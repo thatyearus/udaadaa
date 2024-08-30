@@ -93,3 +93,24 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: pretendard
+      fonts:
+        - asset: fonts/pretendard/Pretendard-Thin.otf
+          weight: 100
+        - asset: fonts/pretendard/Pretendard-ExtraLight.otf
+          weight: 200
+        - asset: fonts/pretendard/Pretendard-Light.otf
+          weight: 300
+        - asset: fonts/pretendard/Pretendard-Regular.otf
+          weight: 400
+        - asset: fonts/pretendard/Pretendard-Medium.otf
+          weight: 500
+        - asset: fonts/pretendard/Pretendard-SemiBold.otf
+          weight: 600
+        - asset: fonts/pretendard/Pretendard-Bold.otf
+          weight: 700
+        - asset: fonts/pretendard/Pretendard-ExtraBold.otf
+          weight: 800
+        - asset: fonts/pretendard/Pretendard-Black.otf
+          weight: 900
