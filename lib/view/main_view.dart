@@ -13,13 +13,16 @@ class MainView extends StatelessWidget {
       const Text('Profile'),
     ];
     return Scaffold(
-      body: BlocBuilder<BottomNavCubit, BottomNavState>(
-          builder: (context, state) {
-        return IndexedStack(
-          index: BottomNavState.values.indexOf(state),
-          children: children,
-        );
-      }),
+      body: SafeArea(
+        minimum: const EdgeInsets.all(8),
+        child: BlocBuilder<BottomNavCubit, BottomNavState>(
+            builder: (context, state) {
+          return IndexedStack(
+            index: BottomNavState.values.indexOf(state),
+            children: children,
+          );
+        }),
+      ),
       bottomNavigationBar: BlocBuilder<BottomNavCubit, BottomNavState>(
         builder: (context, state) => BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
