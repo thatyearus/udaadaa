@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 
 class MainView extends StatelessWidget {
@@ -10,7 +11,10 @@ class MainView extends StatelessWidget {
     final List<Widget> children = [
       const Text('Home'),
       const Text('Feed'),
-      const Text('Profile'),
+      /*const Text('Profile'),*/
+      BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+        return const Text('Profile');
+      }),
     ];
     return Scaffold(
       body: SafeArea(
