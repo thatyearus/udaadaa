@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 export 'theme/colors.dart';
 export 'theme/spacing.dart';
 export 'theme/text_style.dart';
+export 'theme/theme.dart';
 
 final Logger logger = Logger(
   printer: PrettyPrinter(

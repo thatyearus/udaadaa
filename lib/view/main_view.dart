@@ -44,7 +44,7 @@ class MainView extends StatelessWidget {
             ),
           ],
           currentIndex: BottomNavState.values.indexOf(state),
-          selectedItemColor: Colors.blue,
+          selectedItemColor: Theme.of(context).primaryColor,
           onTap: (index) {
             context
                 .read<BottomNavCubit>()
