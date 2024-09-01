@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 export 'theme/colors.dart';
 export 'theme/spacing.dart';
+export 'theme/text_style.dart';
 
 final Logger logger = Logger(
   printer: PrettyPrinter(
