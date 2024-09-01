@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
+import 'package:udaadaa/view/feed/feed_view.dart';
+import 'package:udaadaa/view/home/home_view.dart';
+import 'package:udaadaa/view/mypage/mypage_view.dart';
 
 class MainView extends StatelessWidget {
   const MainView({super.key});
@@ -9,12 +11,9 @@ class MainView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = [
-      const Text('Home'),
-      const Text('Feed'),
-      /*const Text('Profile'),*/
-      BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
-        return const Text('Profile');
-      }),
+      const HomeView(),
+      const FeedView(),
+      const MyPageView(),
     ];
     return Scaffold(
       body: SafeArea(
