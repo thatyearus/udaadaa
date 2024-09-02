@@ -2,14 +2,14 @@ class Profile {
   Profile({
     required this.id,
     required this.nickname,
-    required this.createdAt,
-    required this.pushOption,
+    this.createdAt,
+    this.pushOption,
   });
 
   final String id;
   final String nickname;
-  final DateTime createdAt;
-  final bool pushOption;
+  final DateTime? createdAt;
+  final bool? pushOption;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

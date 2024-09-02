@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 
@@ -26,6 +27,12 @@ class MyPageView extends StatelessWidget {
                   Text(state.user),
                 ],
               ),
+            ElevatedButton(
+              onPressed: () {
+                context.read<AuthCubit>().signOut();
+              },
+              child: const Text('Sign Out'),
+            ),
           ],
         );
       },

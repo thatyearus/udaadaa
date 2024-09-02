@@ -13,12 +13,12 @@ class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit(this.authCubit) : super(ProfileInitial()) {
     final authState = authCubit.state;
     if (authState is Authenticated) {
-      emit(ProfileLoaded(authState.user));
+      emit(ProfileLoaded(authState.user.nickname));
     }
 
     authSubscription = authCubit.stream.listen((authState) {
       if (authState is Authenticated) {
-        emit(ProfileLoaded(authState.user));
+        emit(ProfileLoaded(authState.user.nickname));
       } else {
         emit(ProfileInitial());
       }
