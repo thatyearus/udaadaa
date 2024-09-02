@@ -36,7 +36,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       Profile profile = Profile(
         id: response.user!.id,
-        nickname: '',
+        nickname: RandomNicknameGenerator.generateNickname(),
       );
 
       final res = await supabase

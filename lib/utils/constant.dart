@@ -5,6 +5,7 @@ export 'theme/colors.dart';
 export 'theme/spacing.dart';
 export 'theme/text_style.dart';
 export 'theme/theme.dart';
+export 'random_nickname_generator.dart';
 
 final Logger logger = Logger(
   printer: PrettyPrinter(
