@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
+import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -25,8 +26,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => BottomNavCubit()),
-        BlocProvider(create: (context) => AuthCubit()),
+        BlocProvider<AuthCubit>(create: (context) => AuthCubit()),
+        BlocProvider<BottomNavCubit>(create: (context) => BottomNavCubit()),
+        BlocProvider<ProfileCubit>(
+          create: (context) => ProfileCubit(
+            context.read<AuthCubit>(),
+          ),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
