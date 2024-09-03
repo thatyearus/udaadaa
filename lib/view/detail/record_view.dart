@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class FeedView extends StatelessWidget {
-  const FeedView({super.key});
+class RecordView extends StatelessWidget {
+  const RecordView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class FeedView extends StatelessWidget {
         ],
       ),
       body: const Center(
-        child: Text('Feed View'),
+        child: Text('Record View'),
       ),
     );
   }
