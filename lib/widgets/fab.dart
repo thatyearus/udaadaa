@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/record/exercise_record_view.dart';
 import 'package:udaadaa/view/record/food_record_view.dart';
 import 'package:udaadaa/view/record/weight_record_view.dart';
 
@@ -31,7 +32,8 @@ class _AddFabButtonState extends State<AddFabButton> {
           if (_isExpanded)
             _buildSecondaryFAB(Icons.photo, 140, const WeightRecordView()),
           if (_isExpanded)
-            _buildSecondaryFAB(Icons.video_call, 210, const FoodRecordView()),
+            _buildSecondaryFAB(
+                Icons.video_call, 210, const ExerciseRecordView()),
           _buildMainFAB(),
         ],
       ),
