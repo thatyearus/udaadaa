@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:udaadaa/utils/constant.dart';
 
 class AddFabButton extends StatefulWidget {
   const AddFabButton({super.key});
@@ -37,6 +38,12 @@ class _AddFabButtonState extends State<AddFabButton> {
       onPressed: () {
         _toggleExpanded();
       },
+      backgroundColor: (_isExpanded
+          ? AppColors.neutral[100]
+          : Theme.of(context).primaryColor),
+      foregroundColor: (_isExpanded
+          ? Theme.of(context).primaryColor
+          : AppColors.neutral[100]),
       child: Icon(_isExpanded ? Icons.close : Icons.add),
     );
   }
@@ -49,7 +56,6 @@ class _AddFabButtonState extends State<AddFabButton> {
         onPressed: () {
           // 각 FAB에 대한 액션
         },
-        backgroundColor: Colors.grey[100],
         child: Icon(icon),
       ),
     );
