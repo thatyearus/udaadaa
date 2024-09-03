@@ -5,6 +5,16 @@ class FeedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text('Feed');
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              icon: const Icon(Icons.more_vert_rounded), onPressed: () {}),
+        ],
+      ),
+      body: const Center(
+        child: Text('Feed View'),
+      ),
+    );
   }
 }
