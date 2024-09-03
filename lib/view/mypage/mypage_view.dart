@@ -12,13 +12,14 @@ class MyPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(actions: [
+        IconButton(icon: const Icon(Icons.settings_rounded), onPressed: () {}),
+      ]),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('My Page'),
-              AppSpacing.verticalSizedBoxS,
               if (state is ProfileLoaded)
                 Row(
                   children: [
