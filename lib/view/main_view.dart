@@ -31,16 +31,16 @@ class MainView extends StatelessWidget {
         builder: (context, state) => BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+              icon: Icon(Icons.home_rounded),
+              label: '홈',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.surfing),
-              label: 'Feed',
+              icon: Icon(Icons.feed_rounded),
+              label: '피드',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
+              icon: Icon(Icons.person_rounded),
+              label: '마이페이지',
             ),
           ],
           currentIndex: BottomNavState.values.indexOf(state),
