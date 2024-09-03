@@ -2,6 +2,19 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // #1 Primitive Colors
+  static const MaterialColor red = MaterialColor(0xFFE85146, <int, Color>{
+    50: Color(0xFFFCECEF),
+    100: Color(0xFFF9CFD4),
+    200: Color(0xFFE69EA0),
+    300: Color(0xFFDA7A7B),
+    400: Color(0xFFE35E5C),
+    500: Color(0xFFE85146),
+    600: Color(0xFFD94944),
+    700: Color(0xFFC7403D),
+    800: Color(0xFFBA3B37),
+    900: Color(0xFFA9332D),
+  });
+
   static const MaterialColor orange = MaterialColor(
     0xFFFC5A19,
     <int, Color>{
@@ -39,6 +52,7 @@ class AppColors {
   static const white = Color(0xFFFFFFFF);
 
   // #2 Semantic Colors
-  static const MaterialColor primary = orange;
+  static const MaterialColor primary = red;
+  static const MaterialColor secondary = orange;
   static const MaterialColor neutral = grayscale;
 }
