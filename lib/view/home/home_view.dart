@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/home/report_view.dart';
 import 'package:udaadaa/widgets/fab.dart';
 
 class HomeView extends StatelessWidget {
@@ -6,9 +8,27 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Text('Home'),
-      floatingActionButton: AddFabButton(),
+    return Scaffold(
+      body: Column(children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ReportView(),
+              ),
+            );
+          },
+          child: Container(
+            color: AppColors.neutral[100],
+            padding: AppSpacing.edgeInsetsM,
+            width: double.infinity,
+            alignment: Alignment.center,
+            child: const Text("리포트뷰"),
+          ),
+        ),
+      ]),
+      floatingActionButton: const AddFabButton(),
     );
   }
 }
