@@ -3,8 +3,7 @@ import 'colors.dart';
 import 'text_style.dart';
 
 final ThemeData appTheme = ThemeData(
-  primarySwatch: AppColors.primary,
-  primaryColor: AppColors.primary[500],
+  colorScheme: ColorScheme.fromSwatch(primarySwatch: AppColors.primary),
   textTheme: AppTextStyles.textTheme,
   fontFamily: 'pretendard',
 );
