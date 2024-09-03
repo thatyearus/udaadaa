@@ -13,7 +13,31 @@ class MyPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(actions: [
-        IconButton(icon: const Icon(Icons.settings_rounded), onPressed: () {}),
+        PopupMenuButton(
+          itemBuilder: (context) {
+            return [
+              const PopupMenuItem(
+                value: 'change_nickname',
+                child: Text('닉네임 변경'),
+              ),
+              const PopupMenuItem(
+                value: 'alarm_setting',
+                child: Text("알람 설정"),
+              ),
+            ];
+          },
+          onSelected: (value) {
+            switch (value) {
+              case 'change_nickname':
+                // TODO: 닉네임 변경 기능 구현
+                break;
+              case 'alarm_setting':
+                // TODO: 알람 설정 기능 구현
+                break;
+            }
+          },
+          icon: const Icon(Icons.settings_rounded),
+        ),
       ]),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
