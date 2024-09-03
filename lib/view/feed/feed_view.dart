@@ -8,8 +8,24 @@ class FeedView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-              icon: const Icon(Icons.more_vert_rounded), onPressed: () {}),
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem(
+                  value: 'block_content',
+                  child: Text('컨텐츠 차단'),
+                ),
+              ];
+            },
+            onSelected: (value) {
+              switch (value) {
+                case 'block_content':
+                  // TODO: 컨텐츠 차단 기능 구현
+                  break;
+              }
+            },
+            icon: const Icon(Icons.more_vert_rounded),
+          ),
         ],
       ),
       body: const Center(
