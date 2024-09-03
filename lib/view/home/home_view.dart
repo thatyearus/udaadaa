@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
+import 'package:udaadaa/view/detail/record_view.dart';
 import 'package:udaadaa/view/home/report_view.dart';
 import 'package:udaadaa/widgets/fab.dart';
 
@@ -45,6 +46,33 @@ class HomeView extends StatelessWidget {
             alignment: Alignment.center,
             child: const Text("리포트뷰"),
           ),
+        ),
+        AppSpacing.verticalSizedBoxL,
+        Expanded(
+          child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 4.0,
+                mainAxisSpacing: 4.0,
+                childAspectRatio: 1.0,
+              ),
+              itemCount: 3,
+              itemBuilder: (context, index) {
+                return GridTile(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const RecordView()));
+                    },
+                    child: Container(
+                      color: AppColors.neutral[100],
+                      child: Center(
+                        child: Text('Item $index'),
+                      ),
+                    ),
+                  ),
+                );
+              }),
         ),
       ]),
       floatingActionButton: const AddFabButton(),
