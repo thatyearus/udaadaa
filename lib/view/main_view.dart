@@ -12,9 +12,9 @@ class MainView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = [
-      const HomeView(),
-      const FeedView(),
-      const MyPageView(),
+      const _NavigatorPage(child: HomeView()),
+      const _NavigatorPage(child: FeedView()),
+      const _NavigatorPage(child: MyPageView()),
     ];
     return Scaffold(
       body: SafeArea(
@@ -52,6 +52,23 @@ class MainView extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+}
+
+class _NavigatorPage extends StatelessWidget {
+  final Widget child;
+
+  const _NavigatorPage({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      onGenerateRoute: (settings) {
+        return MaterialPageRoute(
+          builder: (context) => child,
+        );
+      },
     );
   }
 }
