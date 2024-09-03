@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/record/food_record_view.dart';
 
 class AddFabButton extends StatefulWidget {
   const AddFabButton({super.key});
@@ -24,9 +25,12 @@ class _AddFabButtonState extends State<AddFabButton> {
       child: Stack(
         alignment: Alignment.bottomRight,
         children: [
-          if (_isExpanded) _buildSecondaryFAB(Icons.camera_alt, 70),
-          if (_isExpanded) _buildSecondaryFAB(Icons.photo, 140),
-          if (_isExpanded) _buildSecondaryFAB(Icons.video_call, 210),
+          if (_isExpanded)
+            _buildSecondaryFAB(Icons.camera_alt, 70, const FoodRecordView()),
+          if (_isExpanded)
+            _buildSecondaryFAB(Icons.photo, 140, const FoodRecordView()),
+          if (_isExpanded)
+            _buildSecondaryFAB(Icons.video_call, 210, const FoodRecordView()),
           _buildMainFAB(),
         ],
       ),
@@ -48,13 +52,17 @@ class _AddFabButtonState extends State<AddFabButton> {
     );
   }
 
-  Widget _buildSecondaryFAB(IconData icon, double bottom) {
+  Widget _buildSecondaryFAB(IconData icon, double bottom, Widget page) {
     return Positioned(
       bottom: bottom,
       right: 0,
       child: FloatingActionButton(
         onPressed: () {
-          // 각 FAB에 대한 액션
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => page,
+            ),
+          );
         },
         child: Icon(icon),
       ),
