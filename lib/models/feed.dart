@@ -1,6 +1,6 @@
 class Feed {
   Feed({
-    required this.id,
+    this.id,
     required this.userId,
     this.createdAt,
     required this.review,
@@ -8,7 +8,7 @@ class Feed {
     required this.imagePath,
   });
 
-  final String id;
+  final String? id;
   final String userId;
   final DateTime? createdAt;
   final String review;
@@ -17,7 +17,6 @@ class Feed {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
       'user_id': userId,
       'review': review,
       'type': type,
