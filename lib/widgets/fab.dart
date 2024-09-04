@@ -35,7 +35,7 @@ class _AddFabButtonState extends State<AddFabButton> {
                 Icons.scale_rounded, 140, const WeightRecordView()),
           if (_isExpanded)
             _buildSecondaryFAB(
-                Icons.dinner_dining_rounded, 70, const FoodRecordView()),
+                Icons.dinner_dining_rounded, 70, FoodRecordView()),
           _buildMainFAB(),
         ],
       ),

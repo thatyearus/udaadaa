@@ -106,4 +106,6 @@ class FormCubit extends Cubit<FormState> {
       emit(FormError(e.toString()));
     }
   }
+
+  Map<String, XFile?> get selectedImages => _selectedImages;
 }
