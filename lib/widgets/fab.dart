@@ -28,8 +28,8 @@ class _AddFabButtonState extends State<AddFabButton> {
         alignment: Alignment.bottomRight,
         children: [
           if (_isExpanded)
-            _buildSecondaryFAB(Icons.sports_gymnastics_rounded, 210,
-                const ExerciseRecordView()),
+            _buildSecondaryFAB(
+                Icons.sports_gymnastics_rounded, 210, ExerciseRecordView()),
           if (_isExpanded)
             _buildSecondaryFAB(Icons.scale_rounded, 140, WeightRecordView()),
           if (_isExpanded)
