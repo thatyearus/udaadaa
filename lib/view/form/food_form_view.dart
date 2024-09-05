@@ -5,12 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/utils/constant.dart';
 
-class ExerciseRecordView extends StatelessWidget {
-  ExerciseRecordView({super.key});
+class FoodFormView extends StatelessWidget {
+  FoodFormView({super.key});
 
   final TextEditingController commentController = TextEditingController();
-  final TextEditingController exerciseContentController =
-      TextEditingController();
+  final TextEditingController foodContentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +35,14 @@ class ExerciseRecordView extends StatelessWidget {
             AppSpacing.verticalSizedBoxM,
             // 먹은 음식 내용
             TextField(
-              controller: exerciseContentController,
-              decoration: const InputDecoration(labelText: '운동 시간'),
+              controller: foodContentController,
+              decoration: const InputDecoration(labelText: '음식 내용'),
             ),
             AppSpacing.verticalSizedBoxM,
             // 한 줄 평 (공통)
             TextField(
               controller: commentController,
-              decoration: const InputDecoration(labelText: '운동 한마디'),
+              decoration: const InputDecoration(labelText: '음식 한마디'),
             ),
             AppSpacing.verticalSizedBoxL,
             ElevatedButton(
@@ -58,9 +57,9 @@ class ExerciseRecordView extends StatelessWidget {
               ),
               onPressed: () {
                 context.read<form.FormCubit>().submit(
-                      type: 'EXERCISE',
+                      type: 'FOOD',
                       review: commentController.text,
-                      mealContent: exerciseContentController.text,
+                      mealContent: foodContentController.text,
                     );
               },
               child: Text(
@@ -77,7 +76,7 @@ class ExerciseRecordView extends StatelessWidget {
   }
 
   Widget imagePickerWidget(BuildContext context) {
-    final image = context.watch<form.FormCubit>().selectedImages['EXERCISE'];
+    final image = context.watch<form.FormCubit>().selectedImages['FOOD'];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -114,7 +113,7 @@ class ExerciseRecordView extends StatelessWidget {
             minimumSize: const Size(double.infinity, 50),
           ),
           onPressed: () {
-            context.read<form.FormCubit>().updateImage('EXERCISE');
+            context.read<form.FormCubit>().updateImage('FOOD');
           },
           child: Text(
             image != null ? '이미지 변경' : '이미지 업로드',

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/record/exercise_record_view.dart';
-import 'package:udaadaa/view/record/food_record_view.dart';
-import 'package:udaadaa/view/record/weight_record_view.dart';
+import 'package:udaadaa/view/form/exercise_form_view.dart';
+import 'package:udaadaa/view/form/food_form_view.dart';
+import 'package:udaadaa/view/form/weight_form_view.dart';
 
 class AddFabButton extends StatefulWidget {
   const AddFabButton({super.key});
@@ -29,12 +29,11 @@ class _AddFabButtonState extends State<AddFabButton> {
         children: [
           if (_isExpanded)
             _buildSecondaryFAB(
-                Icons.sports_gymnastics_rounded, 210, ExerciseRecordView()),
+                Icons.sports_gymnastics_rounded, 210, ExerciseFormView()),
           if (_isExpanded)
-            _buildSecondaryFAB(Icons.scale_rounded, 140, WeightRecordView()),
+            _buildSecondaryFAB(Icons.scale_rounded, 140, WeightFormView()),
           if (_isExpanded)
-            _buildSecondaryFAB(
-                Icons.dinner_dining_rounded, 70, FoodRecordView()),
+            _buildSecondaryFAB(Icons.dinner_dining_rounded, 70, FoodFormView()),
           _buildMainFAB(),
         ],
       ),

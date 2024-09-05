@@ -5,11 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/utils/constant.dart';
 
-class WeightRecordView extends StatelessWidget {
-  WeightRecordView({super.key});
+class ExerciseFormView extends StatelessWidget {
+  ExerciseFormView({super.key});
 
   final TextEditingController commentController = TextEditingController();
-  final TextEditingController weightContentController = TextEditingController();
+  final TextEditingController exerciseContentController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +36,14 @@ class WeightRecordView extends StatelessWidget {
             AppSpacing.verticalSizedBoxM,
             // 먹은 음식 내용
             TextField(
-              controller: weightContentController,
-              decoration: const InputDecoration(labelText: '몸무게'),
+              controller: exerciseContentController,
+              decoration: const InputDecoration(labelText: '운동 시간'),
             ),
             AppSpacing.verticalSizedBoxM,
             // 한 줄 평 (공통)
             TextField(
               controller: commentController,
-              decoration: const InputDecoration(labelText: '몸무게 한마디'),
+              decoration: const InputDecoration(labelText: '운동 한마디'),
             ),
             AppSpacing.verticalSizedBoxL,
             ElevatedButton(
@@ -57,9 +58,9 @@ class WeightRecordView extends StatelessWidget {
               ),
               onPressed: () {
                 context.read<form.FormCubit>().submit(
-                      type: 'WEIGHT',
+                      type: 'EXERCISE',
                       review: commentController.text,
-                      mealContent: weightContentController.text,
+                      mealContent: exerciseContentController.text,
                     );
               },
               child: Text(
@@ -76,7 +77,7 @@ class WeightRecordView extends StatelessWidget {
   }
 
   Widget imagePickerWidget(BuildContext context) {
-    final image = context.watch<form.FormCubit>().selectedImages['WEIGHT'];
+    final image = context.watch<form.FormCubit>().selectedImages['EXERCISE'];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -113,7 +114,7 @@ class WeightRecordView extends StatelessWidget {
             minimumSize: const Size(double.infinity, 50),
           ),
           onPressed: () {
-            context.read<form.FormCubit>().updateImage('WEIGHT');
+            context.read<form.FormCubit>().updateImage('EXERCISE');
           },
           child: Text(
             image != null ? '이미지 변경' : '이미지 업로드',
