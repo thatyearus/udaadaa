@@ -37,13 +37,13 @@ class ExerciseRecordView extends StatelessWidget {
             // 먹은 음식 내용
             TextField(
               controller: exerciseContentController,
-              decoration: const InputDecoration(labelText: '몸무게'),
+              decoration: const InputDecoration(labelText: '운동 시간'),
             ),
             AppSpacing.verticalSizedBoxM,
             // 한 줄 평 (공통)
             TextField(
               controller: commentController,
-              decoration: const InputDecoration(labelText: '몸무게 한마디'),
+              decoration: const InputDecoration(labelText: '운동 한마디'),
             ),
             AppSpacing.verticalSizedBoxL,
             ElevatedButton(
