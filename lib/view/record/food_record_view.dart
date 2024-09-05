@@ -17,7 +17,7 @@ class FoodRecordView extends StatelessWidget {
       appBar: AppBar(),
       body: Column(
         children: [
-          ImagePickerWidget(context),
+          imagePickerWidget(context),
 
           AppSpacing.verticalSizedBoxM,
           // 먹은 음식 내용
@@ -62,7 +62,7 @@ class FoodRecordView extends StatelessWidget {
     );
   }
 
-  Widget ImagePickerWidget(BuildContext context) {
+  Widget imagePickerWidget(BuildContext context) {
     final image = context.watch<FormCubit>().selectedImages['FOOD'];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
