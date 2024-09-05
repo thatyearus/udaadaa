@@ -104,6 +104,8 @@ class FormCubit extends Cubit<FormState> {
         imagePath: imagePath,
       );
       await supabase.from('feed').insert(feed.toMap());
+      _selectedImages[type] = null;
+      emit(FormSuccess());
     } catch (e) {
       logger.e(e);
       emit(FormError(e.toString()));
