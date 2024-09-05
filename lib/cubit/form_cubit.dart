@@ -75,6 +75,7 @@ class FormCubit extends Cubit<FormState> {
           .upload(imagePath, compressedImage);
       return imagePath;
     } catch (e) {
+      logger.e(e);
       emit(FormError(e.toString()));
       return null;
     }
@@ -89,6 +90,7 @@ class FormCubit extends Cubit<FormState> {
     String? mealContent,
   }) async {
     try {
+      logger.d("submitting form");
       emit(FormLoading());
       String? imagePath = await uploadImage(type);
       if (imagePath == null) {
@@ -103,6 +105,7 @@ class FormCubit extends Cubit<FormState> {
       );
       await supabase.from('feed').insert(feed.toMap());
     } catch (e) {
+      logger.e(e);
       emit(FormError(e.toString()));
     }
   }
