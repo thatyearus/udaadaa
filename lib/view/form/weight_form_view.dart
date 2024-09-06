@@ -59,7 +59,7 @@ class WeightFormView extends StatelessWidget {
                 context.read<form.FormCubit>().submit(
                       type: 'WEIGHT',
                       review: commentController.text,
-                      mealContent: weightContentController.text,
+                      weight: weightContentController.text,
                     );
               },
               child: Text(
