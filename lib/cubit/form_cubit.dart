@@ -6,6 +6,7 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/report.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -132,7 +133,28 @@ class FormCubit extends Cubit<FormState> {
     try {
       switch (type) {
         case 'FOOD':
-          // TODO: calorie calculation
+          final String? base64String = await getBase64Image(type);
+          if (base64String == null) {
+            emit(FormError('Failed to get base64 image'));
+            return;
+          }
+          final res = await dioClient.dio.post(
+            '/estimateCal',
+            data: {
+              'selectedImage': base64String,
+              'description': mealContent!,
+            },
+          );
+          final Map<String, dynamic> jsonResponse = json.decode(res.toString());
+          Calorie calorie = Calorie.fromJson(jsonResponse);
+          final Report report = Report(
+            userId: supabase.auth.currentUser!.id,
+            date: DateTime.now(),
+            breakfast: calorie.totalCalories,
+          );
+          await supabase
+              .from('report')
+              .upsert(report.toMap(), onConflict: 'user_id, date');
           break;
         case 'EXERCISE':
           final int exerciseValue = int.parse(exerciseTime!);
