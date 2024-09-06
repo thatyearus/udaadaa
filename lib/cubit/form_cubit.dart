@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/models/report.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 part 'form_state.dart';
@@ -106,6 +107,49 @@ class FormCubit extends Cubit<FormState> {
       await supabase.from('feed').insert(feed.toMap());
       _selectedImages[type] = null;
       emit(FormSuccess());
+      updateReport(
+        type: type,
+        review: review,
+        mealType: mealType,
+        weight: weight,
+        exerciseTime: exerciseTime,
+        mealContent: mealContent,
+      );
+    } catch (e) {
+      logger.e(e);
+      emit(FormError(e.toString()));
+    }
+  }
+
+  Future<void> updateReport({
+    required String type,
+    required String review,
+    String? mealType,
+    String? weight,
+    String? exerciseTime,
+    String? mealContent,
+  }) async {
+    try {
+      switch (type) {
+        case 'FOOD':
+          // TODO: calorie calculation
+          break;
+        case 'EXERCISE':
+          break;
+        case 'WEIGHT':
+          final double weightValue = double.parse(weight!);
+          logger.d(
+              "${supabase.auth.currentUser!.id} $weightValue ${DateTime.now()}");
+          final Report report = Report(
+            userId: supabase.auth.currentUser!.id,
+            date: DateTime.now(),
+            weight: weightValue,
+          );
+          await supabase
+              .from('report')
+              .upsert(report.toMap(), onConflict: 'user_id, date');
+          break;
+      }
     } catch (e) {
       logger.e(e);
       emit(FormError(e.toString()));
