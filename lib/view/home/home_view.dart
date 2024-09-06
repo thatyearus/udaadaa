@@ -4,6 +4,7 @@ import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/detail/record_view.dart';
 import 'package:udaadaa/view/home/report_view.dart';
 import 'package:udaadaa/widgets/fab.dart';
+import 'package:udaadaa/widgets/report_summary.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -39,13 +40,7 @@ class HomeView extends StatelessWidget {
               ),
             );
           },
-          child: Container(
-            color: AppColors.neutral[100],
-            padding: AppSpacing.edgeInsetsM,
-            width: double.infinity,
-            alignment: Alignment.center,
-            child: const Text("리포트뷰"),
-          ),
+          child: const ReportSummary(),
         ),
         AppSpacing.verticalSizedBoxL,
         Expanded(
