@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -105,7 +106,6 @@ class FormCubit extends Cubit<FormState> {
         imagePath: imagePath,
       );
       await supabase.from('feed').insert(feed.toMap());
-      _selectedImages[type] = null;
       emit(FormSuccess());
       updateReport(
         type: type,
@@ -161,10 +161,51 @@ class FormCubit extends Cubit<FormState> {
               .upsert(report.toMap(), onConflict: 'user_id, date');
           break;
       }
+      selectedImages[type] = null;
     } catch (e) {
       logger.e(e);
       emit(FormError(e.toString()));
     }
+  }
+
+  Future<String?> getBase64Image(String type) async {
+    if (_selectedImages[type] == null) {
+      return null;
+    }
+
+    String extension = _selectedImages[type]!.path.split('.').last;
+    String mimeType;
+    switch (extension) {
+      case 'jpg':
+      case 'jpeg':
+        mimeType = 'image/jpeg';
+        break;
+      case 'png':
+        mimeType = 'image/png';
+        break;
+      case 'gif':
+        mimeType = 'image/gif';
+        break;
+      case 'bmp':
+        mimeType = 'image/bmp';
+        break;
+      case 'webp':
+        mimeType = 'image/webp';
+        break;
+      default:
+        mimeType = 'application/octet-stream'; // 알 수 없는 확장자의 경우 기본값
+        break;
+    }
+
+    File file = File(_selectedImages[type]!.path);
+    File? compressedFile = await compressImage(file);
+    if (compressedFile == null) {
+      return null;
+    }
+    List<int> bytes = compressedFile.readAsBytesSync();
+    String base64Image = base64Encode(bytes);
+
+    return 'data:$mimeType;base64,$base64Image';
   }
 
   Map<String, XFile?> get selectedImages => _selectedImages;
