@@ -135,6 +135,17 @@ class FormCubit extends Cubit<FormState> {
           // TODO: calorie calculation
           break;
         case 'EXERCISE':
+          final int exerciseValue = int.parse(exerciseTime!);
+          logger.d(
+              "${supabase.auth.currentUser!.id} $exerciseValue ${DateTime.now()}");
+          final Report report = Report(
+            userId: supabase.auth.currentUser!.id,
+            date: DateTime.now(),
+            exercise: exerciseValue,
+          );
+          await supabase
+              .from('report')
+              .upsert(report.toMap(), onConflict: 'user_id, date');
           break;
         case 'WEIGHT':
           final double weightValue = double.parse(weight!);
