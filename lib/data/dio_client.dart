@@ -7,7 +7,7 @@ class DioClient {
     BaseOptions(
       baseUrl: _baseUrl,
       connectTimeout: const Duration(milliseconds: 5000),
-      receiveTimeout: const Duration(milliseconds: 3000),
+      receiveTimeout: const Duration(milliseconds: 9000),
     ),
   );
 }
