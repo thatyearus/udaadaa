@@ -1,6 +1,7 @@
 import 'package:logger/logger.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udaadaa/data/dio_client.dart';
 export 'theme/colors.dart';
 export 'theme/spacing.dart';
 export 'theme/text_style.dart';
@@ -22,3 +23,4 @@ final String supabaseUrl = dotenv.env['SUPABASE_URL']!;
 final String supabaseKey = dotenv.env['SUPABASE_KEY']!;
 
 final supabase = Supabase.instance.client;
+final dioClient = DioClient();
