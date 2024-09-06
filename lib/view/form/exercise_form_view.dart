@@ -60,7 +60,7 @@ class ExerciseFormView extends StatelessWidget {
                 context.read<form.FormCubit>().submit(
                       type: 'EXERCISE',
                       review: commentController.text,
-                      mealContent: exerciseContentController.text,
+                      exerciseTime: exerciseContentController.text,
                     );
               },
               child: Text(
