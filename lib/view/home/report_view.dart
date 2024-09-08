@@ -19,31 +19,36 @@ class ReportView extends StatelessWidget {
         : 0);
     return Scaffold(
       appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            children: [
-              Text("오늘의 기록", style: AppTextStyles.textTheme.displaySmall),
-              AppSpacing.verticalSizedBoxL,
-              Row(
-                children: [
-                  CardView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("총칼로리",
-                            style: AppTextStyles.textTheme.headlineMedium),
-                        Text("$totalCalorie kcal",
-                            style: AppTextStyles.textTheme.bodyLarge),
-                      ],
+      body: RefreshIndicator(
+        onRefresh: () {
+          return context.read<ProfileCubit>().getMyTodayReport();
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: SizedBox(
+            width: double.infinity,
+            child: Column(
+              children: [
+                Text("오늘의 기록", style: AppTextStyles.textTheme.displaySmall),
+                AppSpacing.verticalSizedBoxL,
+                Row(
+                  children: [
+                    CardView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("총칼로리",
+                              style: AppTextStyles.textTheme.headlineMedium),
+                          Text("$totalCalorie kcal",
+                              style: AppTextStyles.textTheme.bodyLarge),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              AppSpacing.verticalSizedBoxL,
+                  ],
+                ),
+                AppSpacing.verticalSizedBoxL,
 
-              /*
+                /*
               Container(
                 width: double.infinity,
                 padding: AppSpacing.edgeInsetsS,
@@ -131,90 +136,91 @@ class ReportView extends StatelessWidget {
                   ),
                 ),
               ]),*/
-              Row(
-                children: [
-                  CardView(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("아침",
-                              style: AppTextStyles.textTheme.headlineMedium),
-                          AppSpacing.verticalSizedBoxXxs,
-                          Text("${report?.breakfast ?? 0} kcal",
-                              style: AppTextStyles.textTheme.bodyLarge),
-                        ]),
-                  ),
-                  AppSpacing.horizontalSizedBoxXs,
-                  CardView(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("점심",
-                              style: AppTextStyles.textTheme.headlineMedium),
-                          AppSpacing.verticalSizedBoxXxs,
-                          Text("${report?.lunch ?? 0} kcal",
-                              style: AppTextStyles.textTheme.bodyLarge),
-                        ]),
-                  ),
-                ],
-              ),
-              AppSpacing.verticalSizedBoxXs,
-              Row(
-                children: [
-                  CardView(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("저녁",
-                              style: AppTextStyles.textTheme.headlineMedium),
-                          AppSpacing.verticalSizedBoxXxs,
-                          Text("${report?.dinner ?? 0} kcal",
-                              style: AppTextStyles.textTheme.bodyLarge),
-                        ]),
-                  ),
-                  AppSpacing.horizontalSizedBoxXs,
-                  CardView(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("간식",
-                              style: AppTextStyles.textTheme.headlineMedium),
-                          AppSpacing.verticalSizedBoxXxs,
-                          Text("${report?.snack ?? 0} kcal",
-                              style: AppTextStyles.textTheme.bodyLarge),
-                        ]),
-                  ),
-                ],
-              ),
-              AppSpacing.verticalSizedBoxL,
-              Row(
-                children: [
-                  CardView(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("운동 시간",
-                              style: AppTextStyles.textTheme.headlineMedium),
-                          AppSpacing.verticalSizedBoxXxs,
-                          Text("${report?.exercise ?? 0} 분",
-                              style: AppTextStyles.textTheme.bodyLarge),
-                        ]),
-                  ),
-                  AppSpacing.horizontalSizedBoxXs,
-                  CardView(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("체중",
-                              style: AppTextStyles.textTheme.headlineMedium),
-                          AppSpacing.verticalSizedBoxXxs,
-                          Text("${report?.weight ?? 0.0} kg",
-                              style: AppTextStyles.textTheme.bodyLarge),
-                        ]),
-                  ),
-                ],
-              )
-            ],
+                Row(
+                  children: [
+                    CardView(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("아침",
+                                style: AppTextStyles.textTheme.headlineMedium),
+                            AppSpacing.verticalSizedBoxXxs,
+                            Text("${report?.breakfast ?? 0} kcal",
+                                style: AppTextStyles.textTheme.bodyLarge),
+                          ]),
+                    ),
+                    AppSpacing.horizontalSizedBoxXs,
+                    CardView(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("점심",
+                                style: AppTextStyles.textTheme.headlineMedium),
+                            AppSpacing.verticalSizedBoxXxs,
+                            Text("${report?.lunch ?? 0} kcal",
+                                style: AppTextStyles.textTheme.bodyLarge),
+                          ]),
+                    ),
+                  ],
+                ),
+                AppSpacing.verticalSizedBoxXs,
+                Row(
+                  children: [
+                    CardView(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("저녁",
+                                style: AppTextStyles.textTheme.headlineMedium),
+                            AppSpacing.verticalSizedBoxXxs,
+                            Text("${report?.dinner ?? 0} kcal",
+                                style: AppTextStyles.textTheme.bodyLarge),
+                          ]),
+                    ),
+                    AppSpacing.horizontalSizedBoxXs,
+                    CardView(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("간식",
+                                style: AppTextStyles.textTheme.headlineMedium),
+                            AppSpacing.verticalSizedBoxXxs,
+                            Text("${report?.snack ?? 0} kcal",
+                                style: AppTextStyles.textTheme.bodyLarge),
+                          ]),
+                    ),
+                  ],
+                ),
+                AppSpacing.verticalSizedBoxL,
+                Row(
+                  children: [
+                    CardView(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("운동 시간",
+                                style: AppTextStyles.textTheme.headlineMedium),
+                            AppSpacing.verticalSizedBoxXxs,
+                            Text("${report?.exercise ?? 0} 분",
+                                style: AppTextStyles.textTheme.bodyLarge),
+                          ]),
+                    ),
+                    AppSpacing.horizontalSizedBoxXs,
+                    CardView(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("체중",
+                                style: AppTextStyles.textTheme.headlineMedium),
+                            AppSpacing.verticalSizedBoxXxs,
+                            Text("${report?.weight ?? 0.0} kg",
+                                style: AppTextStyles.textTheme.bodyLarge),
+                          ]),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
