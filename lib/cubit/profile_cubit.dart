@@ -32,15 +32,20 @@ class ProfileCubit extends Cubit<ProfileState> {
     if (authCubit.state is! Authenticated) {
       return;
     }
-    final reportMap = await supabase
-        .from('report')
-        .select()
-        .eq('date', DateTime.now().toIso8601String())
-        .single();
-    logger.d(reportMap);
-    _report = Report.fromMap(map: reportMap);
+    try {
+      final reportMap = await supabase
+          .from('report')
+          .select()
+          .eq('date', DateTime.now().toIso8601String())
+          .single();
+      logger.d(reportMap);
+      _report = Report.fromMap(map: reportMap);
 
-    emit(ProfileLoaded("report"));
+      emit(ProfileLoaded("report"));
+    } catch (e) {
+      logger.e(e);
+      _report = null;
+    }
   }
 
   @override
