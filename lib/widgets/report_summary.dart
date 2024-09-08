@@ -19,15 +19,31 @@ class ReportSummary extends StatelessWidget {
     final weight = report?.weight ?? 0;
 
     return Container(
-      color: AppColors.neutral[100],
+      decoration: BoxDecoration(
+        color: AppColors.neutral[0],
+        border: Border.all(color: AppColors.primary[100]!),
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary[100]!,
+            offset: const Offset(0, 2),
+            blurRadius: 4,
+          ),
+        ],
+      ),
       padding: AppSpacing.edgeInsetsM,
       width: double.infinity,
-      alignment: Alignment.center,
-      child: Column(children: [
-        const Text("오늘의 기록"),
-        Text("총 칼로리 : $totalCalorie kcal"),
-        Text("운동 시간 : $totalExercise 분"),
-        Text("체중 : $weight kg"),
+      alignment: Alignment.centerLeft,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text("오늘의 기록",
+            style: AppTextStyles.headlineMedium(
+                const TextStyle(color: AppColors.primary))),
+        AppSpacing.verticalSizedBoxS,
+        Text("총칼로리 : $totalCalorie kcal",
+            style: AppTextStyles.textTheme.bodyLarge),
+        Text("운동 시간 : $totalExercise 분",
+            style: AppTextStyles.textTheme.bodyLarge),
+        Text("체중 : $weight kg", style: AppTextStyles.textTheme.bodyLarge),
       ]),
     );
   }
