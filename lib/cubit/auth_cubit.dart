@@ -88,4 +88,11 @@ class AuthCubit extends Cubit<AuthState> {
     await supabase.auth.signOut();
     emit(AuthInitial());
   }
+
+  Profile? get getProfile {
+    if (state is Authenticated) {
+      return (state as Authenticated).user;
+    }
+    return null;
+  }
 }

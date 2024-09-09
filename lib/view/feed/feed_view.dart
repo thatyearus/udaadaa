@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:udaadaa/widgets/feed.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udaadaa/models/image.dart';
 
 class FeedView extends StatelessWidget {
   const FeedView({super.key});
@@ -6,7 +9,15 @@ class FeedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
+        backgroundColor: Colors.black,
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back, color: Colors.white),
+        //   onPressed: () {
+        //
+        //   },
+        // ),
         actions: [
           PopupMenuButton(
             itemBuilder: (context) {
@@ -24,13 +35,37 @@ class FeedView extends StatelessWidget {
                   break;
               }
             },
-            icon: const Icon(Icons.more_vert_rounded),
+            icon: const Icon(Icons.more_vert_rounded, color: Colors.white,),
           ),
         ],
       ),
-      body: const Center(
-        child: Text('Feed View'),
-      ),
+      body: FutureBuilder<List<ImageModel>>(
+        future: _fetchImages(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No data found'));
+          } else {
+            return FeedPageView(images: snapshot.data!);
+          }
+        }
+      )
     );
+  }
+}
+
+Future<List<ImageModel>> _fetchImages() async {
+  final supabase = Supabase.instance.client;
+  final data = await supabase
+      .from('images')
+      .select('id, img_url');
+
+  if (data.length == 0){
+    throw "No data";
+  }else{
+    return data.map((item) => ImageModel.fromMap(map: item)).toList();
   }
 }

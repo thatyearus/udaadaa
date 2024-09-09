@@ -5,6 +5,7 @@ import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/widgets/fab.dart';
+import 'package:udaadaa/widgets/my_profile.dart';
 
 class MyPageView extends StatelessWidget {
   const MyPageView({super.key});
@@ -44,17 +45,7 @@ class MyPageView extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (state is ProfileLoaded)
-                Row(
-                  children: [
-                    const CircleAvatar(
-                      radius: 30,
-                      child: Icon(Icons.person),
-                    ),
-                    AppSpacing.horizontalSizedBoxS,
-                    Text(state.user),
-                  ],
-                ),
+              if (state is ProfileLoaded) const MyProfile(),
               ElevatedButton(
                 onPressed: () {
                   context.read<AuthCubit>().signOut();
