@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:udaadaa/models/image.dart';
+import 'package:udaadaa/models/feed.dart';
 
 class ReactionButtonsContainer extends StatelessWidget {
-  final ImageModel image;
+  final Feed image;
   final Function(String imgId, String reactionField) onReactionPressed;
 
   const ReactionButtonsContainer({
@@ -22,31 +22,31 @@ class ReactionButtonsContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ReactionButton(
-              imageId: image.id,
+              imageId: image.id!,
               label: "잘했어요",
               reactionField: "reaction1",
               emoji: "😆",
               onPressed: onReactionPressed),
           ReactionButton(
-              imageId: image.id,
+              imageId: image.id!,
               label: "응원해요",
               reactionField: "reaction2",
               emoji: "🥳",
               onPressed: onReactionPressed),
           ReactionButton(
-              imageId: image.id,
+              imageId: image.id!,
               label: "흠..",
               reactionField: "reaction3",
               emoji: "🧐",
               onPressed: onReactionPressed),
           ReactionButton(
-              imageId: image.id,
+              imageId: image.id!,
               label: "안돼요!",
               reactionField: "reaction4",
               emoji: "🙅🏻‍♀️️",
               onPressed: onReactionPressed),
           ReactionButton(
-              imageId: image.id,
+              imageId: image.id!,
               label: "멋져요",
               reactionField: "reaction5",
               emoji: "👍🏻",

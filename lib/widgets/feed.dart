@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
+import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/image.dart';
 import 'package:udaadaa/widgets/reaction.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -21,6 +24,7 @@ class _FeedPageViewState extends State<FeedPageView> {
 
   @override
   Widget build(BuildContext context) {
+    /*
     return PageView.builder(
         controller: _pageController,
         itemCount: widget.images.length,
@@ -31,7 +35,27 @@ class _FeedPageViewState extends State<FeedPageView> {
             image: image,
             onReactionPressed: _addReaction,
           );
-        });
+        });*/
+
+    return BlocBuilder<FeedCubit, FeedState>(builder: (context, state) {
+      if (state is FeedInitial) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (state is FeedError) {
+        return Center(child: Text('Error: error fetching feed'));
+      }
+      return PageView.builder(
+          controller: _pageController,
+          itemCount: (state as FeedLoaded).feeds.length,
+          scrollDirection: Axis.vertical,
+          itemBuilder: (context, index) {
+            final image = (state as FeedLoaded).feeds[index];
+            return ImageCard(
+              image: image,
+              onReactionPressed: _addReaction,
+            );
+          });
+    });
   }
 
   Future<void> _addReaction(String img_id, String reaction) async {
@@ -56,7 +80,7 @@ class _FeedPageViewState extends State<FeedPageView> {
 }
 
 class ImageCard extends StatefulWidget {
-  final ImageModel image;
+  final Feed image;
   final Function(String imgId, String reactionField) onReactionPressed;
 
   const ImageCard({
@@ -74,7 +98,7 @@ class _ImageCardState extends State<ImageCard> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ImageDisplay(imageUrl: widget.image.imgUrl),
+        ImageDisplay(imageUrl: widget.image.imageUrl!),
         ReactionButtonsOverlay(
           image: widget.image,
           onReactionPressed: widget.onReactionPressed,
@@ -134,7 +158,7 @@ class ImageDisplay extends StatelessWidget {
 }
 
 class ReactionButtonsOverlay extends StatefulWidget {
-  final ImageModel image;
+  final Feed image;
   final Function(String imgId, String reactionField) onReactionPressed;
 
   const ReactionButtonsOverlay({
