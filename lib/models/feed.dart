@@ -6,6 +6,7 @@ class Feed {
     required this.review,
     required this.type,
     required this.imagePath,
+    this.imageUrl,
   });
 
   final String? id;
@@ -14,6 +15,7 @@ class Feed {
   final String review;
   final String type;
   final String imagePath;
+  final String? imageUrl;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -31,7 +33,8 @@ class Feed {
         createdAt = DateTime.parse(map['created_at'] as String),
         review = map['review'] as String,
         type = map['type'] as String,
-        imagePath = map['image_path'] as String;
+        imagePath = map['image_path'] as String,
+        imageUrl = map['image_url'] as String;
 
   Feed copyWith({
     String? id,
@@ -40,6 +43,7 @@ class Feed {
     String? review,
     String? type,
     String? imagePath,
+    String? imageUrl,
   }) {
     return Feed(
       id: id ?? this.id,
@@ -48,6 +52,7 @@ class Feed {
       review: review ?? this.review,
       type: type ?? this.type,
       imagePath: imagePath ?? this.imagePath,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 }
