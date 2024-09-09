@@ -48,11 +48,11 @@ class FeedView extends StatelessWidget {
             future: _fetchImages(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('No data found'));
+                return const Center(child: Text('No data found'));
               } else {
                 return FeedPageView(images: snapshot.data!);
               }
