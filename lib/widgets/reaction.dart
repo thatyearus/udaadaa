@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/models/image.dart';
 
-
 class ReactionButtonsContainer extends StatelessWidget {
   final ImageModel image;
-  final Function(int imgId, String reactionField) onReactionPressed;
+  final Function(String imgId, String reactionField) onReactionPressed;
 
   const ReactionButtonsContainer({
     Key? key,
@@ -22,11 +21,36 @@ class ReactionButtonsContainer extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          ReactionButton(imageId: image.id, label: "잘했어요", reactionField: "reaction1", emoji: "😆", onPressed: onReactionPressed),
-          ReactionButton(imageId: image.id, label: "응원해요", reactionField: "reaction2", emoji: "🥳", onPressed: onReactionPressed),
-          ReactionButton(imageId: image.id, label: "흠..", reactionField: "reaction3", emoji: "🧐", onPressed: onReactionPressed),
-          ReactionButton(imageId: image.id, label: "안돼요!", reactionField: "reaction4", emoji: "🙅🏻‍♀️️", onPressed: onReactionPressed),
-          ReactionButton(imageId: image.id, label: "멋져요", reactionField: "reaction5", emoji: "👍🏻", onPressed: onReactionPressed),
+          ReactionButton(
+              imageId: image.id,
+              label: "잘했어요",
+              reactionField: "reaction1",
+              emoji: "😆",
+              onPressed: onReactionPressed),
+          ReactionButton(
+              imageId: image.id,
+              label: "응원해요",
+              reactionField: "reaction2",
+              emoji: "🥳",
+              onPressed: onReactionPressed),
+          ReactionButton(
+              imageId: image.id,
+              label: "흠..",
+              reactionField: "reaction3",
+              emoji: "🧐",
+              onPressed: onReactionPressed),
+          ReactionButton(
+              imageId: image.id,
+              label: "안돼요!",
+              reactionField: "reaction4",
+              emoji: "🙅🏻‍♀️️",
+              onPressed: onReactionPressed),
+          ReactionButton(
+              imageId: image.id,
+              label: "멋져요",
+              reactionField: "reaction5",
+              emoji: "👍🏻",
+              onPressed: onReactionPressed),
         ],
       ),
     );
@@ -34,11 +58,11 @@ class ReactionButtonsContainer extends StatelessWidget {
 }
 
 class ReactionButton extends StatelessWidget {
-  final int imageId;
+  final String imageId;
   final String label;
   final String reactionField;
   final String emoji;
-  final Function(int, String) onPressed;
+  final Function(String, String) onPressed;
 
   const ReactionButton({
     Key? key,
@@ -57,13 +81,17 @@ class ReactionButton extends StatelessWidget {
         IconButton(
           icon: Text(
             emoji,
-            style: const TextStyle(fontSize: 46, color: Colors.white), // 이모티콘 색상 흰색
+            style: const TextStyle(
+                fontSize: 46, color: Colors.white), // 이모티콘 색상 흰색
           ),
           onPressed: () => onPressed(imageId, reactionField),
         ),
         Text(
           label,
-          style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold), // 텍스트 색상 흰색
+          style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.bold), // 텍스트 색상 흰색
         ),
       ],
     );

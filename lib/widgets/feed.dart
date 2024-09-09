@@ -31,11 +31,10 @@ class _FeedPageViewState extends State<FeedPageView> {
             image: image,
             onReactionPressed: _addReaction,
           );
-        }
-    );
+        });
   }
 
-  Future<void> _addReaction(int img_id, String reaction) async {
+  Future<void> _addReaction(String img_id, String reaction) async {
     final supabase = Supabase.instance.client;
     final data = await supabase
         .from('images')
@@ -46,8 +45,7 @@ class _FeedPageViewState extends State<FeedPageView> {
 
     await supabase
         .from('images')
-        .update({ reaction: data.values.first+1})
-        .eq('id', img_id);
+        .update({reaction: data.values.first + 1}).eq('id', img_id);
   }
 
   @override
@@ -57,10 +55,9 @@ class _FeedPageViewState extends State<FeedPageView> {
   }
 }
 
-
 class ImageCard extends StatefulWidget {
   final ImageModel image;
-  final Function(int imgId, String reactionField) onReactionPressed;
+  final Function(String imgId, String reactionField) onReactionPressed;
 
   const ImageCard({
     Key? key,
@@ -128,7 +125,8 @@ class ImageDisplay extends StatelessWidget {
         imageUrl: imageUrl,
         width: double.infinity,
         height: double.infinity,
-        placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+        placeholder: (context, url) =>
+            Center(child: CircularProgressIndicator()),
         errorWidget: (context, url, error) => Icon(Icons.error),
       ),
     );
@@ -137,7 +135,7 @@ class ImageDisplay extends StatelessWidget {
 
 class ReactionButtonsOverlay extends StatefulWidget {
   final ImageModel image;
-  final Function(int imgId, String reactionField) onReactionPressed;
+  final Function(String imgId, String reactionField) onReactionPressed;
 
   const ReactionButtonsOverlay({
     Key? key,
