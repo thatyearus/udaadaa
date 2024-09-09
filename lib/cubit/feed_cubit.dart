@@ -10,7 +10,7 @@ class FeedCubit extends Cubit<FeedState> {
 
   FeedCubit() : super(FeedInitial()) {
     _getFeeds();
-    _getMyFeeds();
+    fetchMyFeeds();
   }
 
   Future<void> _getFeeds() async {
@@ -44,7 +44,7 @@ class FeedCubit extends Cubit<FeedState> {
     }
   }
 
-  Future<void> _getMyFeeds() async {
+  Future<void> fetchMyFeeds() async {
     try {
       final data = await supabase
           .from('feed')
@@ -71,6 +71,7 @@ class FeedCubit extends Cubit<FeedState> {
           _myFeeds.add(Feed.fromMap(map: item));
         }
       }
+      emit(FeedLoaded(_myFeeds));
     } catch (e) {
       logger.e(e);
     }
