@@ -57,15 +57,15 @@ class ImageCard extends StatelessWidget {
         ReactionButtonsOverlay(
           feed: feed,
         ),
-        const Align(
+        Align(
           alignment: Alignment.bottomLeft,
           child: Padding(
-            padding: EdgeInsets.all(16.0), // 여백 설정
+            padding: const EdgeInsets.all(16.0), // 여백 설정
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min, // Column 크기 최소화
               children: [
-                Text(
+                const Text(
                   '맛있는건 착하다', // 작성자 정보
                   style: TextStyle(
                     color: Colors.white,
@@ -73,10 +73,10 @@ class ImageCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8), // 작성자와 제목 사이의 간격
+                const SizedBox(height: 8), // 작성자와 제목 사이의 간격
                 Text(
-                  '#아침 너무 맛있어서 미치겠읍니다 !', // 제목 정보
-                  style: TextStyle(
+                  feed.review, // 제목 정보
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 15,
                   ),
