@@ -1,9 +1,9 @@
 enum ReactionType {
-  GOOD,
-  CHEERUP,
-  HMMM,
-  NOPE,
-  AWESOME,
+  good,
+  cheerup,
+  hmmm,
+  nope,
+  awesome,
 }
 
 class Reaction {
