@@ -6,10 +6,10 @@ class ReactionButtonsContainer extends StatelessWidget {
   final Function(String imgId, String reactionField) onReactionPressed;
 
   const ReactionButtonsContainer({
-    Key? key,
+    super.key,
     required this.image,
     required this.onReactionPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,13 +65,13 @@ class ReactionButton extends StatelessWidget {
   final Function(String, String) onPressed;
 
   const ReactionButton({
-    Key? key,
+    super.key,
     required this.imageId,
     required this.label,
     required this.reactionField,
     required this.emoji,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
