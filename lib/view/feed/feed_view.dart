@@ -11,52 +11,41 @@ class FeedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
         backgroundColor: Colors.black,
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          // leading: IconButton(
-          //   icon: const Icon(Icons.arrow_back, color: Colors.white),
-          //   onPressed: () {
-          //
-          //   },
-          // ),
-          actions: [
-            PopupMenuButton(
-              itemBuilder: (context) {
-                return [
-                  const PopupMenuItem(
-                    value: 'block_content',
-                    child: Text('컨텐츠 차단'),
-                  ),
-                ];
-              },
-              onSelected: (value) {
-                switch (value) {
-                  case 'block_content':
-                    // TODO: 컨텐츠 차단 기능 구현
-                    break;
-                }
-              },
-              icon: const Icon(
-                Icons.more_vert_rounded,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-        body: FutureBuilder<List<ImageModel>>(
-            future: _fetchImages(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text('No data found'));
-              } else {
-                return FeedPageView(images: snapshot.data!);
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back, color: Colors.white),
+        //   onPressed: () {
+        //
+        //   },
+        // ),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem(
+                  value: 'block_content',
+                  child: Text('컨텐츠 차단'),
+                ),
+              ];
+            },
+            onSelected: (value) {
+              switch (value) {
+                case 'block_content':
+                  // TODO: 컨텐츠 차단 기능 구현
+                  break;
               }
-            }));
+            },
+            icon: const Icon(
+              Icons.more_vert_rounded,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+      body: const FeedPageView(),
+    );
   }
 }
 

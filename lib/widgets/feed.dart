@@ -3,57 +3,44 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
-import 'package:udaadaa/models/image.dart';
 import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/widgets/reaction.dart';
 
 class FeedPageView extends StatefulWidget {
-  final List<ImageModel> images;
-
   const FeedPageView({
     super.key,
-    required this.images,
   });
 
   @override
-  _FeedPageViewState createState() => _FeedPageViewState();
+  FeedPageViewState createState() => FeedPageViewState();
 }
 
-class _FeedPageViewState extends State<FeedPageView> {
+class FeedPageViewState extends State<FeedPageView> {
   final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
     final feeds =
         context.select<FeedCubit, List<Feed>>((cubit) => cubit.getFeeds);
-    return BlocBuilder<FeedCubit, FeedState>(builder: (context, state) {
-      if (state is FeedInitial) {
-        return const Center(child: CircularProgressIndicator());
-      }
-      return PageView.builder(
-          controller: _pageController,
-          itemCount: feeds.length,
-          scrollDirection: Axis.vertical,
-          itemBuilder: (context, index) {
-            final image = feeds[index];
-            return ImageCard(
-              image: image,
-              onReactionPressed: _addReaction,
-            );
-          });
-    });
+    if (feeds.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return PageView.builder(
+        controller: _pageController,
+        itemCount: feeds.length,
+        scrollDirection: Axis.vertical,
+        itemBuilder: (context, index) {
+          final image = feeds[index];
+          return ImageCard(
+            image: image,
+            onReactionPressed: _addReaction,
+          );
+        });
   }
 
   Future<void> _addReaction(String imgId, ReactionType reaction) async {
     context.read<FeedCubit>().addReaction(imgId, reaction);
-    /*
-    final supabase = Supabase.instance.client;
-    final data =
-        await supabase.from('images').select(reaction).eq('id', imgId).single();
-
-    await supabase
-        .from('images')
-        .update({reaction: data.values.first + 1}).eq('id', imgId);*/
   }
 
   @override
