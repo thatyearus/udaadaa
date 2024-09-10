@@ -65,9 +65,9 @@ class ImageCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min, // Column 크기 최소화
               children: [
-                const Text(
-                  '맛있는건 착하다', // 작성자 정보
-                  style: TextStyle(
+                Text(
+                  feed.profile!.nickname, // 작성자 정보
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
