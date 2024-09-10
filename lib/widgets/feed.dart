@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/image.dart';
+import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/widgets/reaction.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FeedPageView extends StatefulWidget {
   final List<ImageModel> images;
@@ -45,14 +45,16 @@ class _FeedPageViewState extends State<FeedPageView> {
     });
   }
 
-  Future<void> _addReaction(String imgId, String reaction) async {
+  Future<void> _addReaction(String imgId, ReactionType reaction) async {
+    context.read<FeedCubit>().addReaction(imgId, reaction);
+    /*
     final supabase = Supabase.instance.client;
     final data =
         await supabase.from('images').select(reaction).eq('id', imgId).single();
 
     await supabase
         .from('images')
-        .update({reaction: data.values.first + 1}).eq('id', imgId);
+        .update({reaction: data.values.first + 1}).eq('id', imgId);*/
   }
 
   @override
@@ -64,7 +66,7 @@ class _FeedPageViewState extends State<FeedPageView> {
 
 class ImageCard extends StatefulWidget {
   final Feed image;
-  final Function(String imgId, String reactionField) onReactionPressed;
+  final Function(String imgId, ReactionType reactionField) onReactionPressed;
 
   const ImageCard({
     super.key,
@@ -142,7 +144,7 @@ class ImageDisplay extends StatelessWidget {
 
 class ReactionButtonsOverlay extends StatefulWidget {
   final Feed image;
-  final Function(String imgId, String reactionField) onReactionPressed;
+  final Function(String imgId, ReactionType reactionField) onReactionPressed;
 
   const ReactionButtonsOverlay({
     super.key,

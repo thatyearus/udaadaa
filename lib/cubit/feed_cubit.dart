@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 part 'feed_state.dart';
@@ -72,6 +73,19 @@ class FeedCubit extends Cubit<FeedState> {
         }
       }
       emit(FeedLoaded(_myFeeds));
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  Future<void> addReaction(String feedId, ReactionType reaction) async {
+    try {
+      final newReaction = Reaction(
+          userId: supabase.auth.currentUser!.id,
+          feedId: feedId,
+          type: reaction);
+      logger.d(newReaction.toMap());
+      await supabase.from('reactions').insert(newReaction.toMap());
     } catch (e) {
       logger.e(e);
     }

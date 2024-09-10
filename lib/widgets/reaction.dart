@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/models/reaction.dart';
 
 class ReactionButtonsContainer extends StatelessWidget {
   final Feed image;
-  final Function(String imgId, String reactionField) onReactionPressed;
+  final Function(String imgId, ReactionType reactionField) onReactionPressed;
 
   const ReactionButtonsContainer({
     super.key,
@@ -24,31 +25,31 @@ class ReactionButtonsContainer extends StatelessWidget {
           ReactionButton(
               imageId: image.id!,
               label: "잘했어요",
-              reactionField: "reaction1",
+              reactionField: ReactionType.GOOD,
               emoji: "😆",
               onPressed: onReactionPressed),
           ReactionButton(
               imageId: image.id!,
               label: "응원해요",
-              reactionField: "reaction2",
+              reactionField: ReactionType.CHEERUP,
               emoji: "🥳",
               onPressed: onReactionPressed),
           ReactionButton(
               imageId: image.id!,
               label: "흠..",
-              reactionField: "reaction3",
+              reactionField: ReactionType.HMMM,
               emoji: "🧐",
               onPressed: onReactionPressed),
           ReactionButton(
               imageId: image.id!,
               label: "안돼요!",
-              reactionField: "reaction4",
+              reactionField: ReactionType.NOPE,
               emoji: "🙅🏻‍♀️️",
               onPressed: onReactionPressed),
           ReactionButton(
               imageId: image.id!,
               label: "멋져요",
-              reactionField: "reaction5",
+              reactionField: ReactionType.AWESOME,
               emoji: "👍🏻",
               onPressed: onReactionPressed),
         ],
@@ -60,9 +61,9 @@ class ReactionButtonsContainer extends StatelessWidget {
 class ReactionButton extends StatelessWidget {
   final String imageId;
   final String label;
-  final String reactionField;
+  final ReactionType reactionField;
   final String emoji;
-  final Function(String, String) onPressed;
+  final Function(String, ReactionType) onPressed;
 
   const ReactionButton({
     super.key,
