@@ -111,7 +111,7 @@ class ImageDisplay extends StatelessWidget {
   }
 }
 
-class ReactionButtonsOverlay extends StatefulWidget {
+class ReactionButtonsOverlay extends StatelessWidget {
   final Feed feed;
 
   const ReactionButtonsOverlay({
@@ -120,18 +120,13 @@ class ReactionButtonsOverlay extends StatefulWidget {
   });
 
   @override
-  _ReactionButtonsOverlayState createState() => _ReactionButtonsOverlayState();
-}
-
-class _ReactionButtonsOverlayState extends State<ReactionButtonsOverlay> {
-  @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 90.0),
         child: ReactionButtonsContainer(
-          feedId: widget.feed.id!,
+          feedId: feed.id!, // widget.feed 대신 feed 사용
         ),
       ),
     );
