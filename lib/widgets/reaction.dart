@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
-import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/reaction.dart';
 
 class ReactionButtonsContainer extends StatelessWidget {
-  final Feed image;
+  final String feedId;
 
   const ReactionButtonsContainer({
     super.key,
-    required this.image,
+    required this.feedId,
   });
 
   @override
@@ -23,31 +22,31 @@ class ReactionButtonsContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ReactionButton(
-            imageId: image.id!,
+            feedId: feedId,
             label: "잘했어요",
             reactionField: ReactionType.good,
             emoji: "😆",
           ),
           ReactionButton(
-            imageId: image.id!,
+            feedId: feedId,
             label: "응원해요",
             reactionField: ReactionType.cheerup,
             emoji: "🥳",
           ),
           ReactionButton(
-            imageId: image.id!,
+            feedId: feedId,
             label: "흠..",
             reactionField: ReactionType.hmmm,
             emoji: "🧐",
           ),
           ReactionButton(
-            imageId: image.id!,
+            feedId: feedId,
             label: "안돼요!",
             reactionField: ReactionType.nope,
             emoji: "🙅🏻‍♀️️",
           ),
           ReactionButton(
-            imageId: image.id!,
+            feedId: feedId,
             label: "멋져요",
             reactionField: ReactionType.awesome,
             emoji: "👍🏻",
@@ -59,14 +58,14 @@ class ReactionButtonsContainer extends StatelessWidget {
 }
 
 class ReactionButton extends StatelessWidget {
-  final String imageId;
+  final String feedId;
   final String label;
   final ReactionType reactionField;
   final String emoji;
 
   const ReactionButton({
     super.key,
-    required this.imageId,
+    required this.feedId,
     required this.label,
     required this.reactionField,
     required this.emoji,
@@ -84,7 +83,7 @@ class ReactionButton extends StatelessWidget {
                 fontSize: 46, color: Colors.white), // 이모티콘 색상 흰색
           ),
           onPressed: () =>
-              context.read<FeedCubit>().addReaction(imageId, reactionField),
+              context.read<FeedCubit>().addReaction(feedId, reactionField),
         ),
         Text(
           label,

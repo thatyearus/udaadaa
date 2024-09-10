@@ -31,9 +31,9 @@ class FeedPageViewState extends State<FeedPageView> {
         itemCount: feeds.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
-          final image = feeds[index];
+          final feed = feeds[index];
           return ImageCard(
-            image: image,
+            feed: feed,
             onReactionPressed: _addReaction,
           );
         });
@@ -51,12 +51,12 @@ class FeedPageViewState extends State<FeedPageView> {
 }
 
 class ImageCard extends StatefulWidget {
-  final Feed image;
+  final Feed feed;
   final Function(String imgId, ReactionType reactionField) onReactionPressed;
 
   const ImageCard({
     super.key,
-    required this.image,
+    required this.feed,
     required this.onReactionPressed,
   });
 
@@ -69,9 +69,9 @@ class _ImageCardState extends State<ImageCard> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ImageDisplay(imageUrl: widget.image.imageUrl!),
+        ImageDisplay(imageUrl: widget.feed.imageUrl!),
         ReactionButtonsOverlay(
-          image: widget.image,
+          feed: widget.feed,
         ),
         const Align(
           alignment: Alignment.bottomLeft,
@@ -128,11 +128,11 @@ class ImageDisplay extends StatelessWidget {
 }
 
 class ReactionButtonsOverlay extends StatefulWidget {
-  final Feed image;
+  final Feed feed;
 
   const ReactionButtonsOverlay({
     super.key,
-    required this.image,
+    required this.feed,
   });
 
   @override
@@ -147,7 +147,7 @@ class _ReactionButtonsOverlayState extends State<ReactionButtonsOverlay> {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 90.0),
         child: ReactionButtonsContainer(
-          image: widget.image,
+          feedId: widget.feed.id!,
         ),
       ),
     );
