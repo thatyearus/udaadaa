@@ -17,10 +17,10 @@ class FeedCubit extends Cubit<FeedState> {
 
   Future<void> _getFeeds() async {
     try {
-      final data = await supabase.from('feed').select();
+      final data = await supabase.from('feed').select('*, profiles(*)');
+      logger.d(data);
       final imagePaths =
           data.map((item) => item['image_path'] as String).toList();
-      logger.d(imagePaths);
       final signedUrls = await supabase.storage
           .from('FeedImages')
           .createSignedUrls(imagePaths, 3600);
@@ -30,8 +30,6 @@ class FeedCubit extends Cubit<FeedState> {
         throw "No data";
       } else {
         _feeds = [];
-        logger.d(data.length);
-        logger.d(signedUrls.length);
         for (var i = 0; i < data.length; i++) {
           final item = data[i];
           item['image_url'] = signedUrls[i].signedUrl;
@@ -49,12 +47,11 @@ class FeedCubit extends Cubit<FeedState> {
     try {
       final data = await supabase
           .from('feed')
-          .select()
+          .select('*, profiles(*)')
           .eq('user_id', supabase.auth.currentUser!.id)
           .order('created_at', ascending: false);
       final imagePaths =
           data.map((item) => item['image_path'] as String).toList();
-      logger.d(imagePaths);
       final signedUrls = await supabase.storage
           .from('FeedImages')
           .createSignedUrls(imagePaths, 3600);
@@ -64,8 +61,6 @@ class FeedCubit extends Cubit<FeedState> {
         throw "No data";
       } else {
         _myFeeds = [];
-        logger.d(data.length);
-        logger.d(signedUrls.length);
         for (var i = 0; i < data.length; i++) {
           final item = data[i];
           item['image_url'] = signedUrls[i].signedUrl;

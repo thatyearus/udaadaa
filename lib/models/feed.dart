@@ -1,3 +1,5 @@
+import 'package:udaadaa/models/profile.dart';
+
 class Feed {
   Feed({
     this.id,
@@ -7,6 +9,7 @@ class Feed {
     required this.type,
     required this.imagePath,
     this.imageUrl,
+    this.profile,
   });
 
   final String? id;
@@ -16,6 +19,7 @@ class Feed {
   final String type;
   final String imagePath;
   final String? imageUrl;
+  final Profile? profile;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -34,7 +38,8 @@ class Feed {
         review = map['review'] as String,
         type = map['type'] as String,
         imagePath = map['image_path'] as String,
-        imageUrl = map['image_url'] as String;
+        imageUrl = map['image_url'] as String,
+        profile = Profile.fromMap(map: map['profiles']);
 
   Feed copyWith({
     String? id,
@@ -44,6 +49,7 @@ class Feed {
     String? type,
     String? imagePath,
     String? imageUrl,
+    Profile? profile,
   }) {
     return Feed(
       id: id ?? this.id,
@@ -53,6 +59,7 @@ class Feed {
       type: type ?? this.type,
       imagePath: imagePath ?? this.imagePath,
       imageUrl: imageUrl ?? this.imageUrl,
+      profile: profile ?? this.profile,
     );
   }
 }
