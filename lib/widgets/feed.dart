@@ -24,19 +24,18 @@ class _FeedPageViewState extends State<FeedPageView> {
 
   @override
   Widget build(BuildContext context) {
+    final feeds =
+        context.select<FeedCubit, List<Feed>>((cubit) => cubit.getFeeds);
     return BlocBuilder<FeedCubit, FeedState>(builder: (context, state) {
       if (state is FeedInitial) {
         return const Center(child: CircularProgressIndicator());
       }
-      if (state is FeedError) {
-        return const Center(child: Text('Error: error fetching feed'));
-      }
       return PageView.builder(
           controller: _pageController,
-          itemCount: (state as FeedLoaded).feeds.length,
+          itemCount: feeds.length,
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
-            final image = (state).feeds[index];
+            final image = feeds[index];
             return ImageCard(
               image: image,
               onReactionPressed: _addReaction,

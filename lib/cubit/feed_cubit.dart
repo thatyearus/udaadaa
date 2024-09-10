@@ -8,6 +8,7 @@ part 'feed_state.dart';
 
 class FeedCubit extends Cubit<FeedState> {
   List<Feed> _myFeeds = [];
+  List<Feed> _feeds = [];
 
   FeedCubit() : super(FeedInitial()) {
     _getFeeds();
@@ -28,16 +29,15 @@ class FeedCubit extends Cubit<FeedState> {
         logger.e("No data");
         throw "No data";
       } else {
-        List<Feed> feeds = [];
+        _feeds = [];
         logger.d(data.length);
         logger.d(signedUrls.length);
         for (var i = 0; i < data.length; i++) {
           final item = data[i];
           item['image_url'] = signedUrls[i].signedUrl;
-          feeds.add(Feed.fromMap(map: item));
+          _feeds.add(Feed.fromMap(map: item));
         }
-        logger.d(feeds);
-        emit(FeedLoaded(feeds));
+        emit(FeedLoaded());
       }
     } catch (e) {
       logger.e(e);
@@ -72,7 +72,7 @@ class FeedCubit extends Cubit<FeedState> {
           _myFeeds.add(Feed.fromMap(map: item));
         }
       }
-      emit(FeedLoaded(_myFeeds));
+      emit(FeedLoaded());
     } catch (e) {
       logger.e(e);
     }
@@ -92,4 +92,5 @@ class FeedCubit extends Cubit<FeedState> {
   }
 
   List<Feed> get getMyFeeds => _myFeeds;
+  List<Feed> get getFeeds => _feeds;
 }
