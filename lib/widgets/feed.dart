@@ -44,26 +44,18 @@ class FeedPageViewState extends State<FeedPageView> {
   }
 }
 
-class ImageCard extends StatefulWidget {
+class ImageCard extends StatelessWidget {
   final Feed feed;
 
-  const ImageCard({
-    super.key,
-    required this.feed,
-  });
+  const ImageCard({super.key, required this.feed});
 
-  @override
-  _ImageCardState createState() => _ImageCardState();
-}
-
-class _ImageCardState extends State<ImageCard> {
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ImageDisplay(imageUrl: widget.feed.imageUrl!),
+        ImageDisplay(imageUrl: feed.imageUrl!),
         ReactionButtonsOverlay(
-          feed: widget.feed,
+          feed: feed,
         ),
         const Align(
           alignment: Alignment.bottomLeft,
