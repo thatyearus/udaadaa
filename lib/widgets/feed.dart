@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
-import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/widgets/reaction.dart';
 
 class FeedPageView extends StatefulWidget {
@@ -34,13 +33,8 @@ class FeedPageViewState extends State<FeedPageView> {
           final feed = feeds[index];
           return ImageCard(
             feed: feed,
-            onReactionPressed: _addReaction,
           );
         });
-  }
-
-  Future<void> _addReaction(String imgId, ReactionType reaction) async {
-    context.read<FeedCubit>().addReaction(imgId, reaction);
   }
 
   @override
@@ -52,12 +46,10 @@ class FeedPageViewState extends State<FeedPageView> {
 
 class ImageCard extends StatefulWidget {
   final Feed feed;
-  final Function(String imgId, ReactionType reactionField) onReactionPressed;
 
   const ImageCard({
     super.key,
     required this.feed,
-    required this.onReactionPressed,
   });
 
   @override
