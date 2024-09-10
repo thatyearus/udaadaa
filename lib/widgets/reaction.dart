@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/reaction.dart';
 
 class ReactionButtonsContainer extends StatelessWidget {
   final Feed image;
-  final Function(String imgId, ReactionType reactionField) onReactionPressed;
 
   const ReactionButtonsContainer({
     super.key,
     required this.image,
-    required this.onReactionPressed,
   });
 
   @override
@@ -23,35 +23,35 @@ class ReactionButtonsContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ReactionButton(
-              imageId: image.id!,
-              label: "잘했어요",
-              reactionField: ReactionType.good,
-              emoji: "😆",
-              onPressed: onReactionPressed),
+            imageId: image.id!,
+            label: "잘했어요",
+            reactionField: ReactionType.good,
+            emoji: "😆",
+          ),
           ReactionButton(
-              imageId: image.id!,
-              label: "응원해요",
-              reactionField: ReactionType.cheerup,
-              emoji: "🥳",
-              onPressed: onReactionPressed),
+            imageId: image.id!,
+            label: "응원해요",
+            reactionField: ReactionType.cheerup,
+            emoji: "🥳",
+          ),
           ReactionButton(
-              imageId: image.id!,
-              label: "흠..",
-              reactionField: ReactionType.hmmm,
-              emoji: "🧐",
-              onPressed: onReactionPressed),
+            imageId: image.id!,
+            label: "흠..",
+            reactionField: ReactionType.hmmm,
+            emoji: "🧐",
+          ),
           ReactionButton(
-              imageId: image.id!,
-              label: "안돼요!",
-              reactionField: ReactionType.nope,
-              emoji: "🙅🏻‍♀️️",
-              onPressed: onReactionPressed),
+            imageId: image.id!,
+            label: "안돼요!",
+            reactionField: ReactionType.nope,
+            emoji: "🙅🏻‍♀️️",
+          ),
           ReactionButton(
-              imageId: image.id!,
-              label: "멋져요",
-              reactionField: ReactionType.awesome,
-              emoji: "👍🏻",
-              onPressed: onReactionPressed),
+            imageId: image.id!,
+            label: "멋져요",
+            reactionField: ReactionType.awesome,
+            emoji: "👍🏻",
+          ),
         ],
       ),
     );
@@ -63,7 +63,6 @@ class ReactionButton extends StatelessWidget {
   final String label;
   final ReactionType reactionField;
   final String emoji;
-  final Function(String, ReactionType) onPressed;
 
   const ReactionButton({
     super.key,
@@ -71,7 +70,6 @@ class ReactionButton extends StatelessWidget {
     required this.label,
     required this.reactionField,
     required this.emoji,
-    required this.onPressed,
   });
 
   @override
@@ -85,7 +83,8 @@ class ReactionButton extends StatelessWidget {
             style: const TextStyle(
                 fontSize: 46, color: Colors.white), // 이모티콘 색상 흰색
           ),
-          onPressed: () => onPressed(imageId, reactionField),
+          onPressed: () =>
+              context.read<FeedCubit>().addReaction(imageId, reactionField),
         ),
         Text(
           label,

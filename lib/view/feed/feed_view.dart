@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/widgets/feed.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:udaadaa/models/image.dart';
-
-import '../../utils/constant.dart';
 
 class FeedView extends StatelessWidget {
   const FeedView({super.key});
@@ -46,31 +42,5 @@ class FeedView extends StatelessWidget {
       ),
       body: const FeedPageView(),
     );
-  }
-}
-
-Future<List<ImageModel>> _fetchImages() async {
-  final supabase = Supabase.instance.client;
-  final data = await supabase.from('feed').select('id, image_path');
-  final imagePaths = data.map((item) => item['image_path'] as String).toList();
-  logger.d(imagePaths);
-  final signedUrls = await supabase.storage
-      .from('FeedImages')
-      .createSignedUrls(imagePaths, 3600);
-
-  if (data.isEmpty) {
-    logger.e("No data");
-    throw "No data";
-  } else {
-    List<ImageModel> images = [];
-    logger.d(data.length);
-    logger.d(signedUrls.length);
-    for (var i = 0; i < data.length; i++) {
-      final item = data[i];
-      item['img_url'] = signedUrls[i].signedUrl;
-      images.add(ImageModel.fromMap(map: item));
-    }
-    logger.d(images);
-    return images;
   }
 }

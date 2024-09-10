@@ -72,7 +72,6 @@ class _ImageCardState extends State<ImageCard> {
         ImageDisplay(imageUrl: widget.image.imageUrl!),
         ReactionButtonsOverlay(
           image: widget.image,
-          onReactionPressed: widget.onReactionPressed,
         ),
         const Align(
           alignment: Alignment.bottomLeft,
@@ -130,12 +129,10 @@ class ImageDisplay extends StatelessWidget {
 
 class ReactionButtonsOverlay extends StatefulWidget {
   final Feed image;
-  final Function(String imgId, ReactionType reactionField) onReactionPressed;
 
   const ReactionButtonsOverlay({
     super.key,
     required this.image,
-    required this.onReactionPressed,
   });
 
   @override
@@ -151,7 +148,6 @@ class _ReactionButtonsOverlayState extends State<ReactionButtonsOverlay> {
         padding: const EdgeInsets.only(bottom: 90.0),
         child: ReactionButtonsContainer(
           image: widget.image,
-          onReactionPressed: widget.onReactionPressed,
         ),
       ),
     );
