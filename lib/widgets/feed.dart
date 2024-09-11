@@ -53,6 +53,7 @@ class FeedPageViewState extends State<FeedPageView> {
 
   @override
   void dispose() {
+    _pageController.removeListener(_onScroll);
     _pageController.dispose();
     super.dispose();
   }
