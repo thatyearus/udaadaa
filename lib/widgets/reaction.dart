@@ -101,13 +101,46 @@ class ReactionButton extends StatelessWidget {
                 style: const TextStyle(
                     fontSize: 46, color: Colors.white), // 이모티콘 색상 흰색
               ),
-              onPressed: () => (
-                !isMyPage
-                    ? context
-                        .read<FeedCubit>()
-                        .addReaction(feedId, reactionField)
-                    : null,
-              ),
+              onPressed: () => (!isMyPage
+                  ? context.read<FeedCubit>().addReaction(feedId, reactionField)
+                  : showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Container(
+                          padding: AppSpacing.edgeInsetsM,
+                          width: double.infinity,
+                          color: Colors.white,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text("공감한 사용자",
+                                  style: AppTextStyles.textTheme.titleMedium),
+                              AppSpacing.sizedBoxM,
+                              Divider(
+                                color: AppColors.neutral[300],
+                                thickness: 1,
+                              ),
+                              Flexible(
+                                child: ListView.builder(
+                                  itemCount: reactions.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      title: Text(reactions
+                                              .elementAt(index)
+                                              .profile
+                                              ?.nickname ??
+                                          "no profile"),
+                                      trailing: Text(emoji,
+                                          style: AppTextStyles
+                                              .textTheme.titleMedium),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      })),
             ),
             if (isMyPage)
               Positioned(
