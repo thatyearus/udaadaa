@@ -80,7 +80,9 @@ class FeedCubit extends Cubit<FeedState> {
           feedId: feedId,
           type: reaction);
       logger.d(newReaction.toMap());
-      await supabase.from('reactions').insert(newReaction.toMap());
+      await supabase
+          .from('reactions')
+          .upsert(newReaction.toMap(), onConflict: "user_id, feed_id");
     } catch (e) {
       logger.e(e);
     }
