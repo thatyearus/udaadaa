@@ -182,7 +182,7 @@ class FeedCubit extends Cubit<FeedState> {
     try {
       final data = await supabase
           .from('feed')
-          .select('*, profiles(*)')
+          .select('*, profiles(*), reactions(*)')
           .eq('user_id', supabase.auth.currentUser!.id)
           .order('created_at', ascending: false);
       final imagePaths =
@@ -201,10 +201,12 @@ class FeedCubit extends Cubit<FeedState> {
           item['image_url'] = signedUrls[i].signedUrl;
           _myFeeds.add(Feed.fromMap(map: item));
         }
+        logger.d(_myFeeds);
       }
       emit(FeedLoaded());
     } catch (e) {
       logger.e(e);
+      emit(FeedError());
     }
   }
 
