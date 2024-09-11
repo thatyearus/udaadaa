@@ -20,7 +20,10 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () {
-          return context.read<ProfileCubit>().getMyTodayReport();
+          return Future.wait([
+            context.read<FeedCubit>().fetchHomeFeeds(),
+            context.read<ProfileCubit>().getMyTodayReport(),
+          ]);
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
