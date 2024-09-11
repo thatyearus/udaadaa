@@ -34,6 +34,7 @@ class FeedPageViewState extends State<FeedPageView> {
           context.read<FeedCubit>().changePage(index);
           return ImageCard(
             feed: feed,
+            isMyPage: false,
           );
         });
   }
@@ -47,8 +48,9 @@ class FeedPageViewState extends State<FeedPageView> {
 
 class ImageCard extends StatelessWidget {
   final Feed feed;
+  final bool isMyPage;
 
-  const ImageCard({super.key, required this.feed});
+  const ImageCard({super.key, required this.feed, required this.isMyPage});
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +59,7 @@ class ImageCard extends StatelessWidget {
         ImageDisplay(imageUrl: feed.imageUrl!),
         ReactionButtonsOverlay(
           feed: feed,
+          isMyPage: isMyPage,
         ),
         Align(
           alignment: Alignment.bottomLeft,
@@ -114,10 +117,12 @@ class ImageDisplay extends StatelessWidget {
 
 class ReactionButtonsOverlay extends StatelessWidget {
   final Feed feed;
+  final bool isMyPage;
 
   const ReactionButtonsOverlay({
     super.key,
     required this.feed,
+    required this.isMyPage,
   });
 
   @override
@@ -127,7 +132,8 @@ class ReactionButtonsOverlay extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 90.0),
         child: ReactionButtonsContainer(
-          feedId: feed.id!, // widget.feed 대신 feed 사용
+          feedId: feed.id!,
+          isMyPage: isMyPage,
         ),
       ),
     );

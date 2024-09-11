@@ -60,6 +60,7 @@ class FeedPageViewState extends State<MyFeedPageView> {
           final feed = feeds[index];
           return ImageCard(
             feed: feed,
+            isMyPage: true,
           );
         });
   }
