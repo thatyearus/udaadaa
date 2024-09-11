@@ -16,6 +16,29 @@ class RecordView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: AppColors.white,
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem(
+                  value: 'block_content',
+                  child: Text('컨텐츠 차단'),
+                ),
+              ];
+            },
+            onSelected: (value) {
+              switch (value) {
+                case 'block_content':
+                  context.read<FeedCubit>().blcokDetailPage(stackIndex);
+                  break;
+              }
+            },
+            icon: const Icon(
+              Icons.more_vert_rounded,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: DetailFeedPageView(stackIndex: stackIndex),

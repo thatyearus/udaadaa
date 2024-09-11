@@ -231,6 +231,7 @@ class FeedCubit extends Cubit<FeedState> {
       await supabase.from('blocked_feed').upsert(
           {'user_id': supabase.auth.currentUser!.id, 'feed_id': feedId},
           onConflict: 'user_id, feed_id');
+      _blockedFeedIds.add(feedId);
     } catch (e) {
       logger.e(e);
     }
@@ -241,6 +242,16 @@ class FeedCubit extends Cubit<FeedState> {
     blockFeed(feedId).then(
       (_) {
         getMoreFeeds().then((_) => _feeds.removeAt(_curFeedPage));
+      },
+    );
+  }
+
+  void blcokDetailPage(int stackIndex) {
+    final feedId = _homeFeeds[stackIndex][_curHomeFeedPage[stackIndex]].id!;
+    blockFeed(feedId).then(
+      (_) {
+        getMoreHomeFeeds(stackIndex).then((_) =>
+            _homeFeeds[stackIndex].removeAt(_curHomeFeedPage[stackIndex]));
       },
     );
   }
