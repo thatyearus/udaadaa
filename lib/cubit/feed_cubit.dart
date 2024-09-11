@@ -18,6 +18,7 @@ class FeedCubit extends Cubit<FeedState> {
   List<String> _blockedFeedIds = [];
   final int _limit = 10;
   int _curFeedPage = 0;
+  List<int> _curHomeFeedPage = [0, 0, 0];
 
   FeedCubit(this.authCubit) : super(FeedInitial()) {
     if (authCubit.state is Authenticated) {
@@ -80,6 +81,7 @@ class FeedCubit extends Cubit<FeedState> {
         throw "No data";
       } else {
         _homeFeeds = [[], [], []];
+        _curHomeFeedPage = [0, 0, 0];
         for (var i = 0; i < data.length; i++) {
           final item = data[i];
           item['image_url'] = signedUrls[i].signedUrl;
@@ -166,6 +168,14 @@ class FeedCubit extends Cubit<FeedState> {
       getMoreFeeds();
     }
     logger.d("Current page: $_curFeedPage");
+  }
+
+  void changeHomeFeedPage(int index, int page) {
+    _curHomeFeedPage[index] = page;
+    if (page == _homeFeeds[index].length - 1) {
+      getMoreHomeFeeds(index);
+    }
+    logger.d("Current home feed page: $_curHomeFeedPage");
   }
 
   Future<void> fetchMyFeeds() async {

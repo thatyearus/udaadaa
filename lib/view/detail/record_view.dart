@@ -39,19 +39,6 @@ class FeedPageViewState extends State<MyFeedPageView> {
   final PageController _pageController = PageController();
 
   @override
-  void initState() {
-    super.initState();
-    _pageController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (_pageController.position.pixels >=
-        _pageController.position.maxScrollExtent) {
-      context.read<FeedCubit>().getMoreHomeFeeds(widget.stackIndex);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final feeds = context.select<FeedCubit, List<Feed>>(
         (cubit) => cubit.getHomeFeeds[widget.stackIndex]);
@@ -65,6 +52,9 @@ class FeedPageViewState extends State<MyFeedPageView> {
         itemCount: feeds.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
+          context
+              .read<FeedCubit>()
+              .changeHomeFeedPage(widget.stackIndex, index);
           final feed = feeds[index];
           return ImageCard(
             feed: feed,
@@ -74,7 +64,6 @@ class FeedPageViewState extends State<MyFeedPageView> {
 
   @override
   void dispose() {
-    _pageController.removeListener(_onScroll);
     _pageController.dispose();
     super.dispose();
   }
