@@ -83,8 +83,9 @@ class ReactionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int reactionCount = context.select<FeedCubit, int>(
-        (cubit) => cubit.getReactionCount(feedId, reactionField));
+    final Iterable<Reaction> reactions =
+        context.select<FeedCubit, Iterable<Reaction>>(
+            (cubit) => cubit.getReaction(feedId, reactionField));
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -119,7 +120,7 @@ class ReactionButton extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    '$reactionCount', // 리액션 수 표시
+                    '${reactions.length}', // 리액션 수 표시
                     style: AppTextStyles.textTheme.bodyMedium,
                   ),
                 ),

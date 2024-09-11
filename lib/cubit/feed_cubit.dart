@@ -263,11 +263,9 @@ class FeedCubit extends Cubit<FeedState> {
   List<Feed> get getFeeds => _feeds;
   List<List<Feed>> get getHomeFeeds => _homeFeeds;
 
-  int getReaction(String feedId, ReactionType reactionField) {
+  Iterable<Reaction> getReaction(String feedId, ReactionType reactionField) {
     final feed = _myFeeds.firstWhere((feed) => feed.id == feedId);
-    return feed.reaction
-            ?.where((reaction) => reaction.type == reactionField)
-            .length ??
-        0;
+    return feed.reaction?.where((reaction) => reaction.type == reactionField) ??
+        [];
   }
 }
