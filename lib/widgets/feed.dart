@@ -44,6 +44,7 @@ class FeedPageViewState extends State<FeedPageView> {
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
           final feed = feeds[index];
+          context.read<FeedCubit>().changePage(index);
           return ImageCard(
             feed: feed,
           );

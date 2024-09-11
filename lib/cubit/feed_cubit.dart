@@ -10,6 +10,7 @@ class FeedCubit extends Cubit<FeedState> {
   List<Feed> _myFeeds = [];
   List<Feed> _feeds = [];
   final int _limit = 10;
+  int _curFeedPage = 0;
 
   FeedCubit() : super(FeedInitial()) {
     _getFeeds();
@@ -46,6 +47,11 @@ class FeedCubit extends Cubit<FeedState> {
       logger.e(e);
       emit(FeedError());
     }
+  }
+
+  void changePage(int page) {
+    _curFeedPage = page;
+    logger.d("Current page: $_curFeedPage");
   }
 
   Future<void> fetchMyFeeds() async {
