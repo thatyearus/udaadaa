@@ -9,15 +9,19 @@ part 'feed_state.dart';
 class FeedCubit extends Cubit<FeedState> {
   List<Feed> _myFeeds = [];
   List<Feed> _feeds = [];
+  final int _limit = 10;
 
   FeedCubit() : super(FeedInitial()) {
     _getFeeds();
     fetchMyFeeds();
   }
 
-  Future<void> _getFeeds() async {
+  Future<void> _getFeeds({bool loadMore = false}) async {
     try {
-      final data = await supabase.from('feed').select('*, profiles(*)');
+      final data = await supabase
+          .from('random_feed')
+          .select('*, profiles(*)')
+          .limit(_limit);
       logger.d(data);
       final imagePaths =
           data.map((item) => item['image_path'] as String).toList();
@@ -29,12 +33,13 @@ class FeedCubit extends Cubit<FeedState> {
         logger.e("No data");
         throw "No data";
       } else {
-        _feeds = [];
+        final List<Feed> newFeeds = [];
         for (var i = 0; i < data.length; i++) {
           final item = data[i];
           item['image_url'] = signedUrls[i].signedUrl;
-          _feeds.add(Feed.fromMap(map: item));
+          newFeeds.add(Feed.fromMap(map: item));
         }
+        _feeds = loadMore ? [..._feeds, ...newFeeds] : newFeeds;
         emit(FeedLoaded());
       }
     } catch (e) {
