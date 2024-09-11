@@ -93,6 +93,10 @@ class FeedCubit extends Cubit<FeedState> {
     }
   }
 
+  Future<void> getMoreFeeds() async {
+    await _getFeeds(loadMore: true);
+  }
+
   List<Feed> get getMyFeeds => _myFeeds;
   List<Feed> get getFeeds => _feeds;
 }
