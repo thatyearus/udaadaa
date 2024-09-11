@@ -100,8 +100,13 @@ class ReactionButton extends StatelessWidget {
                 style: const TextStyle(
                     fontSize: 46, color: Colors.white), // 이모티콘 색상 흰색
               ),
-              onPressed: () =>
-                  context.read<FeedCubit>().addReaction(feedId, reactionField),
+              onPressed: () => (
+                !isMyPage
+                    ? context
+                        .read<FeedCubit>()
+                        .addReaction(feedId, reactionField)
+                    : null,
+              ),
             ),
             if (isMyPage)
               Positioned(
