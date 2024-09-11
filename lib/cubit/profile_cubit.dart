@@ -36,10 +36,13 @@ class ProfileCubit extends Cubit<ProfileState> {
       final reportMap = await supabase
           .from('report')
           .select()
-          .eq('date', DateTime.now().toIso8601String())
-          .single();
-      logger.d(reportMap);
-      _report = Report.fromMap(map: reportMap);
+          .eq('date', DateTime.now().toIso8601String());
+      if (reportMap.isEmpty) {
+        _report = null;
+        emit(ProfileLoaded("report"));
+        return;
+      }
+      _report = Report.fromMap(map: reportMap[0]);
 
       emit(ProfileLoaded("report"));
     } catch (e) {

@@ -30,47 +30,51 @@ class ExerciseFormView extends StatelessWidget {
             );
           }
         },
-        child: Column(
-          children: [
-            imagePickerWidget(context),
-            AppSpacing.verticalSizedBoxM,
-            // 먹은 음식 내용
-            TextField(
-              controller: exerciseContentController,
-              decoration: const InputDecoration(labelText: '운동 시간'),
-            ),
-            AppSpacing.verticalSizedBoxM,
-            // 한 줄 평 (공통)
-            TextField(
-              controller: commentController,
-              decoration: const InputDecoration(labelText: '운동 한마디'),
-            ),
-            AppSpacing.verticalSizedBoxL,
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Theme.of(context).primaryColor,
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Theme.of(context).primaryColor),
-                  borderRadius: BorderRadius.circular(12),
+        child: SingleChildScrollView(
+          padding: AppSpacing.edgeInsetsL,
+          reverse: true,
+          child: Column(
+            children: [
+              imagePickerWidget(context),
+              AppSpacing.verticalSizedBoxM,
+              // 먹은 음식 내용
+              TextField(
+                controller: exerciseContentController,
+                decoration: const InputDecoration(labelText: '운동 시간'),
+              ),
+              AppSpacing.verticalSizedBoxM,
+              // 한 줄 평 (공통)
+              TextField(
+                controller: commentController,
+                decoration: const InputDecoration(labelText: '운동 한마디'),
+              ),
+              AppSpacing.verticalSizedBoxL,
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Theme.of(context).primaryColor),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  minimumSize: const Size(double.infinity, 50),
                 ),
-                minimumSize: const Size(double.infinity, 50),
+                onPressed: () {
+                  context.read<form.FormCubit>().submit(
+                        type: 'EXERCISE',
+                        review: commentController.text,
+                        exerciseTime: exerciseContentController.text,
+                      );
+                },
+                child: Text(
+                  '기록 추가',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                ),
               ),
-              onPressed: () {
-                context.read<form.FormCubit>().submit(
-                      type: 'EXERCISE',
-                      review: commentController.text,
-                      exerciseTime: exerciseContentController.text,
-                    );
-              },
-              child: Text(
-                '기록 추가',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).primaryColor,
-                    ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

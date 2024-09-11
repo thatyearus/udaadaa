@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
-import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/feed/feed_view.dart';
 import 'package:udaadaa/view/home/home_view.dart';
 import 'package:udaadaa/view/mypage/mypage_view.dart';
@@ -18,7 +17,6 @@ class MainView extends StatelessWidget {
     ];
     return Scaffold(
       body: SafeArea(
-        minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         child: BlocBuilder<BottomNavCubit, BottomNavState>(
             builder: (context, state) {
           return IndexedStack(
@@ -44,7 +42,6 @@ class MainView extends StatelessWidget {
             ),
           ],
           currentIndex: BottomNavState.values.indexOf(state),
-          selectedItemColor: Theme.of(context).primaryColor,
           onTap: (index) {
             context
                 .read<BottomNavCubit>()

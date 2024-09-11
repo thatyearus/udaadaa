@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/widgets/feed.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:udaadaa/models/image.dart';
 
 class FeedView extends StatelessWidget {
   const FeedView({super.key});
@@ -11,7 +11,7 @@ class FeedView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
         // leading: IconButton(
         //   icon: const Icon(Icons.arrow_back, color: Colors.white),
         //   onPressed: () {
@@ -31,41 +31,18 @@ class FeedView extends StatelessWidget {
             onSelected: (value) {
               switch (value) {
                 case 'block_content':
-                  // TODO: 컨텐츠 차단 기능 구현
+                  context.read<FeedCubit>().blockFeedPage();
                   break;
               }
             },
-            icon: const Icon(Icons.more_vert_rounded, color: Colors.white,),
+            icon: const Icon(
+              Icons.more_vert_rounded,
+              color: Colors.white,
+            ),
           ),
         ],
       ),
-      body: FutureBuilder<List<ImageModel>>(
-        future: _fetchImages(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No data found'));
-          } else {
-            return FeedPageView(images: snapshot.data!);
-          }
-        }
-      )
+      body: const FeedPageView(),
     );
-  }
-}
-
-Future<List<ImageModel>> _fetchImages() async {
-  final supabase = Supabase.instance.client;
-  final data = await supabase
-      .from('images')
-      .select('id, img_url');
-
-  if (data.length == 0){
-    throw "No data";
-  }else{
-    return data.map((item) => ImageModel.fromMap(map: item)).toList();
   }
 }
