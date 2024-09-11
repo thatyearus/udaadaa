@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -7,15 +10,36 @@ import 'package:udaadaa/utils/constant.dart';
 part 'feed_state.dart';
 
 class FeedCubit extends Cubit<FeedState> {
+  final AuthCubit authCubit;
+  late final StreamSubscription authSubscription;
   List<Feed> _myFeeds = [];
   List<Feed> _feeds = [];
   List<String> _blockedFeedIds = [];
   final int _limit = 10;
   int _curFeedPage = 0;
 
-  FeedCubit() : super(FeedInitial()) {
-    fetchBlockedFeed().then((_) => _getFeeds());
-    fetchMyFeeds();
+  FeedCubit(this.authCubit) : super(FeedInitial()) {
+    if (authCubit.state is Authenticated) {
+      fetchBlockedFeed().then((_) => _getFeeds());
+      fetchMyFeeds();
+    }
+
+    authSubscription = authCubit.stream.listen((authState) {
+      if (authState is Authenticated) {
+        fetchBlockedFeed().then((_) => _getFeeds());
+        fetchMyFeeds();
+      } else {
+        _feeds = [];
+        _myFeeds = [];
+        emit(FeedInitial());
+      }
+    });
+  }
+
+  @override
+  Future<void> close() {
+    authSubscription.cancel();
+    return super.close();
   }
 
   Future<void> fetchBlockedFeed() async {
