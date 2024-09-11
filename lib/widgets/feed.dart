@@ -25,7 +25,7 @@ class FeedPageViewState extends State<FeedPageView> {
 
   void _onScroll() {
     if (_pageController.position.pixels >=
-        _pageController.position.maxScrollExtent - 200) {
+        _pageController.position.maxScrollExtent) {
       context.read<FeedCubit>().getMoreFeeds();
     }
   }
