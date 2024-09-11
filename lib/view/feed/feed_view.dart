@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/widgets/feed.dart';
 
 class FeedView extends StatelessWidget {
@@ -29,7 +31,7 @@ class FeedView extends StatelessWidget {
             onSelected: (value) {
               switch (value) {
                 case 'block_content':
-                  // TODO: 컨텐츠 차단 기능 구현
+                  context.read<FeedCubit>().blockFeedPage();
                   break;
               }
             },

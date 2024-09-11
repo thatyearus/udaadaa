@@ -103,6 +103,23 @@ class FeedCubit extends Cubit<FeedState> {
     await _getFeeds(loadMore: true);
   }
 
+  Future<void> blockFeed(String feedId) async {
+    try {
+      await supabase.from('blocked_feed').upsert(
+          {'user_id': supabase.auth.currentUser!.id, 'feed_id': feedId},
+          onConflict: 'user_id, feed_id');
+      _feeds.removeWhere((element) => element.id == feedId);
+      emit(FeedLoaded());
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  void blockFeedPage() {
+    final feedId = _feeds[_curFeedPage].id!;
+    blockFeed(feedId);
+  }
+
   List<Feed> get getMyFeeds => _myFeeds;
   List<Feed> get getFeeds => _feeds;
 }
