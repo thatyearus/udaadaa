@@ -162,6 +162,9 @@ class FeedCubit extends Cubit<FeedState> {
 
   void changePage(int page) {
     _curFeedPage = page;
+    if (page == _feeds.length - 1) {
+      getMoreFeeds();
+    }
     logger.d("Current page: $_curFeedPage");
   }
 

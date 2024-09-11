@@ -18,19 +18,6 @@ class FeedPageViewState extends State<FeedPageView> {
   final PageController _pageController = PageController();
 
   @override
-  void initState() {
-    super.initState();
-    _pageController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (_pageController.position.pixels >=
-        _pageController.position.maxScrollExtent) {
-      context.read<FeedCubit>().getMoreFeeds();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final feeds =
         context.select<FeedCubit, List<Feed>>((cubit) => cubit.getFeeds);
@@ -53,7 +40,6 @@ class FeedPageViewState extends State<FeedPageView> {
 
   @override
   void dispose() {
-    _pageController.removeListener(_onScroll);
     _pageController.dispose();
     super.dispose();
   }
