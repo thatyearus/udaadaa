@@ -1,7 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
-import 'package:udaadaa/cubit/profile_cubit.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/widgets/fab.dart';
@@ -12,6 +13,9 @@ class MyPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final myFeeds =
+        context.select((FeedCubit feedCubit) => feedCubit.getMyFeeds);
+
     return Scaffold(
       appBar: AppBar(actions: [
         PopupMenuButton(
@@ -40,48 +44,57 @@ class MyPageView extends StatelessWidget {
           icon: const Icon(Icons.settings_rounded),
         ),
       ]),
-      body: BlocBuilder<ProfileCubit, ProfileState>(
-        builder: (context, state) {
-          return Column(
+      body: RefreshIndicator(
+        onRefresh: () => context.read<FeedCubit>().fetchMyFeeds(),
+        child: SingleChildScrollView(
+          padding: AppSpacing.edgeInsetsL,
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (state is ProfileLoaded) const MyProfile(),
+              const MyProfile(),
               ElevatedButton(
                 onPressed: () {
                   context.read<AuthCubit>().signOut();
                 },
                 child: const Text('Sign Out'),
               ),
-              Expanded(
-                child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 4.0,
-                      mainAxisSpacing: 4.0,
-                      childAspectRatio: 1.0,
-                    ),
-                    itemCount: 9,
-                    itemBuilder: (context, index) {
-                      return GridTile(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const MyRecordView()));
-                          },
-                          child: Container(
-                            color: AppColors.neutral[100],
-                            child: Center(
-                              child: Text('Item $index'),
+              GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 4.0,
+                    mainAxisSpacing: 4.0,
+                    childAspectRatio: 1.0,
+                  ),
+                  itemCount: myFeeds.length,
+                  itemBuilder: (context, index) {
+                    return GridTile(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  MyRecordView(initialPage: index),
                             ),
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: CachedNetworkImage(
+                            width: double.infinity,
+                            height: double.infinity,
+                            imageUrl: myFeeds[index].imageUrl!,
+                            fit: BoxFit.cover,
                           ),
                         ),
-                      );
-                    }),
-              ),
+                      ),
+                    );
+                  }),
             ],
-          );
-        },
+          ),
+        ),
       ),
       floatingActionButton: const AddFabButton(),
     );

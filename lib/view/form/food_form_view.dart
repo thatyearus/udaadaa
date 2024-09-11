@@ -29,47 +29,51 @@ class FoodFormView extends StatelessWidget {
             );
           }
         },
-        child: Column(
-          children: [
-            imagePickerWidget(context),
-            AppSpacing.verticalSizedBoxM,
-            // 먹은 음식 내용
-            TextField(
-              controller: foodContentController,
-              decoration: const InputDecoration(labelText: '음식 내용'),
-            ),
-            AppSpacing.verticalSizedBoxM,
-            // 한 줄 평 (공통)
-            TextField(
-              controller: commentController,
-              decoration: const InputDecoration(labelText: '음식 한마디'),
-            ),
-            AppSpacing.verticalSizedBoxL,
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Theme.of(context).primaryColor,
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Theme.of(context).primaryColor),
-                  borderRadius: BorderRadius.circular(12),
+        child: SingleChildScrollView(
+          reverse: true,
+          padding: AppSpacing.edgeInsetsL,
+          child: Column(
+            children: [
+              imagePickerWidget(context),
+              AppSpacing.verticalSizedBoxM,
+              // 먹은 음식 내용
+              TextField(
+                controller: foodContentController,
+                decoration: const InputDecoration(labelText: '음식 내용'),
+              ),
+              AppSpacing.verticalSizedBoxM,
+              // 한 줄 평 (공통)
+              TextField(
+                controller: commentController,
+                decoration: const InputDecoration(labelText: '음식 한마디'),
+              ),
+              AppSpacing.verticalSizedBoxL,
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Theme.of(context).primaryColor),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  minimumSize: const Size(double.infinity, 50),
                 ),
-                minimumSize: const Size(double.infinity, 50),
+                onPressed: () {
+                  context.read<form.FormCubit>().submit(
+                        type: 'FOOD',
+                        review: commentController.text,
+                        mealContent: foodContentController.text,
+                      );
+                },
+                child: Text(
+                  '기록 추가',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                ),
               ),
-              onPressed: () {
-                context.read<form.FormCubit>().submit(
-                      type: 'FOOD',
-                      review: commentController.text,
-                      mealContent: foodContentController.text,
-                    );
-              },
-              child: Text(
-                '기록 추가',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).primaryColor,
-                    ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

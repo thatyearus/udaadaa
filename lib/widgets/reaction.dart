@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:udaadaa/models/image.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
+import 'package:udaadaa/models/reaction.dart';
+import 'package:udaadaa/utils/constant.dart';
 
 class ReactionButtonsContainer extends StatelessWidget {
-  final ImageModel image;
-  final Function(int imgId, String reactionField) onReactionPressed;
+  final String feedId;
+  final bool isMyPage;
 
   const ReactionButtonsContainer({
-    Key? key,
-    required this.image,
-    required this.onReactionPressed,
-  }) : super(key: key);
+    super.key,
+    required this.feedId,
+    required this.isMyPage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +24,41 @@ class ReactionButtonsContainer extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          ReactionButton(imageId: image.id, label: "잘했어요", reactionField: "reaction1", emoji: "😆", onPressed: onReactionPressed),
-          ReactionButton(imageId: image.id, label: "응원해요", reactionField: "reaction2", emoji: "🥳", onPressed: onReactionPressed),
-          ReactionButton(imageId: image.id, label: "흠..", reactionField: "reaction3", emoji: "🧐", onPressed: onReactionPressed),
-          ReactionButton(imageId: image.id, label: "안돼요!", reactionField: "reaction4", emoji: "🙅🏻‍♀️️", onPressed: onReactionPressed),
-          ReactionButton(imageId: image.id, label: "멋져요", reactionField: "reaction5", emoji: "👍🏻", onPressed: onReactionPressed),
+          ReactionButton(
+            feedId: feedId,
+            label: "잘했어요",
+            reactionField: ReactionType.good,
+            emoji: "😆",
+            isMyPage: isMyPage,
+          ),
+          ReactionButton(
+            feedId: feedId,
+            label: "응원해요",
+            reactionField: ReactionType.cheerup,
+            emoji: "🥳",
+            isMyPage: isMyPage,
+          ),
+          ReactionButton(
+            feedId: feedId,
+            label: "흠..",
+            reactionField: ReactionType.hmmm,
+            emoji: "🧐",
+            isMyPage: isMyPage,
+          ),
+          ReactionButton(
+            feedId: feedId,
+            label: "안돼요!",
+            reactionField: ReactionType.nope,
+            emoji: "🙅🏻‍♀️️",
+            isMyPage: isMyPage,
+          ),
+          ReactionButton(
+            feedId: feedId,
+            label: "멋져요",
+            reactionField: ReactionType.awesome,
+            emoji: "👍🏻",
+            isMyPage: isMyPage,
+          ),
         ],
       ),
     );
@@ -34,36 +66,106 @@ class ReactionButtonsContainer extends StatelessWidget {
 }
 
 class ReactionButton extends StatelessWidget {
-  final int imageId;
+  final String feedId;
   final String label;
-  final String reactionField;
+  final ReactionType reactionField;
   final String emoji;
-  final Function(int, String) onPressed;
+  final bool isMyPage;
 
   const ReactionButton({
-    Key? key,
-    required this.imageId,
+    super.key,
+    required this.feedId,
     required this.label,
     required this.reactionField,
     required this.emoji,
-    required this.onPressed,
-  }) : super(key: key);
+    required this.isMyPage, // MyPage 여부 추가
+  });
 
   @override
   Widget build(BuildContext context) {
+    final Iterable<Reaction> reactions =
+        context.select<FeedCubit, Iterable<Reaction>>(
+            (cubit) => cubit.getReaction(feedId, reactionField));
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        IconButton(
-          icon: Text(
-            emoji,
-            style: const TextStyle(fontSize: 46, color: Colors.white), // 이모티콘 색상 흰색
-          ),
-          onPressed: () => onPressed(imageId, reactionField),
+        Stack(
+          alignment: Alignment.topCenter,
+          clipBehavior: Clip.none,
+          children: [
+            // IconButton for Reaction
+            IconButton(
+              icon: Text(
+                emoji,
+                style: const TextStyle(
+                    fontSize: 46, color: Colors.white), // 이모티콘 색상 흰색
+              ),
+              onPressed: () => (!isMyPage
+                  ? context.read<FeedCubit>().addReaction(feedId, reactionField)
+                  : showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Container(
+                          padding: AppSpacing.edgeInsetsM,
+                          width: double.infinity,
+                          color: Colors.white,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text("공감한 사용자",
+                                  style: AppTextStyles.textTheme.titleMedium),
+                              AppSpacing.sizedBoxM,
+                              Divider(
+                                color: AppColors.neutral[300],
+                                thickness: 1,
+                              ),
+                              Flexible(
+                                child: ListView.builder(
+                                  itemCount: reactions.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      title: Text(reactions
+                                              .elementAt(index)
+                                              .profile
+                                              ?.nickname ??
+                                          "no profile"),
+                                      trailing: Text(emoji,
+                                          style: AppTextStyles
+                                              .textTheme.titleMedium),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      })),
+            ),
+            if (isMyPage)
+              Positioned(
+                top: -20,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 4.0, horizontal: 8.0),
+                  decoration: BoxDecoration(
+                    color: AppColors.white.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    '${reactions.length}', // 리액션 수 표시
+                    style: AppTextStyles.textTheme.bodyMedium,
+                  ),
+                ),
+              ),
+          ],
         ),
         Text(
           label,
-          style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold), // 텍스트 색상 흰색
+          style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.bold), // 텍스트 색상 흰색
         ),
       ],
     );
