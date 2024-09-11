@@ -27,6 +27,7 @@ class ReportView extends StatelessWidget {
           return context.read<ProfileCubit>().getMyTodayReport();
         },
         child: SingleChildScrollView(
+          padding: AppSpacing.edgeInsetsL,
           physics: const AlwaysScrollableScrollPhysics(),
           child: SizedBox(
             width: double.infinity,

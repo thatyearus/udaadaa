@@ -27,6 +27,7 @@ class HomeView extends StatelessWidget {
           ]);
         },
         child: SingleChildScrollView(
+          padding: AppSpacing.edgeInsetsL,
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(children: [
             GestureDetector(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
+import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/widgets/fab.dart';
 import 'package:udaadaa/widgets/my_profile.dart';
@@ -46,6 +47,7 @@ class MyPageView extends StatelessWidget {
       body: RefreshIndicator(
         onRefresh: () => context.read<FeedCubit>().fetchMyFeeds(),
         child: SingleChildScrollView(
+          padding: AppSpacing.edgeInsetsL,
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
