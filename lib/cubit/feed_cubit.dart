@@ -14,19 +14,26 @@ class FeedCubit extends Cubit<FeedState> {
   late final StreamSubscription authSubscription;
   List<Feed> _myFeeds = [];
   List<Feed> _feeds = [];
+  List<List<Feed>> _homeFeeds = [[], [], []];
   List<String> _blockedFeedIds = [];
   final int _limit = 10;
   int _curFeedPage = 0;
 
   FeedCubit(this.authCubit) : super(FeedInitial()) {
     if (authCubit.state is Authenticated) {
-      fetchBlockedFeed().then((_) => _getFeeds());
+      fetchBlockedFeed().then((_) {
+        fetchHomeFeeds();
+        _getFeeds();
+      });
       fetchMyFeeds();
     }
 
     authSubscription = authCubit.stream.listen((authState) {
       if (authState is Authenticated) {
-        fetchBlockedFeed().then((_) => _getFeeds());
+        fetchBlockedFeed().then((_) {
+          fetchHomeFeeds();
+          _getFeeds();
+        });
         fetchMyFeeds();
       } else {
         _feeds = [];
@@ -52,6 +59,38 @@ class FeedCubit extends Cubit<FeedState> {
       _blockedFeedIds = blockedFeedIds.toList();
     } catch (e) {
       logger.e(e);
+    }
+  }
+
+  Future<void> fetchHomeFeeds() async {
+    try {
+      final data = await supabase
+          .from('random_feed')
+          .select('*, profiles(*)')
+          .not('id', 'in', _blockedFeedIds.toList())
+          .limit(_limit);
+      final imagePaths =
+          data.map((item) => item['image_path'] as String).toList();
+      final signedUrls = await supabase.storage
+          .from('FeedImages')
+          .createSignedUrls(imagePaths, 3600);
+
+      if (data.isEmpty) {
+        logger.e("No data");
+        throw "No data";
+      } else {
+        _homeFeeds = [[], [], []];
+        for (var i = 0; i < data.length; i++) {
+          final item = data[i];
+          item['image_url'] = signedUrls[i].signedUrl;
+          _homeFeeds[i % _homeFeeds.length].add(Feed.fromMap(map: item));
+        }
+        logger.d(_homeFeeds);
+        emit(FeedLoaded());
+      }
+    } catch (e) {
+      logger.e(e);
+      emit(FeedError());
     }
   }
 
@@ -162,4 +201,5 @@ class FeedCubit extends Cubit<FeedState> {
 
   List<Feed> get getMyFeeds => _myFeeds;
   List<Feed> get getFeeds => _feeds;
+  List<List<Feed>> get getHomeFeeds => _homeFeeds;
 }
