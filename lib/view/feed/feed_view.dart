@@ -11,7 +11,7 @@ class FeedView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
         // leading: IconButton(
         //   icon: const Icon(Icons.arrow_back, color: Colors.white),
         //   onPressed: () {

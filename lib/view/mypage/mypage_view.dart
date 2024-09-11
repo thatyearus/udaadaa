@@ -71,8 +71,12 @@ class MyPageView extends StatelessWidget {
                     return GridTile(
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const MyRecordView()));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  MyRecordView(initialPage: index),
+                            ),
+                          );
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
