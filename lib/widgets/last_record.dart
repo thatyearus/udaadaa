@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class LastRecord extends StatelessWidget {
@@ -17,6 +18,21 @@ class LastRecord extends StatelessWidget {
     final year = (date != null) ? date.year : "";
     final month = (date != null) ? date.month : "";
     final day = (date != null) ? date.day : "";
+
+    int countReaction(ReactionType reactionType) {
+      return myFeedRecord.isEmpty || myFeedRecord[0].reaction == null
+          ? 0
+          : myFeedRecord[0]
+              .reaction!
+              .where((element) => element.type == reactionType)
+              .length;
+    }
+
+    final reaction1 = countReaction(ReactionType.good);
+    final reaction2 = countReaction(ReactionType.cheerup);
+    final reaction3 = countReaction(ReactionType.hmmm);
+    final reaction4 = countReaction(ReactionType.nope);
+    final reaction5 = countReaction(ReactionType.awesome);
 
     return myFeedRecord.isEmpty
         ? const Center(child: CircularProgressIndicator())
@@ -78,33 +94,38 @@ class LastRecord extends StatelessWidget {
                     Column(
                       children: [
                         Text("😆", style: AppTextStyles.textTheme.displayLarge),
-                        Text("32", style: AppTextStyles.textTheme.bodyLarge),
+                        Text('$reaction1',
+                            style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                     Column(
                       children: [
                         Text("🥳", style: AppTextStyles.textTheme.displayLarge),
-                        Text("32", style: AppTextStyles.textTheme.bodyLarge),
+                        Text('$reaction2',
+                            style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                     Column(
                       children: [
                         Text("🧐", style: AppTextStyles.textTheme.displayLarge),
-                        Text("32", style: AppTextStyles.textTheme.bodyLarge),
+                        Text('$reaction3',
+                            style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                     Column(
                       children: [
                         Text("🙅🏻‍♀️",
                             style: AppTextStyles.textTheme.displayLarge),
-                        Text("32", style: AppTextStyles.textTheme.bodyLarge),
+                        Text('$reaction4',
+                            style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                     Column(
                       children: [
                         Text("👍🏻",
                             style: AppTextStyles.textTheme.displayLarge),
-                        Text("32", style: AppTextStyles.textTheme.bodyLarge),
+                        Text('$reaction5',
+                            style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                   ],
