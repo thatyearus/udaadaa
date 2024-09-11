@@ -40,8 +40,8 @@ class Reaction {
         createdAt = DateTime.parse(map['created_at'] as String),
         type = ReactionType.values.firstWhere((e) => e.name == map['type']),
         feedId = map['feed_id'] as String,
-        profile = map['profile'] != null
-            ? Profile.fromMap(map: map['profile'] as Map<String, dynamic>)
+        profile = map['profiles'] != null
+            ? Profile.fromMap(map: map['profiles'] as Map<String, dynamic>)
             : null;
 
   Reaction copyWith({
