@@ -34,7 +34,7 @@ class Reaction {
   })  : id = map['id'] as String,
         userId = map['user_id'] as String,
         createdAt = DateTime.parse(map['created_at'] as String),
-        type = map['type'] as ReactionType,
+        type = ReactionType.values.firstWhere((e) => e.name == map['type']),
         feedId = map['feed_id'] as String;
 
   Reaction copyWith({
