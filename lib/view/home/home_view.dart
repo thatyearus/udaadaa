@@ -77,7 +77,8 @@ class HomeView extends StatelessWidget {
                           child: GestureDetector(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const RecordView()));
+                                  builder: (context) =>
+                                      RecordView(stackIndex: index)));
                             },
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),

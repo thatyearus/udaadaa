@@ -1,36 +1,71 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
+import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/widgets/feed.dart';
 
 class RecordView extends StatelessWidget {
-  const RecordView({super.key});
+  final int stackIndex;
+  const RecordView({super.key, required this.stackIndex});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.black,
       appBar: AppBar(
-        actions: [
-          PopupMenuButton(
-            itemBuilder: (context) {
-              return [
-                const PopupMenuItem(
-                  value: 'block_content',
-                  child: Text('컨텐츠 차단'),
-                ),
-              ];
-            },
-            onSelected: (value) {
-              switch (value) {
-                case 'block_content':
-                  // TODO: 컨텐츠 차단 기능 구현
-                  break;
-              }
-            },
-            icon: const Icon(Icons.more_vert_rounded),
-          ),
-        ],
+        backgroundColor: Colors.transparent,
+        foregroundColor: AppColors.white,
       ),
-      body: const Center(
-        child: Text('Record View'),
+      body: Center(
+        child: MyFeedPageView(stackIndex: stackIndex),
       ),
     );
+  }
+}
+
+class MyFeedPageView extends StatefulWidget {
+  final int stackIndex;
+  const MyFeedPageView({
+    super.key,
+    required this.stackIndex,
+  });
+
+  @override
+  FeedPageViewState createState() => FeedPageViewState();
+}
+
+class FeedPageViewState extends State<MyFeedPageView> {
+  final PageController _pageController = PageController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final feeds = context.select<FeedCubit, List<List<Feed>>>(
+        (cubit) => cubit.getHomeFeeds)[widget.stackIndex];
+    if (feeds.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return PageView.builder(
+        controller: _pageController,
+        itemCount: feeds.length,
+        scrollDirection: Axis.vertical,
+        itemBuilder: (context, index) {
+          final feed = feeds[index];
+          return ImageCard(
+            feed: feed,
+          );
+        });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 }
