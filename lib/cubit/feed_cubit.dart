@@ -9,12 +9,26 @@ part 'feed_state.dart';
 class FeedCubit extends Cubit<FeedState> {
   List<Feed> _myFeeds = [];
   List<Feed> _feeds = [];
+  List<String> _blockedFeedIds = [];
   final int _limit = 10;
   int _curFeedPage = 0;
 
   FeedCubit() : super(FeedInitial()) {
-    _getFeeds();
+    fetchBlockedFeed().then((_) => _getFeeds());
     fetchMyFeeds();
+  }
+
+  Future<void> fetchBlockedFeed() async {
+    try {
+      final data = await supabase
+          .from('blocked_feed')
+          .select('feed_id')
+          .eq('user_id', supabase.auth.currentUser!.id);
+      final blockedFeedIds = data.map((item) => item['feed_id'] as String);
+      _blockedFeedIds = blockedFeedIds.toList();
+    } catch (e) {
+      logger.e(e);
+    }
   }
 
   Future<void> _getFeeds({bool loadMore = false}) async {
@@ -22,6 +36,7 @@ class FeedCubit extends Cubit<FeedState> {
       final data = await supabase
           .from('random_feed')
           .select('*, profiles(*)')
+          .not('id', 'in', _blockedFeedIds.toList())
           .limit(_limit);
       logger.d(data);
       final imagePaths =
