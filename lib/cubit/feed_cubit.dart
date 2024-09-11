@@ -182,9 +182,10 @@ class FeedCubit extends Cubit<FeedState> {
     try {
       final data = await supabase
           .from('feed')
-          .select('*, profiles(*), reactions(*)')
+          .select('*, profiles(*), reactions(*, profiles(*))')
           .eq('user_id', supabase.auth.currentUser!.id)
           .order('created_at', ascending: false);
+      logger.d(data);
       final imagePaths =
           data.map((item) => item['image_path'] as String).toList();
       final signedUrls = await supabase.storage
@@ -262,7 +263,7 @@ class FeedCubit extends Cubit<FeedState> {
   List<Feed> get getFeeds => _feeds;
   List<List<Feed>> get getHomeFeeds => _homeFeeds;
 
-  int getReactionCount(String feedId, ReactionType reactionField) {
+  int getReaction(String feedId, ReactionType reactionField) {
     final feed = _myFeeds.firstWhere((feed) => feed.id == feedId);
     return feed.reaction
             ?.where((reaction) => reaction.type == reactionField)

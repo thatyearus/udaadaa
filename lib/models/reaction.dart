@@ -1,3 +1,5 @@
+import 'package:udaadaa/models/profile.dart';
+
 enum ReactionType {
   good,
   cheerup,
@@ -13,6 +15,7 @@ class Reaction {
     this.createdAt,
     required this.feedId,
     required this.type,
+    this.profile,
   });
 
   final String? id;
@@ -20,6 +23,7 @@ class Reaction {
   final DateTime? createdAt;
   final String feedId;
   final ReactionType type;
+  final Profile? profile;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -35,7 +39,10 @@ class Reaction {
         userId = map['user_id'] as String,
         createdAt = DateTime.parse(map['created_at'] as String),
         type = ReactionType.values.firstWhere((e) => e.name == map['type']),
-        feedId = map['feed_id'] as String;
+        feedId = map['feed_id'] as String,
+        profile = map['profile'] != null
+            ? Profile.fromMap(map: map['profile'] as Map<String, dynamic>)
+            : null;
 
   Reaction copyWith({
     String? id,
