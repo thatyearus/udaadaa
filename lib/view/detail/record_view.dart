@@ -18,15 +18,15 @@ class RecordView extends StatelessWidget {
         foregroundColor: AppColors.white,
       ),
       body: Center(
-        child: MyFeedPageView(stackIndex: stackIndex),
+        child: DetailFeedPageView(stackIndex: stackIndex),
       ),
     );
   }
 }
 
-class MyFeedPageView extends StatefulWidget {
+class DetailFeedPageView extends StatefulWidget {
   final int stackIndex;
-  const MyFeedPageView({
+  const DetailFeedPageView({
     super.key,
     required this.stackIndex,
   });
@@ -35,7 +35,7 @@ class MyFeedPageView extends StatefulWidget {
   FeedPageViewState createState() => FeedPageViewState();
 }
 
-class FeedPageViewState extends State<MyFeedPageView> {
+class FeedPageViewState extends State<DetailFeedPageView> {
   final PageController _pageController = PageController();
 
   @override
