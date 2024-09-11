@@ -90,7 +90,6 @@ class FeedCubit extends Cubit<FeedState> {
           userId: supabase.auth.currentUser!.id,
           feedId: feedId,
           type: reaction);
-      logger.d(newReaction.toMap());
       await supabase
           .from('reactions')
           .upsert(newReaction.toMap(), onConflict: "user_id, feed_id");
@@ -108,8 +107,6 @@ class FeedCubit extends Cubit<FeedState> {
       await supabase.from('blocked_feed').upsert(
           {'user_id': supabase.auth.currentUser!.id, 'feed_id': feedId},
           onConflict: 'user_id, feed_id');
-      _feeds.removeWhere((element) => element.id == feedId);
-      emit(FeedLoaded());
     } catch (e) {
       logger.e(e);
     }
@@ -117,7 +114,11 @@ class FeedCubit extends Cubit<FeedState> {
 
   void blockFeedPage() {
     final feedId = _feeds[_curFeedPage].id!;
-    blockFeed(feedId);
+    blockFeed(feedId).then(
+      (_) {
+        getMoreFeeds().then((_) => _feeds.removeAt(_curFeedPage));
+      },
+    );
   }
 
   List<Feed> get getMyFeeds => _myFeeds;
