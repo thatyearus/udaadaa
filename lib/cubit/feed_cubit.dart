@@ -94,6 +94,39 @@ class FeedCubit extends Cubit<FeedState> {
     }
   }
 
+  Future<void> getMoreHomeFeeds(int index) async {
+    logger.d("Get more home feeds index: $index");
+    try {
+      final data = await supabase
+          .from('random_feed')
+          .select('*, profiles(*)')
+          .not('id', 'in', _blockedFeedIds.toList())
+          .limit(_limit);
+      final imagePaths =
+          data.map((item) => item['image_path'] as String).toList();
+      final signedUrls = await supabase.storage
+          .from('FeedImages')
+          .createSignedUrls(imagePaths, 3600);
+
+      if (data.isEmpty) {
+        logger.e("No data");
+        throw "No data";
+      } else {
+        List<Feed> newFeeds = [];
+        for (var i = 0; i < data.length; i++) {
+          final item = data[i];
+          item['image_url'] = signedUrls[i].signedUrl;
+          newFeeds.add(Feed.fromMap(map: item));
+        }
+        _homeFeeds[index] = [..._homeFeeds[index], ...newFeeds];
+        emit(FeedLoaded());
+      }
+    } catch (e) {
+      logger.e(e);
+      emit(FeedError());
+    }
+  }
+
   Future<void> _getFeeds({bool loadMore = false}) async {
     try {
       final data = await supabase

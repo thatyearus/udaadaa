@@ -41,17 +41,26 @@ class FeedPageViewState extends State<MyFeedPageView> {
   @override
   void initState() {
     super.initState();
+    _pageController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_pageController.position.pixels >=
+        _pageController.position.maxScrollExtent) {
+      context.read<FeedCubit>().getMoreHomeFeeds(widget.stackIndex);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final feeds = context.select<FeedCubit, List<List<Feed>>>(
-        (cubit) => cubit.getHomeFeeds)[widget.stackIndex];
+    final feeds = context.select<FeedCubit, List<Feed>>(
+        (cubit) => cubit.getHomeFeeds[widget.stackIndex]);
     if (feeds.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
 
     return PageView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
         controller: _pageController,
         itemCount: feeds.length,
         scrollDirection: Axis.vertical,
