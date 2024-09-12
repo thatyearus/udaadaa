@@ -22,6 +22,15 @@ class FormCubit extends Cubit<FormState> {
     'WEIGHT': null,
   };
 
+  final List<bool> _mealSelection = [true, false, false, false];
+
+  void updateMealSelection(int index) {
+    for (int i = 0; i < _mealSelection.length; i++) {
+      _mealSelection[i] = i == index;
+    }
+    emit(FormInitial());
+  }
+
   Future<void> updateImage(String type) async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedFile =
@@ -231,4 +240,5 @@ class FormCubit extends Cubit<FormState> {
   }
 
   Map<String, XFile?> get selectedImages => _selectedImages;
+  List<bool> get mealSelection => _mealSelection;
 }
