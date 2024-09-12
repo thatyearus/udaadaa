@@ -35,7 +35,10 @@ class MyApp extends StatelessWidget {
             context.read<AuthCubit>(),
           ),
         ),
-        BlocProvider<FormCubit>(create: (context) => FormCubit()),
+        BlocProvider<FormCubit>(
+            create: (context) => FormCubit(
+                  context.read<ProfileCubit>(),
+                )),
         BlocProvider<FeedCubit>(
           create: (context) => FeedCubit(
             context.read<AuthCubit>(),

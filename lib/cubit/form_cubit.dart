@@ -6,6 +6,7 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/report.dart';
@@ -14,13 +15,38 @@ import 'package:udaadaa/utils/constant.dart';
 part 'form_state.dart';
 
 class FormCubit extends Cubit<FormState> {
-  FormCubit() : super(FormInitial());
+  ProfileCubit profileCubit;
+  FormCubit(
+    this.profileCubit,
+  ) : super(FormInitial());
 
   final Map<String, XFile?> _selectedImages = {
     'FOOD': null,
     'EXERCISE': null,
     'WEIGHT': null,
   };
+
+  List<bool> _mealSelection = [true, false, false, false];
+  FeedType _feedType = FeedType.breakfast;
+
+  void updateMealSelection(int index) {
+    _mealSelection = List.generate(_mealSelection.length, (i) => i == index);
+    switch (index) {
+      case 0:
+        _feedType = FeedType.breakfast;
+        break;
+      case 1:
+        _feedType = FeedType.lunch;
+        break;
+      case 2:
+        _feedType = FeedType.dinner;
+        break;
+      case 3:
+        _feedType = FeedType.snack;
+        break;
+    }
+    emit(FormInitial());
+  }
 
   Future<void> updateImage(String type) async {
     final ImagePicker picker = ImagePicker();
@@ -84,18 +110,18 @@ class FormCubit extends Cubit<FormState> {
     }
   }
 
-  Future<void> submit({
-    required String type,
-    required String review,
-    String? mealType,
-    String? weight,
-    String? exerciseTime,
-    String? mealContent,
-  }) async {
+  Future<void> submit(
+      {required FeedType type,
+      required String review,
+      String? mealType,
+      String? weight,
+      String? exerciseTime,
+      String? mealContent,
+      required String contentType}) async {
     try {
       logger.d("submitting form");
       emit(FormLoading());
-      String? imagePath = await uploadImage(type);
+      String? imagePath = await uploadImage(contentType);
       if (imagePath == null) {
         emit(FormError('Failed to upload image'));
         return;
@@ -111,6 +137,7 @@ class FormCubit extends Cubit<FormState> {
       updateReport(
         type: type,
         review: review,
+        contentType: contentType,
         mealType: mealType,
         weight: weight,
         exerciseTime: exerciseTime,
@@ -123,17 +150,23 @@ class FormCubit extends Cubit<FormState> {
   }
 
   Future<void> updateReport({
-    required String type,
+    required FeedType type,
     required String review,
+    required String contentType,
     String? mealType,
     String? weight,
     String? exerciseTime,
     String? mealContent,
   }) async {
     try {
+      await profileCubit.getMyTodayReport();
+      final Report? prevReport = profileCubit.getReport;
       switch (type) {
-        case 'FOOD':
-          final String? base64String = await getBase64Image(type);
+        case FeedType.breakfast:
+        case FeedType.lunch:
+        case FeedType.dinner:
+        case FeedType.snack:
+          final String? base64String = await getBase64Image('FOOD');
           if (base64String == null) {
             emit(FormError('Failed to get base64 image'));
             return;
@@ -150,26 +183,37 @@ class FormCubit extends Cubit<FormState> {
           final Report report = Report(
             userId: supabase.auth.currentUser!.id,
             date: DateTime.now(),
-            breakfast: calorie.totalCalories,
+            breakfast: type == FeedType.breakfast
+                ? (prevReport?.breakfast ?? 0) + calorie.totalCalories
+                : null,
+            lunch: type == FeedType.lunch
+                ? (prevReport?.lunch ?? 0) + calorie.totalCalories
+                : null,
+            dinner: type == FeedType.dinner
+                ? (prevReport?.dinner ?? 0) + calorie.totalCalories
+                : null,
+            snack: type == FeedType.snack
+                ? (prevReport?.snack ?? 0) + calorie.totalCalories
+                : null,
           );
           await supabase
               .from('report')
               .upsert(report.toMap(), onConflict: 'user_id, date');
           break;
-        case 'EXERCISE':
+        case FeedType.exercise:
           final int exerciseValue = int.parse(exerciseTime!);
           logger.d(
               "${supabase.auth.currentUser!.id} $exerciseValue ${DateTime.now()}");
           final Report report = Report(
             userId: supabase.auth.currentUser!.id,
             date: DateTime.now(),
-            exercise: exerciseValue,
+            exercise: (prevReport?.exercise ?? 0) + exerciseValue,
           );
           await supabase
               .from('report')
               .upsert(report.toMap(), onConflict: 'user_id, date');
           break;
-        case 'WEIGHT':
+        case FeedType.weight:
           final double weightValue = double.parse(weight!);
           logger.d(
               "${supabase.auth.currentUser!.id} $weightValue ${DateTime.now()}");
@@ -183,7 +227,7 @@ class FormCubit extends Cubit<FormState> {
               .upsert(report.toMap(), onConflict: 'user_id, date');
           break;
       }
-      selectedImages[type] = null;
+      selectedImages[contentType] = null;
     } catch (e) {
       logger.e(e);
       emit(FormError(e.toString()));
@@ -231,4 +275,6 @@ class FormCubit extends Cubit<FormState> {
   }
 
   Map<String, XFile?> get selectedImages => _selectedImages;
+  List<bool> get mealSelection => _mealSelection;
+  FeedType get feedType => _feedType;
 }
