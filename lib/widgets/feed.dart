@@ -1,53 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:udaadaa/models/image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
+import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/widgets/reaction.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FeedPageView extends StatefulWidget {
-  final List<ImageModel> images;
-
   const FeedPageView({
-    Key? key,
-    required this.images,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
-  _FeedPageViewState createState() => _FeedPageViewState();
+  FeedPageViewState createState() => FeedPageViewState();
 }
 
-class _FeedPageViewState extends State<FeedPageView> {
+class FeedPageViewState extends State<FeedPageView> {
   final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
+    final feeds =
+        context.select<FeedCubit, List<Feed>>((cubit) => cubit.getFeeds);
+    if (feeds.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return PageView.builder(
         controller: _pageController,
-        itemCount: widget.images.length,
+        itemCount: feeds.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
-          final image = widget.images[index];
+          final feed = feeds[index];
+          context.read<FeedCubit>().changePage(index);
           return ImageCard(
-            image: image,
-            onReactionPressed: _addReaction,
+            feed: feed,
+            isMyPage: false,
           );
-        }
-    );
-  }
-
-  Future<void> _addReaction(int img_id, String reaction) async {
-    final supabase = Supabase.instance.client;
-    final data = await supabase
-        .from('images')
-        .select(reaction)
-        .eq('id', img_id)
-        .single();
-    print(data.values.first);
-
-    await supabase
-        .from('images')
-        .update({ reaction: data.values.first+1})
-        .eq('id', img_id);
+        });
   }
 
   @override
@@ -57,30 +46,20 @@ class _FeedPageViewState extends State<FeedPageView> {
   }
 }
 
+class ImageCard extends StatelessWidget {
+  final Feed feed;
+  final bool isMyPage;
 
-class ImageCard extends StatefulWidget {
-  final ImageModel image;
-  final Function(int imgId, String reactionField) onReactionPressed;
+  const ImageCard({super.key, required this.feed, required this.isMyPage});
 
-  const ImageCard({
-    Key? key,
-    required this.image,
-    required this.onReactionPressed,
-  }) : super(key: key);
-
-  @override
-  _ImageCardState createState() => _ImageCardState();
-}
-
-class _ImageCardState extends State<ImageCard> {
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ImageDisplay(imageUrl: widget.image.imgUrl),
+        ImageDisplay(imageUrl: feed.imageUrl!),
         ReactionButtonsOverlay(
-          image: widget.image,
-          onReactionPressed: widget.onReactionPressed,
+          feed: feed,
+          isMyPage: isMyPage,
         ),
         Align(
           alignment: Alignment.bottomLeft,
@@ -91,7 +70,7 @@ class _ImageCardState extends State<ImageCard> {
               mainAxisSize: MainAxisSize.min, // Column 크기 최소화
               children: [
                 Text(
-                  '맛있는건 착하다', // 작성자 정보
+                  feed.profile!.nickname, // 작성자 정보
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -100,7 +79,7 @@ class _ImageCardState extends State<ImageCard> {
                 ),
                 const SizedBox(height: 8), // 작성자와 제목 사이의 간격
                 Text(
-                  '#아침 너무 맛있어서 미치겠읍니다 !', // 제목 정보
+                  feed.review, // 제목 정보
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 15,
@@ -118,7 +97,7 @@ class _ImageCardState extends State<ImageCard> {
 class ImageDisplay extends StatelessWidget {
   final String imageUrl;
 
-  const ImageDisplay({Key? key, required this.imageUrl}) : super(key: key);
+  const ImageDisplay({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -128,28 +107,24 @@ class ImageDisplay extends StatelessWidget {
         imageUrl: imageUrl,
         width: double.infinity,
         height: double.infinity,
-        placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-        errorWidget: (context, url, error) => Icon(Icons.error),
+        placeholder: (context, url) =>
+            const Center(child: CircularProgressIndicator()),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
       ),
     );
   }
 }
 
-class ReactionButtonsOverlay extends StatefulWidget {
-  final ImageModel image;
-  final Function(int imgId, String reactionField) onReactionPressed;
+class ReactionButtonsOverlay extends StatelessWidget {
+  final Feed feed;
+  final bool isMyPage;
 
   const ReactionButtonsOverlay({
-    Key? key,
-    required this.image,
-    required this.onReactionPressed,
-  }) : super(key: key);
+    super.key,
+    required this.feed,
+    required this.isMyPage,
+  });
 
-  @override
-  _ReactionButtonsOverlayState createState() => _ReactionButtonsOverlayState();
-}
-
-class _ReactionButtonsOverlayState extends State<ReactionButtonsOverlay> {
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -157,8 +132,8 @@ class _ReactionButtonsOverlayState extends State<ReactionButtonsOverlay> {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 90.0),
         child: ReactionButtonsContainer(
-          image: widget.image,
-          onReactionPressed: widget.onReactionPressed,
+          feedId: feed.id!,
+          isMyPage: isMyPage,
         ),
       ),
     );

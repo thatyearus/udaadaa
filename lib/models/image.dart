@@ -1,5 +1,5 @@
 class ImageModel {
-  final int id;
+  final String id;
   final String imgUrl;
 
   ImageModel({
@@ -9,9 +9,8 @@ class ImageModel {
 
   ImageModel.fromMap({
     required Map<String, dynamic> map,
-  })
-      : id = map['id'] as int,
-        imgUrl= map['img_url'] as String;
+  })  : id = map['id'] as String,
+        imgUrl = map['img_url'] as String;
 
   Map<String, dynamic> toMap() {
     return {
@@ -19,15 +18,14 @@ class ImageModel {
       'img_url': imgUrl,
     };
   }
-  ImageModel copyWith({
-    int? id,
-    String? imgUrl,
 
+  ImageModel copyWith({
+    String? id,
+    String? imgUrl,
   }) {
     return ImageModel(
       id: id ?? this.id,
       imgUrl: imgUrl ?? this.imgUrl,
-
     );
   }
 }

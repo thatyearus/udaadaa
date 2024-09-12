@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -34,8 +35,11 @@ class MyApp extends StatelessWidget {
             context.read<AuthCubit>(),
           ),
         ),
-        BlocProvider<FormCubit>(
-          create: (context) => FormCubit(),
+        BlocProvider<FormCubit>(create: (context) => FormCubit()),
+        BlocProvider<FeedCubit>(
+          create: (context) => FeedCubit(
+            context.read<AuthCubit>(),
+          ),
         ),
       ],
       child: MaterialApp(
