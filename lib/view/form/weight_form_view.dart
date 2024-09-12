@@ -66,6 +66,8 @@ class WeightFormView extends StatelessWidget {
                         review: commentController.text,
                         weight: weightContentController.text,
                       );
+                  commentController.clear();
+                  weightContentController.clear();
                 },
                 child: Text(
                   '기록 추가',

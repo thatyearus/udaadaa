@@ -71,6 +71,8 @@ class FoodFormView extends StatelessWidget {
                         review: commentController.text,
                         mealContent: foodContentController.text,
                       );
+                  commentController.clear();
+                  foodContentController.clear();
                 },
                 child: Text(
                   '기록 추가',

@@ -66,6 +66,8 @@ class ExerciseFormView extends StatelessWidget {
                         review: commentController.text,
                         exerciseTime: exerciseContentController.text,
                       );
+                  commentController.clear();
+                  exerciseContentController.clear();
                 },
                 child: Text(
                   '기록 추가',
