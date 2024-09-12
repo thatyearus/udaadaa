@@ -14,7 +14,9 @@ class FoodFormView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        surfaceTintColor: AppColors.white,
+      ),
       body: BlocListener<form.FormCubit, form.FormState>(
         listener: (context, state) {
           if (state is form.FormSuccess) {
