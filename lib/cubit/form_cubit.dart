@@ -6,6 +6,7 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/report.dart';
@@ -14,7 +15,10 @@ import 'package:udaadaa/utils/constant.dart';
 part 'form_state.dart';
 
 class FormCubit extends Cubit<FormState> {
-  FormCubit() : super(FormInitial());
+  ProfileCubit profileCubit;
+  FormCubit(
+    this.profileCubit,
+  ) : super(FormInitial());
 
   final Map<String, XFile?> _selectedImages = {
     'FOOD': null,
@@ -155,6 +159,8 @@ class FormCubit extends Cubit<FormState> {
     String? mealContent,
   }) async {
     try {
+      await profileCubit.getMyTodayReport();
+      final Report? prevReport = profileCubit.getReport;
       switch (type) {
         case FeedType.breakfast:
         case FeedType.lunch:
@@ -194,7 +200,7 @@ class FormCubit extends Cubit<FormState> {
           final Report report = Report(
             userId: supabase.auth.currentUser!.id,
             date: DateTime.now(),
-            exercise: exerciseValue,
+            exercise: (prevReport?.exercise ?? 0) + exerciseValue,
           );
           await supabase
               .from('report')
