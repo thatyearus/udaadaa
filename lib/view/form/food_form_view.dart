@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
+import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class FoodFormView extends StatelessWidget {
@@ -63,8 +64,11 @@ class FoodFormView extends StatelessWidget {
                   minimumSize: const Size(double.infinity, 50),
                 ),
                 onPressed: () {
+                  FeedType cur = context.read<form.FormCubit>().feedType;
+                  logger.d(cur);
                   context.read<form.FormCubit>().submit(
-                        type: 'FOOD',
+                        type: cur,
+                        contentType: 'FOOD',
                         review: commentController.text,
                         mealContent: foodContentController.text,
                       );

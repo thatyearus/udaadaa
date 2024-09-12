@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
+import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class WeightFormView extends StatelessWidget {
@@ -60,7 +61,8 @@ class WeightFormView extends StatelessWidget {
                 ),
                 onPressed: () {
                   context.read<form.FormCubit>().submit(
-                        type: 'WEIGHT',
+                        type: FeedType.weight,
+                        contentType: 'WEIGHT',
                         review: commentController.text,
                         weight: weightContentController.text,
                       );

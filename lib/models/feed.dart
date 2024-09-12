@@ -1,6 +1,15 @@
 import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/models/reaction.dart';
 
+enum FeedType {
+  breakfast,
+  lunch,
+  dinner,
+  snack,
+  exercise,
+  weight,
+}
+
 class Feed {
   Feed({
     this.id,
@@ -18,7 +27,7 @@ class Feed {
   final String userId;
   final DateTime? createdAt;
   final String review;
-  final String type;
+  final FeedType type;
   final String imagePath;
   final String? imageUrl;
   final Profile? profile;
@@ -28,7 +37,7 @@ class Feed {
     return <String, dynamic>{
       'user_id': userId,
       'review': review,
-      'type': type,
+      'type': type.name,
       'image_path': imagePath,
     };
   }
@@ -39,7 +48,7 @@ class Feed {
         userId = map['user_id'] as String,
         createdAt = DateTime.parse(map['created_at'] as String),
         review = map['review'] as String,
-        type = map['type'] as String,
+        type = FeedType.values.firstWhere((e) => e.name == map['type']),
         imagePath = map['image_path'] as String,
         imageUrl = map['image_url'] as String,
         profile = Profile.fromMap(map: map['profiles']),
@@ -55,7 +64,7 @@ class Feed {
     String? userId,
     DateTime? createdAt,
     String? review,
-    String? type,
+    FeedType? type,
     String? imagePath,
     String? imageUrl,
     Profile? profile,

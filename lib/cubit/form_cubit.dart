@@ -22,11 +22,24 @@ class FormCubit extends Cubit<FormState> {
     'WEIGHT': null,
   };
 
-  final List<bool> _mealSelection = [true, false, false, false];
+  List<bool> _mealSelection = [true, false, false, false];
+  FeedType _feedType = FeedType.breakfast;
 
   void updateMealSelection(int index) {
-    for (int i = 0; i < _mealSelection.length; i++) {
-      _mealSelection[i] = i == index;
+    _mealSelection = List.generate(_mealSelection.length, (i) => i == index);
+    switch (index) {
+      case 0:
+        _feedType = FeedType.breakfast;
+        break;
+      case 1:
+        _feedType = FeedType.lunch;
+        break;
+      case 2:
+        _feedType = FeedType.dinner;
+        break;
+      case 3:
+        _feedType = FeedType.snack;
+        break;
     }
     emit(FormInitial());
   }
@@ -93,18 +106,18 @@ class FormCubit extends Cubit<FormState> {
     }
   }
 
-  Future<void> submit({
-    required String type,
-    required String review,
-    String? mealType,
-    String? weight,
-    String? exerciseTime,
-    String? mealContent,
-  }) async {
+  Future<void> submit(
+      {required FeedType type,
+      required String review,
+      String? mealType,
+      String? weight,
+      String? exerciseTime,
+      String? mealContent,
+      required String contentType}) async {
     try {
       logger.d("submitting form");
       emit(FormLoading());
-      String? imagePath = await uploadImage(type);
+      String? imagePath = await uploadImage(contentType);
       if (imagePath == null) {
         emit(FormError('Failed to upload image'));
         return;
@@ -120,6 +133,7 @@ class FormCubit extends Cubit<FormState> {
       updateReport(
         type: type,
         review: review,
+        contentType: contentType,
         mealType: mealType,
         weight: weight,
         exerciseTime: exerciseTime,
@@ -132,8 +146,9 @@ class FormCubit extends Cubit<FormState> {
   }
 
   Future<void> updateReport({
-    required String type,
+    required FeedType type,
     required String review,
+    required String contentType,
     String? mealType,
     String? weight,
     String? exerciseTime,
@@ -141,8 +156,11 @@ class FormCubit extends Cubit<FormState> {
   }) async {
     try {
       switch (type) {
-        case 'FOOD':
-          final String? base64String = await getBase64Image(type);
+        case FeedType.breakfast:
+        case FeedType.lunch:
+        case FeedType.dinner:
+        case FeedType.snack:
+          final String? base64String = await getBase64Image('FOOD');
           if (base64String == null) {
             emit(FormError('Failed to get base64 image'));
             return;
@@ -159,13 +177,17 @@ class FormCubit extends Cubit<FormState> {
           final Report report = Report(
             userId: supabase.auth.currentUser!.id,
             date: DateTime.now(),
-            breakfast: calorie.totalCalories,
+            breakfast:
+                type == FeedType.breakfast ? calorie.totalCalories : null,
+            lunch: type == FeedType.lunch ? calorie.totalCalories : null,
+            dinner: type == FeedType.dinner ? calorie.totalCalories : null,
+            snack: type == FeedType.snack ? calorie.totalCalories : null,
           );
           await supabase
               .from('report')
               .upsert(report.toMap(), onConflict: 'user_id, date');
           break;
-        case 'EXERCISE':
+        case FeedType.exercise:
           final int exerciseValue = int.parse(exerciseTime!);
           logger.d(
               "${supabase.auth.currentUser!.id} $exerciseValue ${DateTime.now()}");
@@ -178,7 +200,7 @@ class FormCubit extends Cubit<FormState> {
               .from('report')
               .upsert(report.toMap(), onConflict: 'user_id, date');
           break;
-        case 'WEIGHT':
+        case FeedType.weight:
           final double weightValue = double.parse(weight!);
           logger.d(
               "${supabase.auth.currentUser!.id} $weightValue ${DateTime.now()}");
@@ -192,7 +214,7 @@ class FormCubit extends Cubit<FormState> {
               .upsert(report.toMap(), onConflict: 'user_id, date');
           break;
       }
-      selectedImages[type] = null;
+      selectedImages[contentType] = null;
     } catch (e) {
       logger.e(e);
       emit(FormError(e.toString()));
@@ -241,4 +263,5 @@ class FormCubit extends Cubit<FormState> {
 
   Map<String, XFile?> get selectedImages => _selectedImages;
   List<bool> get mealSelection => _mealSelection;
+  FeedType get feedType => _feedType;
 }
