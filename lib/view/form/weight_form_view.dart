@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
+import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class WeightFormView extends StatelessWidget {
@@ -50,8 +51,8 @@ class WeightFormView extends StatelessWidget {
               AppSpacing.verticalSizedBoxL,
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Theme.of(context).primaryColor,
-                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(
                     side: BorderSide(color: Theme.of(context).primaryColor),
                     borderRadius: BorderRadius.circular(12),
@@ -60,15 +61,18 @@ class WeightFormView extends StatelessWidget {
                 ),
                 onPressed: () {
                   context.read<form.FormCubit>().submit(
-                        type: 'WEIGHT',
+                        type: FeedType.weight,
+                        contentType: 'WEIGHT',
                         review: commentController.text,
                         weight: weightContentController.text,
                       );
+                  commentController.clear();
+                  weightContentController.clear();
                 },
                 child: Text(
                   '기록 추가',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).primaryColor,
+                        color: AppColors.white,
                       ),
                 ),
               ),

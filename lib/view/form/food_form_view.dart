@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
+import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class FoodFormView extends StatelessWidget {
@@ -14,7 +15,9 @@ class FoodFormView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        surfaceTintColor: AppColors.white,
+      ),
       body: BlocListener<form.FormCubit, form.FormState>(
         listener: (context, state) {
           if (state is form.FormSuccess) {
@@ -34,6 +37,8 @@ class FoodFormView extends StatelessWidget {
           padding: AppSpacing.edgeInsetsL,
           child: Column(
             children: [
+              const MealToggleButtons(),
+              AppSpacing.verticalSizedBoxM,
               imagePickerWidget(context),
               AppSpacing.verticalSizedBoxM,
               // 먹은 음식 내용
@@ -50,8 +55,8 @@ class FoodFormView extends StatelessWidget {
               AppSpacing.verticalSizedBoxL,
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Theme.of(context).primaryColor,
-                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(
                     side: BorderSide(color: Theme.of(context).primaryColor),
                     borderRadius: BorderRadius.circular(12),
@@ -59,16 +64,20 @@ class FoodFormView extends StatelessWidget {
                   minimumSize: const Size(double.infinity, 50),
                 ),
                 onPressed: () {
+                  FeedType cur = context.read<form.FormCubit>().feedType;
                   context.read<form.FormCubit>().submit(
-                        type: 'FOOD',
+                        type: cur,
+                        contentType: 'FOOD',
                         review: commentController.text,
                         mealContent: foodContentController.text,
                       );
+                  commentController.clear();
+                  foodContentController.clear();
                 },
                 child: Text(
                   '기록 추가',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).primaryColor,
+                        color: AppColors.white,
                       ),
                 ),
               ),
@@ -127,6 +136,79 @@ class FoodFormView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class MealToggleButtons extends StatelessWidget {
+  const MealToggleButtons({super.key});
+
+  Widget button(String text, bool isSelected, BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: isSelected ? Theme.of(context).primaryColor : Colors.white,
+        boxShadow: isSelected
+            ? const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 5,
+                ),
+              ]
+            : null,
+      ),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: isSelected ? Colors.white : Colors.black45,
+            ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final selection = context.select<form.FormCubit, List<bool>>(
+      (cubit) => cubit.mealSelection,
+    );
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(8),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final buttonWidth = constraints.maxWidth / 4;
+          return ToggleButtons(
+            renderBorder: false,
+            isSelected: selection,
+            borderRadius: BorderRadius.circular(5),
+            fillColor: Colors.white,
+            constraints: BoxConstraints.tightFor(width: buttonWidth),
+            children: <Widget>[
+              button('아침', selection[0], context),
+              button('점심', selection[1], context),
+              button('저녁', selection[2], context),
+              button('간식', selection[3], context),
+            ],
+            onPressed: (int index) {
+              context.read<form.FormCubit>().updateMealSelection(index);
+            },
+          );
+        },
+      ),
     );
   }
 }
