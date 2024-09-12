@@ -183,11 +183,18 @@ class FormCubit extends Cubit<FormState> {
           final Report report = Report(
             userId: supabase.auth.currentUser!.id,
             date: DateTime.now(),
-            breakfast:
-                type == FeedType.breakfast ? calorie.totalCalories : null,
-            lunch: type == FeedType.lunch ? calorie.totalCalories : null,
-            dinner: type == FeedType.dinner ? calorie.totalCalories : null,
-            snack: type == FeedType.snack ? calorie.totalCalories : null,
+            breakfast: type == FeedType.breakfast
+                ? (prevReport?.breakfast ?? 0) + calorie.totalCalories
+                : null,
+            lunch: type == FeedType.lunch
+                ? (prevReport?.lunch ?? 0) + calorie.totalCalories
+                : null,
+            dinner: type == FeedType.dinner
+                ? (prevReport?.dinner ?? 0) + calorie.totalCalories
+                : null,
+            snack: type == FeedType.snack
+                ? (prevReport?.snack ?? 0) + calorie.totalCalories
+                : null,
           );
           await supabase
               .from('report')
