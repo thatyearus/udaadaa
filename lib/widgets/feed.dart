@@ -54,22 +54,30 @@ class ImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
-        ImageDisplay(imageUrl: feed.imageUrl!),
-        ReactionButtonsOverlay(
-          feed: feed,
-          isMyPage: isMyPage,
+        Expanded(
+          flex: 8,
+          child:
+            Stack(
+            children: [
+              ImageDisplay(imageUrl: feed.imageUrl!),
+              ReactionButtonsOverlay(
+                feed: feed,
+                isMyPage: isMyPage,
+              ),
+            ],
+          ),
         ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0), // 여백 설정
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min, // Column 크기 최소화
-              children: [
-                Text(
+        Padding(
+          padding: const EdgeInsets.all(16.0), // 여백 설정
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min, // Column 크기 최소화
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
                   feed.profile!.nickname, // 작성자 정보
                   style: const TextStyle(
                     color: Colors.white,
@@ -77,16 +85,16 @@ class ImageCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 8), // 작성자와 제목 사이의 간격
-                Text(
-                  feed.review, // 제목 정보
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                  ),
+              ),
+              const SizedBox(height: 8), // 작성자와 제목 사이의 간격
+              Text(
+                feed.review, // 제목 정보
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],
@@ -107,6 +115,7 @@ class ImageDisplay extends StatelessWidget {
         imageUrl: imageUrl,
         width: double.infinity,
         height: double.infinity,
+        fit: BoxFit.fitWidth,
         placeholder: (context, url) =>
             const Center(child: CircularProgressIndicator()),
         errorWidget: (context, url, error) => const Icon(Icons.error),
@@ -130,7 +139,7 @@ class ReactionButtonsOverlay extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 90.0),
+        padding: const EdgeInsets.only(bottom: 50.0),
         child: ReactionButtonsContainer(
           feedId: feed.id!,
           isMyPage: isMyPage,
