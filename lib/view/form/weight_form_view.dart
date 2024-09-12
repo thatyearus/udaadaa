@@ -51,8 +51,8 @@ class WeightFormView extends StatelessWidget {
               AppSpacing.verticalSizedBoxL,
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Theme.of(context).primaryColor,
-                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(
                     side: BorderSide(color: Theme.of(context).primaryColor),
                     borderRadius: BorderRadius.circular(12),
@@ -70,7 +70,7 @@ class WeightFormView extends StatelessWidget {
                 child: Text(
                   '기록 추가',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).primaryColor,
+                        color: AppColors.white,
                       ),
                 ),
               ),
