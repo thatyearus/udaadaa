@@ -49,17 +49,6 @@ class HomeView extends StatelessWidget {
               ),*/
                 ),
             AppSpacing.verticalSizedBoxXl,
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ReportView(),
-                  ),
-                );
-              },
-              child: const ReportSummary(),
-            ),
             AppSpacing.verticalSizedBoxL,
             if (homeFeeds[2].isNotEmpty)
               Row(children: [
