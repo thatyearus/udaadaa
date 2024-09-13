@@ -15,6 +15,9 @@ class LastRecord extends StatelessWidget {
     final myFeedRecord = context.select<FeedCubit, List<Feed>>(
       (cubit) => cubit.getMyFeeds,
     );
+    if (myFeedRecord.isEmpty || myFeedRecord.length <= page) {
+      return const Center();
+    }
     final date = myFeedRecord.isEmpty ? null : myFeedRecord[page].createdAt;
     final year = (date != null) ? date.year : "";
     final month = (date != null) ? date.month : "";
