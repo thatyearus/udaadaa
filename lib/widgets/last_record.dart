@@ -104,7 +104,7 @@ class LastRecord extends StatelessWidget {
                     ),
                     Column(
                       children: [
-                        Text("🥳", style: AppTextStyles.textTheme.displayLarge),
+                        Text("🤗", style: AppTextStyles.textTheme.displayLarge),
                         Text('$reaction2',
                             style: AppTextStyles.textTheme.bodyLarge),
                       ],
@@ -118,16 +118,14 @@ class LastRecord extends StatelessWidget {
                     ),
                     Column(
                       children: [
-                        Text("🙅🏻‍♀️",
-                            style: AppTextStyles.textTheme.displayLarge),
+                        Text("🥹", style: AppTextStyles.textTheme.displayLarge),
                         Text('$reaction4',
                             style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                     Column(
                       children: [
-                        Text("👍🏻",
-                            style: AppTextStyles.textTheme.displayLarge),
+                        Text("😉", style: AppTextStyles.textTheme.displayLarge),
                         Text('$reaction5',
                             style: AppTextStyles.textTheme.bodyLarge),
                       ],
