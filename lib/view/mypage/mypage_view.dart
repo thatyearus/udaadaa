@@ -25,19 +25,12 @@ class MyPageView extends StatelessWidget {
                 value: 'change_nickname',
                 child: Text('닉네임 변경'),
               ),
-              const PopupMenuItem(
-                value: 'alarm_setting',
-                child: Text("알람 설정"),
-              ),
             ];
           },
           onSelected: (value) {
             switch (value) {
               case 'change_nickname':
                 // TODO: 닉네임 변경 기능 구현
-                break;
-              case 'alarm_setting':
-                // TODO: 알람 설정 기능 구현
                 break;
             }
           },
