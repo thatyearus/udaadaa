@@ -36,7 +36,7 @@ class HomeView extends StatelessWidget {
               },
               child: const LastRecord(page: 0),
             ),
-            AppSpacing.verticalSizedBoxL,
+            AppSpacing.verticalSizedBoxXl,
             GestureDetector(
               onTap: () {
                 Navigator.push(
