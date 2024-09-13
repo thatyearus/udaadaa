@@ -97,35 +97,60 @@ class LastRecord extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        Text("😆", style: AppTextStyles.textTheme.displayLarge),
+                        Text(
+                          "😆",
+                          style: AppTextStyles.displayLarge(
+                            const TextStyle(fontFamily: 'tossface'),
+                          ),
+                        ),
                         Text('$reaction1',
                             style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                     Column(
                       children: [
-                        Text("🤗", style: AppTextStyles.textTheme.displayLarge),
+                        Text(
+                          "🤗",
+                          style: AppTextStyles.displayLarge(
+                            const TextStyle(fontFamily: 'tossface'),
+                          ),
+                        ),
                         Text('$reaction2',
                             style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                     Column(
                       children: [
-                        Text("🧐", style: AppTextStyles.textTheme.displayLarge),
+                        Text(
+                          "🧐",
+                          style: AppTextStyles.displayLarge(
+                            const TextStyle(fontFamily: 'tossface'),
+                          ),
+                        ),
                         Text('$reaction3',
                             style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                     Column(
                       children: [
-                        Text("🥹", style: AppTextStyles.textTheme.displayLarge),
+                        Text(
+                          "🥹",
+                          style: AppTextStyles.displayLarge(
+                            const TextStyle(fontFamily: 'tossface'),
+                          ),
+                        ),
                         Text('$reaction4',
                             style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                     Column(
                       children: [
-                        Text("😉", style: AppTextStyles.textTheme.displayLarge),
+                        Text(
+                          "😉",
+                          style: AppTextStyles.displayLarge(
+                            const TextStyle(fontFamily: 'tossface'),
+                          ),
+                        ),
                         Text('$reaction5',
                             style: AppTextStyles.textTheme.bodyLarge),
                       ],

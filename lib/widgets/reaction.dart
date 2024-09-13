@@ -100,7 +100,9 @@ class ReactionButton extends StatelessWidget {
               icon: Text(
                 emoji,
                 style: const TextStyle(
-                    fontSize: 46, color: Colors.white), // 이모티콘 색상 흰색
+                    fontFamily: 'tossface',
+                    fontSize: 46,
+                    color: Colors.white), // 이모티콘 색상 흰색
               ),
               onPressed: () => (!isMyPage
                   ? context.read<FeedCubit>().addReaction(feedId, reactionField)
