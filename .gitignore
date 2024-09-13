@@ -44,3 +44,8 @@ app.*.map.json
 
 # For secret files
 .env
+
+GoogleService-Info.plist
+google-services.json
+firebase_options.dart
+firebase.json

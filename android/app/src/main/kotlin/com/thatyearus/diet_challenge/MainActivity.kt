@@ -1,4 +1,4 @@
-package com.example.udaadaa
+package com.thatyearus.diet_challenge
 
 import io.flutter.embedding.android.FlutterActivity
 
