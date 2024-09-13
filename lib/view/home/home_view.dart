@@ -4,7 +4,7 @@ import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
-import 'package:udaadaa/widgets/fab.dart';
+import 'package:udaadaa/view/form/food_form_view.dart';
 import 'package:udaadaa/widgets/last_record.dart';
 
 class HomeView extends StatelessWidget {
@@ -50,7 +50,27 @@ class HomeView extends StatelessWidget {
           ]),
         ),
       ),
-      floatingActionButton: const AddFabButton(),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+        width: double.infinity,
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => FoodFormView(),
+              ),
+            );
+          },
+          label: Text(
+            '반응 받으러 가기',
+            style: AppTextStyles.textTheme.headlineLarge,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
