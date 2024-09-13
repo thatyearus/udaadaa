@@ -51,6 +51,7 @@ dependencies:
   firebase_messaging: ^15.1.1
   flutter_local_notifications: ^17.2.2
   amplitude_flutter: ^3.16.4
+  mixpanel_flutter: ^2.3.2
 
 dev_dependencies:
   flutter_test:
