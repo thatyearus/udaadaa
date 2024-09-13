@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
@@ -30,6 +31,39 @@ class MyPageView extends StatelessWidget {
             switch (value) {
               case 'change_nickname':
                 // TODO: 닉네임 변경 기능 구현
+                final nicknameController = TextEditingController();
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('닉네임 변경'),
+                        content: TextField(
+                          decoration: InputDecoration(
+                            hintText: '변경할 닉네임을 입력해주세요',
+                            hintStyle: AppTextStyles.labelLarge(
+                                TextStyle(color: AppColors.neutral[500])),
+                          ),
+                          controller: nicknameController,
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('취소'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              context
+                                  .read<AuthCubit>()
+                                  .updateNickname(nicknameController.text);
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('확인'),
+                          ),
+                        ],
+                      );
+                    });
                 break;
             }
           },
