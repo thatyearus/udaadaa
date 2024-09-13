@@ -70,19 +70,25 @@ class LastRecord extends StatelessWidget {
                       ),
                     ),
                     AppSpacing.horizontalSizedBoxM,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("내 최근 기록",
-                            style: AppTextStyles.headlineMedium(
-                                const TextStyle(color: AppColors.primary))),
-                        AppSpacing.verticalSizedBoxS,
-                        Text(myFeedRecord[page].review,
-                            style: AppTextStyles.textTheme.titleSmall),
-                        AppSpacing.verticalSizedBoxXxs,
-                        Text("작성일 : $year.$month.$day",
-                            style: AppTextStyles.textTheme.bodySmall),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("내 최근 기록",
+                              style: AppTextStyles.headlineMedium(
+                                  const TextStyle(color: AppColors.primary))),
+                          AppSpacing.verticalSizedBoxS,
+                          Text(
+                            myFeedRecord[page].review,
+                            style: AppTextStyles.textTheme.titleSmall,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          AppSpacing.verticalSizedBoxXxs,
+                          Text("작성일 : $year.$month.$day",
+                              style: AppTextStyles.textTheme.bodySmall),
+                        ],
+                      ),
                     ),
                   ],
                 ),
