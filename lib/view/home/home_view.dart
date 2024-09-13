@@ -33,7 +33,7 @@ class HomeView extends StatelessWidget {
                   ),
                 );
               },
-              child: const LastRecord(),
+              child: const LastRecord(page: 0),
             ),
             AppSpacing.verticalSizedBoxL,
             GestureDetector(
@@ -45,7 +45,7 @@ class HomeView extends StatelessWidget {
                   ),
                 );
               },
-              child: const LastRecord(),
+              child: const LastRecord(page: 1),
             ),
           ]),
         ),
