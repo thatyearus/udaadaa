@@ -83,9 +83,10 @@ class ReactionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Iterable<Reaction> reactions =
-        context.select<FeedCubit, Iterable<Reaction>>(
-            (cubit) => cubit.getReaction(feedId, reactionField));
+    final Iterable<Reaction> reactions = (isMyPage
+        ? context.select<FeedCubit, Iterable<Reaction>>(
+            (cubit) => cubit.getReaction(feedId, reactionField))
+        : []);
 
     return Column(
       mainAxisSize: MainAxisSize.min,

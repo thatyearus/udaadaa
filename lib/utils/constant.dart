@@ -2,6 +2,7 @@ import 'package:logger/logger.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/data/dio_client.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 export 'theme/colors.dart';
 export 'theme/spacing.dart';
 export 'theme/text_style.dart';
@@ -21,6 +22,10 @@ final Logger logger = Logger(
 final String apiUrl = dotenv.env['API_URL']!;
 final String supabaseUrl = dotenv.env['SUPABASE_URL']!;
 final String supabaseKey = dotenv.env['SUPABASE_KEY']!;
+final String amplitudeToken = dotenv.env['AMPLITUDE_TOKEN']!;
+final String mixpanelToken = dotenv.env['MIXPANEL_TOKEN']!;
 
 final supabase = Supabase.instance.client;
 final dioClient = DioClient();
+
+final Analytics analytics = Analytics();
