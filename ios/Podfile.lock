@@ -1,4 +1,10 @@
 PODS:
+  - Amplitude (8.18.0):
+    - AnalyticsConnector (~> 1.0.0)
+  - amplitude_flutter (0.0.1):
+    - Amplitude (= 8.18.0)
+    - Flutter
+  - AnalyticsConnector (1.0.3)
   - app_links (0.0.2):
     - Flutter
   - Firebase/Analytics (11.0.0):
@@ -115,6 +121,12 @@ PODS:
     - GoogleUtilities/Privacy
   - image_picker_ios (0.0.1):
     - Flutter
+  - Mixpanel-swift (4.3.0):
+    - Mixpanel-swift/Complete (= 4.3.0)
+  - Mixpanel-swift/Complete (4.3.0)
+  - mixpanel_flutter (2.3.2):
+    - Flutter
+    - Mixpanel-swift (= 4.3.0)
   - nanopb (3.30910.0):
     - nanopb/decode (= 3.30910.0)
     - nanopb/encode (= 3.30910.0)
@@ -134,6 +146,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - amplitude_flutter (from `.symlinks/plugins/amplitude_flutter/ios`)
   - app_links (from `.symlinks/plugins/app_links/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -141,6 +154,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - mixpanel_flutter (from `.symlinks/plugins/mixpanel_flutter/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite (from `.symlinks/plugins/sqflite/darwin`)
@@ -148,6 +162,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Amplitude
+    - AnalyticsConnector
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -157,10 +173,13 @@ SPEC REPOS:
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
+    - Mixpanel-swift
     - nanopb
     - PromisesObjC
 
 EXTERNAL SOURCES:
+  amplitude_flutter:
+    :path: ".symlinks/plugins/amplitude_flutter/ios"
   app_links:
     :path: ".symlinks/plugins/app_links/ios"
   firebase_analytics:
@@ -175,6 +194,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  mixpanel_flutter:
+    :path: ".symlinks/plugins/mixpanel_flutter/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   shared_preferences_foundation:
@@ -185,6 +206,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
+  Amplitude: 184def4f87aa26f94a93a7faa334e06b1cae704d
+  amplitude_flutter: 0f617f89d62b10c40a0ab14849e660a7c12e4e46
+  AnalyticsConnector: a53214d38ae22734c6266106c0492b37832633a9
   app_links: e7a6750a915a9e161c58d91bc610e8cd1d4d0ad0
   Firebase: 9f574c08c2396885b5e7e100ed4293d956218af9
   firebase_analytics: b8ce6c2c4b245d3c3bb3a147965d09da0f455959
@@ -201,6 +225,8 @@ SPEC CHECKSUMS:
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
+  Mixpanel-swift: 2192b9a24cf41b870749e4e0e10fbc9822bb2b4a
+  mixpanel_flutter: 6c398fa229f5e306febe8c514da0716a153a8b21
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
