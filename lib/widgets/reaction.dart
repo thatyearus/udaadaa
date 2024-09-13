@@ -35,7 +35,7 @@ class ReactionButtonsContainer extends StatelessWidget {
             feedId: feedId,
             label: "응원해요",
             reactionField: ReactionType.cheerup,
-            emoji: "🥳",
+            emoji: "🤗",
             isMyPage: isMyPage,
           ),
           ReactionButton(
@@ -49,7 +49,7 @@ class ReactionButtonsContainer extends StatelessWidget {
             feedId: feedId,
             label: "안돼요!",
             reactionField: ReactionType.nope,
-            emoji: "🙂‍↕️️",
+            emoji: "🥹",
             isMyPage: isMyPage,
           ),
           ReactionButton(
