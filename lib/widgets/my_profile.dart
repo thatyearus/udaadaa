@@ -32,7 +32,10 @@ class MyProfile extends StatelessWidget {
             child: Icon(Icons.person),
           ),
           AppSpacing.horizontalSizedBoxS,
-          Text(profile?.nickname ?? 'Not Logged In'),
+          Text(
+            profile?.nickname ?? 'Not Logged In',
+            style: AppTextStyles.textTheme.bodyLarge,
+          ),
         ],
       ),
     );
