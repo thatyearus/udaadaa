@@ -5,7 +5,7 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
-import 'package:udaadaa/widgets/fab.dart';
+import 'package:udaadaa/view/form/food_form_view.dart';
 import 'package:udaadaa/widgets/my_profile.dart';
 
 class MyPageView extends StatelessWidget {
@@ -30,7 +30,6 @@ class MyPageView extends StatelessWidget {
           onSelected: (value) {
             switch (value) {
               case 'change_nickname':
-                // TODO: 닉네임 변경 기능 구현
                 final nicknameController = TextEditingController();
                 showDialog(
                     context: context,
@@ -117,7 +116,27 @@ class MyPageView extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: const AddFabButton(),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+        width: double.infinity,
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => FoodFormView(),
+              ),
+            );
+          },
+          label: Text(
+            '반응 받으러 가기',
+            style: AppTextStyles.textTheme.headlineLarge,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
