@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
+import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class MyProfile extends StatelessWidget {
@@ -8,7 +9,8 @@ class MyProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profile = context.watch<AuthCubit>().getProfile;
+    final profile =
+        context.select<AuthCubit, Profile?>((cubit) => cubit.getProfile);
     return Container(
       decoration: BoxDecoration(
         color: AppColors.neutral[0],

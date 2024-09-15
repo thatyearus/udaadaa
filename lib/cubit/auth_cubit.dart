@@ -92,8 +92,12 @@ class AuthCubit extends Cubit<AuthState> {
       }
       final res = await supabase
           .from('profiles')
-          .update({'nickname': nickname}).eq('id', currentUser.id);
-      logger.d(res);
+          .update({'nickname': nickname})
+          .eq('id', currentUser.id)
+          .select()
+          .single();
+      Profile profile = Profile.fromMap(map: res);
+      emit(Authenticated(profile));
     } catch (e) {
       logger.e(e.toString());
     }
