@@ -127,3 +127,6 @@ flutter:
           weight: 800
         - asset: fonts/pretendard/Pretendard-Black.otf
           weight: 900
+    - family: tossface
+      fonts:
+        - asset: fonts/tossface/TossFaceFont.ttf
