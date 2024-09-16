@@ -84,6 +84,25 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> updateNickname(String nickname) async {
+    try {
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('User is not authenticated');
+      }
+      final res = await supabase
+          .from('profiles')
+          .update({'nickname': nickname})
+          .eq('id', currentUser.id)
+          .select()
+          .single();
+      Profile profile = Profile.fromMap(map: res);
+      emit(Authenticated(profile));
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
   Future<void> signOut() async {
     await supabase.auth.signOut();
     emit(AuthInitial());

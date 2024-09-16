@@ -7,22 +7,26 @@ import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class LastRecord extends StatelessWidget {
-  const LastRecord({super.key});
+  final int page;
+  const LastRecord({super.key, required this.page});
 
   @override
   Widget build(BuildContext context) {
     final myFeedRecord = context.select<FeedCubit, List<Feed>>(
       (cubit) => cubit.getMyFeeds,
     );
-    final date = myFeedRecord.isEmpty ? null : myFeedRecord[0].createdAt;
+    if (myFeedRecord.isEmpty || myFeedRecord.length <= page) {
+      return const Center();
+    }
+    final date = myFeedRecord.isEmpty ? null : myFeedRecord[page].createdAt;
     final year = (date != null) ? date.year : "";
     final month = (date != null) ? date.month : "";
     final day = (date != null) ? date.day : "";
 
     int countReaction(ReactionType reactionType) {
-      return myFeedRecord.isEmpty || myFeedRecord[0].reaction == null
+      return myFeedRecord.isEmpty || myFeedRecord[page].reaction == null
           ? 0
-          : myFeedRecord[0]
+          : myFeedRecord[page]
               .reaction!
               .where((element) => element.type == reactionType)
               .length;
@@ -61,24 +65,30 @@ class LastRecord extends StatelessWidget {
                       child: CachedNetworkImage(
                         width: 100,
                         height: 100,
-                        imageUrl: myFeedRecord[0].imageUrl!,
+                        imageUrl: myFeedRecord[page].imageUrl!,
                         fit: BoxFit.cover,
                       ),
                     ),
                     AppSpacing.horizontalSizedBoxM,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("내 최근 기록",
-                            style: AppTextStyles.headlineMedium(
-                                const TextStyle(color: AppColors.primary))),
-                        AppSpacing.verticalSizedBoxS,
-                        Text(myFeedRecord[0].review,
-                            style: AppTextStyles.textTheme.titleSmall),
-                        AppSpacing.verticalSizedBoxXxs,
-                        Text("작성일 : $year.$month.$day",
-                            style: AppTextStyles.textTheme.bodySmall),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("내 최근 기록",
+                              style: AppTextStyles.headlineMedium(
+                                  const TextStyle(color: AppColors.primary))),
+                          AppSpacing.verticalSizedBoxS,
+                          Text(
+                            myFeedRecord[page].review,
+                            style: AppTextStyles.textTheme.titleSmall,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          AppSpacing.verticalSizedBoxXxs,
+                          Text("작성일 : $year.$month.$day",
+                              style: AppTextStyles.textTheme.bodySmall),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -93,37 +103,60 @@ class LastRecord extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        Text("😆", style: AppTextStyles.textTheme.displayLarge),
+                        Text(
+                          "😆",
+                          style: AppTextStyles.displayLarge(
+                            const TextStyle(fontFamily: 'tossface'),
+                          ),
+                        ),
                         Text('$reaction1',
                             style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                     Column(
                       children: [
-                        Text("🥳", style: AppTextStyles.textTheme.displayLarge),
+                        Text(
+                          "🤗",
+                          style: AppTextStyles.displayLarge(
+                            const TextStyle(fontFamily: 'tossface'),
+                          ),
+                        ),
                         Text('$reaction2',
                             style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                     Column(
                       children: [
-                        Text("🧐", style: AppTextStyles.textTheme.displayLarge),
+                        Text(
+                          "🧐",
+                          style: AppTextStyles.displayLarge(
+                            const TextStyle(fontFamily: 'tossface'),
+                          ),
+                        ),
                         Text('$reaction3',
                             style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                     Column(
                       children: [
-                        Text("🙅🏻‍♀️",
-                            style: AppTextStyles.textTheme.displayLarge),
+                        Text(
+                          "🥹",
+                          style: AppTextStyles.displayLarge(
+                            const TextStyle(fontFamily: 'tossface'),
+                          ),
+                        ),
                         Text('$reaction4',
                             style: AppTextStyles.textTheme.bodyLarge),
                       ],
                     ),
                     Column(
                       children: [
-                        Text("👍🏻",
-                            style: AppTextStyles.textTheme.displayLarge),
+                        Text(
+                          "😉",
+                          style: AppTextStyles.displayLarge(
+                            const TextStyle(fontFamily: 'tossface'),
+                          ),
+                        ),
                         Text('$reaction5',
                             style: AppTextStyles.textTheme.bodyLarge),
                       ],
