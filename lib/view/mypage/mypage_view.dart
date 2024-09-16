@@ -5,7 +5,7 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
-import 'package:udaadaa/widgets/fab.dart';
+import 'package:udaadaa/view/form/food_form_view.dart';
 import 'package:udaadaa/widgets/my_profile.dart';
 
 class MyPageView extends StatelessWidget {
@@ -25,19 +25,44 @@ class MyPageView extends StatelessWidget {
                 value: 'change_nickname',
                 child: Text('닉네임 변경'),
               ),
-              const PopupMenuItem(
-                value: 'alarm_setting',
-                child: Text("알람 설정"),
-              ),
             ];
           },
           onSelected: (value) {
             switch (value) {
               case 'change_nickname':
-                // TODO: 닉네임 변경 기능 구현
-                break;
-              case 'alarm_setting':
-                // TODO: 알람 설정 기능 구현
+                final nicknameController = TextEditingController();
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('닉네임 변경'),
+                        content: TextField(
+                          decoration: InputDecoration(
+                            hintText: '변경할 닉네임을 입력해주세요',
+                            hintStyle: AppTextStyles.labelLarge(
+                                TextStyle(color: AppColors.neutral[500])),
+                          ),
+                          controller: nicknameController,
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('취소'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              context
+                                  .read<AuthCubit>()
+                                  .updateNickname(nicknameController.text);
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('확인'),
+                          ),
+                        ],
+                      );
+                    });
                 break;
             }
           },
@@ -53,12 +78,7 @@ class MyPageView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const MyProfile(),
-              ElevatedButton(
-                onPressed: () {
-                  context.read<AuthCubit>().signOut();
-                },
-                child: const Text('Sign Out'),
-              ),
+              AppSpacing.verticalSizedBoxL,
               GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -96,7 +116,27 @@ class MyPageView extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: const AddFabButton(),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+        width: double.infinity,
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => FoodFormView(),
+              ),
+            );
+          },
+          label: Text(
+            '반응 받으러 가기',
+            style: AppTextStyles.textTheme.headlineLarge,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

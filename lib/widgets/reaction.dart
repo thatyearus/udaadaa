@@ -35,7 +35,7 @@ class ReactionButtonsContainer extends StatelessWidget {
             feedId: feedId,
             label: "응원해요",
             reactionField: ReactionType.cheerup,
-            emoji: "🥳",
+            emoji: "🤗",
             isMyPage: isMyPage,
           ),
           ReactionButton(
@@ -49,7 +49,7 @@ class ReactionButtonsContainer extends StatelessWidget {
             feedId: feedId,
             label: "안돼요!",
             reactionField: ReactionType.nope,
-            emoji: "🙂‍↕️️",
+            emoji: "🥹",
             isMyPage: isMyPage,
           ),
           ReactionButton(
@@ -100,7 +100,9 @@ class ReactionButton extends StatelessWidget {
               icon: Text(
                 emoji,
                 style: const TextStyle(
-                    fontSize: 46, color: Colors.white), // 이모티콘 색상 흰색
+                    fontFamily: 'tossface',
+                    fontSize: 46,
+                    color: Colors.white), // 이모티콘 색상 흰색
               ),
               onPressed: () => (!isMyPage
                   ? context.read<FeedCubit>().addReaction(feedId, reactionField)
