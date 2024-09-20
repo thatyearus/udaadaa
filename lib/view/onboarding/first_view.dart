@@ -10,12 +10,21 @@ class FirstView extends StatelessWidget {
       appBar: AppBar(),
       body: SafeArea(
         minimum: AppSpacing.edgeInsetsL,
-        child: Center(
+        child: SingleChildScrollView(
+          reverse: true,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("우다다", style: AppTextStyles.textTheme.displayLarge),
+              Text("피드에 업로드할\n사진을 올려주세요",
+                  style: AppTextStyles.textTheme.displayMedium),
+              AppSpacing.verticalSizedBoxL,
+              SizedBox(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height * 0.55,
+                child: Placeholder(),
+              ),
+              AppSpacing.verticalSizedBoxXxl,
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
