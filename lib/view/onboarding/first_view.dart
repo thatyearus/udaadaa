@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/onboarding/second_view.dart';
 
 class FirstView extends StatelessWidget {
   const FirstView({super.key});
@@ -40,7 +41,7 @@ class FirstView extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const FirstView()),
+                    MaterialPageRoute(builder: (context) => SecondView()),
                   );
                 },
                 child: Text(
