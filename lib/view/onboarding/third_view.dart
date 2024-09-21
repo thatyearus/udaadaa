@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/onboarding/third_view.dart';
 
-class SecondView extends StatelessWidget {
-  SecondView({super.key});
+class ThirdView extends StatelessWidget {
+  ThirdView({super.key, required this.foodContent});
 
-  final TextEditingController foodContentController = TextEditingController();
+  final String foodContent;
+  final TextEditingController commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class SecondView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("음식에 대한\n설명을 작성해주세요",
+              Text("피드에 들어갈\n한마디를 작성해주세요",
                   style: AppTextStyles.textTheme.displayMedium),
               AppSpacing.verticalSizedBoxL,
               SizedBox(
@@ -41,7 +41,7 @@ class SecondView extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => ThirdView(
-                              foodContent: foodContentController.text,
+                              foodContent: "",
                             )),
                   );
                 },
@@ -61,8 +61,8 @@ class SecondView extends StatelessWidget {
 
   Widget imagePickerWidget(BuildContext context) {
     return TextField(
-      controller: foodContentController,
-      decoration: const InputDecoration(labelText: '음식 내용', hintText: '연어 포케'),
+      controller: commentController,
+      decoration: const InputDecoration(labelText: '음식 한마디'),
     );
   }
 }
