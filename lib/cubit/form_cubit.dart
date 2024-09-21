@@ -132,7 +132,8 @@ class FormCubit extends Cubit<FormState> {
         type: type,
         imagePath: imagePath,
       );
-      await supabase.from('feed').insert(feed.toMap());
+      final ret =
+          await supabase.from('feed').insert(feed.toMap()).select().single();
       emit(FormSuccess());
       updateReport(
         type: type,
@@ -142,6 +143,7 @@ class FormCubit extends Cubit<FormState> {
         weight: weight,
         exerciseTime: exerciseTime,
         mealContent: mealContent,
+        feedId: ret['id'],
       );
     } catch (e) {
       logger.e(e);
@@ -153,6 +155,7 @@ class FormCubit extends Cubit<FormState> {
     required FeedType type,
     required String review,
     required String contentType,
+    required String feedId,
     String? mealType,
     String? weight,
     String? exerciseTime,
@@ -180,6 +183,9 @@ class FormCubit extends Cubit<FormState> {
           );
           final Map<String, dynamic> jsonResponse = json.decode(res.toString());
           Calorie calorie = Calorie.fromJson(jsonResponse);
+          await supabase
+              .from('feed')
+              .update({'calorie': calorie.totalCalories}).eq('id', feedId);
           final Report report = Report(
             userId: supabase.auth.currentUser!.id,
             date: DateTime.now(),
