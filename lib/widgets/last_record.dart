@@ -18,10 +18,10 @@ class LastRecord extends StatelessWidget {
     if (myFeedRecord.isEmpty || myFeedRecord.length <= page) {
       return const Center();
     }
-    final date = myFeedRecord.isEmpty ? null : myFeedRecord[page].createdAt;
-    final year = (date != null) ? date.year : "";
-    final month = (date != null) ? date.month : "";
-    final day = (date != null) ? date.day : "";
+    // final date = myFeedRecord.isEmpty ? null : myFeedRecord[page].createdAt;
+    // final year = (date != null) ? date.year : "";
+    // final month = (date != null) ? date.month : "";
+    // final day = (date != null) ? date.day : "";
 
     int countReaction(ReactionType reactionType) {
       return myFeedRecord.isEmpty || myFeedRecord[page].reaction == null
@@ -85,7 +85,7 @@ class LastRecord extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           AppSpacing.verticalSizedBoxXxs,
-                          Text("작성일 : $year.$month.$day",
+                          Text("칼로리 : ${myFeedRecord[page].calorie} kcal",
                               style: AppTextStyles.textTheme.bodySmall),
                         ],
                       ),
