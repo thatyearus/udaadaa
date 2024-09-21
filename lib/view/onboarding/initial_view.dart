@@ -15,6 +15,11 @@ class InitialView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text("우다다", style: AppTextStyles.textTheme.displayLarge),
+              Text(
+                "같이 다이어트하지 않을래요?\n서로 식단 응원하고 공감하면서\n같이 다이어트해요",
+                style: AppTextStyles.textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
