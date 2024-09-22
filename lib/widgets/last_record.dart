@@ -85,7 +85,7 @@ class LastRecord extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           AppSpacing.verticalSizedBoxXxs,
-                          Text("칼로리 : ${myFeedRecord[page].calorie} kcal",
+                          Text("칼로리 : ${myFeedRecord[page].calorie ?? 0} kcal",
                               style: AppTextStyles.textTheme.bodySmall),
                         ],
                       ),
