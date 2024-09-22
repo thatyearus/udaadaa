@@ -11,17 +11,17 @@ enum FeedType {
 }
 
 class Feed {
-  Feed({
-    this.id,
-    required this.userId,
-    this.createdAt,
-    required this.review,
-    required this.type,
-    required this.imagePath,
-    this.imageUrl,
-    this.profile,
-    this.reaction,
-  });
+  Feed(
+      {this.id,
+      required this.userId,
+      this.createdAt,
+      required this.review,
+      required this.type,
+      required this.imagePath,
+      this.imageUrl,
+      this.profile,
+      this.reaction,
+      this.calorie});
 
   final String? id;
   final String userId;
@@ -32,6 +32,7 @@ class Feed {
   final String? imageUrl;
   final Profile? profile;
   final List<Reaction>? reaction;
+  final int? calorie;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -57,7 +58,8 @@ class Feed {
                 .map((item) =>
                     Reaction.fromMap(map: item as Map<String, dynamic>))
                 .toList()
-            : [];
+            : [],
+        calorie = map['calorie'] as int?;
 
   Feed copyWith({
     String? id,
@@ -69,6 +71,7 @@ class Feed {
     String? imageUrl,
     Profile? profile,
     List<Reaction>? reaction,
+    int? calorie,
   }) {
     return Feed(
       id: id ?? this.id,
@@ -80,6 +83,7 @@ class Feed {
       imageUrl: imageUrl ?? this.imageUrl,
       profile: profile ?? this.profile,
       reaction: reaction ?? this.reaction,
+      calorie: calorie ?? this.calorie,
     );
   }
 }
