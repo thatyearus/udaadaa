@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/widgets/reaction.dart';
 
 class FeedPageView extends StatefulWidget {
@@ -54,12 +55,17 @@ class ImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hashtag = Map<FeedType, String>.from({
+      FeedType.breakfast: '# 아침',
+      FeedType.lunch: '# 점심',
+      FeedType.dinner: '# 저녁',
+      FeedType.snack: '# 간식',
+    });
     return Column(
       children: [
         Expanded(
           flex: 8,
-          child:
-            Stack(
+          child: Stack(
             children: [
               ImageDisplay(imageUrl: feed.imageUrl!),
               ReactionButtonsOverlay(
@@ -87,12 +93,24 @@ class ImageCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8), // 작성자와 제목 사이의 간격
-              Text(
-                feed.review, // 제목 정보
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                ),
+              Row(
+                children: [
+                  Text(
+                    hashtag[feed.type]!,
+                    style: TextStyle(
+                      color: AppColors.neutral[200],
+                      fontSize: 15,
+                    ),
+                  ),
+                  const SizedBox(width: 8), // 작성일과 제목 사이의 간격
+                  Text(
+                    feed.review, // 제목 정보
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

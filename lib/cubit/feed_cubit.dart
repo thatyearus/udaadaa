@@ -131,11 +131,23 @@ class FeedCubit extends Cubit<FeedState> {
 
   Future<void> _getFeeds({bool loadMore = false}) async {
     try {
-      final data = await supabase
-          .from('random_feed')
-          .select('*, profiles(*)')
-          .not('id', 'in', _blockedFeedIds.toList())
-          .limit(_limit);
+      var data = [];
+
+      if (!loadMore) {
+        data = await supabase
+            .from('feed')
+            .select('*, profiles(*)')
+            .not('id', 'in', _blockedFeedIds.toList())
+            .order('created_at', ascending: false)
+            .limit(_limit);
+      } else {
+        data = await supabase
+            .from('random_feed')
+            .select('*, profiles(*)')
+            .not('id', 'in', _blockedFeedIds.toList())
+            .limit(_limit);
+      }
+
       logger.d(data);
       final imagePaths =
           data.map((item) => item['image_path'] as String).toList();

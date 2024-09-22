@@ -100,14 +100,42 @@ class MyPageView extends StatelessWidget {
                             ),
                           );
                         },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: CachedNetworkImage(
-                            width: double.infinity,
-                            height: double.infinity,
-                            imageUrl: myFeeds[index].imageUrl!,
-                            fit: BoxFit.cover,
-                          ),
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: CachedNetworkImage(
+                                width: double.infinity,
+                                height: double.infinity,
+                                imageUrl: myFeeds[index].imageUrl!,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  color:
+                                      AppColors.neutral[500]?.withOpacity(0.5),
+                                  child: Text(
+                                    "${myFeeds[index].calorie} kcal",
+                                    style: AppTextStyles.headlineSmall(
+                                      TextStyle(
+                                          color: AppColors.neutral[200],
+                                          shadows: [
+                                            Shadow(
+                                              color: AppColors.neutral[500]!,
+                                              offset: const Offset(0, 1),
+                                              blurRadius: 0,
+                                            )
+                                          ]),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )),
+                            ),
+                          ],
                         ),
                       ),
                     );

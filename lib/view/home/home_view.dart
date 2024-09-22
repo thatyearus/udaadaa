@@ -48,6 +48,18 @@ class HomeView extends StatelessWidget {
               },
               child: const LastRecord(page: 1),
             ),
+            AppSpacing.verticalSizedBoxXl,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyRecordView(initialPage: 1),
+                  ),
+                );
+              },
+              child: const LastRecord(page: 2),
+            ),
           ]),
         ),
       ),
