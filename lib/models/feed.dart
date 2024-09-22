@@ -59,7 +59,7 @@ class Feed {
                     Reaction.fromMap(map: item as Map<String, dynamic>))
                 .toList()
             : [],
-        calorie = map['calorie'] as int;
+        calorie = map['calorie'] as int?;
 
   Feed copyWith({
     String? id,
