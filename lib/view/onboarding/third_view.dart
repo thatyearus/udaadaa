@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/fourth_view.dart';
 
-class SecondView extends StatelessWidget {
-  SecondView({super.key});
+class ThirdView extends StatelessWidget {
+  ThirdView({super.key});
 
   final TextEditingController foodContentController = TextEditingController();
 
