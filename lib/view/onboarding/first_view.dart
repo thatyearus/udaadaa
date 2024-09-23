@@ -21,14 +21,25 @@ class FirstView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("피드에 업로드할\n사진을 올려주세요",
+              Text("어느 식단을\n올리실 건가요?",
                   style: AppTextStyles.textTheme.displayMedium),
               AppSpacing.verticalSizedBoxL,
               SizedBox(
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * 0.55,
-                child: imagePickerWidget(context),
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    MealToggleButtons(),
+                  ],
+                ),
               ),
+              /*
+              SizedBox(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height * 0.55,
+                child: const MealToggleButtons(),
+              ),*/
               AppSpacing.verticalSizedBoxXxl,
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -106,6 +117,79 @@ class FirstView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class MealToggleButtons extends StatelessWidget {
+  const MealToggleButtons({super.key});
+
+  Widget button(String text, bool isSelected, BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: isSelected ? Theme.of(context).primaryColor : Colors.white,
+        boxShadow: isSelected
+            ? const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 5,
+                ),
+              ]
+            : null,
+      ),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: isSelected ? Colors.white : Colors.black45,
+            ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final selection = context.select<form.FormCubit, List<bool>>(
+      (cubit) => cubit.mealSelection,
+    );
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(8),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final buttonWidth = constraints.maxWidth / 4;
+          return ToggleButtons(
+            renderBorder: false,
+            isSelected: selection,
+            borderRadius: BorderRadius.circular(5),
+            fillColor: Colors.white,
+            constraints: BoxConstraints.tightFor(width: buttonWidth),
+            children: <Widget>[
+              button('아침', selection[0], context),
+              button('점심', selection[1], context),
+              button('저녁', selection[2], context),
+              button('간식', selection[3], context),
+            ],
+            onPressed: (int index) {
+              context.read<form.FormCubit>().updateMealSelection(index);
+            },
+          );
+        },
+      ),
     );
   }
 }
