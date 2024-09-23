@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/onboarding/first_view.dart';
+import 'package:udaadaa/view/onboarding/second_view.dart';
 
 class InitialView extends StatelessWidget {
   const InitialView({super.key});
@@ -31,7 +31,7 @@ class InitialView extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const FirstView()),
+                    MaterialPageRoute(builder: (context) => const SecondView()),
                   );
                 },
                 child: Text(

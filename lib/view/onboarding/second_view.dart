@@ -6,8 +6,8 @@ import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/third_view.dart';
 
-class FirstView extends StatelessWidget {
-  const FirstView({super.key});
+class SecondView extends StatelessWidget {
+  const SecondView({super.key});
 
   @override
   Widget build(BuildContext context) {
