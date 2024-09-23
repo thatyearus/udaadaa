@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/onboarding/fifth_view.dart';
 
-class FourthView extends StatelessWidget {
-  FourthView({super.key, required this.foodContent});
+class FifthView extends StatelessWidget {
+  FifthView({super.key});
 
-  final String foodContent;
   final TextEditingController commentController = TextEditingController();
 
   @override
