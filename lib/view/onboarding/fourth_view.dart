@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
 
-class ThirdView extends StatelessWidget {
-  ThirdView({super.key, required this.foodContent});
+class FourthView extends StatelessWidget {
+  FourthView({super.key, required this.foodContent});
 
   final String foodContent;
   final TextEditingController commentController = TextEditingController();
@@ -40,7 +40,7 @@ class ThirdView extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context) => ThirdView(
+                        builder: (context) => FourthView(
                               foodContent: "",
                             )),
                   );

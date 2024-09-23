@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/onboarding/third_view.dart';
+import 'package:udaadaa/view/onboarding/fourth_view.dart';
 
 class SecondView extends StatelessWidget {
   SecondView({super.key});
@@ -40,7 +40,7 @@ class SecondView extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context) => ThirdView(
+                        builder: (context) => FourthView(
                               foodContent: foodContentController.text,
                             )),
                   );
