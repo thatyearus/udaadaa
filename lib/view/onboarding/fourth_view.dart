@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/form_cubit.dart' as form;
+import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/fifth_view.dart';
 
@@ -14,44 +17,65 @@ class FourthView extends StatelessWidget {
       appBar: AppBar(),
       body: SafeArea(
         minimum: AppSpacing.edgeInsetsL,
-        child: SingleChildScrollView(
-          reverse: true,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("같이하는 친구들에게\n하고 싶은 말을 적어볼까요?",
-                  style: AppTextStyles.textTheme.displayMedium),
-              AppSpacing.verticalSizedBoxL,
-              SizedBox(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.55,
-                child: foodCommentText(context),
-              ),
-              AppSpacing.verticalSizedBoxXxl,
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+        child: BlocListener<form.FormCubit, form.FormState>(
+          listener: (context, state) {
+            if (state is form.FormSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('기록이 추가되었습니다')),
+              );
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => FifthView(),
+                ),
+              );
+            } else if (state is form.FormError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.error)),
+              );
+            }
+          },
+          child: SingleChildScrollView(
+            reverse: true,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("같이하는 친구들에게\n하고 싶은 말을 적어볼까요?",
+                    style: AppTextStyles.textTheme.displayMedium),
+                AppSpacing.verticalSizedBoxL,
+                SizedBox(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.55,
+                  child: foodCommentText(context),
+                ),
+                AppSpacing.verticalSizedBoxXxl,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    minimumSize: const Size(double.infinity, 50),
                   ),
-                  minimumSize: const Size(double.infinity, 50),
+                  onPressed: () {
+                    FeedType cur = context.read<form.FormCubit>().feedType;
+                    context.read<form.FormCubit>().submit(
+                          type: cur,
+                          contentType: 'FOOD',
+                          review: commentController.text,
+                          mealContent: foodContent,
+                        );
+                  },
+                  child: Text(
+                    '올려서 공감받기',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: AppColors.white,
+                        ),
+                  ),
                 ),
-                onPressed: () {
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => FifthView()),
-                    (Route<dynamic> route) => false,
-                  );
-                },
-                child: Text(
-                  '올려서 공감받기',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.white,
-                      ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
