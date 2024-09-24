@@ -39,8 +39,9 @@ class FourthView extends StatelessWidget {
                   minimumSize: const Size(double.infinity, 50),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(
+                  Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => FifthView()),
+                    (Route<dynamic> route) => false,
                   );
                 },
                 child: Text(
