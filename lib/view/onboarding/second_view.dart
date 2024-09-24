@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
+import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/third_view.dart';
 
@@ -11,6 +12,15 @@ class SecondView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final foodTypeString = {
+      FeedType.breakfast: '아침',
+      FeedType.lunch: '점심',
+      FeedType.dinner: '저녁',
+      FeedType.snack: '간식',
+    };
+    final foodType = context.select<form.FormCubit, String>(
+      (cubit) => foodTypeString[cubit.feedType]!,
+    );
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
@@ -21,7 +31,7 @@ class SecondView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("피드에 업로드할\n사진을 올려주세요",
+              Text("오늘 먹은 $foodType\n올려볼까요?",
                   style: AppTextStyles.textTheme.displayMedium),
               AppSpacing.verticalSizedBoxL,
               SizedBox(
