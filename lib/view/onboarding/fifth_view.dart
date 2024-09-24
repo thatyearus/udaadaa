@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/onboarding/sixth_view.dart';
 
 class FifthView extends StatelessWidget {
   FifthView({super.key});
@@ -38,7 +39,7 @@ class FifthView extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => FifthView()),
+                    MaterialPageRoute(builder: (context) => const SixthView()),
                   );
                 },
                 child: Text(
