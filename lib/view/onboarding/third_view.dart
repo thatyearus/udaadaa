@@ -19,13 +19,13 @@ class ThirdView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("음식에 대한\n설명을 작성해주세요",
+              Text("어떤 음식을 먹었나요?",
                   style: AppTextStyles.textTheme.displayMedium),
               AppSpacing.verticalSizedBoxL,
               SizedBox(
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * 0.55,
-                child: imagePickerWidget(context),
+                child: foodContentText(context),
               ),
               AppSpacing.verticalSizedBoxXxl,
               ElevatedButton(
@@ -59,10 +59,16 @@ class ThirdView extends StatelessWidget {
     );
   }
 
-  Widget imagePickerWidget(BuildContext context) {
+  Widget foodContentText(BuildContext context) {
     return TextField(
       controller: foodContentController,
-      decoration: const InputDecoration(labelText: '음식 내용', hintText: '연어 포케'),
+      decoration: InputDecoration(
+        labelText: '음식 내용',
+        hintText: '연어 포케',
+        hintStyle:
+            AppTextStyles.bodyMedium(TextStyle(color: AppColors.neutral[500])),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+      ),
     );
   }
 }
