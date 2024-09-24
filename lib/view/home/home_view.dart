@@ -67,6 +67,7 @@ class HomeView extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         width: double.infinity,
         child: FloatingActionButton.extended(
+          heroTag: 'addFood',
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
