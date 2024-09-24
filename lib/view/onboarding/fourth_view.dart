@@ -26,7 +26,7 @@ class FourthView extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * 0.55,
-                child: imagePickerWidget(context),
+                child: foodCommentText(context),
               ),
               AppSpacing.verticalSizedBoxXxl,
               ElevatedButton(
@@ -58,7 +58,7 @@ class FourthView extends StatelessWidget {
     );
   }
 
-  Widget imagePickerWidget(BuildContext context) {
+  Widget foodCommentText(BuildContext context) {
     return TextField(
       controller: commentController,
       decoration: InputDecoration(
