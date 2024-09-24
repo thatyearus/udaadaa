@@ -21,6 +21,9 @@ class SecondView extends StatelessWidget {
     final foodType = context.select<form.FormCubit, String>(
       (cubit) => foodTypeString[cubit.feedType]!,
     );
+    final imageSelected = context.select<form.FormCubit, bool>(
+      (cubit) => cubit.selectedImages['FOOD'] != null,
+    );
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
@@ -43,16 +46,20 @@ class SecondView extends StatelessWidget {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: imageSelected
+                      ? Theme.of(context).primaryColor
+                      : AppColors.neutral[300],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                   minimumSize: const Size(double.infinity, 50),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ThirdView()),
-                  );
+                  if (imageSelected) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => ThirdView()),
+                    );
+                  }
                 },
                 child: Text(
                   '다음',
