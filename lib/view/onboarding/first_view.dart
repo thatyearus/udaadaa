@@ -21,7 +21,7 @@ class FirstView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("어느 식단을\n올리실 건가요?",
+              Text("올릴 식단을\n선택해 볼까요?",
                   style: AppTextStyles.textTheme.displayMedium),
               AppSpacing.verticalSizedBoxL,
               SizedBox(
