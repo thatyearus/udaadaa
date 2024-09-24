@@ -20,7 +20,7 @@ class FourthView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("피드에 들어갈\n한마디를 작성해주세요",
+              Text("같이하는 친구들에게\n하고 싶은 말을 적어볼까요?",
                   style: AppTextStyles.textTheme.displayMedium),
               AppSpacing.verticalSizedBoxL,
               SizedBox(
@@ -45,7 +45,7 @@ class FourthView extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  '다음',
+                  '올려서 공감받기',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: AppColors.white,
                       ),
@@ -61,7 +61,13 @@ class FourthView extends StatelessWidget {
   Widget imagePickerWidget(BuildContext context) {
     return TextField(
       controller: commentController,
-      decoration: const InputDecoration(labelText: '음식 한마디'),
+      decoration: InputDecoration(
+        labelText: '음식 한마디',
+        hintText: '오늘 치팅데이니까 혼내지 말아 주세요ㅠ',
+        hintStyle:
+            AppTextStyles.bodyMedium(TextStyle(color: AppColors.neutral[500])),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+      ),
     );
   }
 }
