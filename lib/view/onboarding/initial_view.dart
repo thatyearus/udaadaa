@@ -43,7 +43,7 @@ class InitialView extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  '다음',
+                  '시작하기',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: AppColors.white,
                       ),
