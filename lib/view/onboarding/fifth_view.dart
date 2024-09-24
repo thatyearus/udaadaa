@@ -19,13 +19,13 @@ class FifthView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("피드에 들어갈\n한마디를 작성해주세요",
+              Text("이제 같이하는 친구들 식단을\n응원해 볼까요?",
                   style: AppTextStyles.textTheme.displayMedium),
               AppSpacing.verticalSizedBoxL,
               SizedBox(
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * 0.55,
-                child: imagePickerWidget(context),
+                child: const Placeholder(),
               ),
               AppSpacing.verticalSizedBoxXxl,
               ElevatedButton(
@@ -43,7 +43,7 @@ class FifthView extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  '다음',
+                  '응원하러 가기',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: AppColors.white,
                       ),
@@ -53,13 +53,6 @@ class FifthView extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget imagePickerWidget(BuildContext context) {
-    return TextField(
-      controller: commentController,
-      decoration: const InputDecoration(labelText: '음식 한마디'),
     );
   }
 }
