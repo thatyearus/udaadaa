@@ -42,36 +42,36 @@ class SecondView extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.55,
                 child: imagePickerWidget(context),
               ),
-              AppSpacing.verticalSizedBoxXxl,
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: imageSelected
-                      ? Theme.of(context).primaryColor
-                      : AppColors.neutral[300],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                onPressed: () {
-                  if (imageSelected) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => ThirdView()),
-                    );
-                  }
-                },
-                child: Text(
-                  '다음',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.white,
-                      ),
-                ),
-              ),
             ],
           ),
         ),
       ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+        width: double.infinity,
+        child: FloatingActionButton.extended(
+          heroTag: 'onboarding2',
+          onPressed: () {
+            if (imageSelected) {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => ThirdView()),
+              );
+            }
+          },
+          label: Text(
+            '다음',
+            style: AppTextStyles.textTheme.titleMedium
+                ?.copyWith(color: AppColors.white),
+          ),
+          backgroundColor: imageSelected
+              ? Theme.of(context).primaryColor
+              : AppColors.neutral[300],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
