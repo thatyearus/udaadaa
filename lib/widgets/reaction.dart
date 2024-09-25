@@ -72,7 +72,7 @@ class ReactionButtonsContainer extends StatelessWidget {
   }
 }
 
-class ReactionButton extends StatelessWidget {
+class ReactionButton extends StatefulWidget {
   final String feedId;
   final String label;
   final ReactionType reactionField;
@@ -91,10 +91,43 @@ class ReactionButton extends StatelessWidget {
   });
 
   @override
+  ReactionButtonState createState() => ReactionButtonState();
+}
+
+class ReactionButtonState extends State<ReactionButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 애니메이션 컨트롤러 설정
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.3)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _animateReaction() {
+    _controller.forward().then((value) => _controller.reverse());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final Iterable<Reaction> reactions = (isMyPage
+    final Iterable<Reaction> reactions = (widget.isMyPage
         ? context.select<FeedCubit, Iterable<Reaction>>(
-            (cubit) => cubit.getReaction(feedId, reactionField))
+            (cubit) => cubit.getReaction(widget.feedId, widget.reactionField))
         : []);
 
     return Column(
@@ -104,63 +137,72 @@ class ReactionButton extends StatelessWidget {
           alignment: Alignment.topCenter,
           clipBehavior: Clip.none,
           children: [
-            // IconButton for Reaction
-            IconButton(
-              icon: Text(
-                emoji,
-                style: const TextStyle(
+            // IconButton for Reaction with animated scale
+            ScaleTransition(
+              scale: _scaleAnimation,
+              child: IconButton(
+                icon: Text(
+                  widget.emoji,
+                  style: const TextStyle(
                     fontFamily: 'tossface',
                     fontSize: 46,
-                    color: Colors.white), // 이모티콘 색상 흰색
-              ),
-              onPressed: () => (!isMyPage
-                  ? context
-                      .read<FeedCubit>()
-                      .addReaction(feedId, reactionField)
-                      .then((value) {
-                      logger.d("ReactionButton: onReactionPressed");
-                      onReactionPressed();
-                    })
-                  : showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return Container(
-                          padding: AppSpacing.edgeInsetsM,
-                          width: double.infinity,
-                          color: Colors.white,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text("공감한 사용자",
-                                  style: AppTextStyles.textTheme.titleMedium),
-                              AppSpacing.sizedBoxM,
-                              Divider(
-                                color: AppColors.neutral[300],
-                                thickness: 1,
-                              ),
-                              Flexible(
-                                child: ListView.builder(
-                                  itemCount: reactions.length,
-                                  itemBuilder: (context, index) {
-                                    return ListTile(
-                                      title: Text(reactions
-                                              .elementAt(index)
-                                              .profile
-                                              ?.nickname ??
-                                          "no profile"),
-                                      trailing: Text(emoji,
-                                          style: AppTextStyles
-                                              .textTheme.titleMedium),
-                                    );
-                                  },
+                    color: Colors.white,
+                  ), // 이모티콘 색상 흰색
+                ),
+                onPressed: () {
+                  _animateReaction(); // 애니메이션 실행
+
+                  if (!widget.isMyPage) {
+                    context
+                        .read<FeedCubit>()
+                        .addReaction(widget.feedId, widget.reactionField)
+                        .then((value) {
+                      widget.onReactionPressed();
+                    });
+                  } else {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Container(
+                            padding: AppSpacing.edgeInsetsM,
+                            width: double.infinity,
+                            color: Colors.white,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text("공감한 사용자",
+                                    style: AppTextStyles.textTheme.titleMedium),
+                                AppSpacing.sizedBoxM,
+                                Divider(
+                                  color: AppColors.neutral[300],
+                                  thickness: 1,
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      })),
+                                Flexible(
+                                  child: ListView.builder(
+                                    itemCount: reactions.length,
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        title: Text(reactions
+                                                .elementAt(index)
+                                                .profile
+                                                ?.nickname ??
+                                            "no profile"),
+                                        trailing: Text(widget.emoji,
+                                            style: AppTextStyles
+                                                .textTheme.titleMedium),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        });
+                  }
+                },
+              ),
             ),
-            if (isMyPage)
+            if (widget.isMyPage)
               Positioned(
                 top: -20,
                 child: Container(
@@ -179,7 +221,7 @@ class ReactionButton extends StatelessWidget {
           ],
         ),
         Text(
-          label,
+          widget.label,
           style: const TextStyle(
               color: Colors.white,
               fontSize: 12,
