@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/widgets/feed.dart';
@@ -68,6 +69,7 @@ class OnboardingFeedViewState extends State<OnboardingFeedView> {
   void _onScroll() {
     if (_pageController.position.pixels >
         _pageController.position.maxScrollExtent) {
+      PreferencesService().setBool('isOnboardingComplete', true);
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
