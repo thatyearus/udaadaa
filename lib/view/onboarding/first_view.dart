@@ -24,48 +24,32 @@ class FirstView extends StatelessWidget {
               Text("올릴 식단을\n선택해 볼까요?",
                   style: AppTextStyles.textTheme.displayMedium),
               AppSpacing.verticalSizedBoxL,
-              SizedBox(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.55,
-                child: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    MealToggleButtons(),
-                  ],
-                ),
-              ),
-              /*
-              SizedBox(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.55,
-                child: const MealToggleButtons(),
-              ),*/
-              AppSpacing.verticalSizedBoxXxl,
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const SecondView()),
-                  );
-                },
-                child: Text(
-                  '다음',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.white,
-                      ),
-                ),
-              ),
+              const MealToggleButtons(),
             ],
           ),
         ),
       ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+        width: double.infinity,
+        child: FloatingActionButton.extended(
+          heroTag: 'onboarding1',
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const SecondView()),
+            );
+          },
+          label: Text(
+            '다음',
+            style: AppTextStyles.textTheme.titleMedium
+                ?.copyWith(color: AppColors.white),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
