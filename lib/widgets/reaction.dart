@@ -7,11 +7,13 @@ import 'package:udaadaa/utils/constant.dart';
 class ReactionButtonsContainer extends StatelessWidget {
   final String feedId;
   final bool isMyPage;
+  final VoidCallback onReactionPressed;
 
   const ReactionButtonsContainer({
     super.key,
     required this.feedId,
     required this.isMyPage,
+    required this.onReactionPressed,
   });
 
   @override
@@ -30,6 +32,7 @@ class ReactionButtonsContainer extends StatelessWidget {
             reactionField: ReactionType.good,
             emoji: "😆",
             isMyPage: isMyPage,
+            onReactionPressed: onReactionPressed,
           ),
           ReactionButton(
             feedId: feedId,
@@ -37,6 +40,7 @@ class ReactionButtonsContainer extends StatelessWidget {
             reactionField: ReactionType.cheerup,
             emoji: "🤗",
             isMyPage: isMyPage,
+            onReactionPressed: onReactionPressed,
           ),
           ReactionButton(
             feedId: feedId,
@@ -44,6 +48,7 @@ class ReactionButtonsContainer extends StatelessWidget {
             reactionField: ReactionType.hmmm,
             emoji: "🧐",
             isMyPage: isMyPage,
+            onReactionPressed: onReactionPressed,
           ),
           ReactionButton(
             feedId: feedId,
@@ -51,6 +56,7 @@ class ReactionButtonsContainer extends StatelessWidget {
             reactionField: ReactionType.nope,
             emoji: "🥹",
             isMyPage: isMyPage,
+            onReactionPressed: onReactionPressed,
           ),
           ReactionButton(
             feedId: feedId,
@@ -58,6 +64,7 @@ class ReactionButtonsContainer extends StatelessWidget {
             reactionField: ReactionType.awesome,
             emoji: "😉",
             isMyPage: isMyPage,
+            onReactionPressed: onReactionPressed,
           ),
         ],
       ),
@@ -71,6 +78,7 @@ class ReactionButton extends StatelessWidget {
   final ReactionType reactionField;
   final String emoji;
   final bool isMyPage;
+  final VoidCallback onReactionPressed;
 
   const ReactionButton({
     super.key,
@@ -78,7 +86,8 @@ class ReactionButton extends StatelessWidget {
     required this.label,
     required this.reactionField,
     required this.emoji,
-    required this.isMyPage, // MyPage 여부 추가
+    required this.isMyPage,
+    required this.onReactionPressed,
   });
 
   @override
@@ -105,7 +114,13 @@ class ReactionButton extends StatelessWidget {
                     color: Colors.white), // 이모티콘 색상 흰색
               ),
               onPressed: () => (!isMyPage
-                  ? context.read<FeedCubit>().addReaction(feedId, reactionField)
+                  ? context
+                      .read<FeedCubit>()
+                      .addReaction(feedId, reactionField)
+                      .then((value) {
+                      logger.d("ReactionButton: onReactionPressed");
+                      onReactionPressed();
+                    })
                   : showModalBottomSheet(
                       context: context,
                       builder: (context) {

@@ -109,6 +109,13 @@ class OnboardingFeedViewState extends State<OnboardingFeedView> {
           return ImageCard(
             feed: feed,
             isMyPage: false,
+            onReactionPressed: () {
+              // go to next page
+              _pageController.nextPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            },
           );
         });
   }

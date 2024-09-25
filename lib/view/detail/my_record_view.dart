@@ -61,6 +61,7 @@ class FeedPageViewState extends State<MyFeedPageView> {
           return ImageCard(
             feed: feed,
             isMyPage: true,
+            onReactionPressed: () {},
           );
         });
   }

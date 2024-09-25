@@ -36,6 +36,14 @@ class FeedPageViewState extends State<FeedPageView> {
           return ImageCard(
             feed: feed,
             isMyPage: false,
+            onReactionPressed: () {
+              // go to next page
+              _pageController.nextPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+              logger.d("FeedPageViewState: onReactionPressed");
+            },
           );
         });
   }
@@ -50,8 +58,14 @@ class FeedPageViewState extends State<FeedPageView> {
 class ImageCard extends StatelessWidget {
   final Feed feed;
   final bool isMyPage;
+  final VoidCallback onReactionPressed;
 
-  const ImageCard({super.key, required this.feed, required this.isMyPage});
+  const ImageCard({
+    super.key,
+    required this.feed,
+    required this.isMyPage,
+    required this.onReactionPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +85,7 @@ class ImageCard extends StatelessWidget {
               ReactionButtonsOverlay(
                 feed: feed,
                 isMyPage: isMyPage,
+                onReactionPressed: onReactionPressed,
               ),
             ],
           ),
@@ -145,11 +160,13 @@ class ImageDisplay extends StatelessWidget {
 class ReactionButtonsOverlay extends StatelessWidget {
   final Feed feed;
   final bool isMyPage;
+  final VoidCallback onReactionPressed;
 
   const ReactionButtonsOverlay({
     super.key,
     required this.feed,
     required this.isMyPage,
+    required this.onReactionPressed,
   });
 
   @override
@@ -161,6 +178,7 @@ class ReactionButtonsOverlay extends StatelessWidget {
         child: ReactionButtonsContainer(
           feedId: feed.id!,
           isMyPage: isMyPage,
+          onReactionPressed: onReactionPressed,
         ),
       ),
     );
