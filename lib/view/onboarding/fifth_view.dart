@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/sixth_view.dart';
+import 'package:udaadaa/widgets/video_player_screen.dart';
 
 class FifthView extends StatelessWidget {
   FifthView({super.key});
@@ -25,7 +26,7 @@ class FifthView extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * 0.55,
-                child: const Placeholder(),
+                child: const VideoPlayerScreen(),
               ),
             ],
           ),
