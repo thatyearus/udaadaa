@@ -23,10 +23,11 @@ class FourthView extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('기록이 추가되었습니다')),
               );
-              Navigator.of(context).pushReplacement(
+              Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
                   builder: (context) => FifthView(),
                 ),
+                (Route<dynamic> route) => false,
               );
             } else if (state is form.FormError) {
               ScaffoldMessenger.of(context).showSnackBar(
