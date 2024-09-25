@@ -54,7 +54,7 @@ class HomeView extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MyRecordView(initialPage: 1),
+                    builder: (context) => const MyRecordView(initialPage: 2),
                   ),
                 );
               },
