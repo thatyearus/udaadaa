@@ -43,42 +43,37 @@ class FourthView extends StatelessWidget {
                 Text("같이하는 친구들에게\n하고 싶은 말을 적어볼까요?",
                     style: AppTextStyles.textTheme.displayMedium),
                 AppSpacing.verticalSizedBoxL,
-                SizedBox(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.55,
-                  child: foodCommentText(context),
-                ),
-                AppSpacing.verticalSizedBoxXxl,
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Theme.of(context).primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    minimumSize: const Size(double.infinity, 50),
-                  ),
-                  onPressed: () {
-                    FeedType cur = context.read<form.FormCubit>().feedType;
-                    context.read<form.FormCubit>().submit(
-                          type: cur,
-                          contentType: 'FOOD',
-                          review: commentController.text,
-                          mealContent: foodContent,
-                        );
-                  },
-                  child: Text(
-                    '올려서 공감받기',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppColors.white,
-                        ),
-                  ),
-                ),
+                foodCommentText(context),
               ],
             ),
           ),
         ),
       ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+        width: double.infinity,
+        child: FloatingActionButton.extended(
+          heroTag: 'onboarding4',
+          onPressed: () {
+            FeedType cur = context.read<form.FormCubit>().feedType;
+            context.read<form.FormCubit>().submit(
+                  type: cur,
+                  contentType: 'FOOD',
+                  review: commentController.text,
+                  mealContent: foodContent,
+                );
+          },
+          label: Text(
+            '올려서 공감받기',
+            style: AppTextStyles.textTheme.titleMedium
+                ?.copyWith(color: AppColors.white),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
