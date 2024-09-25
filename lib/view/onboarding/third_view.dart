@@ -22,40 +22,36 @@ class ThirdView extends StatelessWidget {
               Text("어떤 음식을 먹었나요?",
                   style: AppTextStyles.textTheme.displayMedium),
               AppSpacing.verticalSizedBoxL,
-              SizedBox(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.55,
-                child: foodContentText(context),
-              ),
-              AppSpacing.verticalSizedBoxXxl,
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => FourthView(
-                              foodContent: foodContentController.text,
-                            )),
-                  );
-                },
-                child: Text(
-                  '다음',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.white,
-                      ),
-                ),
-              ),
+              foodContentText(context),
             ],
           ),
         ),
       ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+        width: double.infinity,
+        child: FloatingActionButton.extended(
+          heroTag: 'onboarding3',
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => FourthView(
+                  foodContent: foodContentController.text,
+                ),
+              ),
+            );
+          },
+          label: Text(
+            '다음',
+            style: AppTextStyles.textTheme.titleMedium
+                ?.copyWith(color: AppColors.white),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
