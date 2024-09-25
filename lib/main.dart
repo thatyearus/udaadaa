@@ -9,13 +9,15 @@ import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/firebase_options.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/main_view.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udaadaa/view/splash_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await Future.wait([
+    PreferencesService().init(),
     Supabase.initialize(
       url: supabaseUrl,
       anonKey: supabaseKey,
@@ -56,7 +58,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: appTheme,
-        home: const MainView(),
+        home: const SplashView(),
       ),
     );
   }

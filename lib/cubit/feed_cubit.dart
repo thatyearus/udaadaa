@@ -232,6 +232,7 @@ class FeedCubit extends Cubit<FeedState> {
       await supabase
           .from('reactions')
           .upsert(newReaction.toMap(), onConflict: "user_id, feed_id");
+      logger.d("Reaction added: $reaction");
     } catch (e) {
       logger.e(e);
     }
