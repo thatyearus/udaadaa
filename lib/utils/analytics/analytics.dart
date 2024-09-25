@@ -7,7 +7,7 @@ class Analytics {
   final FirebaseAnalytics _gaAnalytics = FirebaseAnalytics.instance;
   final FirebaseAnalyticsObserver _observer;
   late Mixpanel _mixpanel;
-  final Amplitude _amplitude = Amplitude.getInstance();
+  final Amplitude _amplitude = Amplitude.getInstance(instanceName: "udaadaa_local");
 
   Analytics._internal()
       : _observer =
@@ -18,8 +18,8 @@ class Analytics {
   factory Analytics() => _instance;
 
   Future<void> init() async {
-    _mixpanel = await Mixpanel.init(amplitudeToken, trackAutomaticEvents: true);
-    _amplitude.init(mixpanelToken);
+    _mixpanel = await Mixpanel.init(mixpanelToken, trackAutomaticEvents: true);
+    _amplitude.init(amplitudeToken);
   }
 
   FirebaseAnalyticsObserver get observer => _observer;

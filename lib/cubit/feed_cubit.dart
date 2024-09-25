@@ -7,6 +7,8 @@ import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/utils/constant.dart';
 
+import '../utils/analytics/analytics.dart';
+
 part 'feed_state.dart';
 
 class FeedCubit extends Cubit<FeedState> {
@@ -180,6 +182,8 @@ class FeedCubit extends Cubit<FeedState> {
       getMoreFeeds();
     }
     logger.d("Current page: $_curFeedPage");
+    Analytics().logEvent("피드_피드탐색",
+        parameters: {"현재피드":_curFeedPage,});
   }
 
   void changeHomeFeedPage(int index, int page) {
@@ -225,6 +229,8 @@ class FeedCubit extends Cubit<FeedState> {
 
   Future<void> addReaction(String feedId, ReactionType reaction) async {
     try {
+      Analytics().logEvent("피드_리액션",
+        parameters: {"리액션": reaction.toString().split('.').last},);
       final newReaction = Reaction(
           userId: supabase.auth.currentUser!.id,
           feedId: feedId,

@@ -12,6 +12,7 @@ import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/view/splash_view.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,7 @@ Future<void> main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     ),
   ]);
+  Analytics().init();
   runApp(const MyApp());
 }
 

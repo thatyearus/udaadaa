@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/second_view.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 
 class FirstView extends StatelessWidget {
   const FirstView({super.key});
@@ -35,6 +36,7 @@ class FirstView extends StatelessWidget {
         child: FloatingActionButton.extended(
           heroTag: 'onboarding1',
           onPressed: () {
+            Analytics().logEvent("온보딩_식단종류", parameters: {"다음":"클릭"},);
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const SecondView()),
             );
@@ -140,6 +142,7 @@ class MealToggleButtons extends StatelessWidget {
     final selection = context.select<form.FormCubit, List<bool>>(
       (cubit) => cubit.mealSelection,
     );
+    final List<String> FoodType = ['아침', '점심', '저녁', '간식'];
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -169,6 +172,7 @@ class MealToggleButtons extends StatelessWidget {
               button('간식', selection[3], context),
             ],
             onPressed: (int index) {
+              Analytics().logEvent("온보딩_식단종류", parameters: {"식단종류": FoodType[index]},);
               context.read<form.FormCubit>().updateMealSelection(index);
             },
           );

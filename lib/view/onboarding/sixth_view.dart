@@ -6,6 +6,7 @@ import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/widgets/feed.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 
 class SixthView extends StatelessWidget {
   const SixthView({super.key});
@@ -113,6 +114,7 @@ class OnboardingFeedViewState extends State<OnboardingFeedView> {
             isMyPage: false,
             onReactionPressed: () {
               // go to next page
+              Analytics().logEvent("온보딩_피드구경", parameters: {"리액션":"클릭"},);
               _pageController.nextPage(
                 duration: const Duration(milliseconds: 800),
                 curve: Curves.easeInOut,

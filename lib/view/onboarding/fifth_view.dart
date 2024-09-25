@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/sixth_view.dart';
 import 'package:udaadaa/widgets/video_player_screen.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 
 class FifthView extends StatelessWidget {
   FifthView({super.key});
@@ -38,6 +39,7 @@ class FifthView extends StatelessWidget {
         child: FloatingActionButton.extended(
           heroTag: 'onboarding5',
           onPressed: () {
+            Analytics().logEvent("온보딩_응원하러_가기", parameters: {"버튼":"클릭"},);
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const SixthView()),
             );
