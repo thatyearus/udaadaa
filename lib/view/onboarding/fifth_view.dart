@@ -27,32 +27,31 @@ class FifthView extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.55,
                 child: const Placeholder(),
               ),
-              AppSpacing.verticalSizedBoxXxl,
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const SixthView()),
-                  );
-                },
-                child: Text(
-                  '응원하러 가기',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.white,
-                      ),
-                ),
-              ),
             ],
           ),
         ),
       ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+        width: double.infinity,
+        child: FloatingActionButton.extended(
+          heroTag: 'onboarding5',
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const SixthView()),
+            );
+          },
+          label: Text(
+            '응원하러 가기',
+            style: AppTextStyles.textTheme.titleMedium
+                ?.copyWith(color: AppColors.white),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
