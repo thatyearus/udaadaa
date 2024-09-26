@@ -10,6 +10,7 @@ import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/report.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 part 'form_state.dart';
@@ -77,6 +78,7 @@ class FormCubit extends Cubit<FormState> {
 
       return compressedImage;
     } catch (e) {
+      Analytics().logEvent("업로드_압축실패", parameters: {"에러": e.toString()});
       logger.e(e);
       return null;
     }
@@ -105,6 +107,7 @@ class FormCubit extends Cubit<FormState> {
       return imagePath;
     } catch (e) {
       logger.e(e);
+      Analytics().logEvent("업로드_이미지실패", parameters: {"에러": e.toString()});
       emit(FormError(e.toString()));
       return null;
     }
@@ -146,6 +149,7 @@ class FormCubit extends Cubit<FormState> {
         feedId: ret['id'],
       );
     } catch (e) {
+      Analytics().logEvent("업로드_제출실패", parameters: {"에러": e.toString()});
       logger.e(e);
       emit(FormError(e.toString()));
     }
@@ -235,6 +239,7 @@ class FormCubit extends Cubit<FormState> {
       }
       selectedImages[contentType] = null;
     } catch (e) {
+      Analytics().logEvent("업로드_칼로리실패", parameters: {"에러": e.toString()});
       logger.e(e);
       emit(FormError(e.toString()));
     }
