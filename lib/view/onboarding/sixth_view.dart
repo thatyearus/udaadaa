@@ -79,9 +79,8 @@ class OnboardingFeedViewState extends State<OnboardingFeedView> {
       isEnd = _pageController.position.pixels ==
           _pageController.position.maxScrollExtent;
     }
-    logger.d(isEnd);
-    logger.d(_pageController.position.atEdge ? "at Edge" : "not at Edge");
     if (isEnd) {
+      Analytics().logEvent("온보딩_종료");
       PreferencesService().setBool('isOnboardingComplete', true);
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
