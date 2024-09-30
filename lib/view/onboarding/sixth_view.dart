@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
@@ -68,8 +69,19 @@ class OnboardingFeedViewState extends State<OnboardingFeedView> {
   }
 
   void _onScroll() {
-    if (_pageController.position.pixels >
-        _pageController.position.maxScrollExtent) {
+    bool isEnd;
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      // iOS에서는 maxScrollExtent보다 더 큰 값을 확인
+      isEnd = _pageController.position.pixels >
+          _pageController.position.maxScrollExtent + 20;
+    } else {
+      // Android에서는 정확히 maxScrollExtent를 확인
+      isEnd = _pageController.position.pixels ==
+          _pageController.position.maxScrollExtent;
+    }
+    logger.d(isEnd);
+    logger.d(_pageController.position.atEdge ? "at Edge" : "not at Edge");
+    if (isEnd) {
       PreferencesService().setBool('isOnboardingComplete', true);
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
@@ -114,7 +126,10 @@ class OnboardingFeedViewState extends State<OnboardingFeedView> {
             isMyPage: false,
             onReactionPressed: () {
               // go to next page
-              Analytics().logEvent("온보딩_피드구경", parameters: {"리액션":"클릭"},);
+              Analytics().logEvent(
+                "온보딩_피드구경",
+                parameters: {"리액션": "클릭"},
+              );
               _pageController.nextPage(
                 duration: const Duration(milliseconds: 800),
                 curve: Curves.easeInOut,
