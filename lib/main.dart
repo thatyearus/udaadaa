@@ -12,6 +12,14 @@ import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/view/splash_view.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
+import 'package:facebook_app_events/facebook_app_events.dart';
+
+Future<void> _facebookTracking() async {
+  FacebookAppEvents facebookAppEvents = FacebookAppEvents();
+  await facebookAppEvents.setAdvertiserTracking(enabled: true);
+  await facebookAppEvents.setAutoLogAppEventsEnabled(true);
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +34,9 @@ Future<void> main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     ),
   ]);
+  Analytics().init();
+
+  _facebookTracking();
   runApp(const MyApp());
 }
 

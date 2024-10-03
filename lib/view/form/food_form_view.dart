@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 
 class FoodFormView extends StatelessWidget {
   FoodFormView({super.key});
@@ -44,13 +45,39 @@ class FoodFormView extends StatelessWidget {
               // 먹은 음식 내용
               TextField(
                 controller: foodContentController,
-                decoration: const InputDecoration(labelText: '음식 내용'),
+                decoration: InputDecoration(
+                  labelText: '음식 내용',
+                  hintText: '연어 포케',
+                  hintStyle: AppTextStyles.bodyMedium(
+                      TextStyle(color: AppColors.neutral[500])),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                ),
+                onEditingComplete: () {
+                  Analytics().logEvent(
+                    "업로드_음식내용",
+                    parameters: {"사용자_입력": foodContentController.text},
+                  );
+                  FocusScope.of(context).unfocus();
+                },
               ),
               AppSpacing.verticalSizedBoxM,
               // 한 줄 평 (공통)
               TextField(
                 controller: commentController,
-                decoration: const InputDecoration(labelText: '음식 한마디'),
+                decoration: InputDecoration(
+                  labelText: '음식 한마디',
+                  hintText: '오늘 치팅데이니까 혼내지 말아 주세요ㅠ',
+                  hintStyle: AppTextStyles.bodyMedium(
+                      TextStyle(color: AppColors.neutral[500])),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                ),
+                onEditingComplete: () {
+                  Analytics().logEvent(
+                    "업로드_음식한마디",
+                    parameters: {"사용자_입력": foodContentController.text},
+                  );
+                  FocusScope.of(context).unfocus();
+                },
               ),
               AppSpacing.verticalSizedBoxL,
               ElevatedButton(
@@ -64,6 +91,9 @@ class FoodFormView extends StatelessWidget {
                   minimumSize: const Size(double.infinity, 50),
                 ),
                 onPressed: () {
+                  Analytics().logEvent(
+                    "업로드_기록추가",
+                  );
                   FeedType cur = context.read<form.FormCubit>().feedType;
                   context.read<form.FormCubit>().submit(
                         type: cur,
@@ -127,6 +157,9 @@ class FoodFormView extends StatelessWidget {
           ),
           onPressed: () {
             context.read<form.FormCubit>().updateImage('FOOD');
+            Analytics().logEvent(
+              "업로드_이미지업로드",
+            );
           },
           child: Text(
             image != null ? '이미지 변경' : '이미지 업로드',
@@ -175,6 +208,7 @@ class MealToggleButtons extends StatelessWidget {
     final selection = context.select<form.FormCubit, List<bool>>(
       (cubit) => cubit.mealSelection,
     );
+    final List<String> type = ['아침', '점심', '저녁', '간식'];
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -205,6 +239,10 @@ class MealToggleButtons extends StatelessWidget {
             ],
             onPressed: (int index) {
               context.read<form.FormCubit>().updateMealSelection(index);
+              Analytics().logEvent(
+                "업로드_식단종류",
+                parameters: {"식단종류": type[index]},
+              );
             },
           );
         },

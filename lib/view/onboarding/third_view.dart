@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/fourth_view.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 
 class ThirdView extends StatelessWidget {
   ThirdView({super.key});
@@ -33,6 +34,7 @@ class ThirdView extends StatelessWidget {
         child: FloatingActionButton.extended(
           heroTag: 'onboarding3',
           onPressed: () {
+            Analytics().logEvent("온보딩_음식내용", parameters: {"다음":"클릭"},);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => FourthView(
@@ -65,6 +67,13 @@ class ThirdView extends StatelessWidget {
             AppTextStyles.bodyMedium(TextStyle(color: AppColors.neutral[500])),
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
+      onEditingComplete: () {
+        Analytics().logEvent(
+          "온보딩_음식내용",
+          parameters: {"사용자_입력": foodContentController.text},
+        );
+        FocusScope.of(context).unfocus();
+      },
     );
   }
 }

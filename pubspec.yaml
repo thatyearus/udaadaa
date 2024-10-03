@@ -46,7 +46,7 @@ dependencies:
   image_picker: ^1.1.2
   image: ^4.2.0
   path_provider: ^2.1.4
-  firebase_core: ^3.4.1
+  firebase_core: ^3.5.0
   firebase_analytics: ^11.3.1
   firebase_messaging: ^15.1.1
   flutter_local_notifications: ^17.2.2
@@ -54,6 +54,7 @@ dependencies:
   mixpanel_flutter: ^2.3.2
   shared_preferences: ^2.3.2
   video_player: ^2.9.1
+  facebook_app_events: ^0.19.3
 
 dev_dependencies:
   flutter_test:
