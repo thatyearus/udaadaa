@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/first_view.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 
 class InitialView extends StatelessWidget {
   const InitialView({super.key});
@@ -38,6 +39,7 @@ class InitialView extends StatelessWidget {
                   minimumSize: const Size(double.infinity, 50),
                 ),
                 onPressed: () {
+                  Analytics().logEvent("온보딩_시작하기");
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => const FirstView()),
                   );

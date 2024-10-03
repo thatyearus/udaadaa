@@ -4,6 +4,8 @@ import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/utils/constant.dart';
 
+import '../utils/analytics/analytics.dart';
+
 class ReactionButtonsContainer extends StatelessWidget {
   final String feedId;
   final bool isMyPage;
@@ -151,7 +153,6 @@ class ReactionButtonState extends State<ReactionButton>
                 ),
                 onPressed: () {
                   _animateReaction(); // 애니메이션 실행
-
                   if (!widget.isMyPage) {
                     context
                         .read<FeedCubit>()
@@ -160,6 +161,7 @@ class ReactionButtonState extends State<ReactionButton>
                       widget.onReactionPressed();
                     });
                   } else {
+                    Analytics().logEvent("마이페이지_공감한사용자");
                     showModalBottomSheet(
                         context: context,
                         builder: (context) {

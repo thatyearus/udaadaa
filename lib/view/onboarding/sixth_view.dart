@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
@@ -6,6 +7,7 @@ import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/widgets/feed.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 
 class SixthView extends StatelessWidget {
   const SixthView({super.key});
@@ -67,8 +69,18 @@ class OnboardingFeedViewState extends State<OnboardingFeedView> {
   }
 
   void _onScroll() {
-    if (_pageController.position.pixels >
-        _pageController.position.maxScrollExtent) {
+    bool isEnd;
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      // iOS에서는 maxScrollExtent보다 더 큰 값을 확인
+      isEnd = _pageController.position.pixels >
+          _pageController.position.maxScrollExtent + 20;
+    } else {
+      // Android에서는 정확히 maxScrollExtent를 확인
+      isEnd = _pageController.position.pixels ==
+          _pageController.position.maxScrollExtent;
+    }
+    if (isEnd) {
+      Analytics().logEvent("온보딩_종료");
       PreferencesService().setBool('isOnboardingComplete', true);
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
@@ -113,6 +125,10 @@ class OnboardingFeedViewState extends State<OnboardingFeedView> {
             isMyPage: false,
             onReactionPressed: () {
               // go to next page
+              Analytics().logEvent(
+                "온보딩_피드구경",
+                parameters: {"리액션": "클릭"},
+              );
               _pageController.nextPage(
                 duration: const Duration(milliseconds: 800),
                 curve: Curves.easeInOut,

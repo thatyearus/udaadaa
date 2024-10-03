@@ -4,6 +4,7 @@ import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/fifth_view.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 
 class FourthView extends StatelessWidget {
   FourthView({super.key, required this.foodContent});
@@ -56,6 +57,7 @@ class FourthView extends StatelessWidget {
         child: FloatingActionButton.extended(
           heroTag: 'onboarding4',
           onPressed: () {
+            Analytics().logEvent("온보딩_음식한마디", parameters: {"올려서_공감받기":"클릭"},);
             FeedType cur = context.read<form.FormCubit>().feedType;
             context.read<form.FormCubit>().submit(
                   type: cur,
@@ -88,6 +90,14 @@ class FourthView extends StatelessWidget {
             AppTextStyles.bodyMedium(TextStyle(color: AppColors.neutral[500])),
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
+
+      onEditingComplete: () {
+        Analytics().logEvent(
+          "온보딩_음식한마디",
+          parameters: {"사용자_입력": commentController.text},
+        );
+        FocusScope.of(context).unfocus();
+      },
     );
   }
 }

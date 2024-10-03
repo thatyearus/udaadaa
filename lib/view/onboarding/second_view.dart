@@ -6,6 +6,7 @@ import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/third_view.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 
 class SecondView extends StatelessWidget {
   const SecondView({super.key});
@@ -53,6 +54,7 @@ class SecondView extends StatelessWidget {
           heroTag: 'onboarding2',
           onPressed: () {
             if (imageSelected) {
+              Analytics().logEvent("온보딩_식단업로드", parameters: {"다음":"사진 업로드 완료"},);
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => ThirdView()),
               );
@@ -113,6 +115,10 @@ class SecondView extends StatelessWidget {
             minimumSize: const Size(double.infinity, 50),
           ),
           onPressed: () {
+            Analytics().logEvent(
+              "온보딩_식단업로드",
+              parameters: {"업로드버튼": "클릭"},
+            );
             context.read<form.FormCubit>().updateImage('FOOD');
           },
           child: Text(

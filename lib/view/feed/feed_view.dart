@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/widgets/feed.dart';
 
 class FeedView extends StatelessWidget {
@@ -35,9 +36,14 @@ class FeedView extends StatelessWidget {
                   break;
               }
             },
-            icon: const Icon(
-              Icons.more_vert_rounded,
-              color: Colors.white,
+            icon: GestureDetector(
+              onTap: () {
+                Analytics().logEvent("피드_더보기",);
+              },
+              child: const Icon(
+                Icons.more_vert_rounded,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
