@@ -182,8 +182,9 @@ class FeedCubit extends Cubit<FeedState> {
       getMoreFeeds();
     }
     logger.d("Current page: $_curFeedPage");
-    Analytics().logEvent("피드_피드탐색",
-        parameters: {"현재피드":_curFeedPage,});
+    Analytics().logEvent("피드_피드탐색", parameters: {
+      "현재피드": _curFeedPage,
+    });
   }
 
   void changeHomeFeedPage(int index, int page) {
@@ -229,8 +230,10 @@ class FeedCubit extends Cubit<FeedState> {
 
   Future<void> addReaction(String feedId, ReactionType reaction) async {
     try {
-      Analytics().logEvent("피드_리액션",
-        parameters: {"리액션": reaction.toString().split('.').last},);
+      Analytics().logEvent(
+        "피드_리액션",
+        parameters: {"리액션": reaction.toString().split('.').last},
+      );
       final newReaction = Reaction(
           userId: supabase.auth.currentUser!.id,
           feedId: feedId,
@@ -240,6 +243,10 @@ class FeedCubit extends Cubit<FeedState> {
           .upsert(newReaction.toMap(), onConflict: "user_id, feed_id");
       logger.d("Reaction added: $reaction");
     } catch (e) {
+      Analytics().logEvent(
+        "피드_리액션_에러",
+        parameters: {"에러": e.toString()},
+      );
       logger.e(e);
     }
   }

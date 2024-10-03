@@ -7,6 +7,17 @@ PODS:
   - AnalyticsConnector (1.0.3)
   - app_links (0.0.2):
     - Flutter
+  - facebook_app_events (0.0.1):
+    - FBAudienceNetwork (~> 6.15)
+    - FBSDKCoreKit (~> 17.0)
+    - Flutter
+  - FBAEMKit (17.1.0):
+    - FBSDKCoreKit_Basics (= 17.1.0)
+  - FBAudienceNetwork (6.15.2)
+  - FBSDKCoreKit (17.1.0):
+    - FBAEMKit (= 17.1.0)
+    - FBSDKCoreKit_Basics (= 17.1.0)
+  - FBSDKCoreKit_Basics (17.1.0)
   - Firebase/Analytics (11.0.0):
     - Firebase/Core
   - Firebase/Core (11.0.0):
@@ -151,6 +162,7 @@ PODS:
 DEPENDENCIES:
   - amplitude_flutter (from `.symlinks/plugins/amplitude_flutter/ios`)
   - app_links (from `.symlinks/plugins/app_links/ios`)
+  - facebook_app_events (from `.symlinks/plugins/facebook_app_events/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -168,6 +180,10 @@ SPEC REPOS:
   trunk:
     - Amplitude
     - AnalyticsConnector
+    - FBAEMKit
+    - FBAudienceNetwork
+    - FBSDKCoreKit
+    - FBSDKCoreKit_Basics
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -186,6 +202,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/amplitude_flutter/ios"
   app_links:
     :path: ".symlinks/plugins/app_links/ios"
+  facebook_app_events:
+    :path: ".symlinks/plugins/facebook_app_events/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
@@ -216,6 +234,11 @@ SPEC CHECKSUMS:
   amplitude_flutter: 0f617f89d62b10c40a0ab14849e660a7c12e4e46
   AnalyticsConnector: a53214d38ae22734c6266106c0492b37832633a9
   app_links: e7a6750a915a9e161c58d91bc610e8cd1d4d0ad0
+  facebook_app_events: acb7c266406d3e3592bcf846d7184172ecfd6492
+  FBAEMKit: cb719c53575a3be86ea873279f30d6a2c4e15881
+  FBAudienceNetwork: 2457a89b45e2596241fd81b0c2fd8cb6f6053869
+  FBSDKCoreKit: ecdb980a24633ccb012700299ceb16d0235e14d2
+  FBSDKCoreKit_Basics: 045101c4a9ef10c845347424d73a29aae02c3e43
   Firebase: 9f574c08c2396885b5e7e100ed4293d956218af9
   firebase_analytics: b8ce6c2c4b245d3c3bb3a147965d09da0f455959
   firebase_core: 2ec6b789859c7c24766344ec71fdf78639402d56
