@@ -58,27 +58,34 @@ class MainView extends StatelessWidget {
           },
         ),
       ),
-      floatingActionButton: Container(
-        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-        width: double.infinity,
-        child: FloatingActionButton.extended(
-          heroTag: 'addFood',
-          onPressed: () {
-            Analytics().logEvent("홈_공감받으러가기");
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const FirstView(),
+      floatingActionButton: BlocBuilder<BottomNavCubit, BottomNavState>(
+        builder: (context, state) {
+          if (state == BottomNavState.feed) {
+            return Container();
+          }
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+            width: double.infinity,
+            child: FloatingActionButton.extended(
+              heroTag: 'addFood',
+              onPressed: () {
+                Analytics().logEvent("홈_공감받으러가기");
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const FirstView(),
+                  ),
+                );
+              },
+              label: Text(
+                '반응 받으러 가기',
+                style: AppTextStyles.textTheme.headlineLarge,
               ),
-            );
-          },
-          label: Text(
-            '반응 받으러 가기',
-            style: AppTextStyles.textTheme.headlineLarge,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
