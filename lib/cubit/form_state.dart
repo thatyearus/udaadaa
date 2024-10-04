@@ -13,4 +13,10 @@ final class FormError extends FormState {
 
 final class FormLoading extends FormState {}
 
+final class FormCalorie extends FormState {
+  final Calorie calorie;
+
+  FormCalorie(this.calorie);
+}
+
 final class FormSuccess extends FormState {}
