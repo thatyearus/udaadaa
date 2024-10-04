@@ -4,7 +4,6 @@ import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
-import 'package:udaadaa/view/onboarding/first_view.dart';
 import 'package:udaadaa/widgets/last_record.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 
@@ -76,29 +75,6 @@ class HomeView extends StatelessWidget {
           ]),
         ),
       ),
-      floatingActionButton: Container(
-        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-        width: double.infinity,
-        child: FloatingActionButton.extended(
-          heroTag: 'addFood',
-          onPressed: () {
-            Analytics().logEvent("홈_공감받으러가기");
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const FirstView(),
-              ),
-            );
-          },
-          label: Text(
-            '반응 받으러 가기',
-            style: AppTextStyles.textTheme.headlineLarge,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
