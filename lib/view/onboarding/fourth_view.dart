@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:udaadaa/cubit/form_cubit.dart' as form;
-import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/fifth_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
@@ -18,36 +15,17 @@ class FourthView extends StatelessWidget {
       appBar: AppBar(),
       body: SafeArea(
         minimum: AppSpacing.edgeInsetsL,
-        child: BlocListener<form.FormCubit, form.FormState>(
-          listener: (context, state) {
-            if (state is form.FormSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('기록이 추가되었습니다')),
-              );
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (context) => FifthView(),
-                ),
-                (Route<dynamic> route) => false,
-              );
-            } else if (state is form.FormError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
-              );
-            }
-          },
-          child: SingleChildScrollView(
-            reverse: true,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("같이하는 친구들에게\n하고 싶은 말을 적어볼까요?",
-                    style: AppTextStyles.textTheme.displayMedium),
-                AppSpacing.verticalSizedBoxL,
-                foodCommentText(context),
-              ],
-            ),
+        child: SingleChildScrollView(
+          reverse: true,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("같이하는 친구들에게\n하고 싶은 말을 적어볼까요?",
+                  style: AppTextStyles.textTheme.displayMedium),
+              AppSpacing.verticalSizedBoxL,
+              foodCommentText(context),
+            ],
           ),
         ),
       ),
@@ -57,17 +35,20 @@ class FourthView extends StatelessWidget {
         child: FloatingActionButton.extended(
           heroTag: 'onboarding4',
           onPressed: () {
-            Analytics().logEvent("온보딩_음식한마디", parameters: {"올려서_공감받기":"클릭"},);
-            FeedType cur = context.read<form.FormCubit>().feedType;
-            context.read<form.FormCubit>().submit(
-                  type: cur,
-                  contentType: 'FOOD',
-                  review: commentController.text,
-                  mealContent: foodContent,
-                );
+            Analytics().logEvent(
+              "온보딩_음식한마디",
+              parameters: {"다음": "클릭"},
+            );
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => FifthView(
+                        foodContent: foodContent,
+                        foodComment: commentController.text,
+                      )),
+            );
           },
           label: Text(
-            '올려서 공감받기',
+            '다음',
             style: AppTextStyles.textTheme.titleMedium
                 ?.copyWith(color: AppColors.white),
           ),
@@ -90,7 +71,6 @@ class FourthView extends StatelessWidget {
             AppTextStyles.bodyMedium(TextStyle(color: AppColors.neutral[500])),
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
-
       onEditingComplete: () {
         Analytics().logEvent(
           "온보딩_음식한마디",
