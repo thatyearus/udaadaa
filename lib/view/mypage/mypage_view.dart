@@ -5,7 +5,7 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
-import 'package:udaadaa/view/form/food_form_view.dart';
+import 'package:udaadaa/view/onboarding/first_view.dart';
 import 'package:udaadaa/widgets/my_profile.dart';
 
 import '../../utils/analytics/analytics.dart';
@@ -32,8 +32,10 @@ class MyPageView extends StatelessWidget {
           onSelected: (value) {
             switch (value) {
               case 'change_nickname':
-                Analytics().logEvent("마이페이지_닉네임",
-                  parameters: {"클릭": "닉네임변경"},);
+                Analytics().logEvent(
+                  "마이페이지_닉네임",
+                  parameters: {"클릭": "닉네임변경"},
+                );
                 final nicknameController = TextEditingController();
                 showDialog(
                     context: context,
@@ -51,16 +53,20 @@ class MyPageView extends StatelessWidget {
                         actions: [
                           TextButton(
                             onPressed: () {
-                              Analytics().logEvent("마이페이지_닉네임",
-                                parameters: {"클릭": "취소"},);
+                              Analytics().logEvent(
+                                "마이페이지_닉네임",
+                                parameters: {"클릭": "취소"},
+                              );
                               Navigator.of(context).pop();
                             },
                             child: const Text('취소'),
                           ),
                           TextButton(
                             onPressed: () {
-                              Analytics().logEvent("마이페이지_닉네임",
-                                parameters: {"클릭": "확인"},);
+                              Analytics().logEvent(
+                                "마이페이지_닉네임",
+                                parameters: {"클릭": "확인"},
+                              );
                               context
                                   .read<AuthCubit>()
                                   .updateNickname(nicknameController.text);
@@ -101,8 +107,10 @@ class MyPageView extends StatelessWidget {
                     return GridTile(
                       child: GestureDetector(
                         onTap: () {
-                          Analytics().logEvent("마이페이지_피드",
-                            parameters: {"피드선택": index},);
+                          Analytics().logEvent(
+                            "마이페이지_피드",
+                            parameters: {"피드선택": index},
+                          );
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) =>
@@ -162,7 +170,7 @@ class MyPageView extends StatelessWidget {
             Analytics().logEvent("마이페이지_공감받으러가기");
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => FoodFormView(),
+                builder: (context) => const FirstView(),
               ),
             );
           },
