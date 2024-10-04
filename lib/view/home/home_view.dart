@@ -4,7 +4,7 @@ import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
-import 'package:udaadaa/view/form/food_form_view.dart';
+import 'package:udaadaa/view/onboarding/first_view.dart';
 import 'package:udaadaa/widgets/last_record.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 
@@ -28,8 +28,10 @@ class HomeView extends StatelessWidget {
           child: Column(children: [
             GestureDetector(
               onTap: () {
-                Analytics().logEvent("홈_최근기록",
-                  parameters: {"최근기록_페이지": "1"},);
+                Analytics().logEvent(
+                  "홈_최근기록",
+                  parameters: {"최근기록_페이지": "1"},
+                );
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -42,8 +44,10 @@ class HomeView extends StatelessWidget {
             AppSpacing.verticalSizedBoxXl,
             GestureDetector(
               onTap: () {
-                Analytics().logEvent("홈_최근기록",
-                  parameters: {"최근기록_페이지": "2"},);
+                Analytics().logEvent(
+                  "홈_최근기록",
+                  parameters: {"최근기록_페이지": "2"},
+                );
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -56,8 +60,10 @@ class HomeView extends StatelessWidget {
             AppSpacing.verticalSizedBoxXl,
             GestureDetector(
               onTap: () {
-                Analytics().logEvent("홈_최근기록",
-                  parameters: {"최근기록_페이지": "3"},);
+                Analytics().logEvent(
+                  "홈_최근기록",
+                  parameters: {"최근기록_페이지": "3"},
+                );
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -79,7 +85,7 @@ class HomeView extends StatelessWidget {
             Analytics().logEvent("홈_공감받으러가기");
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => FoodFormView(),
+                builder: (context) => const FirstView(),
               ),
             );
           },
