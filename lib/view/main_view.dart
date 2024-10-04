@@ -69,7 +69,11 @@ class MainView extends StatelessWidget {
             child: FloatingActionButton.extended(
               heroTag: 'addFood',
               onPressed: () {
-                Analytics().logEvent("홈_공감받으러가기");
+                if (state == BottomNavState.home) {
+                  Analytics().logEvent("홈_공감받으러가기");
+                } else if (state == BottomNavState.profile) {
+                  Analytics().logEvent("마이페이지_공감받으러가기");
+                }
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => const FirstView(),
