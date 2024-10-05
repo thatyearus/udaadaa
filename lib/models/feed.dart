@@ -40,6 +40,7 @@ class Feed {
       'review': review,
       'type': type.name,
       'image_path': imagePath,
+      'calorie': calorie,
     };
   }
 
