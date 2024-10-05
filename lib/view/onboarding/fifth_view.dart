@@ -55,7 +55,7 @@ class FifthView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("같이하는 친구들에게\n하고 싶은 말을 적어볼까요?",
+                Text("AI가 측정한 칼로리 결과를\n확인해 볼까요?",
                     style: AppTextStyles.textTheme.displayMedium),
                 AppSpacing.verticalSizedBoxL,
                 _formBody(context),
@@ -192,16 +192,10 @@ class FifthView extends StatelessWidget {
   }
 
   Widget _buildInfoText(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          "칼로리는 여성 1인분 기준으로 측정하였습니다.",
-          style: Theme.of(context)
-              .textTheme
-              .bodySmall
-              ?.copyWith(color: Colors.grey),
-        ),
-      ],
+    return Text(
+      "AI가 대한민국 여성 평균 1인분을 기준으로 측정해 주고 있어요.\n음식 내용을 자세히 적고 알고 있는 칼로리를 함께 적어주면 더 정확한 칼로리를 얻을 수 있어요!",
+      style:
+          Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
     );
   }
 }
