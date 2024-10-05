@@ -85,7 +85,7 @@ class MyPageView extends StatelessWidget {
       body: RefreshIndicator(
         onRefresh: () => context.read<FeedCubit>().fetchMyFeeds(),
         child: SingleChildScrollView(
-          padding: AppSpacing.edgeInsetsL,
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
