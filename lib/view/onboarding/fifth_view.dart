@@ -51,6 +51,7 @@ class FifthView extends StatelessWidget {
           },
           child: SingleChildScrollView(
             reverse: true,
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,6 +60,8 @@ class FifthView extends StatelessWidget {
                     style: AppTextStyles.textTheme.displayMedium),
                 AppSpacing.verticalSizedBoxL,
                 _formBody(context),
+                AppSpacing.verticalSizedBoxXxl,
+                AppSpacing.verticalSizedBoxXxl,
               ],
             ),
           ),
