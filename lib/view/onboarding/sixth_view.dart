@@ -14,7 +14,7 @@ class SixthView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
-        minimum: AppSpacing.edgeInsetsL,
+        minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         child: SingleChildScrollView(
           reverse: true,
           child: Column(

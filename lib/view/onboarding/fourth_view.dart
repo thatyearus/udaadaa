@@ -16,7 +16,7 @@ class FourthView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
-        minimum: AppSpacing.edgeInsetsL,
+        minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         child: BlocListener<form.FormCubit, form.FormState>(
           listener: (context, state) {
             if (state is form.FormCalorie) {

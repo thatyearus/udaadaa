@@ -28,7 +28,7 @@ class SecondView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
-        minimum: AppSpacing.edgeInsetsL,
+        minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         child: SingleChildScrollView(
           reverse: true,
           child: Column(
@@ -54,7 +54,10 @@ class SecondView extends StatelessWidget {
           heroTag: 'onboarding2',
           onPressed: () {
             if (imageSelected) {
-              Analytics().logEvent("온보딩_식단업로드", parameters: {"다음":"사진 업로드 완료"},);
+              Analytics().logEvent(
+                "온보딩_식단업로드",
+                parameters: {"다음": "사진 업로드 완료"},
+              );
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => ThirdView()),
               );

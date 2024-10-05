@@ -13,7 +13,7 @@ class ThirdView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
-        minimum: AppSpacing.edgeInsetsL,
+        minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         child: SingleChildScrollView(
           reverse: true,
           child: Column(
@@ -34,7 +34,10 @@ class ThirdView extends StatelessWidget {
         child: FloatingActionButton.extended(
           heroTag: 'onboarding3',
           onPressed: () {
-            Analytics().logEvent("온보딩_음식내용", parameters: {"다음":"클릭"},);
+            Analytics().logEvent(
+              "온보딩_음식내용",
+              parameters: {"다음": "클릭"},
+            );
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => FourthView(
