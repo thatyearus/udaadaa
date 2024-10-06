@@ -83,6 +83,7 @@ class MainView extends StatelessWidget {
                     builder: (context) => const FirstView(),
                   ),
                 );
+                context.read<BottomNavCubit>().selectTab(BottomNavState.feed);
               },
               label: Text(
                 '반응 받으러 가기',
