@@ -60,8 +60,6 @@ class FifthView extends StatelessWidget {
                     style: AppTextStyles.textTheme.displayMedium),
                 AppSpacing.verticalSizedBoxL,
                 _formBody(context),
-                AppSpacing.verticalSizedBoxXxl,
-                AppSpacing.verticalSizedBoxXxl,
               ],
             ),
           ),
