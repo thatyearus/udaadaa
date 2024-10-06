@@ -104,6 +104,12 @@ class FourthView extends StatelessWidget {
         hintText: '오늘 치팅데이니까 혼내지 말아 주세요ㅠ',
         hintStyle:
             AppTextStyles.bodyMedium(TextStyle(color: AppColors.neutral[500])),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: AppColors.neutral[300]!),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: AppColors.primary),
+        ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
       onEditingComplete: () {
