@@ -6,6 +6,7 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/feed.dart';
@@ -17,8 +18,10 @@ part 'form_state.dart';
 
 class FormCubit extends Cubit<FormState> {
   ProfileCubit profileCubit;
+  FeedCubit feedCubit;
   FormCubit(
     this.profileCubit,
+    this.feedCubit,
   ) : super(FormInitial());
 
   final Map<String, XFile?> _selectedImages = {
@@ -177,6 +180,7 @@ class FormCubit extends Cubit<FormState> {
         feedId: ret['id'],
         calorie: calorie,
       );
+      feedCubit.fetchMyFeeds();
     } catch (e) {
       Analytics().logEvent("업로드_제출실패", parameters: {"에러": e.toString()});
       logger.e(e);
