@@ -47,6 +47,13 @@ class FourthView extends StatelessWidget {
                 children: [
                   Text("같이하는 친구들에게\n하고 싶은 말을 적어볼까요?",
                       style: AppTextStyles.textTheme.displayMedium),
+                  AppSpacing.verticalSizedBoxS,
+                  Text(
+                    "자유롭게 하고 싶은 말을 적어주세요!",
+                    style: AppTextStyles.bodyMedium(
+                      TextStyle(color: AppColors.neutral[500]),
+                    ),
+                  ),
                   AppSpacing.verticalSizedBoxL,
                   foodCommentText(context),
                 ],
@@ -74,7 +81,7 @@ class FourthView extends StatelessWidget {
                 context.read<form.FormCubit>().calculate(foodContent);
               },
               label: Text(
-                '다음',
+                '칼로리 계산하기',
                 style: AppTextStyles.textTheme.titleMedium
                     ?.copyWith(color: AppColors.white),
               ),
