@@ -14,9 +14,13 @@ class MainView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = [
+      /*
       const _NavigatorPage(child: HomeView()),
       const _NavigatorPage(child: FeedView()),
-      const _NavigatorPage(child: MyPageView()),
+      const _NavigatorPage(child: MyPageView()),*/
+      const HomeView(),
+      const FeedView(),
+      const MyPageView(),
     ];
     final List<String> labels = ['홈', '피드', '마이페이지'];
 
@@ -96,6 +100,7 @@ class MainView extends StatelessWidget {
   }
 }
 
+/*
 class _NavigatorPage extends StatelessWidget {
   final Widget child;
 
@@ -112,3 +117,4 @@ class _NavigatorPage extends StatelessWidget {
     );
   }
 }
+*/
