@@ -27,7 +27,7 @@ class FifthView extends StatelessWidget {
       appBar: AppBar(),
       body: SafeArea(
         minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-        child: BlocListener<form.FormCubit, form.FormState>(
+        child: BlocConsumer<form.FormCubit, form.FormState>(
           listener: (context, state) {
             if (state is form.FormSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -49,49 +49,62 @@ class FifthView extends StatelessWidget {
               );
             }
           },
-          child: SingleChildScrollView(
-            reverse: true,
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("AI가 측정한 칼로리 결과를\n확인해 볼까요?",
-                    style: AppTextStyles.textTheme.displayMedium),
-                AppSpacing.verticalSizedBoxL,
-                _formBody(context),
-              ],
-            ),
-          ),
+          builder: (context, state) {
+            if (state is form.FormLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return SingleChildScrollView(
+              reverse: true,
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("AI가 측정한 칼로리 결과를\n확인해 볼까요?",
+                      style: AppTextStyles.textTheme.displayMedium),
+                  AppSpacing.verticalSizedBoxL,
+                  _formBody(context),
+                ],
+              ),
+            );
+          },
         ),
       ),
       floatingActionButton: Container(
         margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         width: double.infinity,
-        child: FloatingActionButton.extended(
-          heroTag: 'onboarding4',
-          onPressed: () {
-            Analytics().logEvent(
-              "온보딩_음식한마디",
-              parameters: {"올려서_공감받기": "클릭"},
-            );
-            FeedType cur = context.read<form.FormCubit>().feedType;
-            context.read<form.FormCubit>().submit(
-                  type: cur,
-                  contentType: 'FOOD',
-                  review: foodComment,
-                  mealContent: foodContent,
-                  calorie: calorie,
+        child: BlocBuilder<form.FormCubit, form.FormState>(
+          builder: (context, state) {
+            return FloatingActionButton.extended(
+              heroTag: 'onboarding4',
+              onPressed: () {
+                if (state is form.FormLoading) return;
+                Analytics().logEvent(
+                  "온보딩_음식한마디",
+                  parameters: {"올려서_공감받기": "클릭"},
                 );
+                FeedType cur = context.read<form.FormCubit>().feedType;
+                context.read<form.FormCubit>().submit(
+                      type: cur,
+                      contentType: 'FOOD',
+                      review: foodComment,
+                      mealContent: foodContent,
+                      calorie: calorie,
+                    );
+              },
+              label: Text(
+                '올려서 공감받기',
+                style: AppTextStyles.textTheme.titleMedium
+                    ?.copyWith(color: AppColors.white),
+              ),
+              backgroundColor: (state is form.FormLoading)
+                  ? AppColors.neutral[300]
+                  : AppColors.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            );
           },
-          label: Text(
-            '올려서 공감받기',
-            style: AppTextStyles.textTheme.titleMedium
-                ?.copyWith(color: AppColors.white),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
