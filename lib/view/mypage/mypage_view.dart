@@ -137,7 +137,9 @@ class MyPageView extends StatelessWidget {
                                   color:
                                       AppColors.neutral[500]?.withOpacity(0.5),
                                   child: Text(
-                                    "${myFeeds[index].calorie} kcal",
+                                    (myFeeds[index].calorie != null
+                                        ? "${myFeeds[index].calorie} kcal"
+                                        : ""),
                                     style: AppTextStyles.headlineSmall(
                                       TextStyle(
                                           color: AppColors.neutral[200],
