@@ -75,6 +75,12 @@ class ThirdView extends StatelessWidget {
         hintText: '그릭요거트(110kcal), 복숭아 1개',
         hintStyle:
             AppTextStyles.bodyMedium(TextStyle(color: AppColors.neutral[500])),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: AppColors.neutral[300]!),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: AppColors.primary),
+        ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
       onEditingComplete: () {
