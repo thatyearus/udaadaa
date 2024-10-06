@@ -22,6 +22,13 @@ class ThirdView extends StatelessWidget {
             children: [
               Text("어떤 음식을 먹었나요?",
                   style: AppTextStyles.textTheme.displayMedium),
+              AppSpacing.verticalSizedBoxS,
+              Text(
+                "음식 내용을 자세히 입력해 주면, AI 칼로리 정확도가 올라가요",
+                style: AppTextStyles.bodyMedium(
+                  TextStyle(color: AppColors.neutral[500]),
+                ),
+              ),
               AppSpacing.verticalSizedBoxL,
               foodContentText(context),
             ],
@@ -65,7 +72,7 @@ class ThirdView extends StatelessWidget {
       controller: foodContentController,
       decoration: InputDecoration(
         labelText: '음식 내용',
-        hintText: '연어 포케',
+        hintText: '그릭요거트(110kcal), 복숭아 1개',
         hintStyle:
             AppTextStyles.bodyMedium(TextStyle(color: AppColors.neutral[500])),
         floatingLabelBehavior: FloatingLabelBehavior.always,
