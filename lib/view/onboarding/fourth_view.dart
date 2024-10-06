@@ -17,7 +17,7 @@ class FourthView extends StatelessWidget {
       appBar: AppBar(),
       body: SafeArea(
         minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-        child: BlocListener<form.FormCubit, form.FormState>(
+        child: BlocConsumer<form.FormCubit, form.FormState>(
           listener: (context, state) {
             if (state is form.FormCalorie) {
               Navigator.of(context).push(
@@ -34,41 +34,55 @@ class FourthView extends StatelessWidget {
               );
             }
           },
-          child: SingleChildScrollView(
-            reverse: true,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("같이하는 친구들에게\n하고 싶은 말을 적어볼까요?",
-                    style: AppTextStyles.textTheme.displayMedium),
-                AppSpacing.verticalSizedBoxL,
-                foodCommentText(context),
-              ],
-            ),
-          ),
+          builder: (context, state) {
+            if (state is form.FormLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            return SingleChildScrollView(
+              reverse: true,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("같이하는 친구들에게\n하고 싶은 말을 적어볼까요?",
+                      style: AppTextStyles.textTheme.displayMedium),
+                  AppSpacing.verticalSizedBoxL,
+                  foodCommentText(context),
+                ],
+              ),
+            );
+          },
         ),
       ),
       floatingActionButton: Container(
         margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         width: double.infinity,
-        child: FloatingActionButton.extended(
-          heroTag: 'onboarding4',
-          onPressed: () {
-            Analytics().logEvent(
-              "온보딩_음식한마디",
-              parameters: {"다음": "클릭"},
+        child: BlocBuilder<form.FormCubit, form.FormState>(
+          builder: (context, state) {
+            return FloatingActionButton.extended(
+              heroTag: 'onboarding4',
+              backgroundColor: (state is form.FormLoading)
+                  ? AppColors.neutral[300]
+                  : AppColors.primary,
+              onPressed: () {
+                if (state is form.FormLoading) return;
+                Analytics().logEvent(
+                  "온보딩_음식한마디",
+                  parameters: {"다음": "클릭"},
+                );
+                context.read<form.FormCubit>().calculate(foodContent);
+              },
+              label: Text(
+                '다음',
+                style: AppTextStyles.textTheme.titleMedium
+                    ?.copyWith(color: AppColors.white),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             );
-            context.read<form.FormCubit>().calculate(foodContent);
           },
-          label: Text(
-            '다음',
-            style: AppTextStyles.textTheme.titleMedium
-                ?.copyWith(color: AppColors.white),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
