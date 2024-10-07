@@ -76,12 +76,19 @@ class FifthView extends StatelessWidget {
         child: BlocBuilder<form.FormCubit, form.FormState>(
           builder: (context, state) {
             return FloatingActionButton.extended(
-              heroTag: 'onboarding4',
+              heroTag: 'onboarding5',
               onPressed: () {
                 if (state is form.FormLoading) return;
                 Analytics().logEvent(
-                  "온보딩_음식한마디",
-                  parameters: {"올려서_공감받기": "클릭"},
+                  "기록_음식한마디",
+                  parameters: {
+                    "올려서_공감받기": "클릭",
+                    "온보딩_완료_여부":
+                        PreferencesService().getBool('isOnboardingComplete') ==
+                                null
+                            ? "false"
+                            : "true",
+                  },
                 );
                 FeedType cur = context.read<form.FormCubit>().feedType;
                 context.read<form.FormCubit>().submit(
