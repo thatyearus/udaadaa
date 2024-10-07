@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/fifth_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
@@ -75,8 +76,15 @@ class FourthView extends StatelessWidget {
               onPressed: () {
                 if (state is form.FormLoading) return;
                 Analytics().logEvent(
-                  "온보딩_음식한마디",
-                  parameters: {"다음": "클릭"},
+                  "기록_음식한마디",
+                  parameters: {
+                    "다음": "클릭",
+                    "온보딩_완료_여부":
+                        PreferencesService().getBool('isOnboardingComplete') ==
+                                null
+                            ? "false"
+                            : "true",
+                  },
                 );
                 context.read<form.FormCubit>().calculate(foodContent);
               },
@@ -114,7 +122,7 @@ class FourthView extends StatelessWidget {
       ),
       onEditingComplete: () {
         Analytics().logEvent(
-          "온보딩_음식한마디",
+          "기록_음식한마디",
           parameters: {"사용자_입력": commentController.text},
         );
         FocusScope.of(context).unfocus();
