@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/fourth_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
@@ -42,8 +43,14 @@ class ThirdView extends StatelessWidget {
           heroTag: 'onboarding3',
           onPressed: () {
             Analytics().logEvent(
-              "온보딩_음식내용",
-              parameters: {"다음": "클릭"},
+              "기록_음식내용",
+              parameters: {
+                "다음": "클릭",
+                "온보딩_완료_여부":
+                    PreferencesService().getBool('isOnboardingComplete') == null
+                        ? "false"
+                        : "true",
+              },
             );
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -85,7 +92,7 @@ class ThirdView extends StatelessWidget {
       ),
       onEditingComplete: () {
         Analytics().logEvent(
-          "온보딩_음식내용",
+          "기록_음식내용",
           parameters: {"사용자_입력": foodContentController.text},
         );
         FocusScope.of(context).unfocus();
