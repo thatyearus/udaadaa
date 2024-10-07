@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/second_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
@@ -37,8 +38,14 @@ class FirstView extends StatelessWidget {
           heroTag: 'onboarding1',
           onPressed: () {
             Analytics().logEvent(
-              "온보딩_식단종류",
-              parameters: {"다음": "클릭"},
+              "기록_식단종류",
+              parameters: {
+                "다음": "클릭",
+                "온보딩_완료_여부":
+                    PreferencesService().getBool('isOnboardingComplete') == null
+                        ? "false"
+                        : "true",
+              },
             );
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const SecondView()),
@@ -176,7 +183,7 @@ class MealToggleButtons extends StatelessWidget {
             ],
             onPressed: (int index) {
               Analytics().logEvent(
-                "온보딩_식단종류",
+                "기록_식단종류",
                 parameters: {"식단종류": foodType[index]},
               );
               context.read<form.FormCubit>().updateMealSelection(index);
