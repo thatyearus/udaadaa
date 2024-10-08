@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/feed.dart';
@@ -51,7 +52,10 @@ class FifthView extends StatelessWidget {
           },
           builder: (context, state) {
             if (state is form.FormLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child:
+                    Lottie.asset('assets/loading_animation.json', width: 150),
+              );
             }
             return SingleChildScrollView(
               reverse: true,
