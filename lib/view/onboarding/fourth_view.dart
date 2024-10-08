@@ -37,7 +37,16 @@ class FourthView extends StatelessWidget {
           },
           builder: (context, state) {
             if (state is form.FormLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("AI 칼로리 측정중",
+                        style: AppTextStyles.textTheme.displaySmall),
+                    Image.asset('assets/calorie_loading.gif'),
+                  ],
+                ),
+              );
             }
 
             return SingleChildScrollView(
