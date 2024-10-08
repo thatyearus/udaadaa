@@ -14,19 +14,51 @@ class InitialViewState extends State<InitialView> {
   final PageController _pageController = PageController();
   int _index = 0;
 
-  final List<Map<String, String>> onboardingPages = [
+  final List<Map<String, dynamic>> onboardingPages = [
     {
       "image": "assets/onboarding_initial.png",
-      "description":
-          "우다다에서 함께 다이어트 해봐요\n내 식단 올리고 공감과 응원받고\nAI가 자동으로 칼로리도 측정해줘요",
+      "description": Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: "우다다",
+              style: AppTextStyles.headlineLarge(
+                const TextStyle(color: AppColors.primary),
+              ),
+            ),
+            const TextSpan(
+              text: "에서 함께 다이어트 해봐요\n내 식단 올리고 공감과 응원받고\nAI가 자동으로 칼로리도 측정해줘요",
+            ),
+          ],
+        ),
+        style: AppTextStyles.textTheme.titleMedium,
+        textAlign: TextAlign.center,
+      ),
     },
     {
       "image": "assets/onboarding_fact.png",
-      "description": "논문으로 밝혀진\n같이하는 다이어트 효과\n",
+      "description": Text.rich(
+        TextSpan(children: [
+          const TextSpan(text: "논문으로 밝혀진\n"),
+          TextSpan(
+            text: "같이",
+            style: AppTextStyles.headlineLarge(
+              const TextStyle(color: AppColors.primary),
+            ),
+          ),
+          const TextSpan(text: "하는 다이어트 효과\n"),
+        ]),
+        style: AppTextStyles.textTheme.titleMedium,
+        textAlign: TextAlign.center,
+      ),
     },
     {
       "image": "assets/onboarding_review.png",
-      "description": "",
+      "description": Text(
+        "",
+        style: AppTextStyles.textTheme.titleMedium,
+        textAlign: TextAlign.center,
+      ),
     },
   ];
 
@@ -61,11 +93,7 @@ class InitialViewState extends State<InitialView> {
                           width: double.infinity,
                         ),
                         AppSpacing.verticalSizedBoxL,
-                        Text(
-                          onboardingPages[index]["description"]!,
-                          style: AppTextStyles.textTheme.titleMedium,
-                          textAlign: TextAlign.center,
-                        ),
+                        onboardingPages[index]["description"]!,
                       ],
                     );
                   },
