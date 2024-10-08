@@ -5,7 +5,6 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
-import 'package:udaadaa/view/form/food_form_view.dart';
 import 'package:udaadaa/widgets/my_profile.dart';
 
 import '../../utils/analytics/analytics.dart';
@@ -32,8 +31,10 @@ class MyPageView extends StatelessWidget {
           onSelected: (value) {
             switch (value) {
               case 'change_nickname':
-                Analytics().logEvent("마이페이지_닉네임",
-                  parameters: {"클릭": "닉네임변경"},);
+                Analytics().logEvent(
+                  "마이페이지_닉네임",
+                  parameters: {"클릭": "닉네임변경"},
+                );
                 final nicknameController = TextEditingController();
                 showDialog(
                     context: context,
@@ -51,16 +52,20 @@ class MyPageView extends StatelessWidget {
                         actions: [
                           TextButton(
                             onPressed: () {
-                              Analytics().logEvent("마이페이지_닉네임",
-                                parameters: {"클릭": "취소"},);
+                              Analytics().logEvent(
+                                "마이페이지_닉네임",
+                                parameters: {"클릭": "취소"},
+                              );
                               Navigator.of(context).pop();
                             },
                             child: const Text('취소'),
                           ),
                           TextButton(
                             onPressed: () {
-                              Analytics().logEvent("마이페이지_닉네임",
-                                parameters: {"클릭": "확인"},);
+                              Analytics().logEvent(
+                                "마이페이지_닉네임",
+                                parameters: {"클릭": "확인"},
+                              );
                               context
                                   .read<AuthCubit>()
                                   .updateNickname(nicknameController.text);
@@ -80,7 +85,7 @@ class MyPageView extends StatelessWidget {
       body: RefreshIndicator(
         onRefresh: () => context.read<FeedCubit>().fetchMyFeeds(),
         child: SingleChildScrollView(
-          padding: AppSpacing.edgeInsetsL,
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,8 +106,10 @@ class MyPageView extends StatelessWidget {
                     return GridTile(
                       child: GestureDetector(
                         onTap: () {
-                          Analytics().logEvent("마이페이지_피드",
-                            parameters: {"피드선택": index},);
+                          Analytics().logEvent(
+                            "마이페이지_피드",
+                            parameters: {"피드선택": index},
+                          );
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) =>
@@ -130,7 +137,9 @@ class MyPageView extends StatelessWidget {
                                   color:
                                       AppColors.neutral[500]?.withOpacity(0.5),
                                   child: Text(
-                                    "${myFeeds[index].calorie} kcal",
+                                    (myFeeds[index].calorie != null
+                                        ? "${myFeeds[index].calorie} kcal"
+                                        : ""),
                                     style: AppTextStyles.headlineSmall(
                                       TextStyle(
                                           color: AppColors.neutral[200],
@@ -154,28 +163,6 @@ class MyPageView extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: Container(
-        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-        width: double.infinity,
-        child: FloatingActionButton.extended(
-          onPressed: () {
-            Analytics().logEvent("마이페이지_공감받으러가기");
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => FoodFormView(),
-              ),
-            );
-          },
-          label: Text(
-            '반응 받으러 가기',
-            style: AppTextStyles.textTheme.headlineLarge,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
