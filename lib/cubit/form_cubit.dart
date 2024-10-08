@@ -6,6 +6,7 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/feed.dart';
@@ -17,8 +18,10 @@ part 'form_state.dart';
 
 class FormCubit extends Cubit<FormState> {
   ProfileCubit profileCubit;
+  FeedCubit feedCubit;
   FormCubit(
     this.profileCubit,
+    this.feedCubit,
   ) : super(FormInitial());
 
   final Map<String, XFile?> _selectedImages = {
@@ -113,6 +116,33 @@ class FormCubit extends Cubit<FormState> {
     }
   }
 
+  Future<void> calculate(
+    String mealContent,
+  ) async {
+    try {
+      emit(FormLoading());
+      final String? base64String = await getBase64Image('FOOD');
+      if (base64String == null) {
+        emit(FormError('Failed to get base64 image'));
+        return;
+      }
+      final res = await dioClient.dio.post(
+        '/estimateCal',
+        data: {
+          'selectedImage': base64String,
+          'description': mealContent,
+        },
+      );
+      final Map<String, dynamic> jsonResponse = json.decode(res.toString());
+      Calorie calorie = Calorie.fromJson(jsonResponse);
+      emit(FormCalorie(calorie));
+    } catch (e) {
+      Analytics().logEvent("업로드_칼로리실패", parameters: {"에러": e.toString()});
+      logger.e(e);
+      emit(FormError(e.toString()));
+    }
+  }
+
   Future<void> submit(
       {required FeedType type,
       required String review,
@@ -120,9 +150,9 @@ class FormCubit extends Cubit<FormState> {
       String? weight,
       String? exerciseTime,
       String? mealContent,
+      Calorie? calorie,
       required String contentType}) async {
     try {
-      logger.d("submitting form");
       emit(FormLoading());
       String? imagePath = await uploadImage(contentType);
       if (imagePath == null) {
@@ -134,6 +164,7 @@ class FormCubit extends Cubit<FormState> {
         review: review,
         type: type,
         imagePath: imagePath,
+        calorie: calorie?.totalCalories,
       );
       final ret =
           await supabase.from('feed').insert(feed.toMap()).select().single();
@@ -147,7 +178,9 @@ class FormCubit extends Cubit<FormState> {
         exerciseTime: exerciseTime,
         mealContent: mealContent,
         feedId: ret['id'],
+        calorie: calorie,
       );
+      feedCubit.fetchMyFeeds();
     } catch (e) {
       Analytics().logEvent("업로드_제출실패", parameters: {"에러": e.toString()});
       logger.e(e);
@@ -164,6 +197,7 @@ class FormCubit extends Cubit<FormState> {
     String? weight,
     String? exerciseTime,
     String? mealContent,
+    Calorie? calorie,
   }) async {
     try {
       await profileCubit.getMyTodayReport();
@@ -173,6 +207,7 @@ class FormCubit extends Cubit<FormState> {
         case FeedType.lunch:
         case FeedType.dinner:
         case FeedType.snack:
+          /*
           final String? base64String = await getBase64Image('FOOD');
           if (base64String == null) {
             emit(FormError('Failed to get base64 image'));
@@ -187,23 +222,24 @@ class FormCubit extends Cubit<FormState> {
           );
           final Map<String, dynamic> jsonResponse = json.decode(res.toString());
           Calorie calorie = Calorie.fromJson(jsonResponse);
+          
           await supabase
               .from('feed')
-              .update({'calorie': calorie.totalCalories}).eq('id', feedId);
+              .update({'calorie': calorie.totalCalories}).eq('id', feedId);*/
           final Report report = Report(
             userId: supabase.auth.currentUser!.id,
             date: DateTime.now(),
             breakfast: type == FeedType.breakfast
-                ? (prevReport?.breakfast ?? 0) + calorie.totalCalories
+                ? (prevReport?.breakfast ?? 0) + (calorie?.totalCalories ?? 0)
                 : null,
             lunch: type == FeedType.lunch
-                ? (prevReport?.lunch ?? 0) + calorie.totalCalories
+                ? (prevReport?.lunch ?? 0) + (calorie?.totalCalories ?? 0)
                 : null,
             dinner: type == FeedType.dinner
-                ? (prevReport?.dinner ?? 0) + calorie.totalCalories
+                ? (prevReport?.dinner ?? 0) + (calorie?.totalCalories ?? 0)
                 : null,
             snack: type == FeedType.snack
-                ? (prevReport?.snack ?? 0) + calorie.totalCalories
+                ? (prevReport?.snack ?? 0) + (calorie?.totalCalories ?? 0)
                 : null,
           );
           await supabase
@@ -239,7 +275,7 @@ class FormCubit extends Cubit<FormState> {
       }
       selectedImages[contentType] = null;
     } catch (e) {
-      Analytics().logEvent("업로드_칼로리실패", parameters: {"에러": e.toString()});
+      Analytics().logEvent("업로드_리포트실패", parameters: {"에러": e.toString()});
       logger.e(e);
       emit(FormError(e.toString()));
     }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/third_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
@@ -28,7 +29,7 @@ class SecondView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
-        minimum: AppSpacing.edgeInsetsL,
+        minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         child: SingleChildScrollView(
           reverse: true,
           child: Column(
@@ -54,7 +55,17 @@ class SecondView extends StatelessWidget {
           heroTag: 'onboarding2',
           onPressed: () {
             if (imageSelected) {
-              Analytics().logEvent("온보딩_식단업로드", parameters: {"다음":"사진 업로드 완료"},);
+              Analytics().logEvent(
+                "기록_식단업로드",
+                parameters: {
+                  "다음": "사진 업로드 완료",
+                  "온보딩_완료_여부":
+                      PreferencesService().getBool('isOnboardingComplete') ==
+                              null
+                          ? "false"
+                          : "true",
+                },
+              );
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => ThirdView()),
               );
@@ -116,7 +127,7 @@ class SecondView extends StatelessWidget {
           ),
           onPressed: () {
             Analytics().logEvent(
-              "온보딩_식단업로드",
+              "기록_식단업로드",
               parameters: {"업로드버튼": "클릭"},
             );
             context.read<form.FormCubit>().updateImage('FOOD');

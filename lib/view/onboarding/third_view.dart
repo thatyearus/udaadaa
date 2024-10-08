@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/fourth_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
@@ -13,7 +14,7 @@ class ThirdView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
-        minimum: AppSpacing.edgeInsetsL,
+        minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         child: SingleChildScrollView(
           reverse: true,
           child: Column(
@@ -22,6 +23,13 @@ class ThirdView extends StatelessWidget {
             children: [
               Text("어떤 음식을 먹었나요?",
                   style: AppTextStyles.textTheme.displayMedium),
+              AppSpacing.verticalSizedBoxS,
+              Text(
+                "음식 내용을 자세히 입력해 주면, AI 칼로리 정확도가 올라가요",
+                style: AppTextStyles.bodyMedium(
+                  TextStyle(color: AppColors.neutral[500]),
+                ),
+              ),
               AppSpacing.verticalSizedBoxL,
               foodContentText(context),
             ],
@@ -34,7 +42,16 @@ class ThirdView extends StatelessWidget {
         child: FloatingActionButton.extended(
           heroTag: 'onboarding3',
           onPressed: () {
-            Analytics().logEvent("온보딩_음식내용", parameters: {"다음":"클릭"},);
+            Analytics().logEvent(
+              "기록_음식내용",
+              parameters: {
+                "다음": "클릭",
+                "온보딩_완료_여부":
+                    PreferencesService().getBool('isOnboardingComplete') == null
+                        ? "false"
+                        : "true",
+              },
+            );
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => FourthView(
@@ -62,14 +79,20 @@ class ThirdView extends StatelessWidget {
       controller: foodContentController,
       decoration: InputDecoration(
         labelText: '음식 내용',
-        hintText: '연어 포케',
+        hintText: '그릭요거트(110kcal), 복숭아 1개',
         hintStyle:
             AppTextStyles.bodyMedium(TextStyle(color: AppColors.neutral[500])),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: AppColors.neutral[300]!),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: AppColors.primary),
+        ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
       onEditingComplete: () {
         Analytics().logEvent(
-          "온보딩_음식내용",
+          "기록_음식내용",
           parameters: {"사용자_입력": foodContentController.text},
         );
         FocusScope.of(context).unfocus();
