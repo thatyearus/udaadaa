@@ -31,7 +31,7 @@ class FourthView extends StatelessWidget {
               );
             } else if (state is form.FormError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
+                const SnackBar(content: Text("칼로리 측정에 실패했습니다")),
               );
             }
           },
