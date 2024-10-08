@@ -46,7 +46,7 @@ class FifthView extends StatelessWidget {
               );
             } else if (state is form.FormError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
+                const SnackBar(content: Text("기록 추가에 실패했습니다")),
               );
             }
           },
