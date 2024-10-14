@@ -4,8 +4,10 @@ import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
+import 'package:udaadaa/view/home/report_view.dart';
 import 'package:udaadaa/widgets/last_record.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
+import 'package:udaadaa/widgets/report_summary.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -43,29 +45,44 @@ class HomeViewState extends State<HomeView> {
         child: SingleChildScrollView(
           padding: AppSpacing.edgeInsetsL,
           physics: const AlwaysScrollableScrollPhysics(),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.3,
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Analytics().logEvent(
-                      "홈_최근기록",
-                      parameters: {"최근기록_페이지": (index + 1).toString()},
-                    );
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MyRecordView(initialPage: index),
-                      ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.3,
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Analytics().logEvent(
+                          "홈_최근기록",
+                          parameters: {"최근기록_페이지": (index + 1).toString()},
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MyRecordView(initialPage: index),
+                          ),
+                        );
+                      },
+                      child: LastRecord(page: index),
                     );
                   },
-                  child: LastRecord(page: index),
-                );
-              },
-            ),
+                ),
+              ),
+              AppSpacing.verticalSizedBoxL,
+              GestureDetector(
+                child: const ReportSummary(),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ReportView()),
+                  );
+                },
+              )
+            ],
           ),
         ),
       ),
