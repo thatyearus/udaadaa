@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 
@@ -10,7 +9,7 @@ class ReportSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final report = context.watch<ProfileCubit>().getReport;
-    final nickname = context.watch<AuthCubit>().getProfile?.nickname ?? "사용자";
+    // final nickname = context.watch<AuthCubit>().getProfile?.nickname ?? "사용자";
     final totalCalorie = (report != null
         ? ((report.breakfast ?? 0) +
             (report.lunch ?? 0) +
@@ -38,7 +37,7 @@ class ReportSummary extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("$nickname 님의 리포트",
+          Text("오늘의 리포트",
               style: AppTextStyles.headlineMedium(
                   const TextStyle(color: AppColors.primary))),
           AppSpacing.verticalSizedBoxS,
