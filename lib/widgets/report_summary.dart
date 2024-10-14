@@ -17,8 +17,6 @@ class ReportSummary extends StatelessWidget {
             (report.dinner ?? 0) +
             (report.snack ?? 0))
         : 0);
-    final totalExercise = report?.exercise ?? 0;
-    final weight = report?.weight ?? 0;
 
     return Container(
       decoration: BoxDecoration(
@@ -33,20 +31,33 @@ class ReportSummary extends StatelessWidget {
           ),
         ],
       ),
+      margin: AppSpacing.edgeInsetsXxs,
       padding: AppSpacing.edgeInsetsM,
       width: double.infinity,
       alignment: Alignment.centerLeft,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text("$nickname 님의 리포트",
-            style: AppTextStyles.headlineMedium(
-                const TextStyle(color: AppColors.primary))),
-        AppSpacing.verticalSizedBoxS,
-        Text("총칼로리 : $totalCalorie kcal",
-            style: AppTextStyles.textTheme.bodyLarge),
-        Text("운동 시간 : $totalExercise 분",
-            style: AppTextStyles.textTheme.bodyLarge),
-        Text("체중 : $weight kg", style: AppTextStyles.textTheme.bodyLarge),
-      ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("$nickname 님의 리포트",
+              style: AppTextStyles.headlineMedium(
+                  const TextStyle(color: AppColors.primary))),
+          AppSpacing.verticalSizedBoxS,
+          Text("총칼로리 : $totalCalorie kcal",
+              style: AppTextStyles.textTheme.bodyLarge),
+          AppSpacing.verticalSizedBoxXs,
+          Text("아침 : ${report?.breakfast ?? 0} kcal",
+              style: AppTextStyles.textTheme.bodyMedium),
+          AppSpacing.verticalSizedBoxXxs,
+          Text("점심 : ${report?.lunch ?? 0} kcal",
+              style: AppTextStyles.textTheme.bodyMedium),
+          AppSpacing.verticalSizedBoxXxs,
+          Text("저녁 : ${report?.dinner ?? 0} kcal",
+              style: AppTextStyles.textTheme.bodyMedium),
+          AppSpacing.verticalSizedBoxXxs,
+          Text("간식 : ${report?.snack ?? 0} kcal",
+              style: AppTextStyles.textTheme.bodyMedium),
+        ],
+      ),
     );
   }
 }
