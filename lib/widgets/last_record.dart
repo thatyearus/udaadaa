@@ -53,10 +53,13 @@ class LastRecord extends StatelessWidget {
                 ),
               ],
             ),
+            margin: AppSpacing.edgeInsetsXxs,
             padding: AppSpacing.edgeInsetsM,
             width: double.infinity,
+            height: double.infinity,
             alignment: Alignment.centerLeft,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Row(
                   children: [
@@ -92,12 +95,10 @@ class LastRecord extends StatelessWidget {
                     ),
                   ],
                 ),
-                AppSpacing.verticalSizedBoxXxs,
                 Divider(
                   color: AppColors.neutral[300],
                   thickness: 1,
                 ),
-                AppSpacing.verticalSizedBoxXxs,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
