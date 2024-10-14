@@ -43,9 +43,9 @@ class ReportSummary extends StatelessWidget {
                   const TextStyle(color: AppColors.primary))),
           AppSpacing.verticalSizedBoxS,
           Text("총칼로리 : $totalCalorie kcal",
-              style: AppTextStyles.textTheme.bodyLarge),
+              style: AppTextStyles.textTheme.headlineMedium),
           AppSpacing.verticalSizedBoxXs,
-          Text("아침 : ${report?.breakfast ?? 0} kcal",
+          /*Text("아침 : ${report?.breakfast ?? 0} kcal",
               style: AppTextStyles.textTheme.bodyMedium),
           AppSpacing.verticalSizedBoxXxs,
           Text("점심 : ${report?.lunch ?? 0} kcal",
@@ -55,7 +55,93 @@ class ReportSummary extends StatelessWidget {
               style: AppTextStyles.textTheme.bodyMedium),
           AppSpacing.verticalSizedBoxXxs,
           Text("간식 : ${report?.snack ?? 0} kcal",
-              style: AppTextStyles.textTheme.bodyMedium),
+              style: AppTextStyles.textTheme.bodyMedium),*/
+          Row(
+            children: [
+              Expanded(
+                child: MiniCard(
+                  title: "아침",
+                  content: (report?.breakfast ?? 0).toString(),
+                  unit: "kcal",
+                  color: AppColors.white,
+                ),
+              ),
+              Expanded(
+                child: MiniCard(
+                  title: "점심",
+                  content: (report?.lunch ?? 0).toString(),
+                  unit: "kcal",
+                  color: AppColors.white,
+                ),
+              ),
+            ],
+          ),
+          AppSpacing.verticalSizedBoxXxs,
+          Row(
+            children: [
+              Expanded(
+                child: MiniCard(
+                  title: "저녁",
+                  content: (report?.dinner ?? 0).toString(),
+                  unit: "kcal",
+                  color: AppColors.white,
+                ),
+              ),
+              Expanded(
+                child: MiniCard(
+                  title: "간식",
+                  content: (report?.snack ?? 0).toString(),
+                  unit: "kcal",
+                  color: AppColors.white,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MiniCard extends StatelessWidget {
+  final String title;
+  final String content;
+  final String unit;
+  final Color color;
+
+  const MiniCard({
+    super.key,
+    required this.title,
+    required this.content,
+    required this.unit,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.neutral[0],
+        border: Border.all(color: AppColors.primary[100]!),
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary[100]!,
+            offset: const Offset(0, 2),
+            blurRadius: 4,
+          ),
+        ],
+      ),
+      margin: AppSpacing.edgeInsetsXxs,
+      padding: AppSpacing.edgeInsetsM,
+      width: double.infinity,
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: AppTextStyles.textTheme.headlineSmall),
+          AppSpacing.verticalSizedBoxXxs,
+          Text("$content $unit", style: AppTextStyles.textTheme.bodyLarge),
         ],
       ),
     );
