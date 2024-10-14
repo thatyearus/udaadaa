@@ -76,6 +76,9 @@ class HomeViewState extends State<HomeView> {
               GestureDetector(
                 child: const ReportSummary(),
                 onTap: () {
+                  Analytics().logEvent(
+                    "홈_리포트",
+                  );
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const ReportView()),
