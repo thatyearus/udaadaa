@@ -19,13 +19,13 @@ class ProfileCubit extends Cubit<ProfileState> {
     final authState = authCubit.state;
     if (authState is Authenticated) {
       getMyTodayReport();
-      fetchSelectedReport(DateTime.now());
+      selectDay(DateTime.now());
     }
 
     authSubscription = authCubit.stream.listen((authState) {
       if (authState is Authenticated) {
         getMyTodayReport();
-        fetchSelectedReport(DateTime.now());
+        selectDay(DateTime.now());
       } else {
         emit(ProfileInitial());
       }

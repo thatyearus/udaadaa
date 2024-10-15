@@ -69,7 +69,7 @@ class ReportView extends StatelessWidget {
                     if (selectedDate == null) {
                       return false;
                     }
-                    return day.isAtSameMomentAs(selectedDate);
+                    return isSameDay(selectedDate, day);
                   },
                 ),
                 /* Text("$nickname 님의 리포트",
