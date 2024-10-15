@@ -40,6 +40,8 @@ class ReportView extends StatelessWidget {
             child: Column(
               children: [
                 const Calendar(),
+                AppSpacing.verticalSizedBoxXs,
+                const DayBanner(),
                 /* Text("$nickname 님의 리포트",
                     style: AppTextStyles.textTheme.displaySmall),*/
                 AppSpacing.verticalSizedBoxXxl,
