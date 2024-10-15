@@ -46,6 +46,7 @@ class ReportView extends StatelessWidget {
                     titleCentered: true,
                     titleTextStyle: AppTextStyles.textTheme.headlineMedium!,
                   ),
+                  calendarFormat: CalendarFormat.week,
                   calendarStyle: CalendarStyle(
                     isTodayHighlighted: true,
                     selectedDecoration: const BoxDecoration(
