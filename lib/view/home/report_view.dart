@@ -37,6 +37,7 @@ class ReportView extends StatelessWidget {
             child: Column(
               children: [
                 TableCalendar(
+                  locale: 'ko_KR',
                   focusedDay: DateTime.now(),
                   firstDay: DateTime(1800),
                   lastDay: DateTime(2050),
