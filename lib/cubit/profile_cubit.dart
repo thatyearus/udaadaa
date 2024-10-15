@@ -15,6 +15,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   Report? _selectedReport;
   DateTime? _selectedDate;
   DateTime _focusDate = DateTime.now();
+  List<bool> _typeSelection = [true, false];
 
   ProfileCubit(this.authCubit) : super(ProfileInitial()) {
     final authState = authCubit.state;
@@ -31,6 +32,11 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(ProfileInitial());
       }
     });
+  }
+
+  void updateTypeSelection(int index) {
+    _typeSelection = List.generate(_typeSelection.length, (i) => i == index);
+    emit(ProfileLoaded("typeSelection"));
   }
 
   Future<void> getMyTodayReport() async {
@@ -99,4 +105,5 @@ class ProfileCubit extends Cubit<ProfileState> {
   Report? get getSelectedReport => _selectedReport;
   DateTime? get getSelectedDate => _selectedDate;
   DateTime get getFocusDate => _focusDate;
+  List<bool> get getSelectedType => _typeSelection;
 }
