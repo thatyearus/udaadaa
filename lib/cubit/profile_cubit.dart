@@ -14,6 +14,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   Report? _report;
   Report? _selectedReport;
   DateTime? _selectedDate;
+  DateTime _focusDate = DateTime.now();
 
   ProfileCubit(this.authCubit) : super(ProfileInitial()) {
     final authState = authCubit.state;
@@ -55,6 +56,11 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  void selectFocusDate(DateTime date) {
+    _focusDate = date;
+    emit(ProfileLoaded("focusDate"));
+  }
+
   void selectDay(DateTime date) {
     _selectedDate = date;
     fetchSelectedReport(date);
@@ -92,4 +98,5 @@ class ProfileCubit extends Cubit<ProfileState> {
   Report? get getReport => _report;
   Report? get getSelectedReport => _selectedReport;
   DateTime? get getSelectedDate => _selectedDate;
+  DateTime get getFocusDate => _focusDate;
 }

@@ -16,6 +16,8 @@ class ReportView extends StatelessWidget {
     final nickname = context.watch<AuthCubit>().getProfile?.nickname ?? "사용자";
     DateTime? selectedDate = context
         .select<ProfileCubit, DateTime?>((cubit) => cubit.getSelectedDate);
+    DateTime focusedDate =
+        context.select<ProfileCubit, DateTime>((cubit) => cubit.getFocusDate);
 
     final totalCalorie = (report != null
         ? ((report.breakfast ?? 0) +
@@ -42,7 +44,7 @@ class ReportView extends StatelessWidget {
               children: [
                 TableCalendar(
                   locale: 'ko_KR',
-                  focusedDay: DateTime.now(),
+                  focusedDay: focusedDate,
                   firstDay: DateTime(1800),
                   lastDay: DateTime(2050),
                   headerStyle: HeaderStyle(
@@ -62,6 +64,8 @@ class ReportView extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                   ),
+                  onPageChanged: (focusedDay) =>
+                      context.read<ProfileCubit>().selectFocusDate(focusedDay),
                   onDaySelected: (DateTime selectedDay, DateTime focusDay) {
                     context.read<ProfileCubit>().selectDay(selectedDay);
                   },
