@@ -49,73 +49,39 @@ class ReportView extends StatelessWidget {
                 AppSpacing.verticalSizedBoxL,
                 Row(
                   children: [
-                    CardView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("총칼로리",
-                              style: AppTextStyles.textTheme.headlineMedium),
-                          Text("$totalCalorie kcal",
-                              style: AppTextStyles.textTheme.bodyLarge),
-                        ],
-                      ),
+                    DayMiniReport(
+                      title: "총칼로리",
+                      content: '$totalCalorie',
+                      unit: "kcal",
                     ),
                   ],
                 ),
                 AppSpacing.verticalSizedBoxL,
                 Row(
                   children: [
-                    CardView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("아침",
-                                style: AppTextStyles.textTheme.headlineMedium),
-                            AppSpacing.verticalSizedBoxXxs,
-                            Text("${report?.breakfast ?? 0} kcal",
-                                style: AppTextStyles.textTheme.bodyLarge),
-                          ]),
-                    ),
+                    DayMiniReport(
+                        title: '아침',
+                        content: '${report?.breakfast ?? 0}',
+                        unit: 'kcal'),
                     AppSpacing.horizontalSizedBoxXs,
-                    CardView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("점심",
-                                style: AppTextStyles.textTheme.headlineMedium),
-                            AppSpacing.verticalSizedBoxXxs,
-                            Text("${report?.lunch ?? 0} kcal",
-                                style: AppTextStyles.textTheme.bodyLarge),
-                          ]),
-                    ),
+                    DayMiniReport(
+                        title: '점심',
+                        content: '${report?.lunch ?? 0}',
+                        unit: 'kcal'),
                   ],
                 ),
                 AppSpacing.verticalSizedBoxXs,
                 Row(
                   children: [
-                    CardView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("저녁",
-                                style: AppTextStyles.textTheme.headlineMedium),
-                            AppSpacing.verticalSizedBoxXxs,
-                            Text("${report?.dinner ?? 0} kcal",
-                                style: AppTextStyles.textTheme.bodyLarge),
-                          ]),
-                    ),
+                    DayMiniReport(
+                        title: '저녁',
+                        content: '${report?.dinner ?? 0}',
+                        unit: 'kcal'),
                     AppSpacing.horizontalSizedBoxXs,
-                    CardView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("간식",
-                                style: AppTextStyles.textTheme.headlineMedium),
-                            AppSpacing.verticalSizedBoxXxs,
-                            Text("${report?.snack ?? 0} kcal",
-                                style: AppTextStyles.textTheme.bodyLarge),
-                          ]),
-                    ),
+                    DayMiniReport(
+                        title: '간식',
+                        content: '${report?.snack ?? 0}',
+                        unit: 'kcal'),
                   ],
                 ),
               ],
@@ -198,6 +164,33 @@ class SelectToggleButtons extends StatelessWidget {
             },
           );
         },
+      ),
+    );
+  }
+}
+
+class DayMiniReport extends StatelessWidget {
+  final String title;
+  final String content;
+  final String unit;
+
+  const DayMiniReport({
+    super.key,
+    required this.title,
+    required this.content,
+    required this.unit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CardView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: AppTextStyles.textTheme.headlineMedium),
+          AppSpacing.verticalSizedBoxXxs,
+          Text("$content $unit", style: AppTextStyles.textTheme.bodyLarge),
+        ],
       ),
     );
   }

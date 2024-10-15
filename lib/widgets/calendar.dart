@@ -58,25 +58,23 @@ class DayBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final selectedDate = context
         .select<ProfileCubit, DateTime?>((cubit) => cubit.getSelectedDate);
-    return Container(
-      child: Column(
-        children: [
-          const Divider(
-            color: AppColors.primary,
-            thickness: 1,
-          ),
-          Text(
-            selectedDate != null
-                ? "${selectedDate.year}년 ${selectedDate.month}월 ${selectedDate.day}일"
-                : "날짜를 선택해주세요",
-            style: AppTextStyles.textTheme.bodyLarge,
-          ),
-          const Divider(
-            color: AppColors.primary,
-            thickness: 1,
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        const Divider(
+          color: AppColors.primary,
+          thickness: 1,
+        ),
+        Text(
+          selectedDate != null
+              ? "${selectedDate.year}년 ${selectedDate.month}월 ${selectedDate.day}일"
+              : "날짜를 선택해주세요",
+          style: AppTextStyles.textTheme.bodyLarge,
+        ),
+        const Divider(
+          color: AppColors.primary,
+          thickness: 1,
+        ),
+      ],
     );
   }
 }
