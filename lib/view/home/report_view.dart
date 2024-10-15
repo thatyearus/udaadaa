@@ -11,7 +11,7 @@ class ReportView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Report? report = context.watch<ProfileCubit>().getReport;
+    Report? report = context.watch<ProfileCubit>().getSelectedReport;
     final nickname = context.watch<AuthCubit>().getProfile?.nickname ?? "사용자";
 
     final totalCalorie = (report != null

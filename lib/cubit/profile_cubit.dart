@@ -12,16 +12,19 @@ class ProfileCubit extends Cubit<ProfileState> {
   final AuthCubit authCubit;
   late final StreamSubscription authSubscription;
   Report? _report;
+  Report? _selectedReport;
 
   ProfileCubit(this.authCubit) : super(ProfileInitial()) {
     final authState = authCubit.state;
     if (authState is Authenticated) {
       getMyTodayReport();
+      fetchSelectedReport(DateTime.now());
     }
 
     authSubscription = authCubit.stream.listen((authState) {
       if (authState is Authenticated) {
         getMyTodayReport();
+        fetchSelectedReport(DateTime.now());
       } else {
         emit(ProfileInitial());
       }
@@ -51,6 +54,29 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  Future<void> fetchSelectedReport(DateTime date) async {
+    if (authCubit.state is! Authenticated) {
+      return;
+    }
+    try {
+      final reportMap = await supabase
+          .from('report')
+          .select()
+          .eq('date', date.toIso8601String());
+      if (reportMap.isEmpty) {
+        _selectedReport = null;
+        emit(ProfileLoaded("selectedReport"));
+        return;
+      }
+      _selectedReport = Report.fromMap(map: reportMap[0]);
+
+      emit(ProfileLoaded("selectedReport"));
+    } catch (e) {
+      logger.e(e);
+      _selectedReport = null;
+    }
+  }
+
   @override
   Future<void> close() {
     authSubscription.cancel();
@@ -58,4 +84,5 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Report? get getReport => _report;
+  Report? get getSelectedReport => _selectedReport;
 }
