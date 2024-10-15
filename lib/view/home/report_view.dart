@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/models/report.dart';
@@ -13,6 +14,8 @@ class ReportView extends StatelessWidget {
   Widget build(BuildContext context) {
     Report? report = context.watch<ProfileCubit>().getSelectedReport;
     final nickname = context.watch<AuthCubit>().getProfile?.nickname ?? "사용자";
+    DateTime? selectedDate = context
+        .select<ProfileCubit, DateTime?>((cubit) => cubit.getSelectedDate);
 
     final totalCalorie = (report != null
         ? ((report.breakfast ?? 0) +
@@ -33,6 +36,37 @@ class ReportView extends StatelessWidget {
             width: double.infinity,
             child: Column(
               children: [
+                TableCalendar(
+                  focusedDay: DateTime.now(),
+                  firstDay: DateTime(1800),
+                  lastDay: DateTime(2050),
+                  headerStyle: HeaderStyle(
+                    formatButtonVisible: false,
+                    titleCentered: true,
+                    titleTextStyle: AppTextStyles.textTheme.headlineMedium!,
+                  ),
+                  calendarStyle: CalendarStyle(
+                    isTodayHighlighted: true,
+                    selectedDecoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    todayDecoration: BoxDecoration(
+                      color: AppColors.primary[200],
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  onDaySelected: (DateTime selectedDay, DateTime focusDay) {
+                    context.read<ProfileCubit>().selectDay(selectedDay);
+                  },
+                  selectedDayPredicate: (day) {
+                    if (selectedDate == null) {
+                      return false;
+                    }
+
+                    return day.isAtSameMomentAs(selectedDate);
+                  },
+                ),
                 Text("$nickname 님의 리포트",
                     style: AppTextStyles.textTheme.displaySmall),
                 AppSpacing.verticalSizedBoxL,

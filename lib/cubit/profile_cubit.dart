@@ -13,6 +13,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   late final StreamSubscription authSubscription;
   Report? _report;
   Report? _selectedReport;
+  DateTime? _selectedDate;
 
   ProfileCubit(this.authCubit) : super(ProfileInitial()) {
     final authState = authCubit.state;
@@ -54,6 +55,11 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  void selectDay(DateTime date) {
+    _selectedDate = date;
+    fetchSelectedReport(date);
+  }
+
   Future<void> fetchSelectedReport(DateTime date) async {
     if (authCubit.state is! Authenticated) {
       return;
@@ -85,4 +91,5 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   Report? get getReport => _report;
   Report? get getSelectedReport => _selectedReport;
+  DateTime? get getSelectedDate => _selectedDate;
 }
