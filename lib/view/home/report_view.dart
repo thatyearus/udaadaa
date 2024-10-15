@@ -30,7 +30,7 @@ class ReportView extends StatelessWidget {
           return context.read<ProfileCubit>().getMyTodayReport();
         },
         child: SingleChildScrollView(
-          padding: AppSpacing.edgeInsetsL,
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
           physics: const AlwaysScrollableScrollPhysics(),
           child: SizedBox(
             width: double.infinity,
@@ -65,7 +65,6 @@ class ReportView extends StatelessWidget {
                     if (selectedDate == null) {
                       return false;
                     }
-
                     return day.isAtSameMomentAs(selectedDate);
                   },
                 ),
