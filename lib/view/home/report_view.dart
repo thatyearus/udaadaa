@@ -24,7 +24,11 @@ class ReportView extends StatelessWidget {
             (report.snack ?? 0))
         : 0);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("$nickname 님의 리포트",
+            style: AppTextStyles.textTheme.headlineMedium),
+        centerTitle: true,
+      ),
       body: RefreshIndicator(
         onRefresh: () {
           return context.read<ProfileCubit>().getMyTodayReport();
@@ -68,8 +72,8 @@ class ReportView extends StatelessWidget {
                     return day.isAtSameMomentAs(selectedDate);
                   },
                 ),
-                Text("$nickname 님의 리포트",
-                    style: AppTextStyles.textTheme.displaySmall),
+                /* Text("$nickname 님의 리포트",
+                    style: AppTextStyles.textTheme.displaySmall),*/
                 AppSpacing.verticalSizedBoxL,
                 Row(
                   children: [
