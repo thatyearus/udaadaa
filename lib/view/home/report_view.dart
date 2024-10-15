@@ -13,15 +13,10 @@ class ReportView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Report? report = context.watch<ProfileCubit>().getSelectedReport;
     final nickname = context.watch<AuthCubit>().getProfile?.nickname ?? "사용자";
-
-    final totalCalorie = (report != null
-        ? ((report.breakfast ?? 0) +
-            (report.lunch ?? 0) +
-            (report.dinner ?? 0) +
-            (report.snack ?? 0))
-        : 0);
+    final selection = context.select<ProfileCubit, List<bool>>(
+      (cubit) => cubit.getSelectedType,
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text("$nickname 님의 리포트",
@@ -47,43 +42,7 @@ class ReportView extends StatelessWidget {
                 AppSpacing.verticalSizedBoxXxl,
                 const SelectToggleButtons(),
                 AppSpacing.verticalSizedBoxL,
-                Row(
-                  children: [
-                    DayMiniReport(
-                      title: "총칼로리",
-                      content: '$totalCalorie',
-                      unit: "kcal",
-                    ),
-                  ],
-                ),
-                AppSpacing.verticalSizedBoxL,
-                Row(
-                  children: [
-                    DayMiniReport(
-                        title: '아침',
-                        content: '${report?.breakfast ?? 0}',
-                        unit: 'kcal'),
-                    AppSpacing.horizontalSizedBoxXs,
-                    DayMiniReport(
-                        title: '점심',
-                        content: '${report?.lunch ?? 0}',
-                        unit: 'kcal'),
-                  ],
-                ),
-                AppSpacing.verticalSizedBoxXs,
-                Row(
-                  children: [
-                    DayMiniReport(
-                        title: '저녁',
-                        content: '${report?.dinner ?? 0}',
-                        unit: 'kcal'),
-                    AppSpacing.horizontalSizedBoxXs,
-                    DayMiniReport(
-                        title: '간식',
-                        content: '${report?.snack ?? 0}',
-                        unit: 'kcal'),
-                  ],
-                ),
+                (selection[0] ? const DailyReport() : const WeeklyReport()),
               ],
             ),
           ),
@@ -192,6 +151,69 @@ class DayMiniReport extends StatelessWidget {
           Text("$content $unit", style: AppTextStyles.textTheme.bodyLarge),
         ],
       ),
+    );
+  }
+}
+
+class DailyReport extends StatelessWidget {
+  const DailyReport({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Report? report = context.watch<ProfileCubit>().getSelectedReport;
+    final totalCalorie = (report != null
+        ? ((report.breakfast ?? 0) +
+            (report.lunch ?? 0) +
+            (report.dinner ?? 0) +
+            (report.snack ?? 0))
+        : 0);
+    return Column(
+      children: [
+        Row(
+          children: [
+            DayMiniReport(
+              title: "총칼로리",
+              content: '$totalCalorie',
+              unit: "kcal",
+            ),
+          ],
+        ),
+        AppSpacing.verticalSizedBoxL,
+        Row(
+          children: [
+            DayMiniReport(
+                title: '아침',
+                content: '${report?.breakfast ?? 0}',
+                unit: 'kcal'),
+            AppSpacing.horizontalSizedBoxXs,
+            DayMiniReport(
+                title: '점심', content: '${report?.lunch ?? 0}', unit: 'kcal'),
+          ],
+        ),
+        AppSpacing.verticalSizedBoxXs,
+        Row(
+          children: [
+            DayMiniReport(
+                title: '저녁', content: '${report?.dinner ?? 0}', unit: 'kcal'),
+            AppSpacing.horizontalSizedBoxXs,
+            DayMiniReport(
+                title: '간식', content: '${report?.snack ?? 0}', unit: 'kcal'),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class WeeklyReport extends StatelessWidget {
+  const WeeklyReport({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text("주간 리포트", style: AppTextStyles.textTheme.displaySmall),
+      ],
     );
   }
 }
