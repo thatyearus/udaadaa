@@ -4,8 +4,49 @@ import 'package:udaadaa/utils/constant.dart';
 
 class WeeklyReport extends StatelessWidget {
   const WeeklyReport({super.key});
+
   double sanitizeToY(double? value) {
     return (value == null || value.isNaN || value.isInfinite) ? 0 : value;
+  }
+
+  BarChartGroupData chartData(
+    int x,
+    double val1,
+    double val2,
+    double val3,
+    double val4,
+  ) {
+    return BarChartGroupData(
+      x: x,
+      barRods: [
+        BarChartRodData(
+          toY: sanitizeToY(val1 + val2 + val3 + val4),
+          rodStackItems: [
+            BarChartRodStackItem(
+              sanitizeToY(0.0),
+              sanitizeToY(val1),
+              AppColors.primary[100]!,
+            ),
+            BarChartRodStackItem(
+              sanitizeToY(val1),
+              sanitizeToY(val1 + val2),
+              AppColors.primary[300]!,
+            ),
+            BarChartRodStackItem(
+              sanitizeToY(val1 + val2),
+              sanitizeToY(val1 + val2 + val3),
+              AppColors.primary,
+            ),
+            BarChartRodStackItem(
+              sanitizeToY(val1 + val2 + val3),
+              sanitizeToY(val1 + val2 + val3 + val4),
+              AppColors.primary[700]!,
+            ),
+          ],
+          color: AppColors.primary,
+        ),
+      ],
+    );
   }
 
   @override
@@ -18,94 +59,13 @@ class WeeklyReport extends StatelessWidget {
           height: 200, // 차트 높이 설정
           child: BarChart(
             BarChartData(
-              maxY: 20, // y축의 최대 값
-              minY: 0, // y축의 최소 값
               barGroups: [
-                BarChartGroupData(
-                  x: 0,
-                  barRods: [
-                    BarChartRodData(
-                      toY: sanitizeToY(8.0),
-                      color: Colors.blue,
-                    ),
-                  ],
-                ),
-                BarChartGroupData(
-                  x: 1,
-                  barRods: [
-                    BarChartRodData(
-                      toY: sanitizeToY(10.0),
-                      color: Colors.blue,
-                    ),
-                  ],
-                ),
-                BarChartGroupData(
-                  x: 2,
-                  barRods: [
-                    BarChartRodData(
-                      toY: sanitizeToY(13.0),
-                      rodStackItems: [
-                        BarChartRodStackItem(
-                          sanitizeToY(0.0),
-                          sanitizeToY(5.0),
-                          AppColors.primary[100]!,
-                        ),
-                        BarChartRodStackItem(
-                          sanitizeToY(5.0),
-                          sanitizeToY(10.0),
-                          AppColors.primary[300]!,
-                        ),
-                        BarChartRodStackItem(
-                          sanitizeToY(10.0),
-                          sanitizeToY(12.0),
-                          AppColors.primary,
-                        ),
-                        BarChartRodStackItem(
-                          sanitizeToY(12.0),
-                          sanitizeToY(13.0),
-                          AppColors.primary[700]!,
-                        ),
-                      ],
-                      color: AppColors.primary,
-                    ),
-                  ],
-                ),
-                BarChartGroupData(
-                  x: 3,
-                  barRods: [
-                    BarChartRodData(
-                      toY: sanitizeToY(14.0),
-                      color: Colors.blue,
-                    ),
-                  ],
-                ),
-                BarChartGroupData(
-                  x: 4,
-                  barRods: [
-                    BarChartRodData(
-                      toY: sanitizeToY(16.0),
-                      color: Colors.blue,
-                    ),
-                  ],
-                ),
-                BarChartGroupData(
-                  x: 5,
-                  barRods: [
-                    BarChartRodData(
-                      toY: sanitizeToY(18.0),
-                      color: Colors.blue,
-                    ),
-                  ],
-                ),
-                BarChartGroupData(
-                  x: 6,
-                  barRods: [
-                    BarChartRodData(
-                      toY: sanitizeToY(20.0),
-                      color: Colors.blue,
-                    ),
-                  ],
-                ),
+                chartData(0, 3.0, 4.0, 3.0, 2.0),
+                chartData(2, 2.0, 4.0, 3.0, 2.0),
+                chartData(3, 4.0, 3.0, 5.0, 2.0),
+                chartData(4, 3.0, 2.0, 4.0, 3.0),
+                chartData(5, 2.0, 3.0, 2.0, 3.0),
+                chartData(6, 3.0, 4.0, 3.0, 4.0),
               ],
               titlesData: FlTitlesData(
                 bottomTitles: AxisTitles(
@@ -140,10 +100,10 @@ class WeeklyReport extends StatelessWidget {
                   ),
                 ),
                 rightTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false), // 우측 축 숨기기
+                  sideTitles: SideTitles(showTitles: false),
                 ),
                 topTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false), // 상단 축 숨기기
+                  sideTitles: SideTitles(showTitles: false),
                 ),
               ),
               gridData: const FlGridData(show: false),
