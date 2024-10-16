@@ -1,5 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class WeeklyReport extends StatelessWidget {
@@ -51,6 +53,7 @@ class WeeklyReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final weeklyReport = context.watch<ProfileCubit>().getWeeklyReport;
     return Column(
       children: [
         Text("주간 리포트", style: AppTextStyles.textTheme.displaySmall),
@@ -59,14 +62,24 @@ class WeeklyReport extends StatelessWidget {
           height: 200, // 차트 높이 설정
           child: BarChart(
             BarChartData(
-              barGroups: [
+              barGroups: List.generate(weeklyReport.length, (index) {
+                final report = weeklyReport[index];
+                return chartData(
+                  index,
+                  report?.breakfast?.toDouble() ?? 0.0,
+                  report?.lunch?.toDouble() ?? 0.0,
+                  report?.dinner?.toDouble() ?? 0.0,
+                  report?.snack?.toDouble() ?? 0.0,
+                );
+              }),
+              /*
                 chartData(0, 3.0, 4.0, 3.0, 2.0),
                 chartData(2, 2.0, 4.0, 3.0, 2.0),
                 chartData(3, 4.0, 3.0, 5.0, 2.0),
                 chartData(4, 3.0, 2.0, 4.0, 3.0),
                 chartData(5, 2.0, 3.0, 2.0, 3.0),
-                chartData(6, 3.0, 4.0, 3.0, 4.0),
-              ],
+                chartData(6, 3.0, 4.0, 3.0, 4.0),*/
+
               titlesData: FlTitlesData(
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
