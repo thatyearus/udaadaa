@@ -128,11 +128,14 @@ class ImageCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8), // 작성일과 제목 사이의 간격
-                  Text(
-                    feed.review, // 제목 정보
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
+                  Expanded(
+                    child: Text(
+                      feed.review, // 제목 정보
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
