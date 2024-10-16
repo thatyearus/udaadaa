@@ -33,6 +33,16 @@ class FeedPageViewState extends State<FeedPageView> {
         itemBuilder: (context, index) {
           final feed = feeds[index];
           context.read<FeedCubit>().changePage(index);
+          if (index + 1 < feeds.length) {
+            precacheImage(
+                CachedNetworkImageProvider(feeds[index + 1].imageUrl!),
+                context);
+          }
+          if (index + 2 < feeds.length) {
+            precacheImage(
+                CachedNetworkImageProvider(feeds[index + 2].imageUrl!),
+                context);
+          }
           return ImageCard(
             feed: feed,
             isMyPage: false,
