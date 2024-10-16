@@ -247,8 +247,30 @@ class WeeklyReport extends StatelessWidget {
                   x: 2,
                   barRods: [
                     BarChartRodData(
-                      toY: sanitizeToY(12.0),
-                      color: Colors.blue,
+                      toY: sanitizeToY(13.0),
+                      rodStackItems: [
+                        BarChartRodStackItem(
+                          sanitizeToY(0.0),
+                          sanitizeToY(5.0),
+                          AppColors.primary[100]!,
+                        ),
+                        BarChartRodStackItem(
+                          sanitizeToY(5.0),
+                          sanitizeToY(10.0),
+                          AppColors.primary[300]!,
+                        ),
+                        BarChartRodStackItem(
+                          sanitizeToY(10.0),
+                          sanitizeToY(12.0),
+                          AppColors.primary,
+                        ),
+                        BarChartRodStackItem(
+                          sanitizeToY(12.0),
+                          sanitizeToY(13.0),
+                          AppColors.primary[700]!,
+                        ),
+                      ],
+                      color: AppColors.primary,
                     ),
                   ],
                 ),
