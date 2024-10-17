@@ -149,6 +149,17 @@ class WeeklyReport extends StatelessWidget {
                 topTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 36,
+                    getTitlesWidget: (value, meta) => Text(
+                      value.toInt().toString(),
+                      style: AppTextStyles.textTheme.bodyMedium,
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ),
               ),
               gridData: const FlGridData(show: false),
               borderData: FlBorderData(show: false),
