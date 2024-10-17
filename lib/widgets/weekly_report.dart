@@ -11,6 +11,10 @@ class WeeklyReport extends StatelessWidget {
     return (value == null || value.isNaN || value.isInfinite) ? 0 : value;
   }
 
+  String getDate(DateTime date) {
+    return "${date.month}/${date.day}";
+  }
+
   BarChartGroupData chartData(
     int x,
     double val1,
@@ -54,6 +58,9 @@ class WeeklyReport extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final weeklyReport = context.watch<ProfileCubit>().getWeeklyReport;
+    final selectedDate = context.select<ProfileCubit, DateTime?>(
+            (cubit) => cubit.getSelectedDate) ??
+        DateTime.now();
     return Column(
       children: [
         Text("주간 리포트", style: AppTextStyles.textTheme.displaySmall),
@@ -85,7 +92,7 @@ class WeeklyReport extends StatelessWidget {
                   sideTitles: SideTitles(
                     showTitles: true,
                     getTitlesWidget: (double value, TitleMeta meta) {
-                      final style = AppTextStyles.textTheme.headlineSmall;
+                      final style = AppTextStyles.textTheme.bodyMedium;
                       /*const style = TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -93,19 +100,43 @@ class WeeklyReport extends StatelessWidget {
                       );*/
                       switch (value.toInt()) {
                         case 0:
-                          return Text('월', style: style);
+                          return Text(
+                              getDate(
+                                selectedDate.subtract(const Duration(days: 6)),
+                              ),
+                              style: style);
                         case 1:
-                          return Text('화', style: style);
+                          return Text(
+                              getDate(
+                                selectedDate.subtract(const Duration(days: 5)),
+                              ),
+                              style: style);
                         case 2:
-                          return Text('수', style: style);
+                          return Text(
+                              getDate(
+                                selectedDate.subtract(const Duration(days: 4)),
+                              ),
+                              style: style);
                         case 3:
-                          return Text('목', style: style);
+                          return Text(
+                              getDate(
+                                selectedDate.subtract(const Duration(days: 3)),
+                              ),
+                              style: style);
                         case 4:
-                          return Text('금', style: style);
+                          return Text(
+                              getDate(
+                                selectedDate.subtract(const Duration(days: 2)),
+                              ),
+                              style: style);
                         case 5:
-                          return Text('토', style: style);
+                          return Text(
+                              getDate(
+                                selectedDate.subtract(const Duration(days: 1)),
+                              ),
+                              style: style);
                         case 6:
-                          return Text('일', style: style);
+                          return Text(getDate(selectedDate), style: style);
                         default:
                           return Text('', style: style);
                       }
