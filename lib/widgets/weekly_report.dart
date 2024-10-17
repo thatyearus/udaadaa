@@ -80,25 +80,25 @@ class WeeklyReport extends StatelessWidget {
                   report?.snack?.toDouble() ?? 0.0,
                 );
               }),
-              /*
-                chartData(0, 3.0, 4.0, 3.0, 2.0),
-                chartData(2, 2.0, 4.0, 3.0, 2.0),
-                chartData(3, 4.0, 3.0, 5.0, 2.0),
-                chartData(4, 3.0, 2.0, 4.0, 3.0),
-                chartData(5, 2.0, 3.0, 2.0, 3.0),
-                chartData(6, 3.0, 4.0, 3.0, 4.0),*/
-
+              barTouchData: BarTouchData(
+                enabled: true,
+                touchTooltipData: BarTouchTooltipData(
+                  getTooltipColor: (group) => AppColors.primary[100]!,
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    final value = rod.toY.round();
+                    return BarTooltipItem(
+                      value.toString(),
+                      AppTextStyles.textTheme.bodyMedium!,
+                    );
+                  },
+                ),
+              ),
               titlesData: FlTitlesData(
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
                     getTitlesWidget: (double value, TitleMeta meta) {
                       final style = AppTextStyles.textTheme.bodyMedium;
-                      /*const style = TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      );*/
                       switch (value.toInt()) {
                         case 0:
                           return Text(
