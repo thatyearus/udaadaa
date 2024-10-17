@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/widgets/legend_widget.dart';
 
 class WeeklyReport extends StatelessWidget {
   const WeeklyReport({super.key});
@@ -166,6 +167,13 @@ class WeeklyReport extends StatelessWidget {
             ),
           ),
         ),
+        AppSpacing.verticalSizedBoxS,
+        LegendsListWidget(legends: [
+          Legend("아침", AppColors.primary[100]!),
+          Legend("점심", AppColors.primary[300]!),
+          Legend("저녁", AppColors.primary),
+          Legend("간식", AppColors.primary[700]!),
+        ]),
       ],
     );
   }
