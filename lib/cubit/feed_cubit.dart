@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/reaction.dart';
+import 'package:udaadaa/models/report.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 import '../utils/analytics/analytics.dart';
@@ -295,8 +296,48 @@ class FeedCubit extends Cubit<FeedState> {
 
   void deleteMyFeed() async {
     final feedId = _myFeeds[_myFeedPage].id!;
-    await supabase.from('feed').delete().eq('id', feedId);
-    fetchMyFeeds();
+    try {
+      final reportMap = await supabase.from('report').select().eq(
+          'date', _myFeeds[_myFeedPage].createdAt!.toLocal().toIso8601String());
+      if (reportMap.isEmpty) {
+        logger.e("No report data");
+        throw "No report data";
+      }
+      Report report = Report.fromMap(map: reportMap[0]);
+      report = report.copyWith(
+        breakfast: (report.breakfast ?? 0) -
+            (_myFeeds[_myFeedPage].type == FeedType.breakfast
+                ? (_myFeeds[_myFeedPage].calorie ?? 0)
+                : 0),
+        lunch: (report.lunch ?? 0) -
+            (_myFeeds[_myFeedPage].type == FeedType.lunch
+                ? (_myFeeds[_myFeedPage].calorie ?? 0)
+                : 0),
+        dinner: (report.dinner ?? 0) -
+            (_myFeeds[_myFeedPage].type == FeedType.dinner
+                ? (_myFeeds[_myFeedPage].calorie ?? 0)
+                : 0),
+        snack: (report.snack ?? 0) -
+            (_myFeeds[_myFeedPage].type == FeedType.snack
+                ? (_myFeeds[_myFeedPage].calorie ?? 0)
+                : 0),
+      );
+      if ((report.breakfast ?? 0) < 0 ||
+          (report.lunch ?? 0) < 0 ||
+          (report.dinner ?? 0) < 0 ||
+          (report.snack ?? 0) < 0) {
+        logger.e("Negative report data");
+        throw "Negative report data";
+      }
+      await supabase
+          .from('report')
+          .upsert(report.toMap(), onConflict: 'user_id, date');
+      await supabase.from('feed').delete().eq('id', feedId);
+      fetchMyFeeds();
+    } catch (e) {
+      logger.e(e);
+      Analytics().logEvent("피드_삭제_에러", parameters: {"에러": e.toString()});
+    }
   }
 
   List<Feed> get getMyFeeds => _myFeeds;
