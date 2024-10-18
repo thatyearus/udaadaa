@@ -50,7 +50,7 @@ class RecordView extends StatelessWidget {
                               onPressed: () {
                                 context
                                     .read<FeedCubit>()
-                                    .blcokDetailPage(stackIndex);
+                                    .blockDetailPage(stackIndex);
                                 Navigator.of(context).pop();
                                 Analytics().logEvent("피드_차단");
                               },

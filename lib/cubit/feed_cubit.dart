@@ -283,7 +283,7 @@ class FeedCubit extends Cubit<FeedState> {
     );
   }
 
-  void blcokDetailPage(int stackIndex) {
+  void blockDetailPage(int stackIndex) {
     final feedId = _homeFeeds[stackIndex][_curHomeFeedPage[stackIndex]].id!;
     blockFeed(feedId).then(
       (_) {
