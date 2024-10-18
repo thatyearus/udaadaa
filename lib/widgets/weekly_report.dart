@@ -25,32 +25,27 @@ class WeeklyReport extends StatelessWidget {
   ) {
     return BarChartGroupData(
       x: x,
+      groupVertically: true,
       barRods: [
         BarChartRodData(
-          toY: sanitizeToY(val1 + val2 + val3 + val4),
-          rodStackItems: [
-            BarChartRodStackItem(
-              sanitizeToY(0.0),
-              sanitizeToY(val1),
-              AppColors.primary[100]!,
+          fromY: sanitizeToY(0.0),
+          toY: sanitizeToY(val1),
+          color: AppColors.secondary[100],
             ),
-            BarChartRodStackItem(
-              sanitizeToY(val1),
-              sanitizeToY(val1 + val2),
-              AppColors.primary[300]!,
+        BarChartRodData(
+          fromY: sanitizeToY(val1),
+          toY: (val1 + val2),
+          color: AppColors.secondary[300],
             ),
-            BarChartRodStackItem(
-              sanitizeToY(val1 + val2),
-              sanitizeToY(val1 + val2 + val3),
-              AppColors.primary,
-            ),
-            BarChartRodStackItem(
-              sanitizeToY(val1 + val2 + val3),
-              sanitizeToY(val1 + val2 + val3 + val4),
-              AppColors.primary[700]!,
-            ),
-          ],
+        BarChartRodData(
+          fromY: sanitizeToY(val1 + val2),
+          toY: (val1 + val2 + val3),
           color: AppColors.primary,
+        ),
+        BarChartRodData(
+          fromY: sanitizeToY(val1 + val2 + val3),
+          toY: (val1 + val2 + val3 + val4),
+          color: AppColors.primary[800],
         ),
       ],
     );
@@ -169,10 +164,10 @@ class WeeklyReport extends StatelessWidget {
         ),
         AppSpacing.verticalSizedBoxS,
         LegendsListWidget(legends: [
-          Legend("아침", AppColors.primary[100]!),
-          Legend("점심", AppColors.primary[300]!),
+          Legend("아침", AppColors.secondary[100]!),
+          Legend("점심", AppColors.secondary[300]!),
           Legend("저녁", AppColors.primary),
-          Legend("간식", AppColors.primary[700]!),
+          Legend("간식", AppColors.primary[800]!),
         ]),
       ],
     );
