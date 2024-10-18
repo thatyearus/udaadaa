@@ -293,6 +293,12 @@ class FeedCubit extends Cubit<FeedState> {
     );
   }
 
+  void deleteMyFeed() async {
+    final feedId = _myFeeds[_myFeedPage].id!;
+    await supabase.from('feed').delete().eq('id', feedId);
+    fetchMyFeeds();
+  }
+
   List<Feed> get getMyFeeds => _myFeeds;
   List<Feed> get getFeeds => _feeds;
   List<List<Feed>> get getHomeFeeds => _homeFeeds;
