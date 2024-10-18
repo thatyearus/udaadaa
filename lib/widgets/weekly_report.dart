@@ -31,12 +31,12 @@ class WeeklyReport extends StatelessWidget {
           fromY: sanitizeToY(0.0),
           toY: sanitizeToY(val1),
           color: AppColors.secondary[100],
-            ),
+        ),
         BarChartRodData(
           fromY: sanitizeToY(val1),
           toY: (val1 + val2),
           color: AppColors.secondary[300],
-            ),
+        ),
         BarChartRodData(
           fromY: sanitizeToY(val1 + val2),
           toY: (val1 + val2 + val3),
@@ -80,10 +80,21 @@ class WeeklyReport extends StatelessWidget {
                 touchTooltipData: BarTouchTooltipData(
                   getTooltipColor: (group) => AppColors.primary[100]!,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    final value = rod.toY.round();
+                    final allValue = group.barRods[3].toY.toInt();
+                    final value = (rod.toY - rod.fromY).toInt();
+                    final label = [
+                      '아침',
+                      '점심',
+                      '저녁',
+                      '간식',
+                    ];
+
+                    final text =
+                        '${label[rodIndex]} $value kcal\n총합 $allValue kcal';
+
                     return BarTooltipItem(
-                      value.toString(),
-                      AppTextStyles.textTheme.bodyMedium!,
+                      text,
+                      AppTextStyles.textTheme.bodySmall!,
                     );
                   },
                 ),
