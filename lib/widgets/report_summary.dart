@@ -120,14 +120,12 @@ class MiniCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.neutral[0],
-        border: Border.all(color: AppColors.primary[100]!),
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
+        borderRadius: BorderRadius.circular(5),
+        color: Colors.white,
+        boxShadow: const [
           BoxShadow(
-            color: AppColors.primary[100]!,
-            offset: const Offset(0, 2),
-            blurRadius: 4,
+            color: Colors.black12,
+            blurRadius: 5,
           ),
         ],
       ),
