@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/widgets/feed.dart';
 
@@ -16,6 +17,59 @@ class MyRecordView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: AppColors.white,
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem(
+                  value: 'delete_feed',
+                  child: Text('피드 삭제'),
+                ),
+              ];
+            },
+            onSelected: (value) {
+              switch (value) {
+                case 'delete_feed':
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('피드 삭제'),
+                          content: const Text('정말 삭제하시겠습니까?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                '취소',
+                                style: AppTextStyles.textTheme.bodyMedium,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                context.read<FeedCubit>().deleteMyFeed();
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                                Analytics().logEvent("내피드_삭제");
+                              },
+                              child: Text(
+                                '삭제',
+                                style: AppTextStyles.textTheme.bodyMedium,
+                              ),
+                            ),
+                          ],
+                        );
+                      });
+                  break;
+              }
+            },
+            icon: const Icon(
+              Icons.more_vert_rounded,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: MyFeedPageView(initialPage: initialPage),
