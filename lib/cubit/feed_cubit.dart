@@ -20,6 +20,7 @@ class FeedCubit extends Cubit<FeedState> {
   List<String> _blockedFeedIds = [];
   final int _limit = 10;
   int _curFeedPage = 0;
+  int _myFeedPage = 0;
   List<int> _curHomeFeedPage = [0, 0, 0];
 
   FeedCubit(this.authCubit) : super(FeedInitial()) {
@@ -193,6 +194,13 @@ class FeedCubit extends Cubit<FeedState> {
       getMoreHomeFeeds(index);
     }
     logger.d("Current home feed page: $_curHomeFeedPage");
+  }
+
+  void changeMyFeedPage(int page) {
+    _myFeedPage = page;
+    Analytics().logEvent("피드_내피드탐색", parameters: {
+      "현재피드": _myFeedPage,
+    });
   }
 
   Future<void> fetchMyFeeds() async {
