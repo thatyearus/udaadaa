@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
+import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/widgets/feed.dart';
 
 class FeedView extends StatelessWidget {
@@ -32,13 +33,44 @@ class FeedView extends StatelessWidget {
             onSelected: (value) {
               switch (value) {
                 case 'block_content':
-                  context.read<FeedCubit>().blockFeedPage();
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('피드 차단'),
+                          content: const Text('정말 차단하시겠습니까?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                '취소',
+                                style: AppTextStyles.textTheme.bodyMedium,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                context.read<FeedCubit>().blockFeedPage();
+                                Navigator.of(context).pop();
+                                Analytics().logEvent("피드_차단");
+                              },
+                              child: Text(
+                                '차단',
+                                style: AppTextStyles.textTheme.bodyMedium,
+                              ),
+                            ),
+                          ],
+                        );
+                      });
                   break;
               }
             },
             icon: GestureDetector(
               onTap: () {
-                Analytics().logEvent("피드_더보기",);
+                Analytics().logEvent(
+                  "피드_더보기",
+                );
               },
               child: const Icon(
                 Icons.more_vert_rounded,
