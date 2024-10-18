@@ -93,7 +93,7 @@ class WeeklyReport extends StatelessWidget {
                   sideTitles: SideTitles(
                     showTitles: true,
                     getTitlesWidget: (double value, TitleMeta meta) {
-                      final style = AppTextStyles.textTheme.bodyMedium;
+                      final style = AppTextStyles.textTheme.bodySmall;
                       switch (value.toInt()) {
                         case 0:
                           return Text(
@@ -148,16 +148,17 @@ class WeeklyReport extends StatelessWidget {
                 leftTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
-                    reservedSize: 36,
+                    reservedSize: 32,
+                    maxIncluded: false,
                     getTitlesWidget: (value, meta) => Text(
                       value.toInt().toString(),
-                      style: AppTextStyles.textTheme.bodyMedium,
+                      style: AppTextStyles.textTheme.bodySmall,
                       textAlign: TextAlign.end,
                     ),
                   ),
                 ),
               ),
-              gridData: const FlGridData(show: false),
+              gridData: const FlGridData(show: true),
               borderData: FlBorderData(show: false),
             ),
           ),
