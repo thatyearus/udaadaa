@@ -38,7 +38,7 @@ class HomeViewState extends State<HomeView> {
         onRefresh: () {
           return Future.wait([
             context.read<FeedCubit>().fetchMyFeeds(),
-            context.read<FeedCubit>().fetchHomeFeeds(),
+            //context.read<FeedCubit>().fetchHomeFeeds(),
             context.read<ProfileCubit>().getMyTodayReport(),
           ]);
         },
