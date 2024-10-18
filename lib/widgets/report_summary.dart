@@ -37,9 +37,22 @@ class ReportSummary extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("오늘의 리포트",
-              style: AppTextStyles.headlineMedium(
-                  const TextStyle(color: AppColors.primary))),
+          Row(
+            children: [
+              Text(
+                "오늘의 리포트",
+                style: AppTextStyles.headlineMedium(
+                  const TextStyle(color: AppColors.primary),
+                ),
+              ),
+              const Spacer(),
+              Icon(
+                size: 20,
+                Icons.arrow_forward_ios_rounded,
+                color: AppColors.neutral[300],
+              ),
+            ],
+          ),
           AppSpacing.verticalSizedBoxS,
           Text("총칼로리 : $totalCalorie kcal",
               style: AppTextStyles.textTheme.headlineMedium),
