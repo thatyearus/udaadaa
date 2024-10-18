@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class Calendar extends StatelessWidget {
@@ -39,6 +40,8 @@ class Calendar extends StatelessWidget {
       onPageChanged: (focusedDay) =>
           context.read<ProfileCubit>().selectFocusDate(focusedDay),
       onDaySelected: (DateTime selectedDay, DateTime focusDay) {
+        Analytics()
+            .logEvent("리포트_날짜선택", parameters: {"날짜": selectedDay.toString()});
         context.read<ProfileCubit>().selectDay(selectedDay);
       },
       selectedDayPredicate: (day) {
