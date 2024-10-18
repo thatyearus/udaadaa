@@ -86,7 +86,7 @@ class MainView extends StatelessWidget {
                 context.read<BottomNavCubit>().selectTab(BottomNavState.feed);
               },
               label: Text(
-                '반응 받으러 가기',
+                '응원 받으러 가기',
                 style: AppTextStyles.textTheme.headlineLarge,
               ),
               shape: RoundedRectangleBorder(
