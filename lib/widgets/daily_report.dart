@@ -19,7 +19,7 @@ class DayMiniReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardView(
+    return CardView2(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
