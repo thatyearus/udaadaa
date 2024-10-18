@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
@@ -33,6 +35,8 @@ class HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final myFeedsLength =
+        context.select<FeedCubit, int>((cubit) => cubit.getMyFeeds.length);
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () {
@@ -51,7 +55,7 @@ class HomeViewState extends State<HomeView> {
                 height: MediaQuery.of(context).size.height * 0.3,
                 child: PageView.builder(
                   controller: _pageController,
-                  itemCount: 3,
+                  itemCount: min(3, myFeedsLength),
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
