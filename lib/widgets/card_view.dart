@@ -25,3 +25,29 @@ class CardView extends StatelessWidget {
     );
   }
 }
+
+class CardView2 extends StatelessWidget {
+  const CardView2({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: Colors.white,
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        padding: AppSpacing.edgeInsetsL,
+        child: child,
+      ),
+    );
+  }
+}

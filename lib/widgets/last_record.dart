@@ -53,10 +53,13 @@ class LastRecord extends StatelessWidget {
                 ),
               ],
             ),
+            margin: AppSpacing.edgeInsetsXxs,
             padding: AppSpacing.edgeInsetsM,
             width: double.infinity,
+            height: double.infinity,
             alignment: Alignment.centerLeft,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Row(
                   children: [
@@ -74,9 +77,22 @@ class LastRecord extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("내 최근 기록",
-                              style: AppTextStyles.headlineMedium(
-                                  const TextStyle(color: AppColors.primary))),
+                          Row(
+                            children: [
+                              Text(
+                                "내 최근 기록",
+                                style: AppTextStyles.headlineMedium(
+                                  const TextStyle(color: AppColors.primary),
+                                ),
+                              ),
+                              const Spacer(),
+                              Icon(
+                                size: 20,
+                                Icons.arrow_forward_ios_rounded,
+                                color: AppColors.neutral[300],
+                              ),
+                            ],
+                          ),
                           AppSpacing.verticalSizedBoxS,
                           Text(
                             myFeedRecord[page].review,
@@ -92,12 +108,10 @@ class LastRecord extends StatelessWidget {
                     ),
                   ],
                 ),
-                AppSpacing.verticalSizedBoxXxs,
                 Divider(
                   color: AppColors.neutral[300],
                   thickness: 1,
                 ),
-                AppSpacing.verticalSizedBoxXxs,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

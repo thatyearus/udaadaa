@@ -33,6 +33,16 @@ class FeedPageViewState extends State<FeedPageView> {
         itemBuilder: (context, index) {
           final feed = feeds[index];
           context.read<FeedCubit>().changePage(index);
+          if (index + 1 < feeds.length) {
+            precacheImage(
+                CachedNetworkImageProvider(feeds[index + 1].imageUrl!),
+                context);
+          }
+          if (index + 2 < feeds.length) {
+            precacheImage(
+                CachedNetworkImageProvider(feeds[index + 2].imageUrl!),
+                context);
+          }
           return ImageCard(
             feed: feed,
             isMyPage: false,
@@ -118,11 +128,14 @@ class ImageCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8), // 작성일과 제목 사이의 간격
-                  Text(
-                    feed.review, // 제목 정보
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
+                  Expanded(
+                    child: Text(
+                      feed.review, // 제목 정보
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
