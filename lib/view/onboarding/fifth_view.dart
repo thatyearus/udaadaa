@@ -84,7 +84,7 @@ class FifthView extends StatelessWidget {
               onPressed: () {
                 if (state is form.FormLoading) return;
                 Analytics().logEvent(
-                  "기록_음식한마디",
+                  "기록_칼로리결과",
                   parameters: {
                     "올려서_공감받기": "클릭",
                     "온보딩_완료_여부":
