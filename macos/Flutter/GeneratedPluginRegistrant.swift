@@ -13,7 +13,7 @@ import firebase_messaging
 import flutter_local_notifications
 import path_provider_foundation
 import shared_preferences_foundation
-import sqflite
+import sqflite_darwin
 import url_launcher_macos
 import video_player_avfoundation
 

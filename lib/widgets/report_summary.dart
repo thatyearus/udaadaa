@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 
@@ -10,15 +9,13 @@ class ReportSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final report = context.watch<ProfileCubit>().getReport;
-    final nickname = context.watch<AuthCubit>().getProfile?.nickname ?? "사용자";
+    // final nickname = context.watch<AuthCubit>().getProfile?.nickname ?? "사용자";
     final totalCalorie = (report != null
         ? ((report.breakfast ?? 0) +
             (report.lunch ?? 0) +
             (report.dinner ?? 0) +
             (report.snack ?? 0))
         : 0);
-    final totalExercise = report?.exercise ?? 0;
-    final weight = report?.weight ?? 0;
 
     return Container(
       decoration: BoxDecoration(
@@ -33,20 +30,130 @@ class ReportSummary extends StatelessWidget {
           ),
         ],
       ),
+      margin: AppSpacing.edgeInsetsXxs,
       padding: AppSpacing.edgeInsetsM,
       width: double.infinity,
       alignment: Alignment.centerLeft,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text("$nickname 님의 리포트",
-            style: AppTextStyles.headlineMedium(
-                const TextStyle(color: AppColors.primary))),
-        AppSpacing.verticalSizedBoxS,
-        Text("총칼로리 : $totalCalorie kcal",
-            style: AppTextStyles.textTheme.bodyLarge),
-        Text("운동 시간 : $totalExercise 분",
-            style: AppTextStyles.textTheme.bodyLarge),
-        Text("체중 : $weight kg", style: AppTextStyles.textTheme.bodyLarge),
-      ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                "오늘의 리포트",
+                style: AppTextStyles.headlineMedium(
+                  const TextStyle(color: AppColors.primary),
+                ),
+              ),
+              const Spacer(),
+              Icon(
+                size: 20,
+                Icons.arrow_forward_ios_rounded,
+                color: AppColors.neutral[300],
+              ),
+            ],
+          ),
+          AppSpacing.verticalSizedBoxS,
+          Text("총칼로리 : $totalCalorie kcal",
+              style: AppTextStyles.textTheme.headlineMedium),
+          AppSpacing.verticalSizedBoxXs,
+          /*Text("아침 : ${report?.breakfast ?? 0} kcal",
+              style: AppTextStyles.textTheme.bodyMedium),
+          AppSpacing.verticalSizedBoxXxs,
+          Text("점심 : ${report?.lunch ?? 0} kcal",
+              style: AppTextStyles.textTheme.bodyMedium),
+          AppSpacing.verticalSizedBoxXxs,
+          Text("저녁 : ${report?.dinner ?? 0} kcal",
+              style: AppTextStyles.textTheme.bodyMedium),
+          AppSpacing.verticalSizedBoxXxs,
+          Text("간식 : ${report?.snack ?? 0} kcal",
+              style: AppTextStyles.textTheme.bodyMedium),*/
+          Row(
+            children: [
+              Expanded(
+                child: MiniCard(
+                  title: "아침",
+                  content: (report?.breakfast ?? 0).toString(),
+                  unit: "kcal",
+                  color: AppColors.white,
+                ),
+              ),
+              Expanded(
+                child: MiniCard(
+                  title: "점심",
+                  content: (report?.lunch ?? 0).toString(),
+                  unit: "kcal",
+                  color: AppColors.white,
+                ),
+              ),
+            ],
+          ),
+          AppSpacing.verticalSizedBoxXxs,
+          Row(
+            children: [
+              Expanded(
+                child: MiniCard(
+                  title: "저녁",
+                  content: (report?.dinner ?? 0).toString(),
+                  unit: "kcal",
+                  color: AppColors.white,
+                ),
+              ),
+              Expanded(
+                child: MiniCard(
+                  title: "간식",
+                  content: (report?.snack ?? 0).toString(),
+                  unit: "kcal",
+                  color: AppColors.white,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MiniCard extends StatelessWidget {
+  final String title;
+  final String content;
+  final String unit;
+  final Color color;
+
+  const MiniCard({
+    super.key,
+    required this.title,
+    required this.content,
+    required this.unit,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      margin: AppSpacing.edgeInsetsXxs,
+      padding: AppSpacing.edgeInsetsM,
+      width: double.infinity,
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: AppTextStyles.textTheme.headlineSmall),
+          AppSpacing.verticalSizedBoxXxs,
+          Text("$content $unit", style: AppTextStyles.textTheme.bodyLarge),
+        ],
+      ),
     );
   }
 }
