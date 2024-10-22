@@ -41,7 +41,7 @@ class Profile {
       nickname: nickname ?? this.nickname,
       createdAt: createdAt ?? this.createdAt,
       pushOption: pushOption ?? this.pushOption,
-      fcmToken: fcmToken ?? this.fcmToken,
+      fcmToken: fcmToken == "" ? null : fcmToken ?? this.fcmToken,
     );
   }
 }

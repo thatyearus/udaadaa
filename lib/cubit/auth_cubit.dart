@@ -141,6 +141,37 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> turnOffPush(Profile profile) async {
+    try {
+      profile = profile.copyWith(fcmToken: "");
+      await supabase.from('profiles').upsert(profile.toMap());
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
+  Future<void> togglePush() async {
+    try {
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('User is not authenticated');
+      }
+      final res = await supabase
+          .from('profiles')
+          .select()
+          .eq('id', currentUser.id)
+          .single();
+      Profile profile = Profile.fromMap(map: res);
+      if (profile.fcmToken == null) {
+        await _setFCMToken(profile);
+      } else {
+        await turnOffPush(profile);
+      }
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
   Future<void> signOut() async {
     await supabase.auth.signOut();
     emit(AuthInitial());
