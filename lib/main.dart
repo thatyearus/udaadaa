@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
@@ -15,6 +17,17 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/view/splash_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:facebook_app_events/facebook_app_events.dart';
+
+@pragma('vm:entry-point')
+Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  logger.d('Handling a background message ${message.messageId}');
+  logger.d(message.data);
+  logger.d(message.notification?.body ?? "");
+  logger.d(message.notification?.title ?? "");
+}
+
+@pragma('vm:entry-point')
+void notificationTapBackground(NotificationResponse response) {}
 
 Future<void> _facebookTracking() async {
   FacebookAppEvents facebookAppEvents = FacebookAppEvents();
@@ -39,6 +52,7 @@ Future<void> main() async {
   Analytics().init();
 
   _facebookTracking();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
 }
 
