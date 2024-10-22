@@ -26,6 +26,10 @@ class MyPageView extends StatelessWidget {
                 value: 'change_nickname',
                 child: Text('닉네임 변경'),
               ),
+              const PopupMenuItem(
+                value: 'push_setting',
+                child: Text('푸시알림 설정'),
+              ),
             ];
           },
           onSelected: (value) {
@@ -69,6 +73,29 @@ class MyPageView extends StatelessWidget {
                               context
                                   .read<AuthCubit>()
                                   .updateNickname(nicknameController.text);
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('확인'),
+                          ),
+                        ],
+                      );
+                    });
+                break;
+              case 'push_setting':
+                Analytics().logEvent(
+                  "마이페이지_푸시알림",
+                  parameters: {"클릭": "푸시알림설정"},
+                );
+                context.read<AuthCubit>().togglePush();
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('푸시알림 설정'),
+                        content: const Text('푸시알림 설정이 변경되었습니다.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
                               Navigator.of(context).pop();
                             },
                             child: const Text('확인'),
