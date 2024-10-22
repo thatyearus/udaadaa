@@ -20,6 +20,7 @@ class FeedCubit extends Cubit<FeedState> {
   List<Feed> _feeds = [];
   List<List<Feed>> _homeFeeds = [[], [], []];
   List<String> _blockedFeedIds = [];
+  List<String> _reactionFeedIds = [];
   final int _limit = 10;
   int _curFeedPage = 0;
   int _myFeedPage = 0;
@@ -27,7 +28,7 @@ class FeedCubit extends Cubit<FeedState> {
 
   FeedCubit(this.authCubit) : super(FeedInitial()) {
     if (authCubit.state is Authenticated) {
-      fetchBlockedFeed().then((_) {
+      Future.wait([fetchBlockedFeed(), fetchReactionFeed()]).then((_) {
         fetchHomeFeeds();
         _getFeeds();
       });
@@ -36,7 +37,7 @@ class FeedCubit extends Cubit<FeedState> {
 
     authSubscription = authCubit.stream.listen((authState) {
       if (authState is Authenticated) {
-        fetchBlockedFeed().then((_) {
+        Future.wait([fetchBlockedFeed(), fetchReactionFeed()]).then((_) {
           fetchHomeFeeds();
           _getFeeds();
         });
@@ -90,6 +91,19 @@ class FeedCubit extends Cubit<FeedState> {
           .eq('user_id', supabase.auth.currentUser!.id);
       final blockedFeedIds = data.map((item) => item['feed_id'] as String);
       _blockedFeedIds = blockedFeedIds.toList();
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  Future<void> fetchReactionFeed() async {
+    try {
+      final data = await supabase
+          .from('reactions')
+          .select('feed_id')
+          .eq('user_id', supabase.auth.currentUser!.id);
+      final reactionFeedIds = data.map((item) => item['feed_id'] as String);
+      _reactionFeedIds = reactionFeedIds.toList();
     } catch (e) {
       logger.e(e);
     }
@@ -170,6 +184,7 @@ class FeedCubit extends Cubit<FeedState> {
             .from('feed')
             .select('*, profiles(*)')
             .not('id', 'in', _blockedFeedIds.toList())
+            .not('id', 'in', _reactionFeedIds.toList())
             .order('created_at', ascending: false)
             .limit(_limit);
       } else {
@@ -177,6 +192,7 @@ class FeedCubit extends Cubit<FeedState> {
             .from('random_feed')
             .select('*, profiles(*)')
             .not('id', 'in', _blockedFeedIds.toList())
+            .not('id', 'in', _reactionFeedIds.toList())
             .limit(_limit);
       }
 
@@ -279,6 +295,7 @@ class FeedCubit extends Cubit<FeedState> {
           .from('reactions')
           .upsert(newReaction.toMap(), onConflict: "user_id, feed_id");
       logger.d("Reaction added: $reaction");
+      _reactionFeedIds.add(feedId);
     } catch (e) {
       Analytics().logEvent(
         "피드_리액션_에러",
