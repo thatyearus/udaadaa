@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:meta/meta.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
@@ -45,6 +46,33 @@ class FeedCubit extends Cubit<FeedState> {
         _myFeeds = [];
         emit(FeedInitial());
       }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
+      logger.d('onMessageOpenedApp: $message');
+      if (message != null) {
+        final feedId = message.data['feedId'];
+        logger.d("Feed ID: $feedId");
+        if (feedId != null) {
+          final feed = _myFeeds.firstWhere(
+            (feed) => feed.id == feedId,
+            orElse: () => Feed(
+                userId: '',
+                review: '',
+                type: FeedType.breakfast,
+                imagePath: ''),
+          );
+          if (feed.id != null) {
+            final feedIndex = _myFeeds.indexOf(feed);
+            emit(FeedDetail(feed, feedIndex));
+          }
+        }
+      }
+    });
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage? message) {
+      logger.d('getInitialMessage: $message');
     });
   }
 
