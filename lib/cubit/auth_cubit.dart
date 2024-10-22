@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:meta/meta.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/models/profile.dart';
@@ -18,6 +19,10 @@ class AuthCubit extends Cubit<AuthState> {
           .then((res) {
         final profile = Profile.fromMap(map: res);
         emit(Authenticated(profile));
+        _setFCMToken(profile);
+        FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+          _updateFCMToken(token, profile);
+        });
       }).onError((error, stackTrace) {
         logger.e(error.toString());
         emit(AuthError());
@@ -55,6 +60,10 @@ class AuthCubit extends Cubit<AuthState> {
           profile = Profile.fromMap(map: res);
           emit(Authenticated(profile));
           insertSuccess = true; // 성공적으로 삽입된 경우 루프를 탈출
+          _setFCMToken(profile);
+          FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+            _updateFCMToken(token, profile);
+          });
         } catch (error) {
           // UNIQUE 제약 조건 위반 시 새로운 닉네임을 생성하고 다시 시도
           if (error is PostgrestException && error.code == '23505') {
@@ -81,6 +90,35 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       logger.e(e.toString());
       emit(AuthError());
+    }
+  }
+
+  Future<void> _setFCMToken(Profile profile) async {
+    try {
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('User is not authenticated');
+      }
+
+      await FirebaseMessaging.instance.requestPermission();
+
+      await FirebaseMessaging.instance.getAPNSToken();
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      if (fcmToken == null) {
+        throw Exception('Failed to get FCM token');
+      }
+      _updateFCMToken(fcmToken, profile);
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
+  Future<void> _updateFCMToken(String token, Profile profile) async {
+    try {
+      profile = profile.copyWith(fcmToken: token);
+      await supabase.from('profiles').upsert(profile.toMap());
+    } catch (e) {
+      logger.e(e.toString());
     }
   }
 
