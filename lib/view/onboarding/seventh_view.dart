@@ -130,7 +130,7 @@ class OnboardingFeedViewState extends State<OnboardingFeedView> {
                 parameters: {"리액션": "클릭"},
               );
               _pageController.nextPage(
-                duration: const Duration(milliseconds: 800),
+                duration: const Duration(milliseconds: 400),
                 curve: Curves.easeInOut,
               );
             },
