@@ -49,31 +49,15 @@ class FeedCubit extends Cubit<FeedState> {
       }
     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       logger.d('onMessageOpenedApp: $message');
-      if (message != null) {
-        final feedId = message.data['feedId'];
-        logger.d("Feed ID: $feedId");
-        if (feedId != null) {
-          final feed = _myFeeds.firstWhere(
-            (feed) => feed.id == feedId,
-            orElse: () => Feed(
-                userId: '',
-                review: '',
-                type: FeedType.breakfast,
-                imagePath: ''),
-          );
-          if (feed.id != null) {
-            final feedIndex = _myFeeds.indexOf(feed);
-            emit(FeedDetail(feed, feedIndex));
-          }
-        }
-      }
+      openFeedDetail(message);
     });
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage? message) {
       logger.d('getInitialMessage: $message');
+      openFeedDetail(message);
     });
   }
 
@@ -81,6 +65,24 @@ class FeedCubit extends Cubit<FeedState> {
   Future<void> close() {
     authSubscription.cancel();
     return super.close();
+  }
+
+  void openFeedDetail(RemoteMessage? message) {
+    if (message != null) {
+      final feedId = message.data['feedId'];
+      logger.d("Feed ID: $feedId");
+      if (feedId != null) {
+        final feed = _myFeeds.firstWhere(
+          (feed) => feed.id == feedId,
+          orElse: () => Feed(
+              userId: '', review: '', type: FeedType.breakfast, imagePath: ''),
+        );
+        if (feed.id != null) {
+          final feedIndex = _myFeeds.indexOf(feed);
+          emit(FeedDetail(feed, feedIndex));
+        }
+      }
+    }
   }
 
   Future<void> fetchBlockedFeed() async {
