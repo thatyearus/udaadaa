@@ -100,13 +100,28 @@ class MyPageView extends StatelessWidget {
                   "마이페이지_푸시알림",
                   parameters: {"클릭": "푸시알림설정"},
                 );
-                context.read<AuthCubit>().togglePush();
                 showDialog(
                     context: context,
                     builder: (context) {
+                      final bool? isSwitched = context.select<AuthCubit, bool?>(
+                          (authCubit) => authCubit.getPushOption);
                       return AlertDialog(
                         title: const Text('푸시알림 설정'),
-                        content: const Text('푸시알림 설정이 변경되었습니다.'),
+                        content: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('리액션 알림'),
+                              Switch(
+                                value: isSwitched ?? false,
+                                onChanged: (bool newValue) {
+                                  context.read<AuthCubit>().togglePush();
+                                },
+                                activeTrackColor: AppColors.primary,
+                                activeColor: AppColors.primary[200],
+                                inactiveThumbColor: AppColors.neutral[0],
+                                inactiveTrackColor: AppColors.neutral[200],
+                              ),
+                            ]),
                         actions: [
                           TextButton(
                             onPressed: () {
