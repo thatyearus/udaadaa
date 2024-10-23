@@ -6,11 +6,21 @@ import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/widgets/my_profile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils/analytics/analytics.dart';
 
 class MyPageView extends StatelessWidget {
   const MyPageView({super.key});
+
+  Future<void> _launchURL() async {
+    const url = 'http://pf.kakao.com/_lxjxgkG';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +39,10 @@ class MyPageView extends StatelessWidget {
               const PopupMenuItem(
                 value: 'push_setting',
                 child: Text('푸시알림 설정'),
+              ),
+              const PopupMenuItem(
+                value: 'kakaotalk',
+                child: Text('문의하기'),
               ),
             ];
           },
@@ -104,6 +118,12 @@ class MyPageView extends StatelessWidget {
                       );
                     });
                 break;
+              case 'kakaotalk':
+                Analytics().logEvent(
+                  "마이페이지_문의하기",
+                  parameters: {"클릭": "문의하기"},
+                );
+                _launchURL();
             }
           },
           icon: const Icon(Icons.settings_rounded),
