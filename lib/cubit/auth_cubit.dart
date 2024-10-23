@@ -165,12 +165,12 @@ class AuthCubit extends Cubit<AuthState> {
         throw Exception('User is not authenticated');
       }
       if (_profile == null) {
-      final res = await supabase
-          .from('profiles')
-          .select()
-          .eq('id', currentUser.id)
-          .single();
-      Profile profile = Profile.fromMap(map: res);
+        final res = await supabase
+            .from('profiles')
+            .select()
+            .eq('id', currentUser.id)
+            .single();
+        Profile profile = Profile.fromMap(map: res);
         _profile = profile;
       }
       if (_profile?.fcmToken == null) {
