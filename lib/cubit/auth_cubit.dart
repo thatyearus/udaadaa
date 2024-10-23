@@ -8,6 +8,8 @@ import 'package:udaadaa/utils/constant.dart';
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
+  Profile? _profile;
+
   AuthCubit() : super(AuthInitial()) {
     final currentUser = supabase.auth.currentUser;
     if (currentUser != null) {
@@ -18,6 +20,7 @@ class AuthCubit extends Cubit<AuthState> {
           .single()
           .then((res) {
         final profile = Profile.fromMap(map: res);
+        _profile = profile;
         emit(Authenticated(profile));
         _setFCMToken(profile);
         FirebaseMessaging.instance.onTokenRefresh.listen((token) {
@@ -58,6 +61,7 @@ class AuthCubit extends Cubit<AuthState> {
               .single();
 
           profile = Profile.fromMap(map: res);
+          _profile = profile;
           emit(Authenticated(profile));
           insertSuccess = true; // 성공적으로 삽입된 경우 루프를 탈출
           _setFCMToken(profile);
@@ -72,6 +76,7 @@ class AuthCubit extends Cubit<AuthState> {
             profile = profile.copyWith(
               nickname: RandomNicknameGenerator.generateNickname(),
             );
+            _profile = profile;
             retryCount++;
           } else {
             // 다른 오류에 대한 처리
@@ -116,6 +121,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> _updateFCMToken(String token, Profile profile) async {
     try {
       profile = profile.copyWith(fcmToken: token);
+      _profile = profile;
       await supabase.from('profiles').upsert(profile.toMap());
     } catch (e) {
       logger.e(e.toString());
@@ -135,6 +141,7 @@ class AuthCubit extends Cubit<AuthState> {
           .select()
           .single();
       Profile profile = Profile.fromMap(map: res);
+      _profile = profile;
       emit(Authenticated(profile));
     } catch (e) {
       logger.e(e.toString());
@@ -144,6 +151,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> turnOffPush(Profile profile) async {
     try {
       profile = profile.copyWith(fcmToken: "");
+      _profile = profile;
       await supabase.from('profiles').upsert(profile.toMap());
     } catch (e) {
       logger.e(e.toString());
@@ -156,17 +164,21 @@ class AuthCubit extends Cubit<AuthState> {
       if (currentUser == null) {
         throw Exception('User is not authenticated');
       }
+      if (_profile == null) {
       final res = await supabase
           .from('profiles')
           .select()
           .eq('id', currentUser.id)
           .single();
       Profile profile = Profile.fromMap(map: res);
-      if (profile.fcmToken == null) {
-        await _setFCMToken(profile);
-      } else {
-        await turnOffPush(profile);
+        _profile = profile;
       }
+      if (_profile?.fcmToken == null) {
+        await _setFCMToken(_profile!);
+      } else {
+        await turnOffPush(_profile!);
+      }
+      emit(Authenticated(_profile!));
     } catch (e) {
       logger.e(e.toString());
     }
@@ -182,5 +194,13 @@ class AuthCubit extends Cubit<AuthState> {
       return (state as Authenticated).user;
     }
     return null;
+  }
+
+  Profile? get getCurProfile => _profile;
+
+  bool? get getPushOption {
+    logger.d("${getCurProfile?.fcmToken}");
+    logger.d("getPushOption: ${getCurProfile?.fcmToken != null}");
+    return getCurProfile?.fcmToken != null;
   }
 }
