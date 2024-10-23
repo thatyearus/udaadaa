@@ -52,7 +52,7 @@ class HomeViewState extends State<HomeView> {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: 250,
                 child: PageView.builder(
                   controller: _pageController,
                   itemCount: min(3, myFeedsLength),
