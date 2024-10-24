@@ -22,7 +22,6 @@ class AuthCubit extends Cubit<AuthState> {
         final profile = Profile.fromMap(map: res);
         _profile = profile;
         emit(Authenticated(profile));
-        _setFCMToken(profile);
         FirebaseMessaging.instance.onTokenRefresh.listen((token) {
           _updateFCMToken(token, profile);
         });
@@ -64,7 +63,6 @@ class AuthCubit extends Cubit<AuthState> {
           _profile = profile;
           emit(Authenticated(profile));
           insertSuccess = true; // 성공적으로 삽입된 경우 루프를 탈출
-          _setFCMToken(profile);
           FirebaseMessaging.instance.onTokenRefresh.listen((token) {
             _updateFCMToken(token, profile);
           });
@@ -96,6 +94,23 @@ class AuthCubit extends Cubit<AuthState> {
       logger.e(e.toString());
       emit(AuthError());
     }
+  }
+
+  Future<void> setFCMToken() async {
+    if (_profile == null) {
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('User is not authenticated');
+      }
+      final res = await supabase
+          .from('profiles')
+          .select()
+          .eq('id', currentUser.id)
+          .single();
+      Profile profile = Profile.fromMap(map: res);
+      _profile = profile;
+    }
+    await _setFCMToken(_profile!);
   }
 
   Future<void> _setFCMToken(Profile profile) async {
