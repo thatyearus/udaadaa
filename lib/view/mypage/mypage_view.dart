@@ -14,7 +14,7 @@ class MyPageView extends StatelessWidget {
   const MyPageView({super.key});
 
   Future<void> _launchURL() async {
-    const url = 'http://pf.kakao.com/_lxjxgkG';
+    const url = 'https://open.kakao.com/o/sxSYCkWg';
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
     } else {
@@ -114,6 +114,10 @@ class MyPageView extends StatelessWidget {
                               Switch(
                                 value: isSwitched ?? false,
                                 onChanged: (bool newValue) {
+                                  Analytics().logEvent(
+                                    "마이페이지_푸시알림토글",
+                                    parameters: {"변경값": newValue.toString()},
+                                  );
                                   context.read<AuthCubit>().togglePush();
                                 },
                                 activeTrackColor: AppColors.primary,
