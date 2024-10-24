@@ -8,7 +8,7 @@ class Analytics {
   final FirebaseAnalyticsObserver _observer;
   late Mixpanel _mixpanel;
   final Amplitude _amplitude =
-      Amplitude.getInstance(instanceName: "udaadaa_prod");
+      Amplitude.getInstance(instanceName: "udaadaa_local");
 
   Analytics._internal()
       : _observer =
