@@ -68,7 +68,6 @@ class EighthView extends StatelessWidget {
             child: FloatingActionButton.extended(
               heroTag: 'onboarding7',
               onPressed: () {
-                context.read<challenge.ChallengeCubit>().enterChallenge();
                 Analytics().logEvent(
                   "온보딩_챌린지참여",
                   parameters: {"버튼": "클릭"},

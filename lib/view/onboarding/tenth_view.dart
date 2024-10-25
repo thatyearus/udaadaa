@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
@@ -168,6 +170,7 @@ class _TenthViewState extends State<TenthView> {
               parameters: {"버튼": "클릭"},
             );
             //TODO: push 시간 설정 코드 넣기
+            context.read<ChallengeCubit>().enterChallenge();
             PreferencesService().setBool('isOnboardingComplete', true);
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
