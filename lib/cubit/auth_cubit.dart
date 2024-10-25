@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:meta/meta.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/models/profile.dart';
@@ -7,6 +8,8 @@ import 'package:udaadaa/utils/constant.dart';
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
+  Profile? _profile;
+
   AuthCubit() : super(AuthInitial()) {
     final currentUser = supabase.auth.currentUser;
     if (currentUser != null) {
@@ -17,7 +20,11 @@ class AuthCubit extends Cubit<AuthState> {
           .single()
           .then((res) {
         final profile = Profile.fromMap(map: res);
+        _profile = profile;
         emit(Authenticated(profile));
+        FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+          _updateFCMToken(token, profile);
+        });
       }).onError((error, stackTrace) {
         logger.e(error.toString());
         emit(AuthError());
@@ -53,8 +60,12 @@ class AuthCubit extends Cubit<AuthState> {
               .single();
 
           profile = Profile.fromMap(map: res);
+          _profile = profile;
           emit(Authenticated(profile));
           insertSuccess = true; // 성공적으로 삽입된 경우 루프를 탈출
+          FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+            _updateFCMToken(token, profile);
+          });
         } catch (error) {
           // UNIQUE 제약 조건 위반 시 새로운 닉네임을 생성하고 다시 시도
           if (error is PostgrestException && error.code == '23505') {
@@ -63,6 +74,7 @@ class AuthCubit extends Cubit<AuthState> {
             profile = profile.copyWith(
               nickname: RandomNicknameGenerator.generateNickname(),
             );
+            _profile = profile;
             retryCount++;
           } else {
             // 다른 오류에 대한 처리
@@ -84,6 +96,53 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> setFCMToken() async {
+    if (_profile == null) {
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('User is not authenticated');
+      }
+      final res = await supabase
+          .from('profiles')
+          .select()
+          .eq('id', currentUser.id)
+          .single();
+      Profile profile = Profile.fromMap(map: res);
+      _profile = profile;
+    }
+    await _setFCMToken(_profile!);
+  }
+
+  Future<void> _setFCMToken(Profile profile) async {
+    try {
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('User is not authenticated');
+      }
+
+      await FirebaseMessaging.instance.requestPermission();
+
+      await FirebaseMessaging.instance.getAPNSToken();
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      if (fcmToken == null) {
+        throw Exception('Failed to get FCM token');
+      }
+      _updateFCMToken(fcmToken, profile);
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
+  Future<void> _updateFCMToken(String token, Profile profile) async {
+    try {
+      profile = profile.copyWith(fcmToken: token);
+      _profile = profile;
+      await supabase.from('profiles').upsert(profile.toMap());
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
   Future<void> updateNickname(String nickname) async {
     try {
       final currentUser = supabase.auth.currentUser;
@@ -97,7 +156,44 @@ class AuthCubit extends Cubit<AuthState> {
           .select()
           .single();
       Profile profile = Profile.fromMap(map: res);
+      _profile = profile;
       emit(Authenticated(profile));
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
+  Future<void> turnOffPush(Profile profile) async {
+    try {
+      profile = profile.copyWith(fcmToken: "");
+      _profile = profile;
+      await supabase.from('profiles').upsert(profile.toMap());
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
+  Future<void> togglePush() async {
+    try {
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('User is not authenticated');
+      }
+      if (_profile == null) {
+        final res = await supabase
+            .from('profiles')
+            .select()
+            .eq('id', currentUser.id)
+            .single();
+        Profile profile = Profile.fromMap(map: res);
+        _profile = profile;
+      }
+      if (_profile?.fcmToken == null) {
+        await _setFCMToken(_profile!);
+      } else {
+        await turnOffPush(_profile!);
+      }
+      emit(Authenticated(_profile!));
     } catch (e) {
       logger.e(e.toString());
     }
@@ -113,5 +209,13 @@ class AuthCubit extends Cubit<AuthState> {
       return (state as Authenticated).user;
     }
     return null;
+  }
+
+  Profile? get getCurProfile => _profile;
+
+  bool? get getPushOption {
+    logger.d("${getCurProfile?.fcmToken}");
+    logger.d("getPushOption: ${getCurProfile?.fcmToken != null}");
+    return getCurProfile?.fcmToken != null;
   }
 }

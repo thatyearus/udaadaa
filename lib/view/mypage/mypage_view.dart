@@ -6,11 +6,21 @@ import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/widgets/my_profile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils/analytics/analytics.dart';
 
 class MyPageView extends StatelessWidget {
   const MyPageView({super.key});
+
+  Future<void> _launchURL() async {
+    const url = 'https://open.kakao.com/o/sxSYCkWg';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +35,14 @@ class MyPageView extends StatelessWidget {
               const PopupMenuItem(
                 value: 'change_nickname',
                 child: Text('닉네임 변경'),
+              ),
+              const PopupMenuItem(
+                value: 'push_setting',
+                child: Text('푸시알림 설정'),
+              ),
+              const PopupMenuItem(
+                value: 'kakaotalk',
+                child: Text('문의하기'),
               ),
             ];
           },
@@ -77,6 +95,54 @@ class MyPageView extends StatelessWidget {
                       );
                     });
                 break;
+              case 'push_setting':
+                Analytics().logEvent(
+                  "마이페이지_푸시알림",
+                  parameters: {"클릭": "푸시알림설정"},
+                );
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      final bool? isSwitched = context.select<AuthCubit, bool?>(
+                          (authCubit) => authCubit.getPushOption);
+                      return AlertDialog(
+                        title: const Text('푸시알림 설정'),
+                        content: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('리액션 알림'),
+                              Switch(
+                                value: isSwitched ?? false,
+                                onChanged: (bool newValue) {
+                                  Analytics().logEvent(
+                                    "마이페이지_푸시알림토글",
+                                    parameters: {"변경값": newValue.toString()},
+                                  );
+                                  context.read<AuthCubit>().togglePush();
+                                },
+                                activeTrackColor: AppColors.primary,
+                                activeColor: AppColors.primary[200],
+                                inactiveThumbColor: AppColors.neutral[0],
+                                inactiveTrackColor: AppColors.neutral[200],
+                              ),
+                            ]),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('확인'),
+                          ),
+                        ],
+                      );
+                    });
+                break;
+              case 'kakaotalk':
+                Analytics().logEvent(
+                  "마이페이지_문의하기",
+                  parameters: {"클릭": "문의하기"},
+                );
+                _launchURL();
             }
           },
           icon: const Icon(Icons.settings_rounded),

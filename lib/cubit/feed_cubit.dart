@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:meta/meta.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
@@ -19,6 +20,7 @@ class FeedCubit extends Cubit<FeedState> {
   List<Feed> _feeds = [];
   List<List<Feed>> _homeFeeds = [[], [], []];
   List<String> _blockedFeedIds = [];
+  List<String> _reactionFeedIds = [];
   final int _limit = 10;
   int _curFeedPage = 0;
   int _myFeedPage = 0;
@@ -26,7 +28,7 @@ class FeedCubit extends Cubit<FeedState> {
 
   FeedCubit(this.authCubit) : super(FeedInitial()) {
     if (authCubit.state is Authenticated) {
-      fetchBlockedFeed().then((_) {
+      Future.wait([fetchBlockedFeed(), fetchReactionFeed()]).then((_) {
         fetchHomeFeeds();
         _getFeeds();
       });
@@ -35,7 +37,7 @@ class FeedCubit extends Cubit<FeedState> {
 
     authSubscription = authCubit.stream.listen((authState) {
       if (authState is Authenticated) {
-        fetchBlockedFeed().then((_) {
+        Future.wait([fetchBlockedFeed(), fetchReactionFeed()]).then((_) {
           fetchHomeFeeds();
           _getFeeds();
         });
@@ -46,12 +48,41 @@ class FeedCubit extends Cubit<FeedState> {
         emit(FeedInitial());
       }
     });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      logger.d('onMessageOpenedApp: $message');
+      openFeedDetail(message);
+    });
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage? message) {
+      logger.d('getInitialMessage: $message');
+      openFeedDetail(message);
+    });
   }
 
   @override
   Future<void> close() {
     authSubscription.cancel();
     return super.close();
+  }
+
+  void openFeedDetail(RemoteMessage? message) {
+    if (message != null) {
+      final feedId = message.data['feedId'];
+      logger.d("Feed ID: $feedId");
+      if (feedId != null) {
+        final feed = _myFeeds.firstWhere(
+          (feed) => feed.id == feedId,
+          orElse: () => Feed(
+              userId: '', review: '', type: FeedType.breakfast, imagePath: ''),
+        );
+        if (feed.id != null) {
+          final feedIndex = _myFeeds.indexOf(feed);
+          emit(FeedDetail(feed, feedIndex));
+        }
+      }
+    }
   }
 
   Future<void> fetchBlockedFeed() async {
@@ -62,6 +93,19 @@ class FeedCubit extends Cubit<FeedState> {
           .eq('user_id', supabase.auth.currentUser!.id);
       final blockedFeedIds = data.map((item) => item['feed_id'] as String);
       _blockedFeedIds = blockedFeedIds.toList();
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  Future<void> fetchReactionFeed() async {
+    try {
+      final data = await supabase
+          .from('reactions')
+          .select('feed_id')
+          .eq('user_id', supabase.auth.currentUser!.id);
+      final reactionFeedIds = data.map((item) => item['feed_id'] as String);
+      _reactionFeedIds = reactionFeedIds.toList();
     } catch (e) {
       logger.e(e);
     }
@@ -142,6 +186,7 @@ class FeedCubit extends Cubit<FeedState> {
             .from('feed')
             .select('*, profiles(*)')
             .not('id', 'in', _blockedFeedIds.toList())
+            .not('id', 'in', _reactionFeedIds.toList())
             .order('created_at', ascending: false)
             .limit(_limit);
       } else {
@@ -149,6 +194,7 @@ class FeedCubit extends Cubit<FeedState> {
             .from('random_feed')
             .select('*, profiles(*)')
             .not('id', 'in', _blockedFeedIds.toList())
+            .not('id', 'in', _reactionFeedIds.toList())
             .limit(_limit);
       }
 
@@ -251,6 +297,7 @@ class FeedCubit extends Cubit<FeedState> {
           .from('reactions')
           .upsert(newReaction.toMap(), onConflict: "user_id, feed_id");
       logger.d("Reaction added: $reaction");
+      _reactionFeedIds.add(feedId);
     } catch (e) {
       Analytics().logEvent(
         "피드_리액션_에러",
