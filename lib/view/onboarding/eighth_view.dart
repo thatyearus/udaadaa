@@ -98,8 +98,9 @@ class EighthView extends StatelessWidget {
             child: Text(
               '다음에 할래요',
               style: AppTextStyles.textTheme.bodySmall?.copyWith(
-                color: Colors.grey,
+                color: AppColors.neutral[500],
                 decoration: TextDecoration.underline,
+                decorationColor: AppColors.neutral[500],
               ),
             ),
           ),
