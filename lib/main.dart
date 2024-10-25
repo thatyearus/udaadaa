@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
+import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
@@ -82,6 +83,11 @@ class MyApp extends StatelessWidget {
             context.read<FeedCubit>(),
           ),
         ),
+        BlocProvider<ChallengeCubit>(
+          create: (context) => ChallengeCubit(
+            context.read<AuthCubit>(),
+          ),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
