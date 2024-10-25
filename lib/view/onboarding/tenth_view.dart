@@ -8,7 +8,7 @@ class TenthView extends StatefulWidget {
   const TenthView({super.key});
 
   @override
-  _TenthViewState createState() => _TenthViewState();
+  State<TenthView> createState() => _TenthViewState();
 }
 
 class _TenthViewState extends State<TenthView> {
