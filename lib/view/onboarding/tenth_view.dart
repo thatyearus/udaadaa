@@ -103,7 +103,8 @@ class _TenthViewState extends State<TenthView> {
                         ),
                         IconButton(
                           onPressed: _addAlarmTime,
-                          icon: const Icon(Icons.add, color: AppColors.primary),
+                          icon: const Icon(Icons.add_rounded,
+                              color: AppColors.primary),
                           alignment: Alignment.center,
                         ),
                       ],
