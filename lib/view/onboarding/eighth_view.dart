@@ -27,11 +27,12 @@ class EighthView extends StatelessWidget {
                 style: AppTextStyles.textTheme.displayMedium,
               ),
               AppSpacing.sizedBoxXl,
-              Center( // 중앙 정렬을 위해 Center 위젯으로 감싸기
+              Center(
+                // 중앙 정렬을 위해 Center 위젯으로 감싸기
                 child: Column(
                   children: [
                     Image.asset(
-                        "assets/onboarding_lose.png",
+                      "assets/onboarding_lose.png",
                       width: 300,
                     ),
                     Text.rich(
@@ -42,7 +43,8 @@ class EighthView extends StatelessWidget {
                           style: AppTextStyles.titleLarge(
                             const TextStyle(
                               color: AppColors.primary,
-                              fontWeight: FontWeight.bold,),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         const TextSpan(text: "감량 성공\n"),
@@ -51,7 +53,7 @@ class EighthView extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ],
-                )
+                ),
               ),
             ],
           ),
@@ -94,25 +96,7 @@ class EighthView extends StatelessWidget {
               );
               PreferencesService().setBool('isOnboardingComplete', true);
               Navigator.of(context).pushReplacement(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                  const MainView(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
-                    const begin = Offset(0.0, 1.0); // 아래에서 위로
-                    const end = Offset.zero;
-                    const curve = Curves.ease;
-
-                    var tween = Tween(begin: begin, end: end)
-                        .chain(CurveTween(curve: curve));
-                    var offsetAnimation = animation.drive(tween);
-
-                    return SlideTransition(
-                      position: offsetAnimation,
-                      child: child,
-                    );
-                  },
-                ),
+                MaterialPageRoute(builder: (context) => const MainView()),
               );
             },
             child: Text(
