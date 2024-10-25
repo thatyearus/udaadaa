@@ -144,4 +144,5 @@ class ProfileCubit extends Cubit<ProfileState> {
   DateTime get getFocusDate => _focusDate;
   List<bool> get getSelectedType => _typeSelection;
   List<Report?> get getWeeklyReport => _weeklyReport;
+  bool get getIsChallenger => authCubit.getIsChallenger;
 }

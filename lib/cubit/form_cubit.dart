@@ -165,6 +165,7 @@ class FormCubit extends Cubit<FormState> {
         type: type,
         imagePath: imagePath,
         calorie: calorie?.totalCalories,
+        isChallenge: profileCubit.getIsChallenger,
       );
       final ret =
           await supabase.from('feed').insert(feed.toMap()).select().single();

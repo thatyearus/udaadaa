@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
-import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/main_view.dart';
+import 'package:udaadaa/view/onboarding/eighth_view.dart';
 import 'package:udaadaa/widgets/feed.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 
@@ -80,14 +79,13 @@ class OnboardingFeedViewState extends State<OnboardingFeedView> {
           _pageController.position.maxScrollExtent;
     }
     if (isEnd) {
-      Analytics().logEvent("온보딩_종료");
-      PreferencesService().setBool('isOnboardingComplete', true);
+      Analytics().logEvent("온보딩_피드확인완료");
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const MainView(),
+              const EighthView(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(0.0, 1.0); // 아래에서 위로
+            const begin = Offset(0.0, 1.0);
             const end = Offset.zero;
             const curve = Curves.ease;
 
@@ -100,6 +98,7 @@ class OnboardingFeedViewState extends State<OnboardingFeedView> {
               child: child,
             );
           },
+          transitionDuration: const Duration(milliseconds: 50),
         ),
       );
     }
