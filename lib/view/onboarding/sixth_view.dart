@@ -21,7 +21,7 @@ class SixthView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("이제 같이하는 친구들 식단을\n응원해 볼까요?",
+              Text("이제 같이하는 친구들 식단을\n3개만 응원해 볼까요?",
                   style: AppTextStyles.textTheme.displayMedium),
               AppSpacing.verticalSizedBoxL,
               SizedBox(

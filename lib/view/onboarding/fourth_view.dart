@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/service/shared_preferences.dart';
@@ -116,6 +117,10 @@ class FourthView extends StatelessWidget {
   Widget foodCommentText(BuildContext context) {
     return TextField(
       controller: commentController,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(25),
+      ],
+      maxLength: 25,
       decoration: InputDecoration(
         labelText: '음식 한마디',
         hintText: '오늘 치팅데이니까 혼내지 말아 주세요ㅠ',

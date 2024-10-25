@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -25,6 +26,7 @@ class HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    context.read<AuthCubit>().setFCMToken();
   }
 
   @override
@@ -52,7 +54,7 @@ class HomeViewState extends State<HomeView> {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: 250,
                 child: PageView.builder(
                   controller: _pageController,
                   itemCount: min(3, myFeedsLength),

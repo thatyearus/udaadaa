@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/feed/feed_view.dart';
 import 'package:udaadaa/view/home/home_view.dart';
 import 'package:udaadaa/view/mypage/mypage_view.dart';
@@ -28,9 +30,22 @@ class MainView extends StatelessWidget {
       body: SafeArea(
         child: BlocBuilder<BottomNavCubit, BottomNavState>(
             builder: (context, state) {
-          return IndexedStack(
-            index: BottomNavState.values.indexOf(state),
-            children: children,
+          return BlocListener<FeedCubit, FeedState>(
+            listener: (context, state) {
+              if (state is FeedDetail) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => MyRecordView(
+                      initialPage: state.index,
+                    ),
+                  ),
+                );
+              }
+            },
+            child: IndexedStack(
+              index: BottomNavState.values.indexOf(state),
+              children: children,
+            ),
           );
         }),
       ),

@@ -86,7 +86,7 @@ class FifthView extends StatelessWidget {
                 Analytics().logEvent(
                   "기록_칼로리결과",
                   parameters: {
-                    "올려서_공감받기": "클릭",
+                    "공감받기": "클릭",
                     "온보딩_완료_여부":
                         PreferencesService().getBool('isOnboardingComplete') ==
                                 null
@@ -104,7 +104,7 @@ class FifthView extends StatelessWidget {
                     );
               },
               label: Text(
-                '올려서 공감받기',
+                '공감받기',
                 style: AppTextStyles.textTheme.titleMedium
                     ?.copyWith(color: AppColors.white),
               ),
