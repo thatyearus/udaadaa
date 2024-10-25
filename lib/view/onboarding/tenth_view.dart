@@ -126,7 +126,7 @@ class _TenthViewState extends State<TenthView> {
                             children: [
                               const SizedBox(width: 20),
                               const Icon(
-                                Icons.alarm,
+                                Icons.alarm_rounded,
                                 color: AppColors.primary,
                               ),
                               const SizedBox(width: 10),
@@ -137,8 +137,8 @@ class _TenthViewState extends State<TenthView> {
                                 ),
                               ),
                               IconButton(
-                                icon:
-                                    const Icon(Icons.close, color: Colors.grey),
+                                icon: Icon(Icons.close_rounded,
+                                    color: AppColors.neutral[300]),
                                 onPressed: () {
                                   setState(() {
                                     alarmTimes.removeAt(index);
