@@ -94,7 +94,7 @@ class _TenthViewState extends State<TenthView> {
                               Icons.notifications_outlined,
                               color: AppColors.primary,
                             ),
-                            const SizedBox(width: 10),
+                            AppSpacing.horizontalSizedBoxS,
                             Text(
                               "알림 설정",
                               style: AppTextStyles.textTheme.titleMedium,
@@ -113,23 +113,24 @@ class _TenthViewState extends State<TenthView> {
                       color: Colors.grey,
                       thickness: 1.0,
                     ),
-                    const SizedBox(height: 10),
+                    AppSpacing.verticalSizedBoxXs,
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: alarmTimes.length,
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.xxs),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const SizedBox(width: 20),
+                              AppSpacing.horizontalSizedBoxL,
                               const Icon(
                                 Icons.alarm_rounded,
                                 color: AppColors.primary,
                               ),
-                              const SizedBox(width: 10),
+                              AppSpacing.horizontalSizedBoxS,
                               Expanded(
                                 child: Text(
                                   _formatTimeOfDay(alarmTimes[index]),
@@ -145,7 +146,6 @@ class _TenthViewState extends State<TenthView> {
                                   });
                                 },
                                 alignment: Alignment.center,
-                                padding: const EdgeInsets.only(right: 0.0),
                               ),
                             ],
                           ),
