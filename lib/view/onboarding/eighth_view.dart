@@ -4,8 +4,6 @@ import 'package:udaadaa/view/onboarding/ninth_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/view/main_view.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:udaadaa/cubit/challenge_cubit.dart' as challenge;
 
 class EighthView extends StatelessWidget {
   const EighthView({super.key});
