@@ -15,12 +15,14 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   ChallengeCubit(this.authCubit) : super(ChallengeInitial()) {
     final authState = authCubit.state;
     if (authState is Authenticated) {
+      _isEntered();
       // 연속 참여 일 계산
     }
 
     authSubscription = authCubit.stream.listen((authState) {
       if (authState is Authenticated) {
         // 연속 참여 일 계산
+        _isEntered();
       } else {
         emit(ChallengeInitial());
       }
@@ -73,15 +75,16 @@ class ChallengeCubit extends Cubit<ChallengeState> {
       final ret = await supabase
           .from('challenge')
           .select('end_day')
-          .lte('end_day', today)
+          .gte('end_day', today)
           .eq('user_id', supabase.auth.currentUser!.id);
-      if (ret.isEmpty) {
-        authCubit.setIsChallenger(false);
+      if (ret.isNotEmpty) {
+        authCubit.setIsChallenger(true);
         return true;
       }
     } catch (e) {
       logger.e(e);
     }
+    authCubit.setIsChallenger(false);
     return false;
   }
 }
