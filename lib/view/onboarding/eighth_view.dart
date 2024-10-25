@@ -38,10 +38,9 @@ class EighthView extends StatelessWidget {
                         const TextSpan(text: "챌린지 참여자\n"),
                         TextSpan(
                           text: "평균 2.7kg\n",
-                          style: AppTextStyles.titleLarge(
+                          style: AppTextStyles.displaySmall(
                             const TextStyle(
                               color: AppColors.primary,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
