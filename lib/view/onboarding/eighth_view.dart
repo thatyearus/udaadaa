@@ -83,7 +83,7 @@ class EighthView extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 10), // 간격 추가
+          AppSpacing.verticalSizedBoxS,
           GestureDetector(
             onTap: () {
               Analytics().logEvent(
@@ -103,7 +103,6 @@ class EighthView extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 20), // 아래 여백 추가
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
