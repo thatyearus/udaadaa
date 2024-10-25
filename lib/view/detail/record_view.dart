@@ -117,7 +117,7 @@ class FeedPageViewState extends State<DetailFeedPageView> {
             onReactionPressed: () {
               // go to next page
               _pageController.nextPage(
-                duration: const Duration(milliseconds: 800),
+                duration: const Duration(milliseconds: 400),
                 curve: Curves.easeInOut,
               );
             },
