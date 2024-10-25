@@ -72,7 +72,7 @@ class _TenthViewState extends State<TenthView> {
                 padding: const EdgeInsets.all(16),
                 margin: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
@@ -108,9 +108,9 @@ class _TenthViewState extends State<TenthView> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    const Divider(
-                      color: Colors.grey,
+                    AppSpacing.verticalSizedBoxXs,
+                    Divider(
+                      color: AppColors.neutral[300],
                       thickness: 1.0,
                     ),
                     AppSpacing.verticalSizedBoxXs,
