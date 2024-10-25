@@ -12,7 +12,7 @@ class TenthView extends StatefulWidget {
 }
 
 class _TenthViewState extends State<TenthView> {
-  List<TimeOfDay> alarmTimes = [TimeOfDay(hour: 10, minute: 0)];
+  List<TimeOfDay> alarmTimes = [const TimeOfDay(hour: 10, minute: 0)];
 
   String _formatTimeOfDay(TimeOfDay time) {
     final hour = time.hour.toString().padLeft(2, '0');
