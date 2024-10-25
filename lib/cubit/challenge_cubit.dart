@@ -36,7 +36,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   Future<void> enterChallenge() async {
     try {
       final entered = await _isEntered();
-      if (!entered){
+      if (!entered) {
         final now = DateTime.now();
         final today = DateTime(now.year, now.month, now.day);
         final Challenge challenge = Challenge(
@@ -47,39 +47,41 @@ class ChallengeCubit extends Cubit<ChallengeState> {
         final challengeMap = challenge.toMap();
         await supabase.from('challenge').insert(challengeMap).select().single();
         emit(ChallengeSuccess());
-      }else{
+        authCubit.setIsChallenger(true);
+      } else {
         emit(ChallengeError("이미 참여 중 입니다."));
       }
-
     } catch (e) {
       logger.e(e);
     }
   }
 
-  Future<bool> _isEntered() async{
-    try{
-      final r = await supabase.from('challenge')
-      .select('id')
-      .eq('user_id',supabase.auth.currentUser!.id);
+  Future<bool> _isEntered() async {
+    try {
+      final r = await supabase
+          .from('challenge')
+          .select('id')
+          .eq('user_id', supabase.auth.currentUser!.id);
 
-      if(r.isEmpty){
+      if (r.isEmpty) {
+        authCubit.setIsChallenger(false);
         return false;
       }
 
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
-      final ret = await supabase.from('challenge')
+      final ret = await supabase
+          .from('challenge')
           .select('end_day')
           .lte('end_day', today)
           .eq('user_id', supabase.auth.currentUser!.id);
-      if (ret.isEmpty){
+      if (ret.isEmpty) {
+        authCubit.setIsChallenger(false);
         return true;
       }
-
-    }catch (e){
+    } catch (e) {
       logger.e(e);
     }
     return false;
   }
-
 }
