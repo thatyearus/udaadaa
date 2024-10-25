@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
@@ -70,7 +72,7 @@ class _TenthViewState extends State<TenthView> {
                 padding: const EdgeInsets.all(16),
                 margin: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
@@ -92,7 +94,7 @@ class _TenthViewState extends State<TenthView> {
                               Icons.notifications_outlined,
                               color: AppColors.primary,
                             ),
-                            const SizedBox(width: 10),
+                            AppSpacing.horizontalSizedBoxS,
                             Text(
                               "알림 설정",
                               style: AppTextStyles.textTheme.titleMedium,
@@ -101,33 +103,35 @@ class _TenthViewState extends State<TenthView> {
                         ),
                         IconButton(
                           onPressed: _addAlarmTime,
-                          icon: const Icon(Icons.add, color: AppColors.primary),
+                          icon: const Icon(Icons.add_rounded,
+                              color: AppColors.primary),
                           alignment: Alignment.center,
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    const Divider(
-                      color: Colors.grey,
+                    AppSpacing.verticalSizedBoxXs,
+                    Divider(
+                      color: AppColors.neutral[300],
                       thickness: 1.0,
                     ),
-                    const SizedBox(height: 10),
+                    AppSpacing.verticalSizedBoxXs,
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: alarmTimes.length,
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.xxs),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const SizedBox(width: 20),
+                              AppSpacing.horizontalSizedBoxL,
                               const Icon(
-                                Icons.alarm,
+                                Icons.alarm_rounded,
                                 color: AppColors.primary,
                               ),
-                              const SizedBox(width: 10),
+                              AppSpacing.horizontalSizedBoxS,
                               Expanded(
                                 child: Text(
                                   _formatTimeOfDay(alarmTimes[index]),
@@ -135,15 +139,14 @@ class _TenthViewState extends State<TenthView> {
                                 ),
                               ),
                               IconButton(
-                                icon:
-                                    const Icon(Icons.close, color: Colors.grey),
+                                icon: Icon(Icons.close_rounded,
+                                    color: AppColors.neutral[300]),
                                 onPressed: () {
                                   setState(() {
                                     alarmTimes.removeAt(index);
                                   });
                                 },
                                 alignment: Alignment.center,
-                                padding: const EdgeInsets.only(right: 0.0),
                               ),
                             ],
                           ),
@@ -168,6 +171,7 @@ class _TenthViewState extends State<TenthView> {
               parameters: {"버튼": "클릭"},
             );
             //TODO: push 시간 설정 코드 넣기
+            context.read<ChallengeCubit>().enterChallenge();
             PreferencesService().setBool('isOnboardingComplete', true);
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(

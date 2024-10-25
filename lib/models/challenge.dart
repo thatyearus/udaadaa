@@ -6,7 +6,7 @@ class Challenge {
     required this.userId,
   });
 
-  final int? id;
+  final String? id;
   final DateTime startDay;
   final DateTime endDay;
   final String userId;
@@ -21,13 +21,13 @@ class Challenge {
 
   Challenge.fromMap({
     required Map<String, dynamic> map,
-  })  : id = map['id'] as int?,
+  })  : id = map['id'] as String?,
         startDay = DateTime.parse(map['start_day'] as String),
         endDay = DateTime.parse(map['end_day'] as String),
         userId = map['user_id'] as String;
 
   Challenge copyWith({
-    int? id,
+    String? id,
     DateTime? startDay,
     DateTime? endDay,
     String? userId,

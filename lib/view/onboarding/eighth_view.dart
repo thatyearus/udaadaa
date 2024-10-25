@@ -4,8 +4,6 @@ import 'package:udaadaa/view/onboarding/ninth_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/view/main_view.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:udaadaa/cubit/challenge_cubit.dart' as challenge;
 
 class EighthView extends StatelessWidget {
   const EighthView({super.key});
@@ -40,10 +38,9 @@ class EighthView extends StatelessWidget {
                         const TextSpan(text: "챌린지 참여자\n"),
                         TextSpan(
                           text: "평균 2.7kg\n",
-                          style: AppTextStyles.titleLarge(
+                          style: AppTextStyles.displaySmall(
                             const TextStyle(
                               color: AppColors.primary,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
@@ -68,7 +65,6 @@ class EighthView extends StatelessWidget {
             child: FloatingActionButton.extended(
               heroTag: 'onboarding7',
               onPressed: () {
-                context.read<challenge.ChallengeCubit>().enterChallenge();
                 Analytics().logEvent(
                   "온보딩_챌린지참여",
                   parameters: {"버튼": "클릭"},
@@ -87,7 +83,7 @@ class EighthView extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 10), // 간격 추가
+          AppSpacing.verticalSizedBoxS,
           GestureDetector(
             onTap: () {
               Analytics().logEvent(
@@ -102,12 +98,12 @@ class EighthView extends StatelessWidget {
             child: Text(
               '다음에 할래요',
               style: AppTextStyles.textTheme.bodySmall?.copyWith(
-                color: Colors.grey,
+                color: AppColors.neutral[500],
                 decoration: TextDecoration.underline,
+                decorationColor: AppColors.neutral[500],
               ),
             ),
           ),
-          const SizedBox(height: 20), // 아래 여백 추가
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
