@@ -38,7 +38,7 @@ class _TenthViewState extends State<TenthView> {
 
     if (pickedTime != null) {
       bool isDuplicate = alarmTimes.any((time) =>
-      time.hour == pickedTime.hour && time.minute == pickedTime.minute);
+          time.hour == pickedTime.hour && time.minute == pickedTime.minute);
 
       if (!isDuplicate) {
         setState(() {
@@ -62,7 +62,7 @@ class _TenthViewState extends State<TenthView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "미션 알림 시간을\n설정 해볼까요?",
+                "미션 알림 시간을\n설정해 볼까요?",
                 style: AppTextStyles.textTheme.displayMedium,
               ),
               AppSpacing.verticalSizedBoxXxl,
@@ -135,7 +135,8 @@ class _TenthViewState extends State<TenthView> {
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.close, color: Colors.grey),
+                                icon:
+                                    const Icon(Icons.close, color: Colors.grey),
                                 onPressed: () {
                                   setState(() {
                                     alarmTimes.removeAt(index);
