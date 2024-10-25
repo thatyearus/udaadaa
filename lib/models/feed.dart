@@ -21,7 +21,8 @@ class Feed {
       this.imageUrl,
       this.profile,
       this.reaction,
-      this.calorie});
+      this.calorie,
+      this.isChallenge = false});
 
   final String? id;
   final String userId;
@@ -33,6 +34,7 @@ class Feed {
   final Profile? profile;
   final List<Reaction>? reaction;
   final int? calorie;
+  final bool isChallenge;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -41,6 +43,7 @@ class Feed {
       'type': type.name,
       'image_path': imagePath,
       'calorie': calorie,
+      'is_challenge': isChallenge,
     };
   }
 
@@ -60,7 +63,8 @@ class Feed {
                     Reaction.fromMap(map: item as Map<String, dynamic>))
                 .toList()
             : [],
-        calorie = map['calorie'] as int?;
+        calorie = map['calorie'] as int?,
+        isChallenge = map['is_challenge'] as bool;
 
   Feed copyWith({
     String? id,
@@ -73,6 +77,7 @@ class Feed {
     Profile? profile,
     List<Reaction>? reaction,
     int? calorie,
+    bool? isChallenge,
   }) {
     return Feed(
       id: id ?? this.id,
@@ -85,6 +90,7 @@ class Feed {
       profile: profile ?? this.profile,
       reaction: reaction ?? this.reaction,
       calorie: calorie ?? this.calorie,
+      isChallenge: isChallenge ?? this.isChallenge,
     );
   }
 }
