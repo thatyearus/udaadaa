@@ -167,28 +167,13 @@ class _TenthViewState extends State<TenthView> {
               "온보딩_완료",
               parameters: {"버튼": "클릭"},
             );
-            //push 시간 설정 코드 넣기
+            //TODO: push 시간 설정 코드 넣기
             PreferencesService().setBool('isOnboardingComplete', true);
-            Navigator.of(context).pushReplacement(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                const MainView(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  const begin = Offset(0.0, 1.0); // 아래에서 위로
-                  const end = Offset.zero;
-                  const curve = Curves.ease;
-
-                  var tween = Tween(begin: begin, end: end)
-                      .chain(CurveTween(curve: curve));
-                  var offsetAnimation = animation.drive(tween);
-
-                  return SlideTransition(
-                    position: offsetAnimation,
-                    child: child,
-                  );
-                },
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const MainView(),
               ),
+              (Route<dynamic> route) => false,
             );
           },
           label: Text(
