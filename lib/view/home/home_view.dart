@@ -123,8 +123,28 @@ class ChallengeHomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const NonChallengerView();
+  }
+}
+
+class ChallengerView extends StatelessWidget {
+  const ChallengerView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return const Center(
-      child: Text('ChallengeHomeView'),
+      child: Text('ChallengerView'),
+    );
+  }
+}
+
+class NonChallengerView extends StatelessWidget {
+  const NonChallengerView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('NonChallengerView'),
     );
   }
 }
