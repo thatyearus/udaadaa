@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/models/challenge.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/utils/notifications/notification_service.dart';
 
 part 'challenge_state.dart';
 
@@ -86,5 +87,20 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     }
     authCubit.setIsChallenger(false);
     return false;
+  }
+
+  Future<void> scheduleNotifications(List<TimeOfDay> alarmTimes) async {
+    NotificationService.cacnelNotification().then((_) {
+      for (var i = 0; i < alarmTimes.length; i++) {
+        final time = alarmTimes[i];
+        NotificationService.scheduleNotification(
+          i,
+          "미션 알림",
+          "미션을 확인해보세요!",
+          time.hour,
+          time.minute,
+        );
+      }
+    });
   }
 }

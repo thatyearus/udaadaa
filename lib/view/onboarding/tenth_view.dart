@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/utils/notifications/notification_service.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
@@ -171,19 +170,8 @@ class _TenthViewState extends State<TenthView> {
               "온보딩_완료",
               parameters: {"버튼": "클릭"},
             );
-            NotificationService.cacnelNotification().then((_) {
-              for (var i = 0; i < alarmTimes.length; i++) {
-                final time = alarmTimes[i];
-                NotificationService.scheduleNotification(
-                  i,
-                  "미션 알림",
-                  "미션을 확인해보세요!",
-                  time.hour,
-                  time.minute,
-                );
-              }
-            });
             context.read<ChallengeCubit>().enterChallenge();
+            context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
             PreferencesService().setBool('isOnboardingComplete', true);
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
