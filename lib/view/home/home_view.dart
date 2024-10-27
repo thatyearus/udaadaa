@@ -6,8 +6,10 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/utils/notifications/notification_service.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/home/report_view.dart';
+import 'package:udaadaa/view/onboarding/eighth_view.dart';
 import 'package:udaadaa/widgets/last_record.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/widgets/report_summary.dart';
@@ -143,8 +145,19 @@ class NonChallengerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('NonChallengerView'),
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {
+          Analytics().logEvent(
+            "홈_챌린지_참여하기",
+          );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const EighthView()),
+          );
+        },
+        child: const Text('챌린지 참여하기'),
+      ),
     );
   }
 }
