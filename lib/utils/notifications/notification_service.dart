@@ -63,7 +63,7 @@ class NotificationService {
   }
 
   static Future<void> scheduleNotification(
-      String title, String body, int hour, int minute,
+      int id, String title, String body, int hour, int minute,
       {String? payload}) async {
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -92,7 +92,7 @@ class NotificationService {
         NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
+      id,
       title,
       body,
       scheduledDate,

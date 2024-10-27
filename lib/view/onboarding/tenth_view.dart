@@ -171,8 +171,11 @@ class _TenthViewState extends State<TenthView> {
               "온보딩_완료",
               parameters: {"버튼": "클릭"},
             );
-            for (var time in alarmTimes) {
+
+            for (var i = 0; i < alarmTimes.length; i++) {
+              final time = alarmTimes[i];
               NotificationService.scheduleNotification(
+                i,
                 "미션 알림",
                 "미션을 확인해보세요!",
                 time.hour,
