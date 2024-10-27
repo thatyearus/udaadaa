@@ -32,20 +32,22 @@ class NinthView extends StatelessWidget {
                   TextSpan(
                     children: [
                       const TextSpan(
-                        text: "챌린지 완주 성공시\n우다다 "
+                        text: "매일 몸무게를 재고\n식단을 기록하는 것만으로도\n다이어트 "
                       ),
                       TextSpan(
-                        text: "완주 증명서",
-                        style: AppTextStyles.headlineLarge(
-                          const TextStyle(color: AppColors.primary),
+                        text: "성공률 4.2배 ",
+                        style: AppTextStyles.displaySmall(
+                          const TextStyle(
+                            color: AppColors.primary,
+                          ),
                         ),
                       ),
                       const TextSpan(
-                        text: "를 드립니다",
+                        text: "증가",
                       ),
                     ],
                   ),
-                  style: AppTextStyles.textTheme.titleMedium,
+                  style: AppTextStyles.textTheme.titleLarge,
                   textAlign: TextAlign.center,
                 ),
               ),

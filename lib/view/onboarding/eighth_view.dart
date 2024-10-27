@@ -24,27 +24,29 @@ class EighthView extends StatelessWidget {
                 "우다다 친구들과 함께\n일주일 다이어트 챌린지\n무료로 참여해볼까요?",
                 style: AppTextStyles.textTheme.displayMedium,
               ),
-              AppSpacing.sizedBoxXl,
+              AppSpacing.sizedBoxXxl,
+              AppSpacing.sizedBoxXxl,
               Center(
                 // 중앙 정렬을 위해 Center 위젯으로 감싸기
                 child: Column(
                   children: [
                     Image.asset(
-                      "assets/onboarding_lose.png",
+                      "assets/onboarding_effect.png",
                       width: 300,
                     ),
+                    AppSpacing.sizedBoxXl,
                     Text.rich(
                       TextSpan(children: [
-                        const TextSpan(text: "챌린지 참여자\n"),
+                        const TextSpan(text: "실험 결과, 챌린지 참여자\n"),
                         TextSpan(
-                          text: "평균 2.7kg\n",
+                          text: "다이어트 성공 확률 87%\n",
                           style: AppTextStyles.displaySmall(
                             const TextStyle(
                               color: AppColors.primary,
                             ),
                           ),
                         ),
-                        const TextSpan(text: "감량 성공\n"),
+                        const TextSpan(text: "우다다와 함께 해봐요\n"),
                       ]),
                       style: AppTextStyles.textTheme.titleLarge,
                       textAlign: TextAlign.center,
