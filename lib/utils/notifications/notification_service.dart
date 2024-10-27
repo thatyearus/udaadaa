@@ -104,4 +104,8 @@ class NotificationService {
       payload: payload,
     );
   }
+
+  static Future<void> cacnelNotification() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
+  }
 }

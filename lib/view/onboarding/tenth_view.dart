@@ -171,17 +171,18 @@ class _TenthViewState extends State<TenthView> {
               "온보딩_완료",
               parameters: {"버튼": "클릭"},
             );
-
-            for (var i = 0; i < alarmTimes.length; i++) {
-              final time = alarmTimes[i];
-              NotificationService.scheduleNotification(
-                i,
-                "미션 알림",
-                "미션을 확인해보세요!",
-                time.hour,
-                time.minute,
-              );
-            }
+            NotificationService.cacnelNotification().then((_) {
+              for (var i = 0; i < alarmTimes.length; i++) {
+                final time = alarmTimes[i];
+                NotificationService.scheduleNotification(
+                  i,
+                  "미션 알림",
+                  "미션을 확인해보세요!",
+                  time.hour,
+                  time.minute,
+                );
+              }
+            });
             context.read<ChallengeCubit>().enterChallenge();
             PreferencesService().setBool('isOnboardingComplete', true);
             Navigator.of(context).pushAndRemoveUntil(
