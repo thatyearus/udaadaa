@@ -6,7 +6,6 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/utils/notifications/notification_service.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/home/report_view.dart';
 import 'package:udaadaa/view/onboarding/eighth_view.dart';
