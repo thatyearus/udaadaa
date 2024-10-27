@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/utils/notifications/notification_service.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
@@ -170,7 +171,6 @@ class _TenthViewState extends State<TenthView> {
               "온보딩_완료",
               parameters: {"버튼": "클릭"},
             );
-            //TODO: push 시간 설정 코드 넣기
             for (var time in alarmTimes) {
               NotificationService.scheduleNotification(
                 "미션 알림",
