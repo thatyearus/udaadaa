@@ -171,6 +171,14 @@ class _TenthViewState extends State<TenthView> {
               parameters: {"버튼": "클릭"},
             );
             //TODO: push 시간 설정 코드 넣기
+            for (var time in alarmTimes) {
+              NotificationService.scheduleNotification(
+                "미션 알림",
+                "미션을 확인해보세요!",
+                time.hour,
+                time.minute,
+              );
+            }
             context.read<ChallengeCubit>().enterChallenge();
             PreferencesService().setBool('isOnboardingComplete', true);
             Navigator.of(context).pushAndRemoveUntil(
