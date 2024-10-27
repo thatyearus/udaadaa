@@ -12,6 +12,7 @@ part 'challenge_state.dart';
 class ChallengeCubit extends Cubit<ChallengeState> {
   final AuthCubit authCubit;
   late final StreamSubscription authSubscription;
+  Challenge? _challenge;
 
   ChallengeCubit(this.authCubit) : super(ChallengeInitial()) {
     final authState = authCubit.state;
@@ -48,6 +49,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           userId: supabase.auth.currentUser!.id,
         );
         final challengeMap = challenge.toMap();
+        _challenge = challenge;
         await supabase.from('challenge').insert(challengeMap).select().single();
         emit(ChallengeSuccess());
         authCubit.setIsChallenger(true);
@@ -75,11 +77,12 @@ class ChallengeCubit extends Cubit<ChallengeState> {
       final today = DateTime(now.year, now.month, now.day);
       final ret = await supabase
           .from('challenge')
-          .select('end_day')
+          .select('*')
           .gte('end_day', today)
           .eq('user_id', supabase.auth.currentUser!.id);
       if (ret.isNotEmpty) {
         authCubit.setIsChallenger(true);
+        _challenge = Challenge.fromMap(map: ret[0]);
         return true;
       }
     } catch (e) {
@@ -103,4 +106,6 @@ class ChallengeCubit extends Cubit<ChallengeState> {
       }
     });
   }
+
+  Challenge? get challenge => _challenge;
 }
