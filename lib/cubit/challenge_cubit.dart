@@ -93,16 +93,24 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   }
 
   Future<void> scheduleNotifications(List<TimeOfDay> alarmTimes) async {
+    await _isEntered();
+    if (_challenge == null) {
+      return;
+    }
     NotificationService.cacnelNotification().then((_) {
-      for (var i = 0; i < alarmTimes.length; i++) {
-        final time = alarmTimes[i];
-        NotificationService.scheduleNotification(
-          i,
-          "미션 알림",
-          "미션을 확인해보세요!",
-          time.hour,
-          time.minute,
-        );
+      for (int i = 0; i < 7; i++) {
+        final DateTime date = _challenge!.startDay.add(Duration(days: i));
+        for (var j = 0; j < alarmTimes.length; j++) {
+          final time = alarmTimes[j];
+          NotificationService.scheduleNotification(
+            i * alarmTimes.length + j,
+            "미션 알림",
+            "미션을 확인해보세요!",
+            time.hour,
+            time.minute,
+            date,
+          );
+        }
       }
     });
   }

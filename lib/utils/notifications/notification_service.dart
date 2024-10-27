@@ -63,18 +63,18 @@ class NotificationService {
   }
 
   static Future<void> scheduleNotification(
-      int id, String title, String body, int hour, int minute,
+      int id, String title, String body, int hour, int minute, DateTime date,
       {String? payload}) async {
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    //  final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(
       tz.local,
-      now.year,
-      now.month,
-      now.day,
+      date.year,
+      date.month,
+      date.day,
       hour,
       minute,
     );
