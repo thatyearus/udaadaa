@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
 
 class CategoryButtonsContainer extends StatefulWidget {
-  final ValueChanged<String> onCategorySelected;
+  final ValueChanged<FeedCategory> onCategorySelected;
 
   const CategoryButtonsContainer({super.key, required this.onCategorySelected});
 
@@ -11,9 +12,9 @@ class CategoryButtonsContainer extends StatefulWidget {
 }
 
 class _CategoryButtonsContainerState extends State<CategoryButtonsContainer> {
-  String _selectedCategory = "All"; // 기본 선택 카테고리
+  FeedCategory _selectedCategory = FeedCategory.all; // 기본 선택 카테고리
 
-  void _selectCategory(String category) {
+  void _selectCategory(FeedCategory category) {
     setState(() {
       _selectedCategory = category;
     });
@@ -32,15 +33,15 @@ class _CategoryButtonsContainerState extends State<CategoryButtonsContainer> {
             _CategoryButton(
               emoji: "👏",
               text: "전체",
-              isSelected: _selectedCategory == "All",
-              onPressed: () => _selectCategory("All"),
+              isSelected: _selectedCategory == FeedCategory.all,
+              onPressed: () => _selectCategory(FeedCategory.all),
             ),
             const SizedBox(width: 10), // 버튼 간격
             _CategoryButton(
               emoji: "🏆️",
               text: "챌린지",
-              isSelected: _selectedCategory == "Challenge",
-              onPressed: () => _selectCategory("Challenge"),
+              isSelected: _selectedCategory == FeedCategory.challenge,
+              onPressed: () => _selectCategory(FeedCategory.challenge),
             ),
           ],
         ),

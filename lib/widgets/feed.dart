@@ -17,7 +17,7 @@ class FeedPageView extends StatefulWidget {
 class FeedPageViewState extends State<FeedPageView> {
   final PageController _pageController = PageController();
 
-  void _onCategorySelected(String category) {
+  void _onCategorySelected(FeedCategory category) {
     context.read<FeedCubit>().changeCategory(category);
   }
 

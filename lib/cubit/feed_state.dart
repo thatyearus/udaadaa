@@ -15,3 +15,8 @@ final class FeedDetail extends FeedState {
 
   FeedDetail(this.feed, this.index);
 }
+
+enum FeedCategory {
+  all,
+  challenge
+}

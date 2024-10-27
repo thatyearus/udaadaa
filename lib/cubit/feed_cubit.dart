@@ -26,7 +26,7 @@ class FeedCubit extends Cubit<FeedState> {
   int _myFeedPage = 0;
   List<int> _curHomeFeedPage = [0, 0, 0];
 
-  String _currentCategory = "All";
+  FeedCategory _currentCategory = FeedCategory.all;
 
   FeedCubit(this.authCubit) : super(FeedInitial()) {
     if (authCubit.state is Authenticated) {
@@ -69,10 +69,10 @@ class FeedCubit extends Cubit<FeedState> {
     return super.close();
   }
 
-  void changeCategory(String category){
+  void changeCategory(FeedCategory category){
     if( _currentCategory != category){
       _currentCategory = category;
-      if(_currentCategory == "All") {
+      if(_currentCategory == FeedCategory.all) {
         _getFeeds();
       } else {
         _getChallengeFeeds();
@@ -238,7 +238,7 @@ class FeedCubit extends Cubit<FeedState> {
   }
 
   Future<void> _getChallengeFeeds({bool loadMore = false}) async {
-    if (_currentCategory != "Challenge") return ;
+    if (_currentCategory != FeedCategory.challenge) return ;
     try {
       final data = await supabase
           .from('feed')
@@ -376,7 +376,7 @@ class FeedCubit extends Cubit<FeedState> {
   }
 
   Future<void> getMoreFeeds() async {
-    if (_currentCategory == "All"){
+    if (_currentCategory == FeedCategory.all){
       await _getFeeds(loadMore: true);
     }else{
       await _getChallengeFeeds(loadMore: true);
