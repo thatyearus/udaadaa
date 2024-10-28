@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
+import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -211,6 +212,31 @@ class _PushSettingViewState extends State<PushSettingView> {
           ],
         ),
       ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+        width: double.infinity,
+        child: FloatingActionButton.extended(
+          heroTag: 'pushSetting',
+          onPressed: () {
+            Analytics().logEvent(
+              "푸시설정_완료",
+              parameters: {"버튼": "클릭"},
+            );
+            context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
+            PreferencesService().setBool('isOnboardingComplete', true);
+            Navigator.of(context).pop();
+          },
+          label: Text(
+            '설정 완료',
+            style: AppTextStyles.textTheme.titleMedium
+                ?.copyWith(color: AppColors.white),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
