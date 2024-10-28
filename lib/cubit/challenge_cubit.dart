@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/models/challenge.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/utils/notifications/notification_service.dart';
+import 'package:udaadaa/service/notifications/notification_service.dart';
 
 part 'challenge_state.dart';
 

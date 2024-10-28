@@ -15,7 +15,7 @@ import 'package:udaadaa/firebase_options.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:udaadaa/utils/notifications/notification_service.dart';
+import 'package:udaadaa/service/notifications/notification_service.dart';
 import 'package:udaadaa/view/splash_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:facebook_app_events/facebook_app_events.dart';
