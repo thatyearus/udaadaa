@@ -78,7 +78,7 @@ class _PushSettingViewState extends State<PushSettingView> {
   Widget alarmTimeSetting(BuildContext context) {
     return Container(
       padding: AppSpacing.edgeInsetsM,
-      margin: const EdgeInsets.symmetric(vertical: AppSpacing.m),
+      margin: const EdgeInsets.symmetric(vertical: AppSpacing.s),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
