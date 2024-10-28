@@ -175,53 +175,96 @@ class _PushSettingViewState extends State<PushSettingView> {
         padding: const EdgeInsets.all(AppSpacing.l),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('리액션 알림', style: AppTextStyles.textTheme.titleSmall),
-                Switch(
-                  value: _isReactionPushOn,
-                  onChanged: (bool newValue) {
-                    setState(() {
-                      _isReactionPushOn = newValue;
-                    });
-                    Analytics().logEvent(
-                      "푸시알림_토글",
-                      parameters: {"변경값": newValue.toString(), "설정": "리액션"},
-                    );
-                  },
-                  activeTrackColor: AppColors.primary,
-                  activeColor: AppColors.white,
-                  inactiveThumbColor: AppColors.neutral[0],
-                  inactiveTrackColor: AppColors.neutral[200],
-                ),
-              ],
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.neutral[50],
+                borderRadius: BorderRadius.circular(16),
+              ),
+              padding: AppSpacing.edgeInsetsM,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('리액션 알림',
+                            style: AppTextStyles.textTheme.titleSmall),
+                        AppSpacing.verticalSizedBoxXxs,
+                        Text("다른 우다다 사용자가 리액션을 남기면 활동 알림을 받아요.",
+                            style: AppTextStyles.textTheme.labelMedium),
+                      ],
+                    ),
+                  ),
+                  AppSpacing.horizontalSizedBoxS,
+                  Switch(
+                    value: _isReactionPushOn,
+                    onChanged: (bool newValue) {
+                      setState(() {
+                        _isReactionPushOn = newValue;
+                      });
+                      Analytics().logEvent(
+                        "푸시알림_토글",
+                        parameters: {"변경값": newValue.toString(), "설정": "리액션"},
+                      );
+                    },
+                    activeTrackColor: AppColors.primary,
+                    activeColor: AppColors.white,
+                    inactiveThumbColor: AppColors.neutral[0],
+                    inactiveTrackColor: AppColors.neutral[200],
+                  ),
+                ],
+              ),
             ),
             AppSpacing.verticalSizedBoxS,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('미션 알림', style: AppTextStyles.textTheme.titleSmall),
-                Switch(
-                  value: _isMissionPushOn,
-                  onChanged: (bool newValue) {
-                    setState(() {
-                      _isMissionPushOn = newValue;
-                    });
-                    Analytics().logEvent(
-                      "푸시알션_토글",
-                      parameters: {"변경값": newValue.toString(), "설정": "미션"},
-                    );
-                  },
-                  activeTrackColor: AppColors.primary,
-                  activeColor: AppColors.white,
-                  inactiveThumbColor: AppColors.neutral[0],
-                  inactiveTrackColor: AppColors.neutral[200],
-                ),
-              ],
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.neutral[50],
+                borderRadius: BorderRadius.circular(16),
+              ),
+              padding: AppSpacing.edgeInsetsM,
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('미션 알림',
+                                style: AppTextStyles.textTheme.titleSmall),
+                            AppSpacing.verticalSizedBoxXxs,
+                            Text("오늘의 미션 인증을 까먹지 않게 알려드려요.",
+                                style: AppTextStyles.textTheme.labelMedium),
+                          ],
+                        ),
+                      ),
+                      AppSpacing.horizontalSizedBoxS,
+                      Switch(
+                        value: _isMissionPushOn,
+                        onChanged: (bool newValue) {
+                          setState(() {
+                            _isMissionPushOn = newValue;
+                          });
+                          Analytics().logEvent(
+                            "푸시알션_토글",
+                            parameters: {
+                              "변경값": newValue.toString(),
+                              "설정": "미션"
+                            },
+                          );
+                        },
+                        activeTrackColor: AppColors.primary,
+                        activeColor: AppColors.white,
+                        inactiveThumbColor: AppColors.neutral[0],
+                        inactiveTrackColor: AppColors.neutral[200],
+                      ),
+                    ],
+                  ),
+                  AppSpacing.verticalSizedBoxXxs,
+                  (_isMissionPushOn ? alarmTimeSetting(context) : Container()),
+                ],
+              ),
             ),
-            AppSpacing.verticalSizedBoxXxs,
-            (_isMissionPushOn ? alarmTimeSetting(context) : Container()),
           ],
         ),
       ),
