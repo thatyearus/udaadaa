@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 
@@ -13,7 +14,21 @@ class PushSettingView extends StatefulWidget {
 
 class _PushSettingViewState extends State<PushSettingView> {
   bool isMissionPushOn = false;
-  List<TimeOfDay> alarmTimes = [const TimeOfDay(hour: 10, minute: 0)];
+  List<TimeOfDay> alarmTimes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNotificationPreference();
+  }
+
+  Future<void> _loadNotificationPreference() async {
+    final settings = await PreferencesService().getAlarmTimes();
+    setState(() {
+      isMissionPushOn = settings.isNotEmpty;
+      alarmTimes = settings;
+    });
+  }
 
   String _formatTimeOfDay(TimeOfDay time) {
     final hour = time.hour.toString().padLeft(2, '0');
