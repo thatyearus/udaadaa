@@ -118,5 +118,12 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     });
   }
 
+  Future<void> cancelNotifications() async {
+    Future.wait([
+      PreferencesService().setBool('isMissionPushOn', false),
+      NotificationService.cacnelNotification(),
+    ]);
+  }
+
   Challenge? get challenge => _challenge;
 }

@@ -231,7 +231,7 @@ class _PushSettingViewState extends State<PushSettingView> {
             if (_isMissionPushOn) {
               context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
             } else {
-              // Remove all scheduled notifications
+              context.read<ChallengeCubit>().cancelNotifications();
             }
             Navigator.of(context).pop();
           },
