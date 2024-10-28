@@ -121,6 +121,7 @@ class _PushSettingViewState extends State<PushSettingView> {
           ),
           AppSpacing.verticalSizedBoxXs,
           ListView.builder(
+            padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: alarmTimes.length,
