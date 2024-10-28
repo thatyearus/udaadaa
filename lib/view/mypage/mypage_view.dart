@@ -5,6 +5,7 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
+import 'package:udaadaa/view/mypage/push_setting_view.dart';
 import 'package:udaadaa/widgets/my_profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -99,7 +100,7 @@ class MyPageView extends StatelessWidget {
                 Analytics().logEvent(
                   "마이페이지_푸시알림",
                   parameters: {"클릭": "푸시알림설정"},
-                );
+                ); /*
                 showDialog(
                     context: context,
                     builder: (context) {
@@ -135,7 +136,11 @@ class MyPageView extends StatelessWidget {
                           ),
                         ],
                       );
-                    });
+                    });*/
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => const PushSettingView()),
+                );
                 break;
               case 'kakaotalk':
                 Analytics().logEvent(
