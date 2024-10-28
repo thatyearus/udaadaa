@@ -5,6 +5,7 @@ import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/onboarding/eighth_view.dart';
 
 class PushSettingView extends StatefulWidget {
   const PushSettingView({super.key});
@@ -233,6 +234,84 @@ class _PushSettingViewState extends State<PushSettingView> {
               "푸시설정_완료",
               parameters: {"버튼": "클릭"},
             );
+            if (context.read<AuthCubit>().getIsChallenger == false &&
+                _isMissionPushOn) {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  actionsOverflowDirection: VerticalDirection.down,
+                  actions: [
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: AppSpacing.s),
+                              foregroundColor: Theme.of(context).primaryColor,
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              minimumSize: const Size(double.infinity, 0),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isMissionPushOn = false;
+                              });
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('취소',
+                                style: AppTextStyles.textTheme.headlineSmall),
+                          ),
+                        ),
+                        AppSpacing.verticalSizedBoxS,
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: AppSpacing.s),
+                              foregroundColor: AppColors.white,
+                              backgroundColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              minimumSize: const Size(double.infinity, 0),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const EighthView(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              '챌린지 참여하기',
+                              style: AppTextStyles.textTheme.headlineSmall
+                                  ?.copyWith(
+                                color: AppColors.white, // 텍스트 색상 설정
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                  title: Text('미션 알림 기능',
+                      style: AppTextStyles.textTheme.headlineMedium),
+                  content: Text('미션 알림은 챌린지에 참여하면 설정할 수 있어요!',
+                      style: AppTextStyles.textTheme.bodyLarge),
+                ),
+              );
+              return;
+            }
             if (_isMissionPushOn) {
               context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
             } else {
