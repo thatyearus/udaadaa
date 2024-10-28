@@ -13,6 +13,130 @@ class PushSettingView extends StatefulWidget {
 
 class _PushSettingViewState extends State<PushSettingView> {
   bool isMissionPushOn = false;
+  List<TimeOfDay> alarmTimes = [const TimeOfDay(hour: 10, minute: 0)];
+
+  String _formatTimeOfDay(TimeOfDay time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
+
+  int _compareTimeOfDay(TimeOfDay a, TimeOfDay b) {
+    if (a.hour == b.hour) {
+      return a.minute.compareTo(b.minute);
+    }
+    return a.hour.compareTo(b.hour);
+  }
+
+  void _addAlarmTime() async {
+    final now = DateTime.now();
+    final currentTime = TimeOfDay(hour: now.hour, minute: now.minute);
+
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: currentTime,
+    );
+
+    if (pickedTime != null) {
+      bool isDuplicate = alarmTimes.any((time) =>
+          time.hour == pickedTime.hour && time.minute == pickedTime.minute);
+
+      if (!isDuplicate) {
+        setState(() {
+          alarmTimes.add(pickedTime);
+          alarmTimes.sort(_compareTimeOfDay);
+        });
+      }
+    }
+  }
+
+  Widget alarmTimeSetting(BuildContext context) {
+    return Container(
+      padding: AppSpacing.edgeInsetsM,
+      margin: const EdgeInsets.symmetric(vertical: AppSpacing.m),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.neutral[300]!,
+            blurRadius: 4,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.notifications_outlined,
+                    color: AppColors.primary,
+                  ),
+                  AppSpacing.horizontalSizedBoxS,
+                  Text(
+                    "미션 알림 시간",
+                    style: AppTextStyles.textTheme.titleSmall,
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: _addAlarmTime,
+                icon: const Icon(Icons.add_rounded, color: AppColors.primary),
+                alignment: Alignment.center,
+              ),
+            ],
+          ),
+          AppSpacing.verticalSizedBoxXs,
+          Divider(
+            color: AppColors.neutral[300],
+            thickness: 1.0,
+          ),
+          AppSpacing.verticalSizedBoxXs,
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: alarmTimes.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    AppSpacing.horizontalSizedBoxL,
+                    const Icon(
+                      Icons.alarm_rounded,
+                      color: AppColors.primary,
+                    ),
+                    AppSpacing.horizontalSizedBoxS,
+                    Expanded(
+                      child: Text(
+                        _formatTimeOfDay(alarmTimes[index]),
+                        style: AppTextStyles.textTheme.headlineMedium,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close_rounded,
+                          color: AppColors.neutral[300]),
+                      onPressed: () {
+                        setState(() {
+                          alarmTimes.removeAt(index);
+                        });
+                      },
+                      alignment: Alignment.center,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +191,8 @@ class _PushSettingViewState extends State<PushSettingView> {
                 ),
               ],
             ),
+            AppSpacing.verticalSizedBoxXxs,
+            (isMissionPushOn ? alarmTimeSetting(context) : Container()),
           ],
         ),
       ),
