@@ -14,7 +14,7 @@ class PushSettingView extends StatefulWidget {
 }
 
 class _PushSettingViewState extends State<PushSettingView> {
-  bool _isMissionPushOn = false;
+  bool _isMissionPushOn = false, _isReactionPushOn = false;
   List<TimeOfDay> alarmTimes = [];
 
   @override
@@ -26,6 +26,7 @@ class _PushSettingViewState extends State<PushSettingView> {
   void _loadNotificationPreference() {
     final initialAlarms = PreferencesService().getAlarmTimes();
     final missionPushOn = PreferencesService().getBool('isMissionPushOn');
+    final reactionPushOn = context.read<AuthCubit>().getPushOption;
 
     if (initialAlarms.isEmpty && missionPushOn == null) {
       initialAlarms.add(const TimeOfDay(hour: 10, minute: 0));
@@ -34,6 +35,7 @@ class _PushSettingViewState extends State<PushSettingView> {
     setState(() {
       _isMissionPushOn = missionPushOn ?? false;
       alarmTimes = initialAlarms;
+      _isReactionPushOn = reactionPushOn ?? false;
     });
   }
 
@@ -175,9 +177,11 @@ class _PushSettingViewState extends State<PushSettingView> {
               children: [
                 Text('리액션 알림', style: AppTextStyles.textTheme.titleSmall),
                 Switch(
-                  value: context.watch<AuthCubit>().getPushOption ?? false,
+                  value: _isReactionPushOn,
                   onChanged: (bool newValue) {
-                    context.read<AuthCubit>().togglePush();
+                    setState(() {
+                      _isReactionPushOn = newValue;
+                    });
                     Analytics().logEvent(
                       "푸시알림_토글",
                       parameters: {"변경값": newValue.toString(), "설정": "리액션"},
@@ -232,6 +236,9 @@ class _PushSettingViewState extends State<PushSettingView> {
               context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
             } else {
               context.read<ChallengeCubit>().cancelNotifications();
+            }
+            if (_isReactionPushOn != context.read<AuthCubit>().getPushOption) {
+              context.read<AuthCubit>().togglePush();
             }
             Navigator.of(context).pop();
           },
