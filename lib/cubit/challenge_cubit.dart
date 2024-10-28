@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/models/challenge.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/service/notifications/notification_service.dart';
 
@@ -93,6 +94,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   }
 
   Future<void> scheduleNotifications(List<TimeOfDay> alarmTimes) async {
+    PreferencesService().setAlarmTimes(alarmTimes);
     await _isEntered();
     if (_challenge == null) {
       return;
