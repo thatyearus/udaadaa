@@ -40,9 +40,8 @@ class PreferencesService {
     return _preferences?.getString(key);
   }
 
-  Future<List<TimeOfDay>> getAlarmTimes() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? timesAsString = prefs.getStringList('alarmTimes');
+  List<TimeOfDay> getAlarmTimes() {
+    List<String>? timesAsString = _preferences?.getStringList('alarmTimes');
     if (timesAsString == null) return [];
 
     return timesAsString.map((timeStr) {

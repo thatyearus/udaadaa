@@ -23,11 +23,11 @@ class _PushSettingViewState extends State<PushSettingView> {
     _loadNotificationPreference();
   }
 
-  Future<void> _loadNotificationPreference() async {
-    final settings = await PreferencesService().getAlarmTimes();
+  void _loadNotificationPreference() {
+    final initialAlarms = PreferencesService().getAlarmTimes();
     setState(() {
-      isMissionPushOn = settings.isNotEmpty;
-      alarmTimes = settings;
+      isMissionPushOn = initialAlarms.isNotEmpty;
+      alarmTimes = initialAlarms;
     });
   }
 
