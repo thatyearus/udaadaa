@@ -228,7 +228,11 @@ class _PushSettingViewState extends State<PushSettingView> {
               "푸시설정_완료",
               parameters: {"버튼": "클릭"},
             );
-            context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
+            if (_isMissionPushOn) {
+              context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
+            } else {
+              // Remove all scheduled notifications
+            }
             PreferencesService().setBool('isOnboardingComplete', true);
             Navigator.of(context).pop();
           },
