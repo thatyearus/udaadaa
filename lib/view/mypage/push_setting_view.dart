@@ -168,7 +168,8 @@ class _PushSettingViewState extends State<PushSettingView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('푸시알림 설정', style: AppTextStyles.textTheme.headlineLarge),
+        title: Text('알림 설정', style: AppTextStyles.textTheme.headlineLarge),
+        centerTitle: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(AppSpacing.l),
