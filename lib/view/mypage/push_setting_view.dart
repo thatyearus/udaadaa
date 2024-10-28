@@ -14,7 +14,7 @@ class PushSettingView extends StatefulWidget {
 }
 
 class _PushSettingViewState extends State<PushSettingView> {
-  bool isMissionPushOn = false;
+  bool _isMissionPushOn = false;
   List<TimeOfDay> alarmTimes = [];
 
   @override
@@ -32,7 +32,7 @@ class _PushSettingViewState extends State<PushSettingView> {
     }
 
     setState(() {
-      isMissionPushOn = missionPushOn ?? false;
+      _isMissionPushOn = missionPushOn ?? false;
       alarmTimes = initialAlarms;
     });
   }
@@ -196,10 +196,10 @@ class _PushSettingViewState extends State<PushSettingView> {
               children: [
                 Text('미션 알림', style: AppTextStyles.textTheme.titleSmall),
                 Switch(
-                  value: isMissionPushOn,
+                  value: _isMissionPushOn,
                   onChanged: (bool newValue) {
                     setState(() {
-                      isMissionPushOn = newValue;
+                      _isMissionPushOn = newValue;
                     });
                     Analytics().logEvent(
                       "푸시알션_토글",
@@ -214,7 +214,7 @@ class _PushSettingViewState extends State<PushSettingView> {
               ],
             ),
             AppSpacing.verticalSizedBoxXxs,
-            (isMissionPushOn ? alarmTimeSetting(context) : Container()),
+            (_isMissionPushOn ? alarmTimeSetting(context) : Container()),
           ],
         ),
       ),
