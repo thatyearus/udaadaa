@@ -39,7 +39,7 @@ class MyPageView extends StatelessWidget {
               ),
               const PopupMenuItem(
                 value: 'push_setting',
-                child: Text('푸시알림 설정'),
+                child: Text('알림 설정'),
               ),
               const PopupMenuItem(
                 value: 'kakaotalk',
@@ -99,44 +99,8 @@ class MyPageView extends StatelessWidget {
               case 'push_setting':
                 Analytics().logEvent(
                   "마이페이지_푸시알림",
-                  parameters: {"클릭": "푸시알림설정"},
-                ); /*
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      final bool? isSwitched = context.select<AuthCubit, bool?>(
-                          (authCubit) => authCubit.getPushOption);
-                      return AlertDialog(
-                        title: const Text('푸시알림 설정'),
-                        content: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('리액션 알림'),
-                              Switch(
-                                value: isSwitched ?? false,
-                                onChanged: (bool newValue) {
-                                  Analytics().logEvent(
-                                    "마이페이지_푸시알림토글",
-                                    parameters: {"변경값": newValue.toString()},
-                                  );
-                                  context.read<AuthCubit>().togglePush();
-                                },
-                                activeTrackColor: AppColors.primary,
-                                activeColor: AppColors.primary[200],
-                                inactiveThumbColor: AppColors.neutral[0],
-                                inactiveTrackColor: AppColors.neutral[200],
-                              ),
-                            ]),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('확인'),
-                          ),
-                        ],
-                      );
-                    });*/
+                  parameters: {"클릭": "알림설정"},
+                );
                 Navigator.of(context).push(
                   MaterialPageRoute(
                       builder: (context) => const PushSettingView()),
