@@ -187,10 +187,10 @@ class _PushSettingViewState extends State<PushSettingView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('리액션 알림',
+                        Text('응원 알림',
                             style: AppTextStyles.textTheme.titleSmall),
                         AppSpacing.verticalSizedBoxXxs,
-                        Text("다른 우다다 사용자가 리액션을 남기면 활동 알림을 받아요.",
+                        Text("다른 우다다 사용자가 응원을 남기면 활동 알림을 받아요.",
                             style: AppTextStyles.textTheme.labelMedium),
                       ],
                     ),
