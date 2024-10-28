@@ -233,7 +233,6 @@ class _PushSettingViewState extends State<PushSettingView> {
             } else {
               // Remove all scheduled notifications
             }
-            PreferencesService().setBool('isOnboardingComplete', true);
             Navigator.of(context).pop();
           },
           label: Text(
