@@ -27,6 +27,10 @@ class _PushSettingViewState extends State<PushSettingView> {
     final initialAlarms = PreferencesService().getAlarmTimes();
     final missionPushOn = PreferencesService().getBool('isMissionPushOn');
 
+    if (initialAlarms.isEmpty && missionPushOn == null) {
+      initialAlarms.add(const TimeOfDay(hour: 10, minute: 0));
+    }
+
     setState(() {
       isMissionPushOn = missionPushOn ?? false;
       alarmTimes = initialAlarms;
