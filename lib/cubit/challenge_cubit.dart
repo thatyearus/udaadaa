@@ -95,6 +95,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
 
   Future<void> scheduleNotifications(List<TimeOfDay> alarmTimes) async {
     PreferencesService().setAlarmTimes(alarmTimes);
+    PreferencesService().setBool('isMissionPushOn', true);
     await _isEntered();
     if (_challenge == null) {
       return;
