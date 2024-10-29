@@ -49,6 +49,7 @@ Future<void> main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     ),
     initializeDateFormatting(),
+    //NotificationService.initNotification(),
   ]);
   Analytics().init();
 

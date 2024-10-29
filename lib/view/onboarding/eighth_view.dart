@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
+import 'package:udaadaa/service/notifications/notification_service.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/ninth_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
@@ -90,6 +93,8 @@ class EighthView extends StatelessWidget {
                 "온보딩_챌린지_미참여",
                 parameters: {"다음에_할래요": "클릭"},
               );
+              NotificationService.initNotification();
+              context.read<AuthCubit>().setFCMToken();
               PreferencesService().setBool('isOnboardingComplete', true);
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => const MainView()),
