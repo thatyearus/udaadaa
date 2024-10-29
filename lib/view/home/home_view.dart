@@ -67,7 +67,7 @@ class HomeViewState extends State<HomeView> {
           ),
           Expanded(
             child: _selectedIndex == 0
-                ? const ChallengeHomeView()
+                ? ChallengeHomeView(isChallenger: _isChallenger)
                 : ReportHomeView(pageController: _pageController),
           ),
         ],
@@ -129,11 +129,13 @@ class SelectButton extends StatelessWidget {
 }
 
 class ChallengeHomeView extends StatelessWidget {
-  const ChallengeHomeView({super.key});
+  const ChallengeHomeView({super.key, required this.isChallenger});
+
+  final bool isChallenger;
 
   @override
   Widget build(BuildContext context) {
-    return const NonChallengerView();
+    return isChallenger ? const ChallengerView() : const NonChallengerView();
   }
 }
 
