@@ -18,14 +18,14 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   ChallengeCubit(this.authCubit) : super(ChallengeInitial()) {
     final authState = authCubit.state;
     if (authState is Authenticated) {
-      _isEntered();
+      isEntered();
       // 연속 참여 일 계산
     }
 
     authSubscription = authCubit.stream.listen((authState) {
       if (authState is Authenticated) {
         // 연속 참여 일 계산
-        _isEntered();
+        isEntered();
       } else {
         emit(ChallengeInitial());
       }
@@ -40,7 +40,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
 
   Future<void> enterChallenge() async {
     try {
-      final entered = await _isEntered();
+      final entered = await isEntered();
       if (!entered) {
         final now = DateTime.now();
         final today = DateTime(now.year, now.month, now.day);
@@ -62,7 +62,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     }
   }
 
-  Future<bool> _isEntered() async {
+  Future<bool> isEntered() async {
     try {
       final r = await supabase
           .from('challenge')
@@ -96,7 +96,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   Future<void> scheduleNotifications(List<TimeOfDay> alarmTimes) async {
     PreferencesService().setAlarmTimes(alarmTimes);
     PreferencesService().setBool('isMissionPushOn', true);
-    await _isEntered();
+    await isEntered();
     if (_challenge == null) {
       return;
     }
