@@ -43,6 +43,9 @@ class HomeViewState extends State<HomeView> {
 
   Future<void> checkChallenger() async {
     final challenger = await context.read<ChallengeCubit>().isEntered();
+    setState(() {
+      _selectedIndex = challenger ? 0 : 1;
+    });
   }
 
   @override
