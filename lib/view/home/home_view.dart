@@ -7,6 +7,7 @@ import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
+import 'package:udaadaa/view/home/challenge/challenger_view.dart';
 import 'package:udaadaa/view/home/challenge/non_challenger_view.dart';
 import 'package:udaadaa/view/home/report_view.dart';
 import 'package:udaadaa/widgets/last_record.dart';
@@ -136,17 +137,6 @@ class ChallengeHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return isChallenger ? const ChallengerView() : const NonChallengerView();
-  }
-}
-
-class ChallengerView extends StatelessWidget {
-  const ChallengerView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('ChallengerView'),
-    );
   }
 }
 
