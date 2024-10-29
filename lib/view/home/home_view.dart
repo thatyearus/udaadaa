@@ -24,7 +24,7 @@ class HomeView extends StatefulWidget {
 class HomeViewState extends State<HomeView> {
   late PageController _pageController;
   late PageController _sectionController;
-  late bool _isChallenger;
+  bool _isChallenger = false;
 
   int _selectedIndex = 0;
 
@@ -47,6 +47,7 @@ class HomeViewState extends State<HomeView> {
     _isChallenger = await context.read<ChallengeCubit>().isEntered();
     setState(() {
       _selectedIndex = _isChallenger ? 0 : 1;
+      _isChallenger = _isChallenger;
     });
   }
 
