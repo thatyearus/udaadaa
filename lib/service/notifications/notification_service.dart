@@ -38,7 +38,7 @@ class NotificationService {
       {String? payload}) async {
     logger.d("showNotification");
     const androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'your_channel_id',
+      'udaadaa',
       '우다다',
       channelDescription: '우다다 푸시 알림',
       importance: Importance.max,
@@ -80,7 +80,7 @@ class NotificationService {
     );
 
     const androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'your_channel_id',
+      'udaadaa',
       '우다다',
       channelDescription: '우다다 푸시 알림',
       importance: Importance.max,
