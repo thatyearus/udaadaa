@@ -112,7 +112,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           final time = alarmTimes[j];
           NotificationService.scheduleNotification(
             i * alarmTimes.length + j,
-            "오늘의 미션을 인증하기로 한 시간이에요 ⏰",
+            "오늘의 미션 인증 시간이에요 ⏰",
             "$nickname지금 바로 인증하여 다이어트 성공을 향해 한 발짝 더 나아가요 🚀",
             time.hour,
             time.minute,
