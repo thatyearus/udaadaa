@@ -16,16 +16,25 @@ class MissionCard extends StatelessWidget {
         color: AppColors.neutral[50],
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Text(
-            "미션",
-            style: AppTextStyles.textTheme.headlineMedium,
+          Icon(
+            Icons.check_circle_outline,
+            color: AppColors.neutral[300],
           ),
-          Text(
-            "미션을 수행하세요!",
-            style: AppTextStyles.textTheme.bodyLarge,
+          AppSpacing.horizontalSizedBoxS,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "미션",
+                style: AppTextStyles.textTheme.headlineMedium,
+              ),
+              Text(
+                "미션을 수행하세요!",
+                style: AppTextStyles.textTheme.bodyLarge,
+              ),
+            ],
           ),
         ],
       ),
