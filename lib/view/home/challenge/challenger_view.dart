@@ -10,8 +10,11 @@ class ChallengerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Calendar(),
+    return const Column(
+      children: [
+        Calendar(),
+        DayBanner(),
+      ],
     );
   }
 }
