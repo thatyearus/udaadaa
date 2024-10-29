@@ -14,7 +14,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   final AuthCubit authCubit;
   late final StreamSubscription authSubscription;
   Challenge? _challenge;
-  DateTime? _selectedDate;
+  DateTime? _selectedDate = DateTime.now();
   DateTime _focusDate = DateTime.now();
 
   ChallengeCubit(this.authCubit) : super(ChallengeInitial()) {
