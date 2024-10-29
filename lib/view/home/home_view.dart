@@ -38,6 +38,11 @@ class HomeViewState extends State<HomeView> {
     _pageController = PageController();
     _sectionController = PageController();
     // context.read<AuthCubit>().setFCMToken();
+    checkChallenger();
+  }
+
+  Future<void> checkChallenger() async {
+    final challenger = await context.read<ChallengeCubit>().isEntered();
   }
 
   @override
