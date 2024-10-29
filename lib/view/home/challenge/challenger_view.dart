@@ -4,6 +4,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/widgets/mission_card.dart';
 
 class ChallengerView extends StatelessWidget {
   const ChallengerView({super.key});
@@ -15,6 +16,7 @@ class ChallengerView extends StatelessWidget {
         Calendar(),
         //DayBanner(),
         StreakCard(),
+        MissionList(),
       ],
     );
   }
@@ -120,6 +122,32 @@ class StreakCard extends StatelessWidget {
           ),
           const Divider(
             color: AppColors.primary,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MissionList extends StatelessWidget {
+  const MissionList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("날짜", style: AppTextStyles.textTheme.headlineMedium),
+          AppSpacing.verticalSizedBoxS,
+          ListView.builder(
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return const MissionCard();
+            },
+            shrinkWrap: true,
           ),
         ],
       ),
