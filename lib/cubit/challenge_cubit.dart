@@ -14,6 +14,8 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   final AuthCubit authCubit;
   late final StreamSubscription authSubscription;
   Challenge? _challenge;
+  DateTime? _selectedDate;
+  DateTime _focusDate = DateTime.now();
 
   ChallengeCubit(this.authCubit) : super(ChallengeInitial()) {
     final authState = authCubit.state;
@@ -93,6 +95,16 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     return false;
   }
 
+  void selectFocusDate(DateTime date) {
+    _focusDate = date;
+    emit(ChallengeSuccess());
+  }
+
+  void selectDay(DateTime date) {
+    _selectedDate = date;
+    emit(ChallengeSuccess());
+  }
+
   Future<void> scheduleNotifications(List<TimeOfDay> alarmTimes) async {
     PreferencesService().setAlarmTimes(alarmTimes);
     PreferencesService().setBool('isMissionPushOn', true);
@@ -131,4 +143,6 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   }
 
   Challenge? get challenge => _challenge;
+  DateTime? get getSelectedDate => _selectedDate;
+  DateTime get getFocusDate => _focusDate;
 }
