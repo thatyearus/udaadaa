@@ -13,7 +13,8 @@ class ChallengerView extends StatelessWidget {
     return const Column(
       children: [
         Calendar(),
-        DayBanner(),
+        //DayBanner(),
+        StreakCard(),
       ],
     );
   }
@@ -92,6 +93,36 @@ class DayBanner extends StatelessWidget {
           thickness: 1,
         ),
       ],
+    );
+  }
+}
+
+class StreakCard extends StatelessWidget {
+  const StreakCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const streak = 3;
+    return Container(
+      padding: AppSpacing.edgeInsetsS,
+      child: Column(
+        children: [
+          const Divider(
+            color: AppColors.primary,
+          ),
+          Text(
+            "현재 연속 $streak일 인증 완료",
+            style: AppTextStyles.textTheme.headlineLarge,
+          ),
+          Text(
+            "오늘 인증하면 연속 $streak일 달성!",
+            style: AppTextStyles.textTheme.bodyLarge,
+          ),
+          const Divider(
+            color: AppColors.primary,
+          ),
+        ],
+      ),
     );
   }
 }
