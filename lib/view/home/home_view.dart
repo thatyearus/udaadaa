@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:udaadaa/cubit/auth_cubit.dart';
+import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -37,7 +37,7 @@ class HomeViewState extends State<HomeView> {
     super.initState();
     _pageController = PageController();
     _sectionController = PageController();
-    context.read<AuthCubit>().setFCMToken();
+    // context.read<AuthCubit>().setFCMToken();
   }
 
   @override
