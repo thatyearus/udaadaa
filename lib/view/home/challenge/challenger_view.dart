@@ -4,6 +4,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/form/weight/weight_first_view.dart';
 import 'package:udaadaa/widgets/mission_card.dart';
 
 class ChallengerView extends StatelessWidget {
@@ -104,7 +105,9 @@ class StreakCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const streak = 3;
+    final streak = context.select<ChallengeCubit, int>(
+      (cubit) => cubit.getConsecutiveDays,
+    );
     return Container(
       padding: AppSpacing.edgeInsetsS,
       child: Column(
@@ -156,7 +159,18 @@ class MissionList extends StatelessWidget {
           ListView.builder(
             itemCount: 3,
             itemBuilder: (context, index) {
-              return const MissionCard();
+              return GestureDetector(
+                onTap: () {
+                  Analytics()
+                      .logEvent("리포트_미션선택", parameters: {"미션": "미션 $index"});
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const WeightFirstView(),
+                    ),
+                  );
+                },
+                child: const MissionCard(),
+              );
             },
             shrinkWrap: true,
           ),
