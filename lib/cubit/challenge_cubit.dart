@@ -19,6 +19,11 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   DateTime _focusDate = DateTime.now();
   int _consecutiveDays = 0;
   DateTime? _finalStartDate;
+  final Map<String, int> _selectedMissionComplete = {
+    "feed": 0,
+    "reaction": 0,
+    "weight": 0
+  };
 
   ChallengeCubit(this.authCubit) : super(ChallengeInitial()) {
     final authState = authCubit.state;
@@ -115,6 +120,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
 
   void selectDay(DateTime date) {
     _selectedDate = date;
+    getSelectedDayMission();
     emit(ChallengeSuccess());
   }
 
@@ -232,8 +238,45 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     return consecutiveDays;
   }
 
+  Future<void> getSelectedDayMission() async {
+    try {
+      DateTime dayStart =
+          DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+      DateTime dayEnd = dayStart
+          .add(const Duration(days: 1))
+          .subtract(const Duration(seconds: 1));
+
+      // 피드 수 조회
+      final feedCount = await supabase
+          .from('feed')
+          .select('id')
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .gte('created_at', dayStart.toIso8601String())
+          .lte('created_at', dayEnd.toIso8601String())
+          .count(CountOption.exact)
+          .then((res) => res.count);
+      _selectedMissionComplete['feed'] = feedCount;
+
+      // 리액션 수 조회
+      final reactionCount = await supabase
+          .from('reactions')
+          .select('id')
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .gte('created_at', dayStart.toIso8601String())
+          .lte('created_at', dayEnd.toIso8601String())
+          .count(CountOption.exact)
+          .then((res) => res.count);
+      _selectedMissionComplete['reaction'] = reactionCount;
+      logger.d("missionComplete: $_selectedMissionComplete");
+      emit(ChallengeSuccess());
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
   Challenge? get challenge => _challenge;
   DateTime get getSelectedDate => _selectedDate;
   DateTime get getFocusDate => _focusDate;
   int get getConsecutiveDays => _consecutiveDays;
+  Map<String, int> get getSelectedMission => _selectedMissionComplete;
 }
