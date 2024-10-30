@@ -202,7 +202,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     for (DateTime date = endDate;
         date.isAfter(startDate) || date.isAtSameMomentAs(startDate);
         date = date.subtract(const Duration(days: 1))) {
-      DateTime dayStart = DateTime(date.year, date.month, date.day);
+      DateTime dayStart = DateTime(date.year, date.month, date.day, -9);
       DateTime dayEnd = dayStart
           .add(const Duration(days: 1))
           .subtract(const Duration(seconds: 1));
@@ -240,8 +240,8 @@ class ChallengeCubit extends Cubit<ChallengeState> {
 
   Future<void> getSelectedDayMission() async {
     try {
-      DateTime dayStart =
-          DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+      DateTime dayStart = DateTime(
+          _selectedDate.year, _selectedDate.month, _selectedDate.day, -9);
       DateTime dayEnd = dayStart
           .add(const Duration(days: 1))
           .subtract(const Duration(seconds: 1));
