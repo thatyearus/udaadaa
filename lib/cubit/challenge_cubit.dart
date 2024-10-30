@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/models/challenge.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
@@ -16,6 +17,8 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   Challenge? _challenge;
   DateTime? _selectedDate = DateTime.now();
   DateTime _focusDate = DateTime.now();
+  int _consecutiveDays = 0;
+  DateTime? _finalStartDate;
 
   ChallengeCubit(this.authCubit) : super(ChallengeInitial()) {
     final authState = authCubit.state;
@@ -86,6 +89,16 @@ class ChallengeCubit extends Cubit<ChallengeState> {
       if (ret.isNotEmpty) {
         authCubit.setIsChallenger(true);
         _challenge = Challenge.fromMap(map: ret[0]);
+        await getCurrentChallenges();
+        getConsecutiveChallengeDays(
+          supabase.auth.currentUser!.id,
+          _finalStartDate!,
+          DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+          ),
+        );
         return true;
       }
     } catch (e) {
@@ -142,7 +155,85 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     ]);
   }
 
+  Future<void> getCurrentChallenges() async {
+    try {
+      DateTime? startDate;
+      DateTime endDate = DateTime.now();
+
+      final response = await supabase
+          .from('challenge')
+          .select('start_day, end_day')
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .order('start_day', ascending: false);
+
+      if (response.isEmpty) {
+        return;
+      }
+
+      for (final challenge in response) {
+        final challengeStart = DateTime.parse(challenge['start_day']);
+        final challengeEnd = DateTime.parse(challenge['end_day']);
+
+        if (endDate.isBefore(
+          challengeStart.subtract(const Duration(days: 1)),
+        )) {
+          break;
+        }
+
+        startDate = challengeStart;
+        endDate = challengeEnd.isAfter(endDate) ? challengeEnd : endDate;
+      }
+      _finalStartDate = startDate;
+    } catch (error) {
+      logger.e(error);
+    }
+  }
+
+  Future<int> getConsecutiveChallengeDays(
+      String userId, DateTime startDate, DateTime endDate) async {
+    int consecutiveDays = 0;
+
+    for (DateTime date = endDate;
+        date.isAfter(startDate) || date.isAtSameMomentAs(startDate);
+        date = date.subtract(const Duration(days: 1))) {
+      DateTime dayStart = DateTime(date.year, date.month, date.day);
+      DateTime dayEnd = dayStart
+          .add(const Duration(days: 1))
+          .subtract(const Duration(seconds: 1));
+
+      // 피드 수 조회
+      final feedCount = await supabase
+          .from('feed')
+          .select('id')
+          .eq('user_id', userId)
+          .gte('created_at', dayStart.toIso8601String())
+          .lte('created_at', dayEnd.toIso8601String())
+          .count(CountOption.exact)
+          .then((res) => res.count);
+
+      // 리액션 수 조회
+      final reactionCount = await supabase
+          .from('reactions')
+          .select('id')
+          .eq('user_id', userId)
+          .gte('created_at', dayStart.toIso8601String())
+          .lte('created_at', dayEnd.toIso8601String())
+          .count(CountOption.exact)
+          .then((res) => res.count);
+
+      if (feedCount >= 2 && reactionCount >= 3) {
+        consecutiveDays++;
+      } else {
+        break;
+      }
+    }
+    _consecutiveDays = consecutiveDays;
+    emit(ChallengeSuccess());
+    return consecutiveDays;
+  }
+
   Challenge? get challenge => _challenge;
   DateTime? get getSelectedDate => _selectedDate;
   DateTime get getFocusDate => _focusDate;
+  int get getConsecutiveDays => _consecutiveDays;
 }
