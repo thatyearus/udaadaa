@@ -134,13 +134,24 @@ class MissionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final selectedDate = context
+        .select<ChallengeCubit, DateTime?>((cubit) => cubit.getSelectedDate);
+    const weekday = "월화수목금토일";
+
+    if (selectedDate == null) {
+      return Container();
+    }
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("날짜", style: AppTextStyles.textTheme.headlineMedium),
+          Text(
+              (isSameDay(DateTime.now(), selectedDate)
+                  ? "오늘"
+                  : '${selectedDate.month}/${selectedDate.day}(${weekday[selectedDate.weekday - 1]})'),
+              style: AppTextStyles.textTheme.headlineMedium),
           AppSpacing.verticalSizedBoxS,
           ListView.builder(
             itemCount: 3,
