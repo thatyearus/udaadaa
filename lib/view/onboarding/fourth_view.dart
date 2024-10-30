@@ -60,7 +60,7 @@ class FourthView extends StatelessWidget {
                       style: AppTextStyles.textTheme.displayMedium),
                   AppSpacing.verticalSizedBoxS,
                   Text(
-                    "자유롭게 하고 싶은 말을 적어주세요!",
+                    "자유롭게 하고 싶은 말을 적어주세요! -입력 하지 않아도 괜찮아요",
                     style: AppTextStyles.bodyMedium(
                       TextStyle(color: AppColors.neutral[500]),
                     ),
