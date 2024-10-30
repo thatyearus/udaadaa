@@ -15,7 +15,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   final AuthCubit authCubit;
   late final StreamSubscription authSubscription;
   Challenge? _challenge;
-  DateTime? _selectedDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now();
   DateTime _focusDate = DateTime.now();
   int _consecutiveDays = 0;
   DateTime? _finalStartDate;
@@ -233,7 +233,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   }
 
   Challenge? get challenge => _challenge;
-  DateTime? get getSelectedDate => _selectedDate;
+  DateTime get getSelectedDate => _selectedDate;
   DateTime get getFocusDate => _focusDate;
   int get getConsecutiveDays => _consecutiveDays;
 }
