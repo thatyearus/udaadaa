@@ -172,7 +172,6 @@ class _TenthViewState extends State<TenthView> {
             );
             //TODO: push 시간 설정 코드 넣기
             context.read<ChallengeCubit>().enterChallenge();
-            PreferencesService().setBool('isOnboardingComplete', true);
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const MainView(),

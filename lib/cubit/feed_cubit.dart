@@ -299,7 +299,7 @@ class FeedCubit extends Cubit<FeedState> {
     }
     logger.d("Current page: $_curFeedPage");
     Analytics().logEvent("피드_피드탐색", parameters: {
-      "현재피드": _curFeedPage, "카테고리" : _currentCategory,
+      "현재피드": _curFeedPage, "카테고리" : _currentCategory.toString(),
     });
   }
 
