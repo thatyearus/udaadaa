@@ -392,6 +392,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
                 .from('challenge')
                 .update(_challenge!.toMap())
                 .eq('id', _challenge!.id!);
+            emit(ChallengeEnd());
           }
         }
       }
