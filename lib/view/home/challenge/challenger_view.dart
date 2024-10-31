@@ -107,9 +107,15 @@ class StreakCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final streak = context.select<ChallengeCubit, int>(
+    int streak = context.select<ChallengeCubit, int>(
       (cubit) => cubit.getConsecutiveDays,
     );
+    final todayComplete = context.select<ChallengeCubit, bool>(
+      (cubit) => cubit.getTodayChallengeComplete,
+    );
+    if (todayComplete) {
+      streak++;
+    }
     return Container(
       padding: AppSpacing.edgeInsetsS,
       child: Column(
@@ -122,7 +128,9 @@ class StreakCard extends StatelessWidget {
             style: AppTextStyles.textTheme.headlineLarge,
           ),
           Text(
-            "오늘 인증하면 연속 $streak일 달성!",
+            todayComplete
+                ? "축하합니다! 오늘의 미션을 모두 완수했습니다🎉"
+                : "오늘 인증하면 연속 ${streak + 1}일 달성!",
             style: AppTextStyles.textTheme.bodyLarge,
           ),
           const Divider(
