@@ -11,6 +11,7 @@ import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/report.dart';
+import 'package:udaadaa/models/weight.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 
@@ -189,11 +190,41 @@ class FormCubit extends Cubit<FormState> {
     }
   }
 
+  Future<void> submitWeight(
+      {required String weight, required String contentType}) async {
+    try {
+      emit(FormLoading());
+      String? imagePath = await uploadImage(contentType);
+      if (imagePath == null) {
+        emit(FormError('Failed to upload image'));
+        return;
+      }
+      final Weight curWeight = Weight(
+        userId: supabase.auth.currentUser!.id,
+        date: DateTime.now(),
+        weight: double.parse(weight),
+        imagePath: imagePath,
+      );
+      await supabase.from('weight').insert(curWeight.toMap());
+      updateReport(
+        type: FeedType.weight,
+        contentType: contentType,
+        weight: weight,
+      );
+      emit(FormSuccess());
+      feedCubit.fetchMyFeeds();
+    } catch (e) {
+      Analytics().logEvent("업로드_제출실패", parameters: {"에러": e.toString()});
+      logger.e(e);
+      emit(FormError("인증에 실패했습니다."));
+    }
+  }
+
   Future<void> updateReport({
     required FeedType type,
-    required String review,
+    String? review,
     required String contentType,
-    required String feedId,
+    String? feedId,
     String? mealType,
     String? weight,
     String? exerciseTime,
