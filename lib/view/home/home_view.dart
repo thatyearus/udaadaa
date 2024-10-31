@@ -61,6 +61,8 @@ class HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    _isChallenger = context
+        .select<ChallengeCubit, bool>((cubit) => cubit.challenge != null);
     return Scaffold(
       body: BlocListener<ChallengeCubit, ChallengeState>(
         listener: (context, state) {
