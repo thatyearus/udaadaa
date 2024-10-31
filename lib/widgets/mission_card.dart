@@ -14,6 +14,9 @@ class MissionCard extends StatelessWidget {
     "오늘의 몸무게 인증하기",
     "피드에 응원 3개 남기기",
   ];
+  final List<String> missionTag = ["식단", "몸무게", "응원"];
+  final List<String> missionEmoji = ["🥗", "⚖", "🤗"];
+
   MissionCard({super.key, required this.index});
 
   @override
@@ -44,9 +47,47 @@ class MissionCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "미션 ${index + 1}",
-                  style: AppTextStyles.textTheme.headlineMedium,
+                Row(
+                  children: [
+                    Text(
+                      "미션 ${index + 1}",
+                      style: AppTextStyles.textTheme.headlineMedium,
+                    ),
+                    AppSpacing.horizontalSizedBoxS,
+                    Container(
+                      decoration: const BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(AppSpacing.s),
+                        ),
+                      ),
+                      padding: AppSpacing.edgeInsetsXxs,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            //backgroundColor: AppColors.white,
+                            radius: 12,
+                            child: Text(
+                              missionEmoji[index],
+                              style: AppTextStyles.bodyMedium(
+                                const TextStyle(
+                                  fontFamily: 'tossface',
+                                ),
+                              ),
+                            ),
+                          ),
+                          //AppSpacing.horizontalSizedBoxXxs,
+                          Text(
+                            missionTag[index],
+                            style: AppTextStyles.bodySmall(
+                              const TextStyle(color: AppColors.white),
+                            ),
+                          ),
+                          AppSpacing.horizontalSizedBoxXxs,
+                        ],
+                      ),
+                    )
+                  ],
                 ),
                 Text(
                   missionDetail[index],
