@@ -24,6 +24,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     "reaction": 0,
     "weight": 0
   };
+  bool _selectedDayChallenge = false;
 
   ChallengeCubit(this.authCubit) : super(ChallengeInitial()) {
     final authState = authCubit.state;
@@ -252,6 +253,18 @@ class ChallengeCubit extends Cubit<ChallengeState> {
 
   Future<void> getSelectedDayMission() async {
     try {
+      final ret = await supabase
+          .from('challenge')
+          .select('*')
+          .gte('end_day', _selectedDate)
+          .lte('start_day', _selectedDate)
+          .eq('user_id', supabase.auth.currentUser!.id);
+      if (ret.isEmpty) {
+        _selectedDayChallenge = false;
+        return;
+      }
+      _selectedDayChallenge = true;
+
       DateTime dayStart = DateTime(
           _selectedDate.year, _selectedDate.month, _selectedDate.day, -9);
       DateTime dayEnd = dayStart
@@ -302,4 +315,5 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   DateTime get getFocusDate => _focusDate;
   int get getConsecutiveDays => _consecutiveDays;
   Map<String, int> get getSelectedMission => _selectedMissionComplete;
+  bool get getSelectedDayChallenge => _selectedDayChallenge;
 }

@@ -142,6 +142,8 @@ class MissionList extends StatelessWidget {
     final selectedDate = context
         .select<ChallengeCubit, DateTime?>((cubit) => cubit.getSelectedDate);
     const weekday = "월화수목금토일";
+    final selectedDayChallenge = context
+        .select<ChallengeCubit, bool>((cubit) => cubit.getSelectedDayChallenge);
 
     if (selectedDate == null) {
       return Container();
@@ -158,37 +160,39 @@ class MissionList extends StatelessWidget {
                   : '${selectedDate.month}/${selectedDate.day}(${weekday[selectedDate.weekday - 1]})'),
               style: AppTextStyles.textTheme.headlineMedium),
           AppSpacing.verticalSizedBoxS,
-          ListView.builder(
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  Analytics()
-                      .logEvent("챌린지_미션선택", parameters: {"미션": "미션 $index"});
-                  if (index == 2) {
-                    context
-                        .read<BottomNavCubit>()
-                        .selectTab(BottomNavState.feed);
-                    return;
-                  }
-                  if (index == 0) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const FirstView()));
-                    return;
-                  }
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const WeightFirstView(),
-                    ),
-                  );
-                },
-                child: MissionCard(
-                  index: index,
-                ),
-              );
-            },
-            shrinkWrap: true,
-          ),
+          (selectedDayChallenge
+              ? ListView.builder(
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Analytics().logEvent("챌린지_미션선택",
+                            parameters: {"미션": "미션 $index"});
+                        if (index == 2) {
+                          context
+                              .read<BottomNavCubit>()
+                              .selectTab(BottomNavState.feed);
+                          return;
+                        }
+                        if (index == 0) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const FirstView()));
+                          return;
+                        }
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const WeightFirstView(),
+                          ),
+                        );
+                      },
+                      child: MissionCard(
+                        index: index,
+                      ),
+                    );
+                  },
+                  shrinkWrap: true,
+                )
+              : Container()),
         ],
       ),
     );
