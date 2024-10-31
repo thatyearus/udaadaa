@@ -135,7 +135,7 @@ class ChallengeResultView extends StatelessWidget {
           borderRadius: BorderRadius.circular(30),
           side: const BorderSide(color: AppColors.primary),
         ),
-        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        textStyle: AppTextStyles.textTheme.headlineSmall,
         foregroundColor: AppColors.primary, // 기본 텍스트 색상
         backgroundColor: Colors.white, // 기본 배경색
       ).copyWith(
