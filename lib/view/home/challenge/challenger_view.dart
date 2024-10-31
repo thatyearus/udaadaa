@@ -169,7 +169,9 @@ class MissionList extends StatelessWidget {
                     ),
                   );
                 },
-                child: const MissionCard(),
+                child: MissionCard(
+                  index: index,
+                ),
               );
             },
             shrinkWrap: true,
