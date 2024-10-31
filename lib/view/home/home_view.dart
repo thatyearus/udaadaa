@@ -96,29 +96,35 @@ class SelectButton extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            TextButton(
-              onPressed: () => onSelect(0),
-              child: Text(
-                '챌린지',
-                style: TextStyle(
-                  color: selectedIndex == 0
-                      ? AppColors.primary
-                      : AppColors.neutral[500],
-                  fontWeight:
-                      selectedIndex == 0 ? FontWeight.bold : FontWeight.normal,
+            Expanded(
+              child: TextButton(
+                onPressed: () => onSelect(0),
+                child: Text(
+                  '챌린지',
+                  style: TextStyle(
+                    color: selectedIndex == 0
+                        ? AppColors.primary
+                        : AppColors.neutral[500],
+                    fontWeight: selectedIndex == 0
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () => onSelect(1),
-              child: Text(
-                '리포트',
-                style: TextStyle(
-                  color: selectedIndex == 1
-                      ? AppColors.primary
-                      : AppColors.neutral[500],
-                  fontWeight:
-                      selectedIndex == 1 ? FontWeight.bold : FontWeight.normal,
+            Expanded(
+              child: TextButton(
+                onPressed: () => onSelect(1),
+                child: Text(
+                  '리포트',
+                  style: TextStyle(
+                    color: selectedIndex == 1
+                        ? AppColors.primary
+                        : AppColors.neutral[500],
+                    fontWeight: selectedIndex == 1
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
                 ),
               ),
             ),
