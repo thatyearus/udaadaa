@@ -7,8 +7,9 @@ import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
+import 'package:udaadaa/view/home/challenge/challenger_view.dart';
+import 'package:udaadaa/view/home/challenge/non_challenger_view.dart';
 import 'package:udaadaa/view/home/report_view.dart';
-import 'package:udaadaa/view/onboarding/eighth_view.dart';
 import 'package:udaadaa/widgets/last_record.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/widgets/report_summary.dart';
@@ -23,6 +24,7 @@ class HomeView extends StatefulWidget {
 class HomeViewState extends State<HomeView> {
   late PageController _pageController;
   late PageController _sectionController;
+  bool _isChallenger = false;
 
   int _selectedIndex = 0;
 
@@ -42,7 +44,11 @@ class HomeViewState extends State<HomeView> {
   }
 
   Future<void> checkChallenger() async {
-    final challenger = await context.read<ChallengeCubit>().isEntered();
+    _isChallenger = await context.read<ChallengeCubit>().isEntered();
+    setState(() {
+      _selectedIndex = _isChallenger ? 0 : 1;
+      _isChallenger = _isChallenger;
+    });
   }
 
   @override
@@ -63,7 +69,7 @@ class HomeViewState extends State<HomeView> {
           ),
           Expanded(
             child: _selectedIndex == 0
-                ? const ChallengeHomeView()
+                ? ChallengeHomeView(isChallenger: _isChallenger)
                 : ReportHomeView(pageController: _pageController),
           ),
         ],
@@ -125,44 +131,13 @@ class SelectButton extends StatelessWidget {
 }
 
 class ChallengeHomeView extends StatelessWidget {
-  const ChallengeHomeView({super.key});
+  const ChallengeHomeView({super.key, required this.isChallenger});
+
+  final bool isChallenger;
 
   @override
   Widget build(BuildContext context) {
-    return const NonChallengerView();
-  }
-}
-
-class ChallengerView extends StatelessWidget {
-  const ChallengerView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('ChallengerView'),
-    );
-  }
-}
-
-class NonChallengerView extends StatelessWidget {
-  const NonChallengerView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () {
-          Analytics().logEvent(
-            "홈_챌린지_참여하기",
-          );
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const EighthView()),
-          );
-        },
-        child: const Text('챌린지 참여하기'),
-      ),
-    );
+    return isChallenger ? const ChallengerView() : const NonChallengerView();
   }
 }
 

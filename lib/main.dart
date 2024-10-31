@@ -73,9 +73,15 @@ class MyApp extends StatelessWidget {
             context.read<AuthCubit>(),
           ),
         ),
+        BlocProvider<ChallengeCubit>(
+          create: (context) => ChallengeCubit(
+            context.read<AuthCubit>(),
+          ),
+        ),
         BlocProvider<FeedCubit>(
           create: (context) => FeedCubit(
             context.read<AuthCubit>(),
+            context.read<ChallengeCubit>(),
           ),
         ),
         BlocProvider<FormCubit>(
@@ -84,11 +90,6 @@ class MyApp extends StatelessWidget {
             context.read<FeedCubit>(),
           ),
         ),
-        BlocProvider<ChallengeCubit>(
-          create: (context) => ChallengeCubit(
-            context.read<AuthCubit>(),
-          ),
-        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

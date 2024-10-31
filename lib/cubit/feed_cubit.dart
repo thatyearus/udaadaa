@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:meta/meta.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
+import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/models/report.dart';
@@ -15,6 +16,7 @@ part 'feed_state.dart';
 
 class FeedCubit extends Cubit<FeedState> {
   final AuthCubit authCubit;
+  final ChallengeCubit challengeCubit;
   late final StreamSubscription authSubscription;
   List<Feed> _myFeeds = [];
   List<Feed> _feeds = [];
@@ -26,7 +28,7 @@ class FeedCubit extends Cubit<FeedState> {
   int _myFeedPage = 0;
   List<int> _curHomeFeedPage = [0, 0, 0];
 
-  FeedCubit(this.authCubit) : super(FeedInitial()) {
+  FeedCubit(this.authCubit, this.challengeCubit) : super(FeedInitial()) {
     if (authCubit.state is Authenticated) {
       Future.wait([fetchBlockedFeed(), fetchReactionFeed()]).then((_) {
         fetchHomeFeeds();
@@ -298,6 +300,7 @@ class FeedCubit extends Cubit<FeedState> {
           .upsert(newReaction.toMap(), onConflict: "user_id, feed_id");
       logger.d("Reaction added: $reaction");
       _reactionFeedIds.add(feedId);
+      updateMission();
     } catch (e) {
       Analytics().logEvent(
         "피드_리액션_에러",
@@ -385,6 +388,10 @@ class FeedCubit extends Cubit<FeedState> {
       logger.e(e);
       Analytics().logEvent("피드_삭제_에러", parameters: {"에러": e.toString()});
     }
+  }
+
+  Future<void> updateMission() async {
+    await challengeCubit.updateMission();
   }
 
   List<Feed> get getMyFeeds => _myFeeds;
