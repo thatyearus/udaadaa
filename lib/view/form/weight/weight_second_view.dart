@@ -74,8 +74,9 @@ class _WeightSecondViewState extends State<WeightSecondView> {
                       ? AppColors.neutral[300]
                       : AppColors.primary,
               onPressed: () {
-                if (state is form.FormLoading || commentController.text == "")
+                if (state is form.FormLoading || commentController.text == "") {
                   return;
+                }
                 Analytics().logEvent(
                   "기록_체중기록",
                   parameters: {
