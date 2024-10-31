@@ -69,11 +69,13 @@ class _WeightSecondViewState extends State<WeightSecondView> {
           builder: (context, state) {
             return FloatingActionButton.extended(
               heroTag: 'weight2',
-              backgroundColor: (state is form.FormLoading)
-                  ? AppColors.neutral[300]
-                  : AppColors.primary,
+              backgroundColor:
+                  (state is form.FormLoading || commentController.text == "")
+                      ? AppColors.neutral[300]
+                      : AppColors.primary,
               onPressed: () {
-                if (state is form.FormLoading) return;
+                if (state is form.FormLoading || commentController.text == "")
+                  return;
                 Analytics().logEvent(
                   "기록_체중기록",
                   parameters: {
