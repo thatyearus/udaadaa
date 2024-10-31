@@ -7,7 +7,7 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 class ResultCard extends StatelessWidget {
   final bool isSuccess;
 
-  ResultCard({
+  const ResultCard({
     super.key,
     required this.isSuccess,
   });
