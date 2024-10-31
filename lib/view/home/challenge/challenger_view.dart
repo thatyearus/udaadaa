@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/form/weight/weight_first_view.dart';
+import 'package:udaadaa/view/onboarding/first_view.dart';
 import 'package:udaadaa/widgets/mission_card.dart';
 
 class ChallengerView extends StatelessWidget {
@@ -162,7 +164,18 @@ class MissionList extends StatelessWidget {
               return GestureDetector(
                 onTap: () {
                   Analytics()
-                      .logEvent("리포트_미션선택", parameters: {"미션": "미션 $index"});
+                      .logEvent("챌린지_미션선택", parameters: {"미션": "미션 $index"});
+                  if (index == 2) {
+                    context
+                        .read<BottomNavCubit>()
+                        .selectTab(BottomNavState.feed);
+                    return;
+                  }
+                  if (index == 0) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const FirstView()));
+                    return;
+                  }
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => const WeightFirstView(),
