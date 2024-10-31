@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/onboarding/eighth_view.dart';
 import 'package:udaadaa/view/onboarding/seventh_view.dart';
 import 'package:udaadaa/widgets/video_player_screen.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
@@ -21,7 +22,7 @@ class SixthView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("이제 같이하는 친구들 식단을\n3개만 응원해 볼까요?",
+              Text("피드에서 같이하는 친구들\n식단을 응원해 줄 수 있어요!",
                   style: AppTextStyles.textTheme.displayMedium),
               AppSpacing.verticalSizedBoxL,
               SizedBox(
@@ -40,15 +41,15 @@ class SixthView extends StatelessWidget {
           heroTag: 'onboarding5',
           onPressed: () {
             Analytics().logEvent(
-              "온보딩_응원하러_가기",
+              "다음",
               parameters: {"버튼": "클릭"},
             );
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const SeventhView()),
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const EighthView()),
             );
           },
           label: Text(
-            '응원하러 가기',
+            '다음',
             style: AppTextStyles.textTheme.titleMedium
                 ?.copyWith(color: AppColors.white),
           ),

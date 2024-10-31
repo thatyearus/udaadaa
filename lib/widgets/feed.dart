@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
-import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/widgets/category.dart';
 import 'package:udaadaa/widgets/reaction.dart';
+import 'package:udaadaa/utils/constant.dart';
 
 class FeedPageView extends StatefulWidget {
-  const FeedPageView({
-    super.key,
-  });
+  const FeedPageView({super.key});
 
   @override
   FeedPageViewState createState() => FeedPageViewState();
@@ -18,44 +17,58 @@ class FeedPageView extends StatefulWidget {
 class FeedPageViewState extends State<FeedPageView> {
   final PageController _pageController = PageController();
 
+  void _onCategorySelected(FeedCategory category) {
+    context.read<FeedCubit>().changeCategory(category);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final feeds =
-        context.select<FeedCubit, List<Feed>>((cubit) => cubit.getFeeds);
+    final feeds = context.select<FeedCubit, List<Feed>>((cubit) => cubit.getFeeds);
     if (feeds.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return PageView.builder(
-        controller: _pageController,
-        itemCount: feeds.length,
-        scrollDirection: Axis.vertical,
-        itemBuilder: (context, index) {
-          final feed = feeds[index];
-          context.read<FeedCubit>().changePage(index);
-          if (index + 1 < feeds.length) {
-            precacheImage(
+    return Stack(
+      children: [
+        PageView.builder(
+          controller: _pageController,
+          itemCount: feeds.length,
+          scrollDirection: Axis.vertical,
+          itemBuilder: (context, index) {
+            final feed = feeds[index];
+            context.read<FeedCubit>().changePage(index);
+
+            // 다음 이미지를 미리 로드하여 부드러운 전환을 보장합니다.
+            if (index + 1 < feeds.length) {
+              precacheImage(
                 CachedNetworkImageProvider(feeds[index + 1].imageUrl!),
-                context);
-          }
-          if (index + 2 < feeds.length) {
-            precacheImage(
-                CachedNetworkImageProvider(feeds[index + 2].imageUrl!),
-                context);
-          }
-          return ImageCard(
-            feed: feed,
-            isMyPage: false,
-            onReactionPressed: () {
-              // go to next page
-              _pageController.nextPage(
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeInOut,
+                context,
               );
-              logger.d("FeedPageViewState: onReactionPressed");
-            },
-          );
-        });
+            }
+            if (index + 2 < feeds.length) {
+              precacheImage(
+                CachedNetworkImageProvider(feeds[index + 2].imageUrl!),
+                context,
+              );
+            }
+
+            return ImageCard(
+              feed: feed,
+              isMyPage: false,
+              onReactionPressed: () {
+                // 다음 페이지로 이동
+                _pageController.nextPage(
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeInOut,
+                );
+              },
+            );
+          },
+        ),
+        // 상단 왼쪽에 카테고리 버튼
+        CategoryButtonsContainer(onCategorySelected: _onCategorySelected),
+      ],
+    );
   }
 
   @override
@@ -85,6 +98,7 @@ class ImageCard extends StatelessWidget {
       FeedType.dinner: '# 저녁',
       FeedType.snack: '# 간식',
     });
+
     return Column(
       children: [
         Expanded(
@@ -101,15 +115,15 @@ class ImageCard extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(16.0), // 여백 설정
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min, // Column 크기 최소화
+            mainAxisSize: MainAxisSize.min,
             children: [
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  feed.profile!.nickname, // 작성자 정보
+                  feed.profile!.nickname,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -117,7 +131,7 @@ class ImageCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8), // 작성자와 제목 사이의 간격
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Text(
@@ -127,10 +141,10 @@ class ImageCard extends StatelessWidget {
                       fontSize: 15,
                     ),
                   ),
-                  const SizedBox(width: 8), // 작성일과 제목 사이의 간격
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      feed.review, // 제목 정보
+                      feed.review,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 15,
@@ -163,7 +177,7 @@ class ImageDisplay extends StatelessWidget {
         height: double.infinity,
         fit: BoxFit.fitWidth,
         placeholder: (context, url) =>
-            const Center(child: CircularProgressIndicator()),
+        const Center(child: CircularProgressIndicator()),
         errorWidget: (context, url, error) => const Icon(Icons.error),
       ),
     );

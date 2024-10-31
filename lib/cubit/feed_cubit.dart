@@ -28,7 +28,10 @@ class FeedCubit extends Cubit<FeedState> {
   int _myFeedPage = 0;
   List<int> _curHomeFeedPage = [0, 0, 0];
 
+  FeedCategory _currentCategory = FeedCategory.all;
+
   FeedCubit(this.authCubit, this.challengeCubit) : super(FeedInitial()) {
+
     if (authCubit.state is Authenticated) {
       Future.wait([fetchBlockedFeed(), fetchReactionFeed()]).then((_) {
         fetchHomeFeeds();
@@ -67,6 +70,17 @@ class FeedCubit extends Cubit<FeedState> {
   Future<void> close() {
     authSubscription.cancel();
     return super.close();
+  }
+
+  void changeCategory(FeedCategory category){
+    if( _currentCategory != category){
+      _currentCategory = category;
+      if(_currentCategory == FeedCategory.all) {
+        _getFeeds();
+      } else {
+        _getChallengeFeeds();
+      }
+    }
   }
 
   void openFeedDetail(RemoteMessage? message) {
@@ -226,6 +240,61 @@ class FeedCubit extends Cubit<FeedState> {
     }
   }
 
+  Future<void> _getChallengeFeeds({bool loadMore = false}) async {
+    if (_currentCategory != FeedCategory.challenge) return ;
+    try {
+      final data = await supabase
+          .from('feed')
+          .select('*, profiles(*)')
+          .eq('is_challenge', 'TRUE')
+          .not('id', 'in', _blockedFeedIds.toList())
+          .not('id', 'in', _reactionFeedIds.toList())
+          .order('created_at', ascending: false)
+          .limit(_limit);
+
+      final List<Feed> newFeeds = [];
+
+      if (!loadMore && data.isEmpty) {
+
+        final defaultData = await supabase
+            .from('feed')
+            .select('*, profiles(*)')
+            .eq('is_challenge', 'TRUE')
+            .not('id', 'in', _blockedFeedIds.toList())
+            .order('created_at', ascending: true)
+            .limit(1);
+
+        final imagePaths =
+        defaultData.map((item) => item['image_path'] as String).toList();
+        final signedUrls = await supabase.storage
+            .from('FeedImages')
+            .createSignedUrls(imagePaths,3600);
+
+        final item = defaultData[0];
+        item['image_url'] = signedUrls[0].signedUrl;
+        newFeeds.add(Feed.fromMap(map: item));
+
+      } else if(data.isNotEmpty) {
+        final imagePaths =
+        data.map((item) => item['image_path'] as String).toList();
+        final signedUrls = await supabase.storage
+            .from('FeedImages')
+            .createSignedUrls(imagePaths,3600);
+
+        for (var i = 0; i < data.length; i++) {
+          final item = data[i];
+          item['image_url'] = signedUrls[i].signedUrl;
+          newFeeds.add(Feed.fromMap(map: item));
+        }
+      }
+      _feeds = loadMore ? [..._feeds, ...newFeeds] : newFeeds;
+      emit(FeedLoaded());
+    } catch (e) {
+      logger.e(e);
+      emit(FeedError());
+    }
+  }
+
   void changePage(int page) {
     _curFeedPage = page;
     if (page == _feeds.length - 1) {
@@ -233,7 +302,7 @@ class FeedCubit extends Cubit<FeedState> {
     }
     logger.d("Current page: $_curFeedPage");
     Analytics().logEvent("피드_피드탐색", parameters: {
-      "현재피드": _curFeedPage,
+      "현재피드": _curFeedPage, "카테고리" : _currentCategory.toString(),
     });
   }
 
@@ -311,7 +380,11 @@ class FeedCubit extends Cubit<FeedState> {
   }
 
   Future<void> getMoreFeeds() async {
-    await _getFeeds(loadMore: true);
+    if (_currentCategory == FeedCategory.all){
+      await _getFeeds(loadMore: true);
+    }else{
+      await _getChallengeFeeds(loadMore: true);
+    }
   }
 
   Future<void> blockFeed(String feedId) async {

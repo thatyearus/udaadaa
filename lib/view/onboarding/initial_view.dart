@@ -27,7 +27,7 @@ class InitialViewState extends State<InitialView> {
               ),
             ),
             const TextSpan(
-              text: "에서 함께 다이어트 해봐요\n내 식단 올리고 공감과 응원받고\nAI가 자동으로 칼로리도 측정해줘요",
+              text: "에서 다이어트 챌린지 해보세요\n내 식단을 올리면 친구들이 응원해주고\nAI가 자동으로 식단 칼로리도 측정해요",
             ),
           ],
         ),
@@ -99,23 +99,23 @@ class InitialViewState extends State<InitialView> {
                   },
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (int i = 0; i < onboardingPages.length; i++)
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: i == _index
-                            ? Theme.of(context).primaryColor
-                            : AppColors.neutral[300],
-                      ),
-                    ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     for (int i = 0; i < onboardingPages.length; i++)
+              //       Container(
+              //         margin: const EdgeInsets.symmetric(horizontal: 4),
+              //         width: 8,
+              //         height: 8,
+              //         decoration: BoxDecoration(
+              //           shape: BoxShape.circle,
+              //           color: i == _index
+              //               ? Theme.of(context).primaryColor
+              //               : AppColors.neutral[300],
+              //         ),
+              //       ),
+              //   ],
+              // ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
@@ -127,7 +127,7 @@ class InitialViewState extends State<InitialView> {
                 ),
                 onPressed: () {
                   Analytics().logEvent("온보딩_시작하기", parameters: {"페이지": _index});
-                  if (_index == onboardingPages.length - 1) {
+                  if (_index == 0) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) => const FirstView()),
