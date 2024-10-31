@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferencesService {
@@ -24,6 +25,12 @@ class PreferencesService {
     await _preferences?.setString(key, value);
   }
 
+  Future<void> setAlarmTimes(List<TimeOfDay> alarmTimes) async {
+    List<String> timesAsString =
+        alarmTimes.map((time) => "${time.hour}:${time.minute}").toList();
+    await _preferences?.setStringList('alarmTimes', timesAsString);
+  }
+
   // 값 읽기
   bool? getBool(String key) {
     return _preferences?.getBool(key);
@@ -31,6 +38,18 @@ class PreferencesService {
 
   String? getString(String key) {
     return _preferences?.getString(key);
+  }
+
+  List<TimeOfDay> getAlarmTimes() {
+    List<String>? timesAsString = _preferences?.getStringList('alarmTimes');
+    if (timesAsString == null) return [];
+
+    return timesAsString.map((timeStr) {
+      List<String> parts = timeStr.split(':');
+      int hour = int.parse(parts[0]);
+      int minute = int.parse(parts[1]);
+      return TimeOfDay(hour: hour, minute: minute);
+    }).toList();
   }
 
   // 값 삭제

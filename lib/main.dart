@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
+import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
@@ -48,6 +49,7 @@ Future<void> main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     ),
     initializeDateFormatting(),
+    //NotificationService.initNotification(),
   ]);
   Analytics().init();
 
@@ -71,9 +73,15 @@ class MyApp extends StatelessWidget {
             context.read<AuthCubit>(),
           ),
         ),
+        BlocProvider<ChallengeCubit>(
+          create: (context) => ChallengeCubit(
+            context.read<AuthCubit>(),
+          ),
+        ),
         BlocProvider<FeedCubit>(
           create: (context) => FeedCubit(
             context.read<AuthCubit>(),
+            context.read<ChallengeCubit>(),
           ),
         ),
         BlocProvider<FormCubit>(

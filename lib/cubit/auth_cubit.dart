@@ -9,6 +9,7 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   Profile? _profile;
+  bool _isChallenger = false;
 
   AuthCubit() : super(AuthInitial()) {
     final currentUser = supabase.auth.currentUser;
@@ -199,6 +200,10 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  void setIsChallenger(bool newValue) {
+    _isChallenger = newValue;
+  }
+
   Future<void> signOut() async {
     await supabase.auth.signOut();
     emit(AuthInitial());
@@ -218,4 +223,6 @@ class AuthCubit extends Cubit<AuthState> {
     logger.d("getPushOption: ${getCurProfile?.fcmToken != null}");
     return getCurProfile?.fcmToken != null;
   }
+
+  bool get getIsChallenger => _isChallenger;
 }

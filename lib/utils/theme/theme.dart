@@ -6,7 +6,7 @@ final ThemeData appTheme = ThemeData(
   colorScheme: ColorScheme.fromSwatch(
     primarySwatch: AppColors.primary,
     accentColor: AppColors.secondary,
-  ),
+  ).copyWith(outline: AppColors.neutral[50]),
   textTheme: AppTextStyles.textTheme,
   fontFamily: 'pretendard',
 );
