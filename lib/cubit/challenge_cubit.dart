@@ -24,6 +24,12 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     "reaction": 0,
     "weight": 0
   };
+  final Map<String, int> _todayMissionComplete = {
+    "feed": 0,
+    "reaction": 0,
+    "weight": 0
+  };
+  bool _todayChallengeComplete = false;
   bool _selectedDayChallenge = false;
 
   ChallengeCubit(this.authCubit) : super(ChallengeInitial()) {
@@ -202,7 +208,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
       String userId, DateTime startDate, DateTime endDate) async {
     int consecutiveDays = 0;
 
-    for (DateTime date = endDate;
+    for (DateTime date = endDate.subtract(const Duration(days: 1));
         date.isAfter(startDate) || date.isAtSameMomentAs(startDate);
         date = date.subtract(const Duration(days: 1))) {
       DateTime dayStart = DateTime(date.year, date.month, date.day, -9);
@@ -310,10 +316,78 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     }
   }
 
+  Future<void> getTodayMission() async {
+    try {
+      final DateTime now = DateTime.now();
+      final DateTime dayStart = DateTime(now.year, now.month, now.day, -9);
+      final DateTime dayEnd = dayStart
+          .add(const Duration(days: 1))
+          .subtract(const Duration(seconds: 1));
+
+      // 피드 수 조회
+      final feedCount = await supabase
+          .from('feed')
+          .select('id')
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .gte('created_at', dayStart.toIso8601String())
+          .lte('created_at', dayEnd.toIso8601String())
+          .count(CountOption.exact)
+          .then((res) => res.count);
+      _todayMissionComplete['feed'] = feedCount;
+
+      // 몸묵게 조회
+      final weightCount = await supabase
+          .from('weight')
+          .select('id')
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .gte('created_at', dayStart.toIso8601String())
+          .lte('created_at', dayEnd.toIso8601String())
+          .count(CountOption.exact)
+          .then((res) => res.count);
+      _todayMissionComplete['weight'] = weightCount;
+
+      // 리액션 수 조회
+      final reactionCount = await supabase
+          .from('reactions')
+          .select('id')
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .gte('created_at', dayStart.toIso8601String())
+          .lte('created_at', dayEnd.toIso8601String())
+          .count(CountOption.exact)
+          .then((res) => res.count);
+      _todayMissionComplete['reaction'] = reactionCount;
+      if (feedCount >= 2 && reactionCount >= 3 && weightCount >= 1) {
+        _todayChallengeComplete = true;
+      }
+      emit(ChallengeSuccess());
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  Future<void> updateMission() async {
+    try {
+      await getTodayMission();
+      final now = DateTime.now();
+      if (now.year == _selectedDate.year &&
+          now.month == _selectedDate.month &&
+          now.day == _selectedDate.day) {
+        _selectedMissionComplete['feed'] = _todayMissionComplete['feed']!;
+        _selectedMissionComplete['reaction'] =
+            _todayMissionComplete['reaction']!;
+        _selectedMissionComplete['weight'] = _todayMissionComplete['weight']!;
+      }
+      emit(ChallengeSuccess());
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
   Challenge? get challenge => _challenge;
   DateTime get getSelectedDate => _selectedDate;
   DateTime get getFocusDate => _focusDate;
   int get getConsecutiveDays => _consecutiveDays;
   Map<String, int> get getSelectedMission => _selectedMissionComplete;
   bool get getSelectedDayChallenge => _selectedDayChallenge;
+  bool get getTodayChallengeComplete => _todayChallengeComplete;
 }
