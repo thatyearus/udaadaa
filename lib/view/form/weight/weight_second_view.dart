@@ -80,6 +80,8 @@ class _WeightSecondViewState extends State<WeightSecondView> {
                     "인증하기": "클릭",
                   },
                 );
+                context.read<form.FormCubit>().submitWeight(
+                    weight: commentController.text, contentType: "WEIGHT");
               },
               label: Text(
                 '인증하기',
