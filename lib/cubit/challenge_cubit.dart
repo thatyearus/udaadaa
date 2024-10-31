@@ -219,6 +219,16 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           .count(CountOption.exact)
           .then((res) => res.count);
 
+      // 몸묵게 조회
+      final weightCount = await supabase
+          .from('weight')
+          .select('id')
+          .eq('user_id', userId)
+          .gte('created_at', dayStart.toIso8601String())
+          .lte('created_at', dayEnd.toIso8601String())
+          .count(CountOption.exact)
+          .then((res) => res.count);
+
       // 리액션 수 조회
       final reactionCount = await supabase
           .from('reactions')
@@ -229,7 +239,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           .count(CountOption.exact)
           .then((res) => res.count);
 
-      if (feedCount >= 2 && reactionCount >= 3) {
+      if (feedCount >= 2 && reactionCount >= 3 && weightCount >= 1) {
         consecutiveDays++;
       } else {
         break;
@@ -258,6 +268,17 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           .count(CountOption.exact)
           .then((res) => res.count);
       _selectedMissionComplete['feed'] = feedCount;
+
+      // 몸묵게 조회
+      final weightCount = await supabase
+          .from('weight')
+          .select('id')
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .gte('created_at', dayStart.toIso8601String())
+          .lte('created_at', dayEnd.toIso8601String())
+          .count(CountOption.exact)
+          .then((res) => res.count);
+      _selectedMissionComplete['weight'] = weightCount;
 
       // 리액션 수 조회
       final reactionCount = await supabase
