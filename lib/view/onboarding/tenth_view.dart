@@ -181,13 +181,18 @@ class _TenthViewState extends State<TenthView> {
             );
             context.read<ChallengeCubit>().enterChallenge();
             context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
-            PreferencesService().setBool('isOnboardingComplete', true);
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => const MainView(),
-              ),
-              (Route<dynamic> route) => false,
-            );
+
+            if (PreferencesService().getBool('isOnboardingComplete') ?? false) {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            } else {
+              PreferencesService().setBool('isOnboardingComplete', true);
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => const MainView(),
+                ),
+                (Route<dynamic> route) => false,
+              );
+            }
           },
           label: Text(
             '시작하기',
