@@ -97,8 +97,14 @@ class SelectButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
-              child: TextButton(
+              child: OutlinedButton(
                 onPressed: () => onSelect(0),
+                style: OutlinedButton.styleFrom(
+                  overlayColor: AppColors.neutral[500],
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
+                ),
                 child: Text(
                   '챌린지',
                   style: TextStyle(
@@ -113,8 +119,14 @@ class SelectButton extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: TextButton(
+              child: OutlinedButton(
                 onPressed: () => onSelect(1),
+                style: OutlinedButton.styleFrom(
+                  overlayColor: AppColors.neutral[500],
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
+                ),
                 child: Text(
                   '리포트',
                   style: TextStyle(
