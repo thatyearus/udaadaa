@@ -89,13 +89,13 @@ class ChallengeResultView extends StatelessWidget {
             RepaintBoundary(
               key: _repaintBoundaryKey,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
                 child: ResultCard(isSuccess: isSuccess),
               ),
             ),
             const Spacer(flex: 2),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
