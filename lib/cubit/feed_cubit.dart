@@ -391,7 +391,7 @@ class FeedCubit extends Cubit<FeedState> {
   }
 
   Future<void> updateMission() async {
-    await challengeCubit.getSelectedDayMission();
+    await challengeCubit.updateMission();
   }
 
   List<Feed> get getMyFeeds => _myFeeds;
