@@ -56,30 +56,21 @@ class ResultCard extends StatelessWidget {
             ),
           ),
           AppSpacing.verticalSizedBoxS,
-          const Text(
+          Text(
             '우다다',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary,
+            style: AppTextStyles.displayMedium(
+              const TextStyle(color: AppColors.primary),
             ),
           ),
           Text(
             isSuccess ? '챌린지 성공' : '챌린지 실패',
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppTextStyles.textTheme.displayMedium!,
           ),
           AppSpacing.sizedBoxL,
           Text(
             isSuccess ? successMessage : failMessage,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 20,
-              height: 1.5,
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppTextStyles.textTheme.titleMedium,
           ),
         ],
       ),
