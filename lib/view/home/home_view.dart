@@ -144,10 +144,24 @@ class SelectButton extends StatelessWidget {
             ),
           ],
         ),
-        Divider(
-          color: AppColors.neutral[300],
-          height: 5,
+        Row(
+          children: [
+            Expanded(
+              child: Divider(
+                color: AppColors.neutral[500],
+                thickness: selectedIndex == 0 ? AppSpacing.xxs : 0.0,
+                height: 0,
+              ),
+            ),
+            Expanded(
+                child: Divider(
+              color: AppColors.neutral[500],
+              thickness: selectedIndex == 0 ? 0.0 : AppSpacing.xxs,
+              height: 0,
+            )),
+          ],
         ),
+        Divider(color: AppColors.neutral[300], height: 0.0),
       ],
     );
   }
