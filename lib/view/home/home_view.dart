@@ -92,7 +92,7 @@ class SelectButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Divider(color: AppColors.neutral[300]),
+        //Divider(color: AppColors.neutral[300]),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
