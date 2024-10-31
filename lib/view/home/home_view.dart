@@ -104,6 +104,7 @@ class SelectButton extends StatelessWidget {
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.zero,
                   ),
+                  side: const BorderSide(style: BorderStyle.none),
                 ),
                 child: Text(
                   '챌린지',
@@ -126,6 +127,7 @@ class SelectButton extends StatelessWidget {
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.zero,
                   ),
+                  side: const BorderSide(style: BorderStyle.none),
                 ),
                 child: Text(
                   '리포트',
@@ -142,7 +144,10 @@ class SelectButton extends StatelessWidget {
             ),
           ],
         ),
-        Divider(color: AppColors.neutral[300]),
+        Divider(
+          color: AppColors.neutral[300],
+          height: 5,
+        ),
       ],
     );
   }
