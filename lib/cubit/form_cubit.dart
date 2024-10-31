@@ -213,6 +213,7 @@ class FormCubit extends Cubit<FormState> {
       );
       emit(FormSuccess());
       feedCubit.fetchMyFeeds();
+      feedCubit.updateMission();
     } catch (e) {
       Analytics().logEvent("업로드_제출실패", parameters: {"에러": e.toString()});
       logger.e(e);
