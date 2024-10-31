@@ -31,8 +31,8 @@ class ResultCard extends StatelessWidget {
 
     return Container(
       width: MediaQuery.of(context).size.width * 0.9,
-      padding: const EdgeInsets.all(20),
-      margin: const EdgeInsets.symmetric(vertical: 20),
+      padding: AppSpacing.edgeInsetsL,
+      margin: const EdgeInsets.symmetric(vertical: AppSpacing.l),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(30),
@@ -55,7 +55,7 @@ class ResultCard extends StatelessWidget {
               fontFamily: 'tossface',
             ),
           ),
-          const SizedBox(height: 12),
+          AppSpacing.verticalSizedBoxS,
           const Text(
             '우다다',
             style: TextStyle(
