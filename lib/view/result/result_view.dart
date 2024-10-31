@@ -101,13 +101,13 @@ class ChallengeResultView extends StatelessWidget {
                 children: [
                   _buildActionButton(
                     context,
-                    icon: Icons.save_alt,
+                    icon: Icons.save_alt_rounded,
                     label: '저장하기',
                     onPressed: () => _saveImage(context),
                   ),
                   _buildActionButton(
                     context,
-                    icon: Icons.share,
+                    icon: Icons.share_rounded,
                     label: '공유하기',
                     onPressed: () => _shareImage(),
                   ),
