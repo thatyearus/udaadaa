@@ -10,6 +10,7 @@ import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/home/challenge/challenger_view.dart';
 import 'package:udaadaa/view/home/challenge/non_challenger_view.dart';
 import 'package:udaadaa/view/home/report_view.dart';
+import 'package:udaadaa/view/result/result_view.dart';
 import 'package:udaadaa/widgets/last_record.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/widgets/report_summary.dart';
@@ -61,18 +62,29 @@ class HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          SelectButton(
-            selectedIndex: _selectedIndex,
-            onSelect: _onButtonTapped,
-          ),
-          Expanded(
-            child: _selectedIndex == 0
-                ? ChallengeHomeView(isChallenger: _isChallenger)
-                : ReportHomeView(pageController: _pageController),
-          ),
-        ],
+      body: BlocListener<ChallengeCubit, ChallengeState>(
+        listener: (context, state) {
+          if (state is ChallengeEnd) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ChallengeResultView(isSuccess: true),
+              ),
+            );
+          }
+        },
+        child: Column(
+          children: [
+            SelectButton(
+              selectedIndex: _selectedIndex,
+              onSelect: _onButtonTapped,
+            ),
+            Expanded(
+              child: _selectedIndex == 0
+                  ? ChallengeHomeView(isChallenger: _isChallenger)
+                  : ReportHomeView(pageController: _pageController),
+            ),
+          ],
+        ),
       ),
     );
   }
