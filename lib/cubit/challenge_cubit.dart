@@ -40,6 +40,8 @@ class ChallengeCubit extends Cubit<ChallengeState> {
         emit(ChallengeInitial());
       }
     });
+
+    selectDay(DateTime.now());
   }
 
   @override
