@@ -35,7 +35,9 @@ class MissionCard extends StatelessWidget {
         children: [
           Icon(
             Icons.check_circle_outline,
-            color: AppColors.neutral[300],
+            color: (completionRate >= 1.0
+                ? AppColors.primary
+                : AppColors.neutral[300]),
           ),
           AppSpacing.horizontalSizedBoxS,
           Expanded(
