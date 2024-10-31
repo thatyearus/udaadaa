@@ -32,21 +32,25 @@ class ChallengeResultView extends StatelessWidget {
           name: "challenge_result.png",
         );
 
-        if (result['isSuccess']) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('이미지가 저장되었습니다!')),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('이미지 저장에 실패했습니다.')),
-          );
+        if (context.mounted) {
+          if (result['isSuccess']) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('이미지가 저장되었습니다!')),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('이미지 저장에 실패했습니다.')),
+            );
+          }
         }
       }
     } catch (e) {
       logger.e(e);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('이미지 저장에 실패했습니다.')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('이미지 저장에 실패했습니다.')),
+        );
+      }
     }
   }
 
