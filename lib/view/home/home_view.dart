@@ -110,7 +110,7 @@ class SelectButton extends StatelessWidget {
                   '챌린지',
                   style: TextStyle(
                     color: selectedIndex == 0
-                        ? AppColors.primary
+                        ? AppColors.neutral[700]
                         : AppColors.neutral[500],
                     fontWeight: selectedIndex == 0
                         ? FontWeight.bold
@@ -133,7 +133,7 @@ class SelectButton extends StatelessWidget {
                   '리포트',
                   style: TextStyle(
                     color: selectedIndex == 1
-                        ? AppColors.primary
+                        ? AppColors.neutral[700]
                         : AppColors.neutral[500],
                     fontWeight: selectedIndex == 1
                         ? FontWeight.bold
