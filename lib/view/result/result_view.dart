@@ -19,10 +19,12 @@ class ChallengeResultView extends StatelessWidget {
 
   Future<void> _saveImage(BuildContext context) async {
     try {
-      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
 
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
 
       if (byteData != null) {
         final result = await ImageGallerySaver.saveImage(
@@ -31,7 +33,7 @@ class ChallengeResultView extends StatelessWidget {
           name: "challenge_result.png",
         );
 
-        if(result['isSuccess']){
+        if (result['isSuccess']) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('이미지가 저장되었습니다!')),
           );
@@ -40,23 +42,23 @@ class ChallengeResultView extends StatelessWidget {
             const SnackBar(content: Text('이미지 저장에 실패했습니다.')),
           );
         }
-
       }
     } catch (e) {
-      print(e);
+      logger.e(e);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('이미지 저장에 실패했습니다.')),
       );
     }
   }
 
-
   Future<void> _shareImage() async {
     try {
-      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
 
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
       final Uint8List pngBytes = byteData!.buffer.asUint8List();
 
       // 임시 디렉토리에 이미지 파일 저장
@@ -117,7 +119,9 @@ class ChallengeResultView extends StatelessWidget {
   }
 
   Widget _buildActionButton(BuildContext context,
-      {required IconData icon, required String label, required VoidCallback onPressed}) {
+      {required IconData icon,
+      required String label,
+      required VoidCallback onPressed}) {
     return ElevatedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon),

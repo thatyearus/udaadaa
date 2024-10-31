@@ -103,7 +103,6 @@ class FormCubit extends Cubit<FormState> {
         return null;
       }
       final userId = supabase.auth.currentUser?.id;
-      print(userId);
       final imagePath =
           '$userId/$type/${DateTime.now().microsecondsSinceEpoch}.jpg';
       await supabase.storage
