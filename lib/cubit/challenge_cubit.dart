@@ -113,6 +113,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
             DateTime.now().day,
           ),
         );
+        getTodayMission();
         return true;
       }
     } catch (e) {
