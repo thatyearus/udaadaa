@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
+import 'package:udaadaa/service/notifications/notification_service.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
@@ -49,6 +51,13 @@ class _TenthViewState extends State<TenthView> {
         });
       }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    NotificationService.initNotification();
+    context.read<AuthCubit>().setFCMToken();
   }
 
   @override
@@ -170,8 +179,9 @@ class _TenthViewState extends State<TenthView> {
               "온보딩_완료",
               parameters: {"버튼": "클릭"},
             );
-            //TODO: push 시간 설정 코드 넣기
             context.read<ChallengeCubit>().enterChallenge();
+            context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
+            PreferencesService().setBool('isOnboardingComplete', true);
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const MainView(),
