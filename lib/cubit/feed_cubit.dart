@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -33,10 +34,8 @@ class FeedCubit extends Cubit<FeedState> {
   FeedCategory _currentCategory = FeedCategory.all;
 
   FeedCubit(this.authCubit, this.challengeCubit) : super(FeedInitial()) {
-
     if (authCubit.state is Authenticated) {
       Future.wait([fetchBlockedFeed(), fetchReactionFeed()]).then((_) {
-        fetchHomeFeeds();
         _getFeeds();
       });
       fetchMyFeeds();
@@ -45,7 +44,6 @@ class FeedCubit extends Cubit<FeedState> {
     authSubscription = authCubit.stream.listen((authState) {
       if (authState is Authenticated) {
         Future.wait([fetchBlockedFeed(), fetchReactionFeed()]).then((_) {
-          fetchHomeFeeds();
           _getFeeds();
         });
         fetchMyFeeds();
@@ -74,10 +72,10 @@ class FeedCubit extends Cubit<FeedState> {
     return super.close();
   }
 
-  void changeCategory(FeedCategory category){
-    if( _currentCategory != category){
+  void changeCategory(FeedCategory category) {
+    if (_currentCategory != category) {
       _currentCategory = category;
-      if(_currentCategory == FeedCategory.all) {
+      if (_currentCategory == FeedCategory.all) {
         _getFeeds();
       } else {
         _getChallengeFeeds();
@@ -216,7 +214,6 @@ class FeedCubit extends Cubit<FeedState> {
             .limit(_limit);
       }
 
-      logger.d(data);
       final imagePaths =
           data.map((item) => item['image_path'] as String).toList();
       final signedUrls = await supabase.storage
@@ -293,7 +290,8 @@ class FeedCubit extends Cubit<FeedState> {
     }
     logger.d("Current page: $_curFeedPage");
     Analytics().logEvent("피드_피드탐색", parameters: {
-      "현재피드": _curFeedPage, "카테고리" : _currentCategory.toString(),
+      "현재피드": _curFeedPage,
+      "카테고리": _currentCategory.toString(),
     });
   }
 
@@ -371,9 +369,9 @@ class FeedCubit extends Cubit<FeedState> {
   }
 
   Future<void> getMoreFeeds() async {
-    if (_currentCategory == FeedCategory.all){
+    if (_currentCategory == FeedCategory.all) {
       await _getFeeds(loadMore: true);
-    }else{
+    } else {
       await _getChallengeFeeds(loadMore: true);
     }
   }
