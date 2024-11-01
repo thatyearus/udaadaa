@@ -55,7 +55,7 @@ class Feed {
         review = map['review'] as String,
         type = FeedType.values.firstWhere((e) => e.name == map['type']),
         imagePath = map['image_path'] as String,
-        imageUrl = map['image_url'] as String,
+        imageUrl = map['image_url'] as String?,
         profile = Profile.fromMap(map: map['profiles']),
         reaction = map['reactions'] != null
             ? (map['reactions'] as List)

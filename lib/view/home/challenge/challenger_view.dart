@@ -16,6 +16,7 @@ class ChallengerView extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Column(
       children: [
+        AppSpacing.verticalSizedBoxL,
         Calendar(),
         //DayBanner(),
         StreakCard(),
@@ -40,6 +41,7 @@ class Calendar extends StatelessWidget {
       focusedDay: focusedDate,
       firstDay: DateTime(1800),
       lastDay: DateTime(2050),
+      headerVisible: false,
       headerStyle: HeaderStyle(
         formatButtonVisible: false,
         titleCentered: true,

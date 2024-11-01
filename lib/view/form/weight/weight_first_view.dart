@@ -25,7 +25,7 @@ class WeightFirstView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("오늘의 몸무게 사진을\n올려볼까요?",
+              Text("오늘의 몸무게 사진을\n인증해 볼까요?",
                   style: AppTextStyles.textTheme.displayMedium),
               AppSpacing.verticalSizedBoxL,
               SizedBox(

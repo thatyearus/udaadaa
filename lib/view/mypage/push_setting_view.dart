@@ -230,8 +230,47 @@ class _PushSettingViewState extends State<PushSettingView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('미션 알림',
-                                style: AppTextStyles.textTheme.titleSmall),
+                            Row(
+                              children: [
+                                Text('미션 알림',
+                                    style: AppTextStyles.textTheme.titleSmall),
+                                AppSpacing.horizontalSizedBoxS,
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.primary,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(AppSpacing.s),
+                                    ),
+                                  ),
+                                  padding: AppSpacing.edgeInsetsXxs,
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        //backgroundColor: AppColors.white,
+                                        radius: 12,
+                                        child: Text(
+                                          "🏆",
+                                          style: AppTextStyles.bodyMedium(
+                                            const TextStyle(
+                                              fontFamily: 'tossface',
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      //AppSpacing.horizontalSizedBoxXxs,
+                                      Text(
+                                        "챌린지",
+                                        style: AppTextStyles.bodySmall(
+                                          const TextStyle(
+                                              color: AppColors.white),
+                                        ),
+                                      ),
+                                      AppSpacing.horizontalSizedBoxXxs,
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                             AppSpacing.verticalSizedBoxXxs,
                             Text("오늘의 미션 인증을 까먹지 않게 알려드려요.",
                                 style: AppTextStyles.textTheme.labelMedium),

@@ -67,6 +67,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           startDay: today,
           endDay: today.add(const Duration(days: 6)),
           userId: supabase.auth.currentUser!.id,
+          isSuccess: false,
         );
         final challengeMap = challenge.toMap();
         _challenge = challenge;
@@ -113,6 +114,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
             DateTime.now().day,
           ),
         );
+        getTodayMission();
         return true;
       }
     } catch (e) {
@@ -378,6 +380,22 @@ class ChallengeCubit extends Cubit<ChallengeState> {
         _selectedMissionComplete['weight'] = _todayMissionComplete['weight']!;
       }
       emit(ChallengeSuccess());
+      if (_challenge != null && _challenge!.isSuccess == false) {
+        if (_consecutiveDays < 6) return;
+        final endDay = _challenge!.endDay;
+        if (now.year == endDay.year &&
+            now.month == endDay.month &&
+            now.day == endDay.day) {
+          if (_todayChallengeComplete) {
+            _challenge = _challenge!.copyWith(isSuccess: true);
+            await supabase
+                .from('challenge')
+                .update(_challenge!.toMap())
+                .eq('id', _challenge!.id!);
+            emit(ChallengeEnd());
+          }
+        }
+      }
     } catch (e) {
       logger.e(e);
     }

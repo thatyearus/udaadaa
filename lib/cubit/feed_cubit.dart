@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:meta/meta.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
+import 'package:udaadaa/models/challenge.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/models/report.dart';
@@ -27,11 +29,13 @@ class FeedCubit extends Cubit<FeedState> {
   int _curFeedPage = 0;
   int _myFeedPage = 0;
   List<int> _curHomeFeedPage = [0, 0, 0];
+  List<Feed> allFeeds = [];
+
+  FeedCategory _currentCategory = FeedCategory.all;
 
   FeedCubit(this.authCubit, this.challengeCubit) : super(FeedInitial()) {
     if (authCubit.state is Authenticated) {
       Future.wait([fetchBlockedFeed(), fetchReactionFeed()]).then((_) {
-        fetchHomeFeeds();
         _getFeeds();
       });
       fetchMyFeeds();
@@ -40,7 +44,6 @@ class FeedCubit extends Cubit<FeedState> {
     authSubscription = authCubit.stream.listen((authState) {
       if (authState is Authenticated) {
         Future.wait([fetchBlockedFeed(), fetchReactionFeed()]).then((_) {
-          fetchHomeFeeds();
           _getFeeds();
         });
         fetchMyFeeds();
@@ -67,6 +70,17 @@ class FeedCubit extends Cubit<FeedState> {
   Future<void> close() {
     authSubscription.cancel();
     return super.close();
+  }
+
+  void changeCategory(FeedCategory category) {
+    if (_currentCategory != category) {
+      _currentCategory = category;
+      if (_currentCategory == FeedCategory.all) {
+        _getFeeds();
+      } else {
+        _getChallengeFeeds();
+      }
+    }
   }
 
   void openFeedDetail(RemoteMessage? message) {
@@ -200,7 +214,6 @@ class FeedCubit extends Cubit<FeedState> {
             .limit(_limit);
       }
 
-      logger.d(data);
       final imagePaths =
           data.map((item) => item['image_path'] as String).toList();
       final signedUrls = await supabase.storage
@@ -226,6 +239,50 @@ class FeedCubit extends Cubit<FeedState> {
     }
   }
 
+  Future<void> _getChallengeFeeds({bool loadMore = false}) async {
+    if (_currentCategory != FeedCategory.challenge) return;
+
+    try {
+      if (!loadMore) {
+        final challengeData = await supabase.from('challenge').select('*');
+
+        for (final challengeMap in challengeData) {
+          Challenge challenge = Challenge.fromMap(map: challengeMap);
+          final feedData = await supabase
+              .from('feed')
+              .select('*, profiles(*)')
+              .gte('created_at', challenge.startDay.toIso8601String())
+              .lte('created_at', challenge.endDay.toIso8601String())
+              .not('id', 'in', _blockedFeedIds.toList())
+              .not('id', 'in', _reactionFeedIds.toList())
+              .eq('user_id', challenge.userId);
+          for (var i = 0; i < feedData.length; i++) {
+            allFeeds.add(Feed.fromMap(map: feedData[i]));
+          }
+        }
+        allFeeds.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+      }
+      if (!loadMore) _feeds = [];
+      final newFeeds = allFeeds.sublist(
+        _feeds.length,
+        min(_feeds.length + _limit, allFeeds.length),
+      );
+      final imagePaths = newFeeds.map((item) => item.imagePath).toList();
+      final signedUrls = await supabase.storage
+          .from('FeedImages')
+          .createSignedUrls(imagePaths, 3600);
+      for (var i = 0; i < newFeeds.length; i++) {
+        newFeeds[i] = newFeeds[i].copyWith(imageUrl: signedUrls[i].signedUrl);
+      }
+
+      _feeds = loadMore ? [..._feeds, ...newFeeds] : newFeeds;
+      emit(FeedLoaded());
+    } catch (e) {
+      logger.e(e);
+      emit(FeedError());
+    }
+  }
+
   void changePage(int page) {
     _curFeedPage = page;
     if (page == _feeds.length - 1) {
@@ -234,6 +291,7 @@ class FeedCubit extends Cubit<FeedState> {
     logger.d("Current page: $_curFeedPage");
     Analytics().logEvent("피드_피드탐색", parameters: {
       "현재피드": _curFeedPage,
+      "카테고리": _currentCategory.toString(),
     });
   }
 
@@ -311,7 +369,11 @@ class FeedCubit extends Cubit<FeedState> {
   }
 
   Future<void> getMoreFeeds() async {
-    await _getFeeds(loadMore: true);
+    if (_currentCategory == FeedCategory.all) {
+      await _getFeeds(loadMore: true);
+    } else {
+      await _getChallengeFeeds(loadMore: true);
+    }
   }
 
   Future<void> blockFeed(String feedId) async {

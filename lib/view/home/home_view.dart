@@ -10,6 +10,7 @@ import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/home/challenge/challenger_view.dart';
 import 'package:udaadaa/view/home/challenge/non_challenger_view.dart';
 import 'package:udaadaa/view/home/report_view.dart';
+import 'package:udaadaa/view/result/result_view.dart';
 import 'package:udaadaa/widgets/last_record.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/widgets/report_summary.dart';
@@ -32,6 +33,11 @@ class HomeViewState extends State<HomeView> {
     setState(() {
       _selectedIndex = index;
     });
+    _sectionController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -60,19 +66,41 @@ class HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    _isChallenger = context
+        .select<ChallengeCubit, bool>((cubit) => cubit.challenge != null);
     return Scaffold(
-      body: Column(
-        children: [
-          SelectButton(
-            selectedIndex: _selectedIndex,
-            onSelect: _onButtonTapped,
-          ),
-          Expanded(
-            child: _selectedIndex == 0
-                ? ChallengeHomeView(isChallenger: _isChallenger)
-                : ReportHomeView(pageController: _pageController),
-          ),
-        ],
+      body: BlocListener<ChallengeCubit, ChallengeState>(
+        listener: (context, state) {
+          if (state is ChallengeEnd) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ChallengeResultView(isSuccess: true),
+              ),
+            );
+          }
+        },
+        child: Column(
+          children: [
+            SelectButton(
+              selectedIndex: _selectedIndex,
+              onSelect: _onButtonTapped,
+            ),
+            Expanded(
+              child: PageView(
+                controller: _sectionController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                },
+                children: [
+                  ChallengeHomeView(isChallenger: _isChallenger),
+                  ReportHomeView(pageController: _pageController),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -92,39 +120,76 @@ class SelectButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Divider(color: AppColors.neutral[300]),
+        //Divider(color: AppColors.neutral[300]),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            TextButton(
-              onPressed: () => onSelect(0),
-              child: Text(
-                '챌린지',
-                style: TextStyle(
-                  color: selectedIndex == 0
-                      ? AppColors.primary
-                      : AppColors.neutral[500],
-                  fontWeight:
-                      selectedIndex == 0 ? FontWeight.bold : FontWeight.normal,
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () => onSelect(0),
+                style: OutlinedButton.styleFrom(
+                  overlayColor: AppColors.neutral[500],
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  side: const BorderSide(style: BorderStyle.none),
+                ),
+                child: Text(
+                  '챌린지',
+                  style: TextStyle(
+                    color: selectedIndex == 0
+                        ? AppColors.neutral[700]
+                        : AppColors.neutral[500],
+                    fontWeight: selectedIndex == 0
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () => onSelect(1),
-              child: Text(
-                '리포트',
-                style: TextStyle(
-                  color: selectedIndex == 1
-                      ? AppColors.primary
-                      : AppColors.neutral[500],
-                  fontWeight:
-                      selectedIndex == 1 ? FontWeight.bold : FontWeight.normal,
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () => onSelect(1),
+                style: OutlinedButton.styleFrom(
+                  overlayColor: AppColors.neutral[500],
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  side: const BorderSide(style: BorderStyle.none),
+                ),
+                child: Text(
+                  '리포트',
+                  style: TextStyle(
+                    color: selectedIndex == 1
+                        ? AppColors.neutral[700]
+                        : AppColors.neutral[500],
+                    fontWeight: selectedIndex == 1
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
                 ),
               ),
             ),
           ],
         ),
-        Divider(color: AppColors.neutral[300]),
+        Row(
+          children: [
+            Expanded(
+              child: Divider(
+                color: AppColors.neutral[500],
+                thickness: selectedIndex == 0 ? AppSpacing.xxs : 0.0,
+                height: 0,
+              ),
+            ),
+            Expanded(
+                child: Divider(
+              color: AppColors.neutral[500],
+              thickness: selectedIndex == 0 ? 0.0 : AppSpacing.xxs,
+              height: 0,
+            )),
+          ],
+        ),
+        Divider(color: AppColors.neutral[300], height: 0.0),
       ],
     );
   }
