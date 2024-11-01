@@ -97,11 +97,16 @@ class EighthView extends StatelessWidget {
                 parameters: {"다음에_할래요": "클릭"},
               );
               NotificationService.initNotification();
-              context.read<AuthCubit>().setFCMToken();
-              PreferencesService().setBool('isOnboardingComplete', true);
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const MainView()),
-              );
+              if (PreferencesService().getBool('isOnboardingComplete') ??
+                  false) {
+                Navigator.of(context).pop();
+              } else {
+                context.read<AuthCubit>().setFCMToken();
+                PreferencesService().setBool('isOnboardingComplete', true);
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const MainView()),
+                );
+              }
             },
             child: Text(
               '다음에 할래요',

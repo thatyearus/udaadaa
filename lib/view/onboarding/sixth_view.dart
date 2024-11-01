@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/eighth_view.dart';
-import 'package:udaadaa/view/onboarding/seventh_view.dart';
 import 'package:udaadaa/widgets/video_player_screen.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 
@@ -44,7 +43,7 @@ class SixthView extends StatelessWidget {
               "다음",
               parameters: {"버튼": "클릭"},
             );
-            Navigator.of(context).push(
+            Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const EighthView()),
             );
           },

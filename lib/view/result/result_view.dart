@@ -8,7 +8,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/utils/theme/colors.dart';
 import 'package:udaadaa/widgets/result_card.dart';
 
 class ChallengeResultView extends StatelessWidget {
@@ -19,10 +18,12 @@ class ChallengeResultView extends StatelessWidget {
 
   Future<void> _saveImage(BuildContext context) async {
     try {
-      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
 
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
 
       if (byteData != null) {
         final result = await ImageGallerySaver.saveImage(
@@ -31,32 +32,36 @@ class ChallengeResultView extends StatelessWidget {
           name: "challenge_result.png",
         );
 
-        if(result['isSuccess']){
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('이미지가 저장되었습니다!')),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('이미지 저장에 실패했습니다.')),
-          );
+        if (context.mounted) {
+          if (result['isSuccess']) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('이미지가 저장되었습니다!')),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('이미지 저장에 실패했습니다.')),
+            );
+          }
         }
-
       }
     } catch (e) {
-      print(e);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('이미지 저장에 실패했습니다.')),
-      );
+      logger.e(e);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('이미지 저장에 실패했습니다.')),
+        );
+      }
     }
   }
 
-
   Future<void> _shareImage() async {
     try {
-      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
 
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
       final Uint8List pngBytes = byteData!.buffer.asUint8List();
 
       // 임시 디렉토리에 이미지 파일 저장
@@ -84,25 +89,25 @@ class ChallengeResultView extends StatelessWidget {
             RepaintBoundary(
               key: _repaintBoundaryKey,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
                 child: ResultCard(isSuccess: isSuccess),
               ),
             ),
             const Spacer(flex: 2),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildActionButton(
                     context,
-                    icon: Icons.save_alt,
+                    icon: Icons.save_alt_rounded,
                     label: '저장하기',
                     onPressed: () => _saveImage(context),
                   ),
                   _buildActionButton(
                     context,
-                    icon: Icons.share,
+                    icon: Icons.share_rounded,
                     label: '공유하기',
                     onPressed: () => _shareImage(),
                   ),
@@ -117,7 +122,9 @@ class ChallengeResultView extends StatelessWidget {
   }
 
   Widget _buildActionButton(BuildContext context,
-      {required IconData icon, required String label, required VoidCallback onPressed}) {
+      {required IconData icon,
+      required String label,
+      required VoidCallback onPressed}) {
     return ElevatedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon),
@@ -128,7 +135,7 @@ class ChallengeResultView extends StatelessWidget {
           borderRadius: BorderRadius.circular(30),
           side: const BorderSide(color: AppColors.primary),
         ),
-        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        textStyle: AppTextStyles.textTheme.headlineSmall,
         foregroundColor: AppColors.primary, // 기본 텍스트 색상
         backgroundColor: Colors.white, // 기본 배경색
       ).copyWith(

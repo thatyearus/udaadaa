@@ -9,12 +9,14 @@ class DayMiniReport extends StatelessWidget {
   final String title;
   final String content;
   final String unit;
+  final bool challenger;
 
   const DayMiniReport({
     super.key,
     required this.title,
     required this.content,
     required this.unit,
+    this.challenger = false,
   });
 
   @override
@@ -23,7 +25,47 @@ class DayMiniReport extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: AppTextStyles.textTheme.headlineMedium),
+          Row(
+            children: [
+              Text(title, style: AppTextStyles.textTheme.headlineMedium),
+              AppSpacing.horizontalSizedBoxS,
+              (challenger
+                  ? Container(
+                      decoration: const BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(AppSpacing.s),
+                        ),
+                      ),
+                      padding: AppSpacing.edgeInsetsXxs,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            //backgroundColor: AppColors.white,
+                            radius: 12,
+                            child: Text(
+                              "🏆",
+                              style: AppTextStyles.bodyMedium(
+                                const TextStyle(
+                                  fontFamily: 'tossface',
+                                ),
+                              ),
+                            ),
+                          ),
+                          //AppSpacing.horizontalSizedBoxXxs,
+                          Text(
+                            "챌린지",
+                            style: AppTextStyles.bodySmall(
+                              const TextStyle(color: AppColors.white),
+                            ),
+                          ),
+                          AppSpacing.horizontalSizedBoxXxs,
+                        ],
+                      ),
+                    )
+                  : Container()),
+            ],
+          ),
           AppSpacing.verticalSizedBoxXxs,
           Text("$content $unit", style: AppTextStyles.textTheme.bodyLarge),
         ],
@@ -52,6 +94,13 @@ class DailyReport extends StatelessWidget {
               title: "총칼로리",
               content: '$totalCalorie',
               unit: "kcal",
+            ),
+            AppSpacing.horizontalSizedBoxXs,
+            DayMiniReport(
+              title: "체중",
+              content: '${report?.weight ?? 0}',
+              unit: 'kg',
+              challenger: true,
             ),
           ],
         ),

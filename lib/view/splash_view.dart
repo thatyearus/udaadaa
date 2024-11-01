@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:udaadaa/view/result/result_view.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/view/onboarding/initial_view.dart';

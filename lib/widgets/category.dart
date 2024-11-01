@@ -57,7 +57,6 @@ class _CategoryButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const _CategoryButton({
-    super.key,
     required this.emoji,
     required this.text,
     required this.isSelected,
@@ -68,16 +67,15 @@ class _CategoryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected
-            ? Theme.of(context).primaryColor
-            : Colors.grey.withOpacity(0.8),
-        foregroundColor: isSelected ? Colors.white : Colors.black,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 0),
-        elevation: 0
-      ),
+          backgroundColor: isSelected
+              ? Theme.of(context).primaryColor
+              : Colors.grey.withOpacity(0.8),
+          foregroundColor: isSelected ? Colors.white : Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 0),
+          elevation: 0),
       onPressed: onPressed,
       child: Text.rich(
         TextSpan(
