@@ -43,7 +43,7 @@ class SixthView extends StatelessWidget {
               "다음",
               parameters: {"버튼": "클릭"},
             );
-            Navigator.of(context).push(
+            Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const EighthView()),
             );
           },
