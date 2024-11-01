@@ -16,6 +16,23 @@ class WeightSecondView extends StatefulWidget {
 
 class _WeightSecondViewState extends State<WeightSecondView> {
   final TextEditingController commentController = TextEditingController();
+  bool isCommentEmpty = true;
+
+  @override
+  void initState() {
+    super.initState();
+    commentController.addListener(() {
+      setState(() {
+        isCommentEmpty = commentController.text.isEmpty;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    commentController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,12 +86,11 @@ class _WeightSecondViewState extends State<WeightSecondView> {
           builder: (context, state) {
             return FloatingActionButton.extended(
               heroTag: 'weight2',
-              backgroundColor:
-                  (state is form.FormLoading || commentController.text == "")
-                      ? AppColors.neutral[300]
-                      : AppColors.primary,
+              backgroundColor: (state is form.FormLoading || isCommentEmpty)
+                  ? AppColors.neutral[300]
+                  : AppColors.primary,
               onPressed: () {
-                if (state is form.FormLoading || commentController.text == "") {
+                if (state is form.FormLoading || isCommentEmpty) {
                   return;
                 }
                 Analytics().logEvent(
