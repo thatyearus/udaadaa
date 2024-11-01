@@ -79,7 +79,7 @@ class ThirdView extends StatelessWidget {
       controller: foodContentController,
       decoration: InputDecoration(
         labelText: '음식 내용',
-        hintText: '그릭요거트(110kcal), 복숭아 1개',
+        hintText: '그릭요거트(110kcal), 복숭아 1개 -입력 하지 않아도 괜찮아요',
         hintStyle:
             AppTextStyles.bodyMedium(TextStyle(color: AppColors.neutral[500])),
         enabledBorder: UnderlineInputBorder(

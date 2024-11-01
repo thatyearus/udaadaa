@@ -12,3 +12,5 @@ final class ChallengeError extends ChallengeState {
 
   ChallengeError(this.error);
 }
+
+final class ChallengeEnd extends ChallengeState {}

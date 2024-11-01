@@ -98,7 +98,7 @@ class MainView extends StatelessWidget {
                     builder: (context) => const FirstView(),
                   ),
                 );
-                context.read<BottomNavCubit>().selectTab(BottomNavState.feed);
+                context.read<BottomNavCubit>().selectTab(BottomNavState.home);
               },
               label: Text(
                 '응원 받으러 가기',
