@@ -33,6 +33,11 @@ class HomeViewState extends State<HomeView> {
     setState(() {
       _selectedIndex = index;
     });
+    _sectionController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -81,9 +86,18 @@ class HomeViewState extends State<HomeView> {
               onSelect: _onButtonTapped,
             ),
             Expanded(
-              child: _selectedIndex == 0
-                  ? ChallengeHomeView(isChallenger: _isChallenger)
-                  : ReportHomeView(pageController: _pageController),
+              child: PageView(
+                controller: _sectionController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                },
+                children: [
+                  ChallengeHomeView(isChallenger: _isChallenger),
+                  ReportHomeView(pageController: _pageController),
+                ],
+              ),
             ),
           ],
         ),
