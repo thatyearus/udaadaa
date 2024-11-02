@@ -254,13 +254,16 @@ class FeedCubit extends Cubit<FeedState> {
               .gte('created_at', challenge.startDay.toIso8601String())
               .lte('created_at', challenge.endDay.toIso8601String())
               .not('id', 'in', _blockedFeedIds.toList())
-              .not('id', 'in', _reactionFeedIds.toList())
               .eq('user_id', challenge.userId);
           for (var i = 0; i < feedData.length; i++) {
             allFeeds.add(Feed.fromMap(map: feedData[i]));
           }
         }
         allFeeds.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+      }
+      if (allFeeds.isEmpty) {
+        _currentCategory = FeedCategory.all;
+        return;
       }
       if (!loadMore) _feeds = [];
       final newFeeds = allFeeds.sublist(
