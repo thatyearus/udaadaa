@@ -66,7 +66,10 @@ class FeedPageViewState extends State<FeedPageView> {
           },
         ),
         // 상단 왼쪽에 카테고리 버튼
-        CategoryButtonsContainer(onCategorySelected: _onCategorySelected),
+        CategoryButtonsContainer(
+            onCategorySelected: _onCategorySelected,
+            feedCubit: context.read<FeedCubit>(),
+        ),
       ],
     );
   }

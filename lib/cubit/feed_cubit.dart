@@ -79,8 +79,17 @@ class FeedCubit extends Cubit<FeedState> {
         _getFeeds();
       } else {
         _getChallengeFeeds();
+
       }
     }
+  }
+
+  bool hasChallengeFeeds() {
+    _getChallengeFeeds();
+      if(_feeds.isEmpty){
+        return false;
+      }
+      return true;
   }
 
   void openFeedDetail(RemoteMessage? message) {
@@ -305,6 +314,7 @@ class FeedCubit extends Cubit<FeedState> {
       "현재피드": _curFeedPage, "카테고리" : _currentCategory.toString(),
     });
   }
+
 
   void changeHomeFeedPage(int index, int page) {
     _curHomeFeedPage[index] = page;

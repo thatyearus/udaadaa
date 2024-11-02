@@ -3,8 +3,12 @@ import 'package:udaadaa/cubit/feed_cubit.dart';
 
 class CategoryButtonsContainer extends StatefulWidget {
   final ValueChanged<FeedCategory> onCategorySelected;
+  final FeedCubit feedCubit;
 
-  const CategoryButtonsContainer({super.key, required this.onCategorySelected});
+  const CategoryButtonsContainer({super.key,
+    required this.onCategorySelected,
+    required this.feedCubit,
+  });
 
   @override
   State<CategoryButtonsContainer> createState() =>
@@ -23,6 +27,7 @@ class _CategoryButtonsContainerState extends State<CategoryButtonsContainer> {
 
   @override
   Widget build(BuildContext context) {
+    bool hasChallengeFeeds = widget.feedCubit.hasChallengeFeeds();
     return Align(
       alignment: Alignment.topLeft, // 카테고리 위치를 조정하고 싶다면 이 부분 수정
       child: Padding(
@@ -41,7 +46,9 @@ class _CategoryButtonsContainerState extends State<CategoryButtonsContainer> {
               emoji: "🏆️",
               text: "챌린지",
               isSelected: _selectedCategory == FeedCategory.challenge,
-              onPressed: () => _selectCategory(FeedCategory.challenge),
+              onPressed: hasChallengeFeeds
+                  ? () => _selectCategory(FeedCategory.challenge)
+                  : () {},
             ),
           ],
         ),
