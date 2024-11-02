@@ -84,14 +84,6 @@ class FeedCubit extends Cubit<FeedState> {
     }
   }
 
-  bool hasChallengeFeeds() {
-    _getChallengeFeeds();
-      if(_feeds.isEmpty){
-        return false;
-      }
-      return true;
-  }
-
   void openFeedDetail(RemoteMessage? message) {
     if (message != null) {
       final feedId = message.data['feedId'];
@@ -263,7 +255,7 @@ class FeedCubit extends Cubit<FeedState> {
 
       final List<Feed> newFeeds = [];
 
-      if (!loadMore && data.isEmpty) {
+      if (data.isEmpty) {
 
         final defaultData = await supabase
             .from('feed')
