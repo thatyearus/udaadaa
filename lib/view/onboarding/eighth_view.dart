@@ -75,7 +75,6 @@ class EighthView extends StatelessWidget {
                   "온보딩_챌린지참여",
                   parameters: {"버튼": "클릭"},
                 );
-                PreferencesService().setBool('isOnboardingComplete', true);
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const NinthView()),
                 );
