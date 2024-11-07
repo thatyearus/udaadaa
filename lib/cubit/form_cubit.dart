@@ -154,6 +154,9 @@ class FormCubit extends Cubit<FormState> {
       Calorie? calorie,
       required String contentType}) async {
     try {
+      if (state is FormLoading) {
+        return;
+      }
       emit(FormLoading());
       String? imagePath = await uploadImage(contentType);
       if (imagePath == null) {
@@ -193,6 +196,9 @@ class FormCubit extends Cubit<FormState> {
   Future<void> submitWeight(
       {required String weight, required String contentType}) async {
     try {
+      if (state is FormLoading) {
+        return;
+      }
       emit(FormLoading());
       String? imagePath = await uploadImage(contentType);
       if (imagePath == null) {
