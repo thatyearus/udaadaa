@@ -94,7 +94,14 @@ class EighthView extends StatelessWidget {
             onTap: () {
               Analytics().logEvent(
                 "온보딩_챌린지_미참여",
-                parameters: {"다음에_할래요": "클릭"},
+                parameters: {
+                  "다음에_할래요": "클릭",
+                  "온보딩_완료_여부":
+                      PreferencesService().getBool('isOnboardingComplete') ==
+                              null
+                          ? "false"
+                          : "true",
+                },
               );
               NotificationService.initNotification();
               if (PreferencesService().getBool('isOnboardingComplete') ??
@@ -103,6 +110,7 @@ class EighthView extends StatelessWidget {
               } else {
                 context.read<AuthCubit>().setFCMToken();
                 PreferencesService().setBool('isOnboardingComplete', true);
+                Analytics().logEvent('온보딩_완료', parameters: {'다음에_할래요': '클릭'});
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const MainView()),
                 );

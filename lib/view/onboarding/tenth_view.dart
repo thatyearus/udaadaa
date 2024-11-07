@@ -176,8 +176,14 @@ class _TenthViewState extends State<TenthView> {
           heroTag: 'onboarding9',
           onPressed: () {
             Analytics().logEvent(
-              "온보딩_완료",
-              parameters: {"버튼": "클릭"},
+              "온보딩_챌린지_참여",
+              parameters: {
+                "버튼": "클릭",
+                "온보딩_완료_여부":
+                    PreferencesService().getBool('isOnboardingComplete') == null
+                        ? "false"
+                        : "true",
+              },
             );
             context.read<ChallengeCubit>().enterChallenge();
             context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
@@ -186,6 +192,7 @@ class _TenthViewState extends State<TenthView> {
               Navigator.of(context).popUntil((route) => route.isFirst);
             } else {
               PreferencesService().setBool('isOnboardingComplete', true);
+              Analytics().logEvent('온보딩_완료', parameters: {'참여하기': '클릭'});
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
                   builder: (context) => const MainView(),
