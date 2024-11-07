@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/onboarding/eighth_view.dart';
 import 'package:udaadaa/widgets/video_player_screen.dart';
@@ -43,6 +44,7 @@ class SixthView extends StatelessWidget {
               "다음",
               parameters: {"버튼": "클릭"},
             );
+            PreferencesService().setBool('isMealCompleted', true);
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const EighthView()),
             );
