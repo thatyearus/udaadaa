@@ -80,22 +80,28 @@ class InitialViewState extends State<InitialView> {
             children: [
               Text("우다다", style: AppTextStyles.textTheme.displayLarge),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.6,
+                height: MediaQuery.of(context).size.height * 0.65,
                 child: PageView.builder(
                   controller: _pageController,
                   onPageChanged: _onPageChanged,
                   itemCount: onboardingPages.length,
                   itemBuilder: (context, index) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          onboardingPages[index]["image"]!,
-                          width: double.infinity,
-                        ),
-                        AppSpacing.verticalSizedBoxL,
-                        onboardingPages[index]["description"]!,
-                      ],
+                    return SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          (index == 2
+                              ? AppSpacing.verticalSizedBoxXxl
+                              : Container()),
+                          Image.asset(
+                            onboardingPages[index]["image"]!,
+                            width: double.infinity,
+                            fit: BoxFit.scaleDown,
+                          ),
+                          AppSpacing.verticalSizedBoxL,
+                          onboardingPages[index]["description"]!,
+                        ],
+                      ),
                     );
                   },
                 ),
