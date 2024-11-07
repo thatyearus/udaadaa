@@ -64,6 +64,7 @@ class InitialViewState extends State<InitialView> {
   ];
 
   void _onPageChanged(int index) {
+    Analytics().logEvent("온보딩_시작하기", parameters: {"페이지": _index});
     setState(() {
       _index = index;
     });
@@ -150,8 +151,11 @@ class InitialViewState extends State<InitialView> {
                   minimumSize: const Size(double.infinity, 50),
                 ),
                 onPressed: () {
-                  Analytics().logEvent("온보딩_시작하기", parameters: {"페이지": _index});
                   if (_index == 2) {
+                    Analytics().logEvent(
+                      "온보딩_시작하기",
+                      parameters: {"페이지": _index, "버튼": "클릭"},
+                    );
                     Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) => const FirstView()),
