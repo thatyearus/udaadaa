@@ -106,6 +106,23 @@ class InitialViewState extends State<InitialView> {
                   },
                 ),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (int i = 0; i < onboardingPages.length; i++)
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: i == _index
+                            ? Theme.of(context).primaryColor
+                            : AppColors.neutral[300],
+                      ),
+                    ),
+                ],
+              ),
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.center,
               //   children: [
