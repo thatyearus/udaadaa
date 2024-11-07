@@ -27,8 +27,8 @@ class EighthView extends StatelessWidget {
                 "우다다 친구들과 함께\n일주일 다이어트 챌린지\n무료로 참여해볼까요?",
                 style: AppTextStyles.textTheme.displayMedium,
               ),
-              AppSpacing.sizedBoxXxl,
-              AppSpacing.sizedBoxXxl,
+              AppSpacing.sizedBoxL,
+              // AppSpacing.sizedBoxXxl,
               Center(
                 // 중앙 정렬을 위해 Center 위젯으로 감싸기
                 child: Column(
@@ -36,6 +36,7 @@ class EighthView extends StatelessWidget {
                     Image.asset(
                       "assets/onboarding_effect.png",
                       width: 300,
+                      fit: BoxFit.scaleDown,
                     ),
                     AppSpacing.sizedBoxXl,
                     Text.rich(
