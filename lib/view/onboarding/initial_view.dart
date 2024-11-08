@@ -27,7 +27,8 @@ class InitialViewState extends State<InitialView> {
               ),
             ),
             const TextSpan(
-              text: "에서 다이어트 챌린지 해보세요\n내 식단을 올리면 친구들이 응원해주고\nAI가 자동으로 식단 칼로리도 측정해요",
+              text:
+                  "에서 다이어트 챌린지 해보세요\n내 식단을 올리면 친구들이 응원해주고\nAI가 자동으로 식단 칼로리도 측정해요",
             ),
           ],
         ),
@@ -63,6 +64,7 @@ class InitialViewState extends State<InitialView> {
   ];
 
   void _onPageChanged(int index) {
+    Analytics().logEvent("온보딩_시작하기", parameters: {"페이지": _index});
     setState(() {
       _index = index;
     });
@@ -79,25 +81,48 @@ class InitialViewState extends State<InitialView> {
             children: [
               Text("우다다", style: AppTextStyles.textTheme.displayLarge),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.6,
+                height: MediaQuery.of(context).size.height * 0.65,
                 child: PageView.builder(
                   controller: _pageController,
                   onPageChanged: _onPageChanged,
                   itemCount: onboardingPages.length,
                   itemBuilder: (context, index) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          onboardingPages[index]["image"]!,
-                          width: double.infinity,
-                        ),
-                        AppSpacing.verticalSizedBoxL,
-                        onboardingPages[index]["description"]!,
-                      ],
+                    return SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          (index == 2
+                              ? AppSpacing.verticalSizedBoxXxl
+                              : Container()),
+                          Image.asset(
+                            onboardingPages[index]["image"]!,
+                            width: double.infinity,
+                            fit: BoxFit.scaleDown,
+                          ),
+                          AppSpacing.verticalSizedBoxL,
+                          onboardingPages[index]["description"]!,
+                        ],
+                      ),
                     );
                   },
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (int i = 0; i < onboardingPages.length; i++)
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: i == _index
+                            ? Theme.of(context).primaryColor
+                            : AppColors.neutral[300],
+                      ),
+                    ),
+                ],
               ),
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.center,
@@ -126,8 +151,11 @@ class InitialViewState extends State<InitialView> {
                   minimumSize: const Size(double.infinity, 50),
                 ),
                 onPressed: () {
-                  Analytics().logEvent("온보딩_시작하기", parameters: {"페이지": _index});
-                  if (_index == 0) {
+                  if (_index == 2) {
+                    Analytics().logEvent(
+                      "온보딩_시작하기",
+                      parameters: {"페이지": _index, "버튼": "클릭"},
+                    );
                     Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) => const FirstView()),

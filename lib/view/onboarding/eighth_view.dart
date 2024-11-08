@@ -27,8 +27,8 @@ class EighthView extends StatelessWidget {
                 "우다다 친구들과 함께\n일주일 다이어트 챌린지\n무료로 참여해볼까요?",
                 style: AppTextStyles.textTheme.displayMedium,
               ),
-              AppSpacing.sizedBoxXxl,
-              AppSpacing.sizedBoxXxl,
+              AppSpacing.sizedBoxL,
+              // AppSpacing.sizedBoxXxl,
               Center(
                 // 중앙 정렬을 위해 Center 위젯으로 감싸기
                 child: Column(
@@ -36,6 +36,7 @@ class EighthView extends StatelessWidget {
                     Image.asset(
                       "assets/onboarding_effect.png",
                       width: 300,
+                      fit: BoxFit.scaleDown,
                     ),
                     AppSpacing.sizedBoxXl,
                     Text.rich(
@@ -74,7 +75,6 @@ class EighthView extends StatelessWidget {
                   "온보딩_챌린지참여",
                   parameters: {"버튼": "클릭"},
                 );
-                PreferencesService().setBool('isOnboardingComplete', true);
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const NinthView()),
                 );
@@ -94,7 +94,14 @@ class EighthView extends StatelessWidget {
             onTap: () {
               Analytics().logEvent(
                 "온보딩_챌린지_미참여",
-                parameters: {"다음에_할래요": "클릭"},
+                parameters: {
+                  "다음에_할래요": "클릭",
+                  "온보딩_완료_여부":
+                      PreferencesService().getBool('isOnboardingComplete') ==
+                              null
+                          ? "false"
+                          : "true",
+                },
               );
               NotificationService.initNotification();
               if (PreferencesService().getBool('isOnboardingComplete') ??
@@ -103,6 +110,7 @@ class EighthView extends StatelessWidget {
               } else {
                 context.read<AuthCubit>().setFCMToken();
                 PreferencesService().setBool('isOnboardingComplete', true);
+                Analytics().logEvent('온보딩_완료', parameters: {'다음에_할래요': '클릭'});
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const MainView()),
                 );
