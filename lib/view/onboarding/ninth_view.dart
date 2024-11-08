@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/view/onboarding/tenth_view.dart';
-
 
 class NinthView extends StatelessWidget {
   const NinthView({super.key});
@@ -23,7 +23,7 @@ class NinthView extends StatelessWidget {
                   style: AppTextStyles.textTheme.displayMedium),
               AppSpacing.verticalSizedBoxXxl,
               Image.asset(
-                  "assets/onboarding_mission1.png",
+                "assets/onboarding_mission1.png",
                 width: double.infinity,
               ),
               AppSpacing.verticalSizedBoxXxl,
@@ -31,9 +31,7 @@ class NinthView extends StatelessWidget {
                 child: Text.rich(
                   TextSpan(
                     children: [
-                      const TextSpan(
-                        text: "매일 몸무게를 재고\n식단을 기록하는 것만으로도\n다이어트 "
-                      ),
+                      const TextSpan(text: "매일 몸무게를 재고\n식단을 기록하는 것만으로도\n다이어트 "),
                       TextSpan(
                         text: "성공률 4.2배 ",
                         style: AppTextStyles.displaySmall(
@@ -63,12 +61,17 @@ class NinthView extends StatelessWidget {
           onPressed: () {
             Analytics().logEvent(
               "온보딩_미션확인",
-              parameters: {"버튼": "클릭"},
+              parameters: {
+                "버튼": "클릭",
+                "온보딩_완료_여부":
+                    PreferencesService().getBool('isOnboardingComplete') == null
+                        ? "false"
+                        : "true",
+              },
             );
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const TenthView()),
             );
-
           },
           label: Text(
             '미션 확인 했어요',
