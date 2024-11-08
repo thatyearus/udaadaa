@@ -55,6 +55,11 @@ class HomeViewState extends State<HomeView> {
       _selectedIndex = _isChallenger ? 0 : 1;
       _isChallenger = _isChallenger;
     });
+    _sectionController.animateToPage(
+      _selectedIndex,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
