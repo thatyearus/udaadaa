@@ -74,6 +74,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
         await supabase.from('challenge').insert(challengeMap).select().single();
         emit(ChallengeSuccess());
         authCubit.setIsChallenger(true);
+        selectDay(DateTime.now());
       } else {
         emit(ChallengeError("이미 참여 중 입니다."));
       }
