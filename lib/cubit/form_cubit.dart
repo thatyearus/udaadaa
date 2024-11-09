@@ -313,6 +313,8 @@ class FormCubit extends Cubit<FormState> {
           break;
       }
       selectedImages[contentType] = null;
+      profileCubit.getMyTodayReport();
+      profileCubit.selectDay(DateTime.now());
     } catch (e) {
       Analytics().logEvent("업로드_리포트실패", parameters: {"에러": e.toString()});
       logger.e(e);
