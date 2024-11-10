@@ -12,9 +12,11 @@ import 'package:udaadaa/widgets/result_card.dart';
 
 class ChallengeResultView extends StatelessWidget {
   final bool isSuccess;
+  final DateTime endDay;
   final GlobalKey _repaintBoundaryKey = GlobalKey();
 
-  ChallengeResultView({super.key, required this.isSuccess});
+  ChallengeResultView(
+      {super.key, required this.isSuccess, required this.endDay});
 
   Future<void> _saveImage(BuildContext context) async {
     try {
@@ -90,7 +92,7 @@ class ChallengeResultView extends StatelessWidget {
               key: _repaintBoundaryKey,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
-                child: ResultCard(isSuccess: isSuccess),
+                child: ResultCard(isSuccess: isSuccess, e: endDay),
               ),
             ),
             const Spacer(flex: 2),

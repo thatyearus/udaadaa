@@ -6,18 +6,20 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 
 class ResultCard extends StatelessWidget {
   final bool isSuccess;
+  final DateTime e;
 
   const ResultCard({
     super.key,
     required this.isSuccess,
+    required this.e,
   });
 
   @override
   Widget build(BuildContext context) {
     final nickname = context.watch<AuthCubit>().getProfile?.nickname ?? "챌린저";
 
-    final now = DateTime.now();
-    final e = DateTime(now.year, now.month, now.day);
+    // final now = DateTime.now();
+    // final e = DateTime(now.year, now.month, now.day);
     final s = e.subtract(const Duration(days: 6));
 
     final dateFormat = DateFormat('yy.MM.dd');

@@ -79,7 +79,10 @@ class HomeViewState extends State<HomeView> {
           if (state is ChallengeEnd) {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ChallengeResultView(isSuccess: true),
+                builder: (context) => ChallengeResultView(
+                  isSuccess: true,
+                  endDay: DateTime.now(),
+                ),
               ),
             );
           }
