@@ -41,6 +41,20 @@ class MainView extends StatelessWidget {
                   ),
                 );
               }
+              if (state is FeedPushNotification) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    action: SnackBarAction(
+                      label: '바로가기 >',
+                      textColor: Colors.yellow,
+                      onPressed: () {
+                        context.read<FeedCubit>().openFeed(state.feedId);
+                      },
+                    ),
+                    content: Text(state.text),
+                  ),
+                );
+              }
             },
             child: IndexedStack(
               index: BottomNavState.values.indexOf(state),
