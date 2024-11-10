@@ -6,6 +6,7 @@ import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/mypage/push_setting_view.dart';
+import 'package:udaadaa/view/result/result_list_view.dart';
 import 'package:udaadaa/widgets/my_profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,6 +31,19 @@ class MyPageView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(actions: [
+        IconButton(
+            onPressed: () {
+              Analytics().logEvent(
+                "마이페이지_챌린지기록",
+                parameters: {"클릭": "챌린지기록"},
+              );
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const ResultListView(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.inbox_rounded)),
         PopupMenuButton(
           itemBuilder: (context) {
             return [
