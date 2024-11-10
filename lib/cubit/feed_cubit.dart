@@ -64,6 +64,11 @@ class FeedCubit extends Cubit<FeedState> {
       logger.d('getInitialMessage: $message');
       openFeedDetail(message);
     });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      logger.d('onMessage: $message');
+      emit(FeedPushNotification(
+          message.data['feedId'], message.notification!.body!));
+    });
   }
 
   @override
