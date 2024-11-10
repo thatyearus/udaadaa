@@ -26,7 +26,7 @@ class ResultListView extends StatelessWidget {
               if (state.challenges.isEmpty) {
                 return Center(
                   child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
+                    physics: const AlwaysScrollableScrollPhysics(),
                     child: Text(
                       '챌린지 기록이 존재하지 없습니다.',
                       style: AppTextStyles.textTheme.bodyLarge,
