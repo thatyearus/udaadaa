@@ -88,16 +88,20 @@ class FeedCubit extends Cubit<FeedState> {
       final feedId = message.data['feedId'];
       logger.d("Feed ID: $feedId");
       if (feedId != null) {
-        final feed = _myFeeds.firstWhere(
-          (feed) => feed.id == feedId,
-          orElse: () => Feed(
-              userId: '', review: '', type: FeedType.breakfast, imagePath: ''),
-        );
-        if (feed.id != null) {
-          final feedIndex = _myFeeds.indexOf(feed);
-          emit(FeedDetail(feed, feedIndex));
-        }
+        openFeed(feedId);
       }
+    }
+  }
+
+  void openFeed(String feedId) {
+    final feed = _myFeeds.firstWhere(
+      (feed) => feed.id == feedId,
+      orElse: () =>
+          Feed(userId: '', review: '', type: FeedType.breakfast, imagePath: ''),
+    );
+    if (feed.id != null) {
+      final feedIndex = _myFeeds.indexOf(feed);
+      emit(FeedDetail(feed, feedIndex));
     }
   }
 
