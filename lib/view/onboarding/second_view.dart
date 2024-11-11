@@ -94,29 +94,45 @@ class SecondView extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return SafeArea(
-          child: Wrap(
-            children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.photo_library_rounded),
-                title: const Text('갤러리에서 선택'),
-                onTap: () {
-                  context
-                      .read<form.FormCubit>()
-                      .updateImage('FOOD', ImageSource.gallery);
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.camera_alt_rounded),
-                title: const Text('카메라로 촬영'),
-                onTap: () {
-                  context
-                      .read<form.FormCubit>()
-                      .updateImage('FOOD', ImageSource.camera);
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.photo_library_rounded, size: 36),
+                      onPressed: () {
+                        context
+                            .read<form.FormCubit>()
+                            .updateImage('FOOD', ImageSource.gallery);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    AppSpacing.verticalSizedBoxXs,
+                    const Text('갤러리'),
+                  ],
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.camera_alt_rounded, size: 36),
+                      onPressed: () {
+                        context
+                            .read<form.FormCubit>()
+                            .updateImage('FOOD', ImageSource.camera);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    AppSpacing.verticalSizedBoxXs,
+                    const Text('카메라'),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
