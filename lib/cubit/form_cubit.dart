@@ -53,10 +53,9 @@ class FormCubit extends Cubit<FormState> {
     emit(FormInitial());
   }
 
-  Future<void> updateImage(String type) async {
+  Future<void> updateImage(String type, ImageSource pickertype) async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(
-        source: type == 'WEIGHT' ? ImageSource.camera : ImageSource.gallery);
+    final XFile? pickedFile = await picker.pickImage(source: pickertype);
 
     if (pickedFile != null) {
       _selectedImages[type] = pickedFile;

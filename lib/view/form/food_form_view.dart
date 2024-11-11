@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -156,7 +157,9 @@ class FoodFormView extends StatelessWidget {
             minimumSize: const Size(double.infinity, 50),
           ),
           onPressed: () {
-            context.read<form.FormCubit>().updateImage('FOOD');
+            context
+                .read<form.FormCubit>()
+                .updateImage('FOOD', ImageSource.gallery);
             Analytics().logEvent(
               "업로드_이미지업로드",
             );

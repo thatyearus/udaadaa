@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -121,7 +122,9 @@ class WeightFormView extends StatelessWidget {
             minimumSize: const Size(double.infinity, 50),
           ),
           onPressed: () {
-            context.read<form.FormCubit>().updateImage('WEIGHT');
+            context
+                .read<form.FormCubit>()
+                .updateImage('WEIGHT', ImageSource.gallery);
           },
           child: Text(
             image != null ? '이미지 변경' : '이미지 업로드',
