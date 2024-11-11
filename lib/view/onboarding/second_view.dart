@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
@@ -88,6 +89,40 @@ class SecondView extends StatelessWidget {
     );
   }
 
+  void _showPickerOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library_rounded),
+                title: const Text('갤러리에서 선택'),
+                onTap: () {
+                  context
+                      .read<form.FormCubit>()
+                      .updateImage('FOOD', ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt_rounded),
+                title: const Text('카메라로 촬영'),
+                onTap: () {
+                  context
+                      .read<form.FormCubit>()
+                      .updateImage('FOOD', ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget imagePickerWidget(BuildContext context) {
     final image = context.watch<form.FormCubit>().selectedImages['FOOD'];
     return Column(
@@ -130,7 +165,7 @@ class SecondView extends StatelessWidget {
               "기록_식단업로드",
               parameters: {"업로드버튼": "클릭"},
             );
-            context.read<form.FormCubit>().updateImage('FOOD');
+            _showPickerOptions(context);
           },
           child: Text(
             image != null ? '이미지 변경' : '이미지 업로드',
