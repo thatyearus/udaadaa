@@ -79,8 +79,21 @@ class HomeViewState extends State<HomeView> {
           if (state is ChallengeEnd) {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ChallengeResultView(isSuccess: true),
+                builder: (context) => ChallengeResultView(
+                  isSuccess: true,
+                  endDay: DateTime.now(),
+                ),
               ),
+            );
+          } else if (state is ChallengeSuccess) {
+            if (!_isChallenger) return;
+            setState(() {
+              _selectedIndex = 0;
+            });
+            _sectionController.animateToPage(
+              0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
             );
           }
         },

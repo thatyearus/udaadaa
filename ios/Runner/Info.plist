@@ -43,6 +43,8 @@
 	<string>우다다</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>피드 업로드 및 칼로리 분석에 사진이 활용됩니다</string>
+	<key>NSCameraUsageDescription</key>
+	<string>몸무게 인증 사진 촬영에 활용됩니다</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
