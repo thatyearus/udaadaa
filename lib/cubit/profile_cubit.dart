@@ -15,7 +15,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   Report? _selectedReport;
   DateTime? _selectedDate;
   DateTime _focusDate = DateTime.now();
-  List<bool> _typeSelection = [true, false];
+  List<bool> _typeSelection = [true, false, false];
   final List<Report?> _weeklyReport = [
     null,
     null,
