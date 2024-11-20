@@ -41,6 +41,20 @@ class MainView extends StatelessWidget {
                   ),
                 );
               }
+              if (state is FeedPushNotification) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    action: SnackBarAction(
+                      label: '바로가기 >',
+                      textColor: Colors.yellow,
+                      onPressed: () {
+                        context.read<FeedCubit>().openFeed(state.feedId);
+                      },
+                    ),
+                    content: Text(state.text),
+                  ),
+                );
+              }
             },
             child: IndexedStack(
               index: BottomNavState.values.indexOf(state),
@@ -101,7 +115,7 @@ class MainView extends StatelessWidget {
                 context.read<BottomNavCubit>().selectTab(BottomNavState.home);
               },
               label: Text(
-                '응원 받으러 가기',
+                '식단 응원 받으러 가기',
                 style: AppTextStyles.textTheme.headlineLarge,
               ),
               shape: RoundedRectangleBorder(

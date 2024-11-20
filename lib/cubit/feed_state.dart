@@ -16,7 +16,10 @@ final class FeedDetail extends FeedState {
   FeedDetail(this.feed, this.index);
 }
 
-enum FeedCategory {
-  all,
-  challenge
+final class FeedPushNotification extends FeedState {
+  final String feedId, text;
+
+  FeedPushNotification(this.feedId, this.text);
 }
+
+enum FeedCategory { all, challenge }

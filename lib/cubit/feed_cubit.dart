@@ -64,6 +64,11 @@ class FeedCubit extends Cubit<FeedState> {
       logger.d('getInitialMessage: $message');
       openFeedDetail(message);
     });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      logger.d('onMessage: $message');
+      emit(FeedPushNotification(
+          message.data['feedId'], message.notification!.body!));
+    });
   }
 
   @override
@@ -88,16 +93,20 @@ class FeedCubit extends Cubit<FeedState> {
       final feedId = message.data['feedId'];
       logger.d("Feed ID: $feedId");
       if (feedId != null) {
-        final feed = _myFeeds.firstWhere(
-          (feed) => feed.id == feedId,
-          orElse: () => Feed(
-              userId: '', review: '', type: FeedType.breakfast, imagePath: ''),
-        );
-        if (feed.id != null) {
-          final feedIndex = _myFeeds.indexOf(feed);
-          emit(FeedDetail(feed, feedIndex));
-        }
+        openFeed(feedId);
       }
+    }
+  }
+
+  void openFeed(String feedId) {
+    final feed = _myFeeds.firstWhere(
+      (feed) => feed.id == feedId,
+      orElse: () =>
+          Feed(userId: '', review: '', type: FeedType.breakfast, imagePath: ''),
+    );
+    if (feed.id != null) {
+      final feedIndex = _myFeeds.indexOf(feed);
+      emit(FeedDetail(feed, feedIndex));
     }
   }
 
@@ -245,7 +254,7 @@ class FeedCubit extends Cubit<FeedState> {
     try {
       if (!loadMore) {
         final challengeData = await supabase.from('challenge').select('*');
-
+        allFeeds = [];
         for (final challengeMap in challengeData) {
           Challenge challenge = Challenge.fromMap(map: challengeMap);
           final feedData = await supabase

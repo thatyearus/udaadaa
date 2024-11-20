@@ -393,12 +393,33 @@ class ChallengeCubit extends Cubit<ChallengeState> {
                 .from('challenge')
                 .update(_challenge!.toMap())
                 .eq('id', _challenge!.id!);
-            emit(ChallengeEnd());
+            emit(ChallengeEnd(endDay));
           }
         }
       }
     } catch (e) {
       logger.e(e);
+    }
+  }
+
+  Future<void> fetchChallenge() async {
+    try {
+      emit(ChallengeLoading());
+      final response = await supabase
+          .from('challenge')
+          .select()
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .lt('end_day', DateTime.now().toIso8601String())
+          .order('start_day', ascending: true);
+
+      final challengeList =
+          response.map((e) => Challenge.fromMap(map: e)).toList();
+      if (_challenge != null && _challenge!.isSuccess == true) {
+        challengeList.add(_challenge!);
+      }
+      emit(ChallengeList(challengeList));
+    } catch (error) {
+      logger.e(error);
     }
   }
 

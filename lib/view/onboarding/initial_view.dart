@@ -151,6 +151,14 @@ class InitialViewState extends State<InitialView> {
                   minimumSize: const Size(double.infinity, 50),
                 ),
                 onPressed: () {
+                  Analytics().logEvent(
+                    "온보딩_시작하기",
+                    parameters: {"페이지": _index, "버튼": "클릭"},
+                  );
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const FirstView()),
+                  );
+                  /*
                   if (_index == 2) {
                     Analytics().logEvent(
                       "온보딩_시작하기",
@@ -165,10 +173,10 @@ class InitialViewState extends State<InitialView> {
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeIn,
                     );
-                  }
+                  }*/
                 },
                 child: Text(
-                  _index == onboardingPages.length - 1 ? '시작하기' : '다음',
+                  /* _index == onboardingPages.length - 1 ? */ '시작하기' /*: '다음'*/,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: AppColors.white,
                       ),
