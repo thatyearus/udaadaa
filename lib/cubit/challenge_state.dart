@@ -13,4 +13,16 @@ final class ChallengeError extends ChallengeState {
   ChallengeError(this.error);
 }
 
-final class ChallengeEnd extends ChallengeState {}
+final class ChallengeEnd extends ChallengeState {
+  final DateTime endDay;
+
+  ChallengeEnd(this.endDay);
+}
+
+final class ChallengeLoading extends ChallengeState {}
+
+final class ChallengeList extends ChallengeState {
+  final List<Challenge> challenges;
+
+  ChallengeList(this.challenges);
+}

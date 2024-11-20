@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
@@ -88,6 +89,56 @@ class SecondView extends StatelessWidget {
     );
   }
 
+  void _showPickerOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.photo_library_rounded, size: 36),
+                      onPressed: () {
+                        context
+                            .read<form.FormCubit>()
+                            .updateImage('FOOD', ImageSource.gallery);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    AppSpacing.verticalSizedBoxXs,
+                    const Text('갤러리'),
+                  ],
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.camera_alt_rounded, size: 36),
+                      onPressed: () {
+                        context
+                            .read<form.FormCubit>()
+                            .updateImage('FOOD', ImageSource.camera);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    AppSpacing.verticalSizedBoxXs,
+                    const Text('카메라'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget imagePickerWidget(BuildContext context) {
     final image = context.watch<form.FormCubit>().selectedImages['FOOD'];
     return Column(
@@ -130,7 +181,7 @@ class SecondView extends StatelessWidget {
               "기록_식단업로드",
               parameters: {"업로드버튼": "클릭"},
             );
-            context.read<form.FormCubit>().updateImage('FOOD');
+            _showPickerOptions(context);
           },
           child: Text(
             image != null ? '이미지 변경' : '이미지 업로드',

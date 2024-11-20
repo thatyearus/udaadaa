@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/form/weight/weight_second_view.dart';
@@ -116,7 +117,9 @@ class WeightFirstView extends StatelessWidget {
               "기록_몸무게업로드",
               parameters: {"업로드버튼": "클릭"},
             );
-            context.read<form.FormCubit>().updateImage('WEIGHT');
+            context
+                .read<form.FormCubit>()
+                .updateImage('WEIGHT', ImageSource.camera);
           },
           child: Text(
             image != null ? '이미지 변경' : '이미지 업로드',

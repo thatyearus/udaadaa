@@ -53,10 +53,9 @@ class FormCubit extends Cubit<FormState> {
     emit(FormInitial());
   }
 
-  Future<void> updateImage(String type) async {
+  Future<void> updateImage(String type, ImageSource pickertype) async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile = await picker.pickImage(source: pickertype);
 
     if (pickedFile != null) {
       _selectedImages[type] = pickedFile;
@@ -313,6 +312,8 @@ class FormCubit extends Cubit<FormState> {
           break;
       }
       selectedImages[contentType] = null;
+      profileCubit.getMyTodayReport();
+      profileCubit.selectDay(DateTime.now());
     } catch (e) {
       Analytics().logEvent("업로드_리포트실패", parameters: {"에러": e.toString()});
       logger.e(e);
