@@ -41,7 +41,46 @@ class WeightReport extends StatelessWidget {
         DateTime.now();
     return Column(
       children: [
-        Text("체중 변화", style: AppTextStyles.textTheme.displaySmall),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("체중 변화", style: AppTextStyles.textTheme.displaySmall),
+            AppSpacing.horizontalSizedBoxS,
+            Container(
+              decoration: const BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(AppSpacing.s),
+                ),
+              ),
+              padding: AppSpacing.edgeInsetsXxs,
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    //backgroundColor: AppColors.white,
+                    radius: 12,
+                    child: Text(
+                      "🏆",
+                      style: AppTextStyles.bodyMedium(
+                        const TextStyle(
+                          fontFamily: 'tossface',
+                        ),
+                      ),
+                    ),
+                  ),
+                  //AppSpacing.horizontalSizedBoxXxs,
+                  Text(
+                    "챌린지",
+                    style: AppTextStyles.bodySmall(
+                      const TextStyle(color: AppColors.white),
+                    ),
+                  ),
+                  AppSpacing.horizontalSizedBoxXxs,
+                ],
+              ),
+            ),
+          ],
+        ),
         AppSpacing.verticalSizedBoxL,
         SizedBox(
           height: 200, // 차트 높이 설정
