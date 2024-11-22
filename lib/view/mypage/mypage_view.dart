@@ -24,6 +24,188 @@ class MyPageView extends StatelessWidget {
     }
   }
 
+  void showLinkEmailDialog(BuildContext context, String type) {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        actionsOverflowDirection: VerticalDirection.down,
+        actions: [
+          Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+                    foregroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Theme.of(context).primaryColor),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    minimumSize: const Size(double.infinity, 0),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child:
+                      Text('취소', style: AppTextStyles.textTheme.headlineSmall),
+                ),
+              ),
+              AppSpacing.verticalSizedBoxS,
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+                    foregroundColor: AppColors.white,
+                    backgroundColor: AppColors.primary,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Theme.of(context).primaryColor),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    minimumSize: const Size(double.infinity, 0),
+                  ),
+                  onPressed: () async {
+                    int success = -1;
+                    if (type == "link_email") {
+                      // 이메일 계정 연동
+                      success = await context.read<AuthCubit>().linkEmail(
+                          emailController.text, passwordController.text);
+                    } else {
+                      // 계정 복원
+                      success = await context.read<AuthCubit>().signInWithEmail(
+                          emailController.text, passwordController.text);
+                    }
+                    if (!context.mounted) return;
+                    Navigator.of(context).pop(success);
+                  },
+                  child: Text(
+                    type == 'link_email' ? '이메일 계정 연동하기' : '계정 복원하기',
+                    style: AppTextStyles.textTheme.headlineSmall?.copyWith(
+                      color: AppColors.white, // 텍스트 색상 설정
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+        title: Text(type == 'link_email' ? '이메일 계정 연동' : '계정 복원',
+            style: AppTextStyles.textTheme.headlineMedium),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+                type == 'link_email'
+                    ? '이메일을 계정과 연동하시면 데이터를 나중에 복원할 수 있습니다.'
+                    : '계정을 복원하시려면 연동한 이메일과 비밀번호를 입력해 주세요.',
+                style: AppTextStyles.textTheme.bodyLarge),
+            (type == 'link_email')
+                ? const SizedBox()
+                : Text(
+                    "현재 계정의 데이터는 삭제되니 주의하세요.",
+                    style: AppTextStyles.labelMedium(
+                      TextStyle(color: AppColors.neutral[500]),
+                    ),
+                  ),
+            AppSpacing.verticalSizedBoxS,
+            Row(children: [
+              Expanded(
+                child: TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: '이메일',
+                    labelStyle: AppTextStyles.labelLarge(
+                        TextStyle(color: AppColors.neutral[500])),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.neutral[300]!),
+                    ),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.primary),
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+            ]),
+            Row(children: [
+              Expanded(
+                child: TextField(
+                  obscureText: true,
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    labelText: '비밀번호',
+                    labelStyle: AppTextStyles.labelLarge(
+                        TextStyle(color: AppColors.neutral[500])),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.neutral[300]!),
+                    ),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.primary),
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+            ]),
+          ],
+        ),
+      ),
+    ).then((value) {
+      if (value == null || value == -1) return;
+      if (!context.mounted) return;
+      String textMessage = "";
+      switch (value) {
+        case 0:
+          textMessage = "이메일 계정 연동에 실패했습니다.";
+          break;
+
+        case 1:
+          textMessage = "이메일 계정 연동이 완료되었습니다.";
+          break;
+
+        case 2:
+          textMessage = "계정 복원에 실패했습니다.";
+          break;
+
+        case 3:
+          textMessage = "계정 복원이 완료되었습니다.";
+          break;
+
+        case 4:
+          textMessage = "비밀번호는 최소 6자리 이상이어야 합니다.";
+          break;
+
+        case 5:
+          textMessage = "이미 연동된 이메일입니다. 다른 이메일로 시도해주세요.";
+          break;
+
+        case 6:
+          textMessage = "이메일 형식이 올바르지 않습니다.";
+          break;
+
+        case 7:
+          textMessage = "이메일 형식이 올바르지 않습니다.";
+          break;
+
+        case 8:
+          textMessage = "이메일 또는 비밀번호가 일치하지 않습니다.";
+          break;
+
+        default:
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(textMessage),
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final myFeeds =
@@ -58,6 +240,14 @@ class MyPageView extends StatelessWidget {
               const PopupMenuItem(
                 value: 'kakaotalk',
                 child: Text('문의하기'),
+              ),
+              const PopupMenuItem(
+                value: 'link_email',
+                child: Text('이메일 연동'),
+              ),
+              const PopupMenuItem(
+                value: 'account_restore',
+                child: Text("계정 복원"),
               ),
             ];
           },
@@ -126,6 +316,30 @@ class MyPageView extends StatelessWidget {
                   parameters: {"클릭": "문의하기"},
                 );
                 _launchURL();
+                break;
+              case 'link_email':
+                Analytics().logEvent(
+                  "마이페이지_이메일연동",
+                  parameters: {"클릭": "이메일연동"},
+                );
+                if (supabase.auth.currentUser?.email != null &&
+                    supabase.auth.currentUser?.email != "") {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("이미 이메일이 연동되어 있습니다."),
+                    ),
+                  );
+                  return;
+                }
+                showLinkEmailDialog(context, 'link_email');
+                break;
+              case 'account_restore':
+                Analytics().logEvent(
+                  "마이페이지_계정복원",
+                  parameters: {"클릭": "계정복원"},
+                );
+                showLinkEmailDialog(context, 'account_restore');
+                break;
             }
           },
           icon: const Icon(Icons.settings_rounded),
