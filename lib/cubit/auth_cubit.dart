@@ -204,6 +204,57 @@ class AuthCubit extends Cubit<AuthState> {
     _isChallenger = newValue;
   }
 
+  Future<int> linkEmail(String email, String password) async {
+    try {
+      await supabase.auth
+          .updateUser(UserAttributes(email: email, password: password));
+      return 1;
+    } catch (e) {
+      logger.e(e.toString());
+      if (e is AuthException) {
+        if (e.code == 'weak_password' && e.statusCode == '422') {
+          return 4;
+        } else if (e.code == 'email_exists' && e.statusCode == '422') {
+          return 5;
+        } else if (e.code == 'validation_failed' && e.statusCode == '400') {
+          return 6;
+        }
+        return 0;
+      }
+      return 0;
+    }
+  }
+
+  Future<int> signInWithEmail(String email, String password) async {
+    try {
+      await supabase.auth.signInWithPassword(email: email, password: password);
+      final currentUser = supabase.auth.currentUser;
+      logger.d("currentUser: $currentUser");
+      if (_profile != null || _profile!.id != currentUser!.id) {
+        final res = await supabase
+            .from('profiles')
+            .select()
+            .eq('id', currentUser!.id)
+            .single();
+        Profile profile = Profile.fromMap(map: res);
+        _profile = profile;
+      }
+      emit(Authenticated(_profile!));
+      return 3;
+    } catch (e) {
+      logger.e(e.toString());
+      if (e is AuthException) {
+        if (e.code == 'validation_failed' && e.statusCode == '400') {
+          return 7;
+        } else if (e.code == 'invalid_credentials' && e.statusCode == '400') {
+          return 8;
+        }
+        return 2;
+      }
+      return 2;
+    }
+  }
+
   Future<void> signOut() async {
     await supabase.auth.signOut();
     emit(AuthInitial());
