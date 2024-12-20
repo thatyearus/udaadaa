@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/chat/room_view.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/feed/feed_view.dart';
 import 'package:udaadaa/view/home/home_view.dart';
 import 'package:udaadaa/view/mypage/mypage_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/view/onboarding/first_view.dart';
+import 'package:udaadaa/view/register/register_view.dart';
 
 class MainView extends StatelessWidget {
   const MainView({super.key});
@@ -21,10 +23,12 @@ class MainView extends StatelessWidget {
       const _NavigatorPage(child: FeedView()),
       const _NavigatorPage(child: MyPageView()),*/
       const HomeView(),
+      const RoomView(),
+      const RegisterView(),
       const FeedView(),
       const MyPageView(),
     ];
-    final List<String> labels = ['홈', '피드', '마이페이지'];
+    final List<String> labels = ['홈', '채팅', '신청', '피드', '마이페이지'];
 
     return Scaffold(
       body: SafeArea(
@@ -65,10 +69,21 @@ class MainView extends StatelessWidget {
       ),
       bottomNavigationBar: BlocBuilder<BottomNavCubit, BottomNavState>(
         builder: (context, state) => BottomNavigationBar(
+          selectedItemColor: AppColors.primary,
+          unselectedItemColor: AppColors.neutral[500],
+          showUnselectedLabels: true,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home_rounded),
               label: '홈',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat_rounded),
+              label: '채팅',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_box_rounded),
+              label: '신청',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.feed_rounded),
@@ -93,7 +108,9 @@ class MainView extends StatelessWidget {
       ),
       floatingActionButton: BlocBuilder<BottomNavCubit, BottomNavState>(
         builder: (context, state) {
-          if (state == BottomNavState.feed) {
+          if (state == BottomNavState.feed ||
+              state == BottomNavState.chat ||
+              state == BottomNavState.register) {
             return Container();
           }
           return Container(
