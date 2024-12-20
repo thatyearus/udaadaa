@@ -8,6 +8,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
+import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
@@ -89,6 +90,9 @@ class MyApp extends StatelessWidget {
             context.read<ProfileCubit>(),
             context.read<FeedCubit>(),
           ),
+        ),
+        BlocProvider<ChatCubit>(
+          create: (context) => ChatCubit(),
         ),
       ],
       child: MaterialApp(
