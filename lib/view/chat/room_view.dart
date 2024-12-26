@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/models/room.dart';
+import 'package:udaadaa/view/chat/chat_view.dart';
 
 class RoomView extends StatelessWidget {
   const RoomView({super.key});
@@ -19,6 +20,13 @@ class RoomView extends StatelessWidget {
           return ListTile(
             title: Text(rooms[index].roomName),
             subtitle: const Text("Hello"),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ChatView(),
+                ),
+              );
+            },
           );
         },
       ),
