@@ -4,7 +4,7 @@ import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/models/message.dart';
 
 class ChatView extends StatelessWidget {
-  const ChatView({Key? key}) : super(key: key);
+  const ChatView({super.key});
 
   @override
   Widget build(BuildContext context) {
