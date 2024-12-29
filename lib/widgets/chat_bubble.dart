@@ -107,13 +107,14 @@ class ChatBubble extends StatelessWidget {
       bubbleContents = bubbleContents.reversed.toList();
     }
     List<Widget> chatContents = [
-      if (!isMine && isFirstInSequence)
-        const CircleAvatar(
-          child: Icon(
-            Icons.person,
-          ),
-        ),
-      if (!isMine && isFirstInSequence) const SizedBox(width: 12),
+      (!isMine && isFirstInSequence)
+          ? const CircleAvatar(
+              child: Icon(
+                Icons.person,
+              ),
+            )
+          : const SizedBox(width: 40),
+      const SizedBox(width: 12),
       Column(
           crossAxisAlignment:
               isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
