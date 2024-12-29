@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:intl/intl.dart';
@@ -7,11 +9,13 @@ class ChatBubble extends StatelessWidget {
   const ChatBubble({
     super.key,
     required this.message,
+    required this.isMine,
     required this.isFirstInSequence,
     required this.isLastInSequence,
   });
 
-  final Message message;
+  final ChatMessage message;
+  final bool isMine;
   final bool isFirstInSequence;
   final bool isLastInSequence;
 
@@ -68,29 +72,25 @@ class ChatBubble extends StatelessWidget {
           horizontal: 12,
         ),
         decoration: BoxDecoration(
-          color:
-              message.isMine ? AppColors.primary[500] : AppColors.neutral[200],
+          color: isMine ? AppColors.primary[500] : AppColors.neutral[200],
           borderRadius: BorderRadius.circular(10),
         ),
-        child: (message.type == "textMessage"
+        child: (message.medias == null || message.medias!.isEmpty
             ? Text(
-                message.content ?? "",
+                message.text ?? "",
                 style: AppTextStyles.bodyLarge(
                   TextStyle(
-                      color: message.isMine
-                          ? AppColors.white
-                          : AppColors.neutral[800]),
+                      color: isMine ? AppColors.white : AppColors.neutral[800]),
                 ),
               )
-            : (message.image != null
-                ? Image.memory(message.image!)
+            : (message.medias != null
+                ? CachedNetworkImage(imageUrl: message.medias![0].url)
                 : const CircularProgressIndicator())),
       ),
       const SizedBox(width: 4),
       Column(
-          crossAxisAlignment: message.isMine
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
+          crossAxisAlignment:
+              isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             Text(
               "1",
@@ -103,31 +103,31 @@ class ChatBubble extends StatelessWidget {
                   style: AppTextStyles.textTheme.labelSmall),
           ])
     ];
-    if (message.isMine) {
+    if (isMine) {
       bubbleContents = bubbleContents.reversed.toList();
     }
     List<Widget> chatContents = [
-      if (!message.isMine && isFirstInSequence)
+      if (!isMine && isFirstInSequence)
         const CircleAvatar(
           child: Icon(
             Icons.person,
           ),
         ),
-      if (!message.isMine && isFirstInSequence) const SizedBox(width: 12),
+      if (!isMine && isFirstInSequence) const SizedBox(width: 12),
       Column(
-          crossAxisAlignment: message.isMine
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
+          crossAxisAlignment:
+              isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            if (!message.isMine && isFirstInSequence)
-              Text(message.userId, style: AppTextStyles.textTheme.labelMedium),
-            if (!message.isMine && isFirstInSequence) const SizedBox(height: 8),
+            if (!isMine && isFirstInSequence)
+              Text(message.user.firstName ?? "",
+                  style: AppTextStyles.textTheme.labelMedium),
+            if (!isMine && isFirstInSequence) const SizedBox(height: 8),
             Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: bubbleContents),
           ]),
     ];
-    if (message.isMine) {
+    if (isMine) {
       chatContents = chatContents.reversed.toList();
     }
     return Padding(
@@ -136,9 +136,8 @@ class ChatBubble extends StatelessWidget {
         children: [
           if (isFirstInSequence) const SizedBox(height: 8),
           Row(
-            mainAxisAlignment: message.isMine
-                ? MainAxisAlignment.end
-                : MainAxisAlignment.start,
+            mainAxisAlignment:
+                isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: chatContents,
           ),

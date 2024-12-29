@@ -1,9 +1,11 @@
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/models/message.dart';
+import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/widgets/chat_bubble.dart';
 
 /// Page to chat with someone.
@@ -26,114 +28,147 @@ class ChatView extends StatelessWidget {
     final messages =
         context.select<ChatCubit, List<Message>>((cubit) => cubit.getMessages);
     return Scaffold(
-      appBar: AppBar(title: const Text('Chat')),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              reverse: true,
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                final message = messages[index];
-                return ChatBubble(
-                  message: message,
-                  isFirstInSequence: true,
-                  isLastInSequence: true,
-                );
-              },
-            ),
-          ),
-          const _MessageBar(),
-        ],
+      appBar: AppBar(
+        title: const Text('Chat'),
+        backgroundColor: AppColors.primary[100],
+        surfaceTintColor: AppColors.primary[100],
       ),
-    );
-  }
-}
-
-/// Set of widget that contains TextField and Button to submit message
-class _MessageBar extends StatefulWidget {
-  const _MessageBar();
-
-  @override
-  State<_MessageBar> createState() => _MessageBarState();
-}
-
-class _MessageBarState extends State<_MessageBar> {
-  late final TextEditingController _textController;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).cardColor,
-      child: Padding(
-        padding: EdgeInsets.only(
-          top: 8,
-          left: 8,
-          right: 8,
-          bottom: MediaQuery.of(context).padding.bottom,
-        ),
-        child: Row(
-          children: [
-            IconButton(
-              onPressed: () => _submitFileMessage(),
-              icon: const Icon(Icons.album),
-            ),
-            Expanded(
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-                maxLines: null,
-                autofocus: true,
-                controller: _textController,
-                decoration: const InputDecoration(
-                  hintText: 'Type a message',
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  contentPadding: EdgeInsets.all(8),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+        child: DashChat(
+          currentUser: asDashChatUser(supabase.auth.currentUser!.id, 'User'),
+          inputOptions: InputOptions(
+            sendOnEnter: false,
+            textInputAction: TextInputAction.send,
+            inputMaxLines: 2,
+            inputTextStyle: Theme.of(context).textTheme.bodyMedium,
+            inputDecoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(17),
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(17),
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () => _submitMessage(),
-              child: const Text('Send'),
+            leading: [
+              IconButton(
+                icon: const Icon(Icons.photo),
+                onPressed: () async {
+                  // final img = await context.read<ChatCubit>().pickImage();
+                  // context.read<ChatCubit>().sendFileMessage(img);
+                },
+              ),
+            ],
+          ),
+          messageListOptions: MessageListOptions(
+            dateSeparatorBuilder: (date) => Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(8),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black12.withAlpha(50),
+                  borderRadius: BorderRadius.circular(17),
+                ),
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  '${date.year}년 ${date.month}월 ${date.day}일',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.white,
+                      ),
+                ),
+              ),
             ),
-          ],
+          ),
+          messageOptions: MessageOptions(
+            showCurrentUserAvatar: false,
+            showOtherUsersAvatar: true,
+            messageRowBuilder: (ChatMessage message,
+                ChatMessage? previousMessage,
+                ChatMessage? nextMessage,
+                bool isAfterDateSeparator,
+                bool isBeforeDateSeparator) {
+              bool isFirstInSequence = previousMessage == null ||
+                  previousMessage.user.id != message.user.id;
+              bool isLastInSequence =
+                  nextMessage == null || nextMessage.user.id != message.user.id;
+              return ChatBubble(
+                message: message,
+                isMine: message.customProperties?['message'].isMine,
+                isFirstInSequence: isFirstInSequence,
+                isLastInSequence: isLastInSequence,
+              );
+            },
+          ),
+          onSend: (ChatMessage message) {
+            // context.read<ChatCubit>().sendMessage(message.text);
+          },
+          messages: asDashChatMessages(messages),
         ),
       ),
     );
   }
 
-  @override
-  void initState() {
-    _textController = TextEditingController();
-    super.initState();
+  ChatUser asDashChatUser(String userId, String firstName) {
+    return ChatUser(
+      id: userId,
+      firstName: firstName,
+    );
   }
 
-  @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
-  }
-
-  void _submitMessage() async {
-    final text = _textController.text;
-    if (text.isEmpty) {
-      return;
-    }
-    // BlocProvider.of<ChatCubit>(context).sendMessage(text);
-    _textController.clear();
-  }
-
-  void _submitFileMessage() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) {
-        return;
+  List<ChatMessage> asDashChatMessages(List<Message> messages) {
+    List<ChatMessage> result = [];
+    for (var message in messages) {
+      String user = message.userId;
+      // Profile profile = message.profile;
+      if (message.type == "textMessage") {
+        result.add(
+          ChatMessage(
+              createdAt: message.createdAt,
+              text: message.content ?? "",
+              user: asDashChatUser(user, user),
+              customProperties: {
+                // 'reactions': message.reactions,
+                'messageId': message.id,
+                'channelUrl': message.roomId,
+                // 'unreadCount': message.readReceipts.length,
+                'message': message,
+              }),
+        );
+      } else if (message.type == "FileMessage") {
+        result.add(
+          ChatMessage(
+              createdAt: message.createdAt,
+              user: asDashChatUser(user, user),
+              medias: (message.imageUrl != null
+                  ? [
+                      ChatMedia(
+                        url: message.imageUrl!,
+                        fileName: "사진",
+                        type: MediaType.image,
+                      )
+                    ]
+                  : []),
+              customProperties: {
+                // 'reactions': message.reactions,
+                'messageId': message.id,
+                'channelUrl': message.roomId,
+                // 'unreadCount': message.readReceipts.length,
+                'message': message,
+              }),
+        );
       }
-
-      // BlocProvider.of<ChatCubit>(context).sendFileMessage(File(image.path));
-    } catch (e) {
-      debugPrint(e.toString());
     }
+
+    return result;
   }
 }
