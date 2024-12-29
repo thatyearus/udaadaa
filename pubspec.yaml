@@ -63,6 +63,7 @@ dependencies:
   share_plus: ^10.1.1
   image_gallery_saver: ^2.0.3
   timezone: ^0.9.4
+  dash_chat_2: ^0.0.21
 
 
 dev_dependencies:
