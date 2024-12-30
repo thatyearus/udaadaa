@@ -43,6 +43,24 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  Future<void> sendMessage(String content, String type, String roomId) async {
+    try {
+      final message = Message(
+        roomId: roomId,
+        userId: supabase.auth.currentUser!.id,
+        content: content,
+        type: type,
+        isMine: true,
+      );
+      final ret = await supabase.from('messages').upsert(message.toMap());
+      logger.d("sendMessage: $ret");
+      messages.add(message);
+      emit(ChatMessageLoaded());
+    } catch (e) {
+      logger.e("sendMessage error: $e");
+    }
+  }
+
   List<Room> get getChatList => chatList;
   List<Message> get getMessages => messages;
 }

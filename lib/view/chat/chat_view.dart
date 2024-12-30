@@ -111,6 +111,9 @@ class ChatView extends StatelessWidget {
           ),
           onSend: (ChatMessage message) {
             // context.read<ChatCubit>().sendMessage(message.text);
+            context
+                .read<ChatCubit>()
+                .sendMessage(message.text, "textMessage", roomId);
           },
           messages: asDashChatMessages(messages),
         ),
