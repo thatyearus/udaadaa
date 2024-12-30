@@ -23,7 +23,9 @@ class RoomView extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const ChatView(),
+                  builder: (context) => ChatView(
+                    roomId: rooms[index].id,
+                  ),
                 ),
               );
             },

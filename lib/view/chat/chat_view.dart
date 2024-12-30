@@ -11,7 +11,7 @@ import 'package:udaadaa/widgets/chat_bubble.dart';
 ///
 /// Displays chat bubbles as a ListView and TextField to enter new chat.
 class ChatView extends StatelessWidget {
-  const ChatView({super.key});
+  const ChatView({super.key, required this.roomId});
 
   /*static Route<void> route(String roomId) {
     return MaterialPageRoute(
@@ -21,6 +21,7 @@ class ChatView extends StatelessWidget {
       ),
     );
   }*/
+  final String roomId;
 
   @override
   Widget build(BuildContext context) {
