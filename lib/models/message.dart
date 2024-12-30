@@ -6,28 +6,28 @@ DateTime convertToKst(DateTime utcTime) {
 
 class Message {
   Message({
-    required this.id,
+    this.id,
     required this.roomId,
     required this.userId,
-    required this.content,
+    this.content,
     required this.type,
     // required this.profile,
-    required this.createdAt,
+    this.createdAt,
     required this.isMine,
-    required this.imagePath,
+    this.imagePath,
     // required this.reactions,
     // required this.readReceipts,
     this.image,
     this.imageUrl,
   });
 
-  final String id;
+  final String? id;
   final String userId;
   final String roomId;
   final String? content;
   final String type;
   // final Profile profile;
-  final DateTime createdAt;
+  final DateTime? createdAt;
   final bool isMine;
   final Uint8List? image;
   final String? imagePath;

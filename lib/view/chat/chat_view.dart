@@ -132,7 +132,7 @@ class ChatView extends StatelessWidget {
       if (message.type == "textMessage") {
         result.add(
           ChatMessage(
-              createdAt: message.createdAt,
+              createdAt: message.createdAt!,
               text: message.content ?? "",
               user: asDashChatUser(user, user),
               customProperties: {
@@ -146,7 +146,7 @@ class ChatView extends StatelessWidget {
       } else if (message.type == "FileMessage") {
         result.add(
           ChatMessage(
-              createdAt: message.createdAt,
+              createdAt: message.createdAt!,
               user: asDashChatUser(user, user),
               medias: (message.imageUrl != null
                   ? [
