@@ -75,6 +75,9 @@ class ChatBubble extends StatelessWidget {
           color: isMine ? AppColors.primary[500] : AppColors.neutral[200],
           borderRadius: BorderRadius.circular(10),
         ),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.6,
+        ),
         child: (message.medias == null || message.medias!.isEmpty
             ? Text(
                 message.text ?? "",
