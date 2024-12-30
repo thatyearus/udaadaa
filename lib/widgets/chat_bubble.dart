@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
-import 'package:udaadaa/models/message.dart';
 import 'package:intl/intl.dart';
 import 'package:udaadaa/utils/constant.dart';
 

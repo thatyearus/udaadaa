@@ -2,7 +2,6 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:image_picker/image_picker.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/utils/constant.dart';
