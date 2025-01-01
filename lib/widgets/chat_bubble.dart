@@ -71,7 +71,7 @@ class ChatBubble extends StatelessWidget {
           horizontal: 12,
         ),
         decoration: BoxDecoration(
-          color: isMine ? AppColors.primary[500] : AppColors.neutral[100],
+          color: isMine ? AppColors.primary[200] : AppColors.neutral[100],
           borderRadius: BorderRadius.circular(10),
         ),
         constraints: BoxConstraints(
@@ -82,7 +82,8 @@ class ChatBubble extends StatelessWidget {
                 message.text ?? "",
                 style: AppTextStyles.bodyLarge(
                   TextStyle(
-                      color: isMine ? AppColors.white : AppColors.neutral[800]),
+                    color: AppColors.neutral[800],
+                  ),
                 ),
               )
             : (message.medias != null
