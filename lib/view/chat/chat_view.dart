@@ -33,90 +33,94 @@ class ChatView extends StatelessWidget {
         backgroundColor: AppColors.primary[100],
         surfaceTintColor: AppColors.primary[100],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-        child: DashChat(
-          currentUser: asDashChatUser(supabase.auth.currentUser!.id, 'User'),
-          inputOptions: InputOptions(
-            sendOnEnter: false,
-            textInputAction: TextInputAction.send,
-            inputMaxLines: 2,
-            inputTextStyle: Theme.of(context).textTheme.bodyMedium,
-            inputDecoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor,
+      body: Column(
+        children: [
+          Expanded(
+            child: DashChat(
+              currentUser:
+                  asDashChatUser(supabase.auth.currentUser!.id, 'User'),
+              inputOptions: InputOptions(
+                sendOnEnter: false,
+                textInputAction: TextInputAction.send,
+                inputMaxLines: 2,
+                inputTextStyle: Theme.of(context).textTheme.bodyMedium,
+                inputDecoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(17),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(17),
+                    ),
+                  ),
                 ),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(17),
+                leading: [
+                  IconButton(
+                    icon: const Icon(Icons.photo),
+                    onPressed: () async {
+                      // final img = await context.read<ChatCubit>().pickImage();
+                      // context.read<ChatCubit>().sendFileMessage(img);
+                    },
+                  ),
+                ],
+              ),
+              messageListOptions: MessageListOptions(
+                dateSeparatorBuilder: (date) => Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(8),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black12.withAlpha(50),
+                      borderRadius: BorderRadius.circular(17),
+                    ),
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      '${date.year}년 ${date.month}월 ${date.day}일',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.white,
+                          ),
+                    ),
+                  ),
                 ),
               ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor,
-                ),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(17),
-                ),
-              ),
-            ),
-            leading: [
-              IconButton(
-                icon: const Icon(Icons.photo),
-                onPressed: () async {
-                  // final img = await context.read<ChatCubit>().pickImage();
-                  // context.read<ChatCubit>().sendFileMessage(img);
+              messageOptions: MessageOptions(
+                showCurrentUserAvatar: false,
+                showOtherUsersAvatar: true,
+                messageRowBuilder: (ChatMessage message,
+                    ChatMessage? previousMessage,
+                    ChatMessage? nextMessage,
+                    bool isAfterDateSeparator,
+                    bool isBeforeDateSeparator) {
+                  bool isFirstInSequence = previousMessage == null ||
+                      previousMessage.user.id != message.user.id;
+                  bool isLastInSequence = nextMessage == null ||
+                      nextMessage.user.id != message.user.id;
+                  return ChatBubble(
+                    message: message,
+                    isMine: message.customProperties?['message'].isMine,
+                    isFirstInSequence: isFirstInSequence,
+                    isLastInSequence: isLastInSequence,
+                  );
                 },
               ),
-            ],
-          ),
-          messageListOptions: MessageListOptions(
-            dateSeparatorBuilder: (date) => Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(8),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black12.withAlpha(50),
-                  borderRadius: BorderRadius.circular(17),
-                ),
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  '${date.year}년 ${date.month}월 ${date.day}일',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.white,
-                      ),
-                ),
-              ),
+              onSend: (ChatMessage message) {
+                // context.read<ChatCubit>().sendMessage(message.text);
+                context
+                    .read<ChatCubit>()
+                    .sendMessage(message.text, "textMessage", roomId);
+              },
+              messages: asDashChatMessages(messages),
             ),
           ),
-          messageOptions: MessageOptions(
-            showCurrentUserAvatar: false,
-            showOtherUsersAvatar: true,
-            messageRowBuilder: (ChatMessage message,
-                ChatMessage? previousMessage,
-                ChatMessage? nextMessage,
-                bool isAfterDateSeparator,
-                bool isBeforeDateSeparator) {
-              bool isFirstInSequence = previousMessage == null ||
-                  previousMessage.user.id != message.user.id;
-              bool isLastInSequence =
-                  nextMessage == null || nextMessage.user.id != message.user.id;
-              return ChatBubble(
-                message: message,
-                isMine: message.customProperties?['message'].isMine,
-                isFirstInSequence: isFirstInSequence,
-                isLastInSequence: isLastInSequence,
-              );
-            },
-          ),
-          onSend: (ChatMessage message) {
-            // context.read<ChatCubit>().sendMessage(message.text);
-            context
-                .read<ChatCubit>()
-                .sendMessage(message.text, "textMessage", roomId);
-          },
-          messages: asDashChatMessages(messages),
-        ),
+        ],
       ),
     );
   }

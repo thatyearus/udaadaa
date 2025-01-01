@@ -137,7 +137,8 @@ class ChatBubble extends StatelessWidget {
       chatContents = chatContents.reversed.toList();
     }
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding:
+          const EdgeInsets.symmetric(vertical: 4, horizontal: AppSpacing.xs),
       child: Column(
         children: [
           if (isFirstInSequence) const SizedBox(height: 8),
