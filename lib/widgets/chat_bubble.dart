@@ -62,6 +62,37 @@ class ChatBubble extends StatelessWidget {
         });*/
   }
 
+  Widget _buildReaction(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(left: (isMine ? 0 : 40 + 12)),
+      child: Row(
+        mainAxisAlignment:
+            isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [
+          for (var reaction in message.customProperties?['message'].reactions)
+            GestureDetector(
+              onTap: () => _showDetailReactions(context),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: AppColors.neutral[700]?.withAlpha(100),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  reaction.content,
+                  style: AppTextStyles.labelSmall(
+                    TextStyle(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> bubbleContents = [
@@ -142,6 +173,8 @@ class ChatBubble extends StatelessWidget {
       padding:
           const EdgeInsets.symmetric(vertical: 4, horizontal: AppSpacing.xs),
       child: Column(
+        crossAxisAlignment:
+            isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           if (isFirstInSequence) const SizedBox(height: 8),
           Row(
@@ -150,6 +183,10 @@ class ChatBubble extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: chatContents,
           ),
+          if (message.customProperties?['message'].reactions.isNotEmpty)
+            const SizedBox(height: 4),
+          if (message.customProperties?['message'].reactions.isNotEmpty)
+            _buildReaction(context),
         ],
       ),
     );
