@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -13,6 +14,7 @@ class ChatCubit extends Cubit<ChatState> {
   ChatCubit() : super(ChatInitial()) {
     loadChatList();
     loadInitialMessages();
+    setMessagesListener();
   }
 
   Future<void> loadChatList() async {
@@ -43,6 +45,25 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  void setMessagesListener() {
+    supabase
+        .channel('public:messages')
+        .onPostgresChanges(
+            event: PostgresChangeEvent.insert,
+            schema: 'public',
+            table: 'messages',
+            callback: (payload) {
+              final message = Message.fromMap(
+                map: payload.newRecord,
+                myUserId: supabase.auth.currentUser!.id,
+              );
+              logger.d("setMessagesListener: $message");
+              messages = [message, ...messages];
+              emit(ChatMessageLoaded());
+            })
+        .subscribe();
+  }
+
   Future<void> sendMessage(String content, String type, String roomId) async {
     try {
       final message = Message(
@@ -52,10 +73,7 @@ class ChatCubit extends Cubit<ChatState> {
         type: type,
         isMine: true,
       );
-      final ret = await supabase.from('messages').upsert(message.toMap());
-      logger.d("sendMessage: $ret");
-      messages.add(message);
-      emit(ChatMessageLoaded());
+      await supabase.from('messages').upsert(message.toMap());
     } catch (e) {
       logger.e("sendMessage error: $e");
     }
