@@ -97,8 +97,8 @@ class ChatBubble extends StatelessWidget {
           children: [
             Text(
               "1",
-              style:
-                  AppTextStyles.labelSmall(TextStyle(color: AppColors.primary)),
+              style: AppTextStyles.labelSmall(
+                  const TextStyle(color: AppColors.primary)),
             ),
             // TODO: change read receipt to actual number of read receipts
             if (isLastInSequence)
