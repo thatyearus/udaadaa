@@ -1,6 +1,7 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/models/message.dart';
@@ -27,6 +28,8 @@ class ChatView extends StatelessWidget {
   Widget build(BuildContext context) {
     final messages =
         context.select<ChatCubit, List<Message>>((cubit) => cubit.getMessages);
+    final userName = context.select<AuthCubit, String>(
+        (cubit) => cubit.getCurProfile?.nickname ?? "");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat'),
@@ -38,7 +41,7 @@ class ChatView extends StatelessWidget {
           Expanded(
             child: DashChat(
               currentUser:
-                  asDashChatUser(supabase.auth.currentUser!.id, 'User'),
+                  asDashChatUser(supabase.auth.currentUser!.id, userName),
               inputOptions: InputOptions(
                 sendOnEnter: false,
                 textInputAction: TextInputAction.send,
@@ -148,7 +151,7 @@ class ChatView extends StatelessWidget {
           ChatMessage(
               createdAt: message.createdAt!,
               text: message.content ?? "",
-              user: asDashChatUser(user, user),
+              user: asDashChatUser(user, message.profile?.nickname ?? user),
               customProperties: {
                 // 'reactions': message.reactions,
                 'messageId': message.id,

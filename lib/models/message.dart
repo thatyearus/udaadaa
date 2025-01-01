@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:udaadaa/models/profile.dart';
+
 DateTime convertToKst(DateTime utcTime) {
   return utcTime.toUtc().add(const Duration(hours: 9));
 }
@@ -11,7 +13,7 @@ class Message {
     required this.userId,
     this.content,
     required this.type,
-    // required this.profile,
+    this.profile,
     this.createdAt,
     required this.isMine,
     this.imagePath,
@@ -26,7 +28,7 @@ class Message {
   final String roomId;
   final String? content;
   final String type;
-  // final Profile profile;
+  final Profile? profile;
   final DateTime? createdAt;
   final bool isMine;
   final Uint8List? image;
@@ -50,7 +52,7 @@ class Message {
     required String myUserId,
     // required this.reactions,
     // required this.readReceipts,
-    // required this.profile,
+    this.profile,
     this.image,
     this.imageUrl,
   })  : id = map['id'],
@@ -68,7 +70,7 @@ class Message {
     String? roomId,
     String? text,
     String? type,
-    // Profile? profile,
+    Profile? profile,
     DateTime? createdAt,
     bool? isMine,
     // List<Reaction>? reactions,
@@ -84,7 +86,7 @@ class Message {
       content: text ?? content,
       createdAt: createdAt ?? this.createdAt,
       type: type ?? this.type,
-      // profile: profile ?? this.profile,
+      profile: profile ?? this.profile,
       isMine: isMine ?? this.isMine,
       // reactions: reactions ?? this.reactions,
       // readReceipts: readReceipts ?? this.readReceipts,

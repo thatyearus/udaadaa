@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/models/message.dart';
+import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
 
@@ -30,13 +31,16 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> loadInitialMessages() async {
     try {
-      final ret =
-          await supabase.from('messages').select("*").order('created_at');
+      final ret = await supabase
+          .from('messages')
+          .select("*, profiles!messages_user_id_fkey(*)")
+          .order('created_at');
       logger.d("getInitialMessages: $ret");
       messages = ret
           .map((e) => Message.fromMap(
                 map: e,
                 myUserId: supabase.auth.currentUser!.id,
+                profile: Profile.fromMap(map: e['profiles']),
               ))
           .toList();
       emit(ChatMessageLoaded());
@@ -52,10 +56,16 @@ class ChatCubit extends Cubit<ChatState> {
             event: PostgresChangeEvent.insert,
             schema: 'public',
             table: 'messages',
-            callback: (payload) {
+            callback: (payload) async {
+              final profileRet = await supabase
+                  .from('profiles')
+                  .select()
+                  .eq('id', payload.newRecord['user_id'])
+                  .single();
               final message = Message.fromMap(
                 map: payload.newRecord,
                 myUserId: supabase.auth.currentUser!.id,
+                profile: Profile.fromMap(map: profileRet),
               );
               logger.d("setMessagesListener: $message");
               messages = [message, ...messages];
