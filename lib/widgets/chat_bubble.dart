@@ -119,7 +119,7 @@ class ChatBubble extends StatelessWidget {
           : !isMine
               ? const SizedBox(width: 40)
               : const SizedBox.shrink(),
-      const SizedBox(width: 12),
+      if (!isMine) const SizedBox(width: 12),
       Column(
           crossAxisAlignment:
               isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
