@@ -79,7 +79,7 @@ class ChatBubble extends StatelessWidget {
         ),
         child: (message.medias == null || message.medias!.isEmpty
             ? Text(
-                message.text ?? "",
+                message.text,
                 style: AppTextStyles.bodyLarge(
                   TextStyle(
                     color: AppColors.neutral[800],
