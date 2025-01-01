@@ -75,13 +75,19 @@ class ChatView extends StatelessWidget {
               messageListOptions: MessageListOptions(
                 dateSeparatorBuilder: (date) => Container(
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.only(
+                    top: AppSpacing.m,
+                    bottom: AppSpacing.xxs,
+                  ),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.black12.withAlpha(50),
+                      color: AppColors.neutral[700]?.withAlpha(100),
                       borderRadius: BorderRadius.circular(17),
                     ),
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.s,
+                      vertical: 6,
+                    ),
                     child: Text(
                       '${date.year}년 ${date.month}월 ${date.day}일',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
