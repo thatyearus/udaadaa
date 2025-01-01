@@ -111,9 +111,11 @@ class ChatBubble extends StatelessWidget {
     }
     List<Widget> chatContents = [
       (!isMine && isFirstInSequence)
-          ? const CircleAvatar(
-              child: Icon(
+          ? CircleAvatar(
+              backgroundColor: AppColors.primary[50],
+              child: const Icon(
                 Icons.person,
+                color: AppColors.primary,
               ),
             )
           : !isMine
