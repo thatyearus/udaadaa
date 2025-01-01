@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udaadaa/models/chat_reaction.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/models/room.dart';
@@ -33,15 +34,20 @@ class ChatCubit extends Cubit<ChatState> {
     try {
       final ret = await supabase
           .from('messages')
-          .select("*, profiles!messages_user_id_fkey(*)")
+          .select("*, profiles!messages_user_id_fkey(*), chat_reactions(*)")
           .order('created_at');
       logger.d("getInitialMessages: $ret");
       messages = ret
-          .map((e) => Message.fromMap(
-                map: e,
-                myUserId: supabase.auth.currentUser!.id,
-                profile: Profile.fromMap(map: e['profiles']),
-              ))
+          .map(
+            (e) => Message.fromMap(
+              map: e,
+              myUserId: supabase.auth.currentUser!.id,
+              profile: Profile.fromMap(map: e['profiles']),
+              reactions: (e['chat_reactions'] as List<dynamic>)
+                  .map((reactionRet) => Reaction.fromMap(map: reactionRet))
+                  .toList(),
+            ),
+          )
           .toList();
       emit(ChatMessageLoaded());
     } catch (e) {
@@ -66,6 +72,7 @@ class ChatCubit extends Cubit<ChatState> {
                 map: payload.newRecord,
                 myUserId: supabase.auth.currentUser!.id,
                 profile: Profile.fromMap(map: profileRet),
+                reactions: [],
               );
               logger.d("setMessagesListener: $message");
               messages = [message, ...messages];
@@ -82,6 +89,7 @@ class ChatCubit extends Cubit<ChatState> {
         content: content,
         type: type,
         isMine: true,
+        reactions: [],
       );
       await supabase.from('messages').upsert(message.toMap());
     } catch (e) {

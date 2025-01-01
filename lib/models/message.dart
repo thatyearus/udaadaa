@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:udaadaa/models/chat_reaction.dart';
 import 'package:udaadaa/models/profile.dart';
 
 DateTime convertToKst(DateTime utcTime) {
@@ -17,7 +18,7 @@ class Message {
     this.createdAt,
     required this.isMine,
     this.imagePath,
-    // required this.reactions,
+    required this.reactions,
     // required this.readReceipts,
     this.image,
     this.imageUrl,
@@ -33,7 +34,7 @@ class Message {
   final bool isMine;
   final Uint8List? image;
   final String? imagePath;
-  // final List<Reaction> reactions;
+  final List<Reaction> reactions;
   // final Set<String> readRecefipts;
   String? imageUrl;
 
@@ -50,7 +51,7 @@ class Message {
   Message.fromMap({
     required Map<String, dynamic> map,
     required String myUserId,
-    // required this.reactions,
+    required this.reactions,
     // required this.readReceipts,
     this.profile,
     this.image,
@@ -73,7 +74,7 @@ class Message {
     Profile? profile,
     DateTime? createdAt,
     bool? isMine,
-    // List<Reaction>? reactions,
+    List<Reaction>? reactions,
     // Set<String>? readReceipts,
     Uint8List? image,
     String? imageUrl,
@@ -88,7 +89,7 @@ class Message {
       type: type ?? this.type,
       profile: profile ?? this.profile,
       isMine: isMine ?? this.isMine,
-      // reactions: reactions ?? this.reactions,
+      reactions: reactions ?? this.reactions,
       // readReceipts: readReceipts ?? this.readReceipts,
       image: image ?? this.image,
       imageUrl: imageUrl ?? this.imageUrl,
