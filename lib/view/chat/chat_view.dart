@@ -53,15 +53,19 @@ class ChatView extends StatelessWidget {
                     isDense: true,
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.m),
+                      /*
                       borderSide: BorderSide(
-                        color: AppColors.neutral[500]!,
-                      ),
+                        color: AppColors.neutral[200]!,
+                      ),*/
+                      borderSide: BorderSide.none,
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.m),
+                      /*
                       borderSide: BorderSide(
-                        color: AppColors.neutral[500]!,
-                      ),
+                        color: AppColors.neutral[200]!,
+                      ),*/
+                      borderSide: BorderSide.none,
                     ),
                     hintText: '메시지를 입력하세요',
                     hintStyle: AppTextStyles.bodyMedium(
