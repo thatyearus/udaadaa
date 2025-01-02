@@ -48,6 +48,14 @@ class ChatView extends StatelessWidget {
                   inputMaxLines: 2,
                   inputToolbarMargin: EdgeInsets.zero,
                   inputToolbarPadding: const EdgeInsets.all(2),
+                  inputToolbarStyle:
+                      BoxDecoration(color: AppColors.white, boxShadow: [
+                    BoxShadow(
+                      color: AppColors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, -4),
+                    ),
+                  ]),
                   inputTextStyle: Theme.of(context).textTheme.bodyMedium,
                   inputDecoration: InputDecoration(
                     isDense: true,
