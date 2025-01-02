@@ -17,6 +17,7 @@ class ChatCubit extends Cubit<ChatState> {
     loadChatList();
     loadInitialMessages();
     setMessagesListener();
+    setReactionListener();
   }
 
   Future<void> loadChatList() async {
@@ -76,6 +77,37 @@ class ChatCubit extends Cubit<ChatState> {
               );
               logger.d("setMessagesListener: $message");
               messages = [message, ...messages];
+              emit(ChatMessageLoaded());
+            })
+        .subscribe();
+  }
+
+  void setReactionListener() {
+    supabase
+        .channel('public:chat_reactions')
+        .onPostgresChanges(
+            event: PostgresChangeEvent.insert,
+            schema: 'public',
+            table: 'chat_reactions',
+            callback: (payload) {
+              final reaction = Reaction.fromMap(
+                map: payload.newRecord,
+              );
+              /*
+              messages = messages.map((message) {
+                if (message.id == reaction.messageId) {
+                  message.reactions = [reaction, ...message.reactions];
+                }
+                return message;
+              }).toList();*/
+              messages = List.from(messages.map((message) {
+                if (message.id == reaction.messageId) {
+                  message = message
+                      .copyWith(reactions: [reaction, ...message.reactions]);
+                }
+                return message;
+              }));
+              logger.d("setReactionListener: $reaction");
               emit(ChatMessageLoaded());
             })
         .subscribe();

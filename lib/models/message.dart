@@ -34,7 +34,7 @@ class Message {
   final bool isMine;
   final Uint8List? image;
   final String? imagePath;
-  final List<Reaction> reactions;
+  List<Reaction> reactions;
   // final Set<String> readRecefipts;
   String? imageUrl;
 
