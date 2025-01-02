@@ -69,8 +69,8 @@ class MainView extends StatelessWidget {
       ),
       bottomNavigationBar: BlocBuilder<BottomNavCubit, BottomNavState>(
         builder: (context, state) => BottomNavigationBar(
-          selectedItemColor: AppColors.primary,
-          unselectedItemColor: AppColors.neutral[500],
+          selectedItemColor: AppColors.neutral[800],
+          unselectedItemColor: AppColors.neutral[400],
           showUnselectedLabels: true,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
