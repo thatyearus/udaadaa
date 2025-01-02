@@ -63,18 +63,41 @@ class ChatView extends StatelessWidget {
                     borderRadius: const BorderRadius.all(
                       Radius.circular(17),
                     ),
+                    filled: true,
+                    fillColor: AppColors.neutral[100],
                   ),
-                ),
-                leading: [
-                  IconButton(
-                    icon: const Icon(Icons.photo),
-                    onPressed: () async {
-                      // final img = await context.read<ChatCubit>().pickImage();
-                      // context.read<ChatCubit>().sendFileMessage(img);
-                    },
-                  ),
-                ],
-              ),
+                  leading: [
+                    IconButton(
+                      icon: Icon(Icons.photo_outlined,
+                          color: AppColors.neutral[500]),
+                      onPressed: () async {
+                        // final img = await context.read<ChatCubit>().pickImage();
+                        // context.read<ChatCubit>().sendFileMessage(img);
+                      },
+                    ),
+                  ],
+                  trailing: [
+                    IconButton(
+                      icon: Stack(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(AppSpacing.xs),
+                              border: Border.all(
+                                  color: AppColors.neutral[500]!, width: 1),
+                            ),
+                            child: Icon(Icons.add,
+                                color: AppColors.neutral[500], size: 20),
+                          ),
+                        ],
+                      ),
+                      onPressed: () {
+                        // context.read<ChatCubit>().sendMessage();
+                      },
+                    ),
+                  ]),
               messageListOptions: MessageListOptions(
                 dateSeparatorBuilder: (date) => Container(
                   alignment: Alignment.center,
