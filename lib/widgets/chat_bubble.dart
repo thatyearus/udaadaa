@@ -63,31 +63,63 @@ class ChatBubble extends StatelessWidget {
   }
 
   Widget _buildReaction(BuildContext context) {
+    Map<String, int> reactionCounts = {};
+    for (var reaction in message.customProperties?['message'].reactions) {
+      if (reactionCounts.containsKey(reaction.content)) {
+        reactionCounts[reaction.content] =
+            reactionCounts[reaction.content]! + 1;
+      } else {
+        reactionCounts[reaction.content] = 1;
+      }
+    }
+
     return Container(
       padding: EdgeInsets.only(left: (isMine ? 0 : 40 + 12)),
       child: Row(
         mainAxisAlignment:
             isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          for (var reaction in message.customProperties?['message'].reactions)
-            GestureDetector(
-              onTap: () => _showDetailReactions(context),
-              child: Container(
+          GestureDetector(
+            onTap: () => _showDetailReactions(context),
+            child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: AppColors.neutral[700]?.withAlpha(100),
+                  color: AppColors.neutral[800]?.withAlpha(100),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Text(
-                  reaction.content,
-                  style: AppTextStyles.labelSmall(
-                    TextStyle(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+                child: Row(
+                  children: [
+                    for (var reaction in reactionCounts.entries)
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: AppColors.neutral[100],
+                            radius: 10,
+                            child: Text(
+                              reaction.key,
+                              style: AppTextStyles.labelSmall(
+                                const TextStyle(
+                                  fontFamily: 'tossface',
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 2),
+                          Text(
+                            reaction.value.toString(),
+                            style: AppTextStyles.labelSmall(
+                              const TextStyle(
+                                color: AppColors.white,
+                              ),
+                            ),
+                          ),
+                          if (reactionCounts.entries.last.key != reaction.key)
+                            const SizedBox(width: 8),
+                        ],
+                      ),
+                  ],
+                )),
+          ),
         ],
       ),
     );
