@@ -46,8 +46,12 @@ class ChatBubble extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
                       title: Text(members[index]),
-                      trailing: Text(emojis[index],
-                          style: Theme.of(context).textTheme.bodyLarge),
+                      trailing: CircleAvatar(
+                        backgroundColor: AppColors.neutral[100],
+                        child: Text(emojis[index],
+                            style: AppTextStyles.bodyLarge(
+                                const TextStyle(fontFamily: 'tossface'))),
+                      ),
                     );
                   },
                 ),
