@@ -72,6 +72,7 @@ class MainView extends StatelessWidget {
           selectedItemColor: AppColors.neutral[800],
           unselectedItemColor: AppColors.neutral[400],
           showUnselectedLabels: true,
+          type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home_rounded),
