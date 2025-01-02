@@ -73,25 +73,35 @@ class MainView extends StatelessWidget {
           unselectedItemColor: AppColors.neutral[400],
           showUnselectedLabels: true,
           type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded),
+              icon: state == BottomNavState.home
+                  ? const Icon(Icons.home_rounded)
+                  : const Icon(Icons.home_outlined),
               label: '홈',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.chat_rounded),
+              icon: state == BottomNavState.chat
+                  ? const Icon(Icons.chat_rounded)
+                  : const Icon(Icons.chat_bubble_outline_rounded),
               label: '채팅',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.add_box_rounded),
+              icon: state == BottomNavState.register
+                  ? const Icon(Icons.add_box_rounded)
+                  : const Icon(Icons.add_box_outlined),
               label: '신청',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.feed_rounded),
+              icon: state == BottomNavState.feed
+                  ? const Icon(Icons.feed_rounded)
+                  : const Icon(Icons.feed_outlined),
               label: '피드',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_rounded),
+              icon: state == BottomNavState.profile
+                  ? const Icon(Icons.person_rounded)
+                  : const Icon(Icons.person_outline_rounded),
               label: '마이페이지',
             ),
           ],
