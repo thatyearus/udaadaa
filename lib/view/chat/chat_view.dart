@@ -84,7 +84,7 @@ class ChatView extends StatelessWidget {
                   ),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppColors.neutral[700]?.withAlpha(100),
+                      color: AppColors.neutral[800]?.withAlpha(100),
                       borderRadius: BorderRadius.circular(17),
                     ),
                     padding: const EdgeInsets.symmetric(
@@ -93,7 +93,7 @@ class ChatView extends StatelessWidget {
                     ),
                     child: Text(
                       '${date.year}년 ${date.month}월 ${date.day}일',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Colors.white,
                           ),
                     ),
