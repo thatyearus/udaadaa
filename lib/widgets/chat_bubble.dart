@@ -21,16 +21,11 @@ class ChatBubble extends StatelessWidget {
   void _showDetailReactions(BuildContext context) {
     List<String> emojis = [];
     List<String> members = [];
-    Map<String, String> reactionKeys = {
-      'thumb_up': '👍',
-      'heart': '❤️',
-      'smile': '😊',
-    };
 
-    /*
-    for (var reaction in message.reactions) {
-      emojis.add(reactionKeys[reaction.reaction]!);
-      members.add(reaction.profileId);
+    for (var reaction in message.customProperties?['message'].reactions) {
+      emojis.add(reaction.content);
+      members.add(reaction.userId);
+      // TODO: get user name from user id
     }
 
     showModalBottomSheet(
@@ -59,7 +54,7 @@ class ChatBubble extends StatelessWidget {
               ],
             ),
           );
-        });*/
+        });
   }
 
   Widget _buildReaction(BuildContext context) {
