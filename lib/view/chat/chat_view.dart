@@ -43,28 +43,36 @@ class ChatView extends StatelessWidget {
               currentUser:
                   asDashChatUser(supabase.auth.currentUser!.id, userName),
               inputOptions: InputOptions(
-                sendOnEnter: false,
-                textInputAction: TextInputAction.send,
-                inputMaxLines: 2,
-                inputTextStyle: Theme.of(context).textTheme.bodyMedium,
-                inputDecoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
+                  sendOnEnter: false,
+                  textInputAction: TextInputAction.send,
+                  inputMaxLines: 2,
+                  inputToolbarMargin: EdgeInsets.zero,
+                  inputToolbarPadding: const EdgeInsets.all(2),
+                  inputTextStyle: Theme.of(context).textTheme.bodyMedium,
+                  inputDecoration: InputDecoration(
+                    isDense: true,
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppSpacing.m),
+                      borderSide: BorderSide(
+                        color: AppColors.neutral[500]!,
+                      ),
                     ),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(17),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppSpacing.m),
+                      borderSide: BorderSide(
+                        color: AppColors.neutral[500]!,
+                      ),
                     ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
+                    hintText: '메시지를 입력하세요',
+                    hintStyle: AppTextStyles.bodyMedium(
+                      TextStyle(color: AppColors.neutral[500]),
                     ),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(17),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.s,
+                      vertical: AppSpacing.xs,
                     ),
                     filled: true,
-                    fillColor: AppColors.neutral[100],
+                    fillColor: AppColors.neutral[50],
                   ),
                   leading: [
                     IconButton(
