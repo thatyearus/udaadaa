@@ -158,11 +158,12 @@ class ChatBubble extends StatelessWidget {
               isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             Text(
-              "1",
+              message.customProperties?['message'].readReceipts.length
+                      .toString() ??
+                  "",
               style: AppTextStyles.labelSmall(
                   const TextStyle(color: AppColors.primary)),
             ),
-            // TODO: change read receipt to actual number of read receipts
             if (isLastInSequence)
               Text(DateFormat('HH:mm').format(message.createdAt),
                   style: AppTextStyles.textTheme.labelSmall),
