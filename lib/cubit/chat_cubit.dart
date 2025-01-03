@@ -35,9 +35,10 @@ class ChatCubit extends Cubit<ChatState> {
     try {
       final ret = await supabase
           .from('messages')
-          .select("*, profiles!messages_user_id_fkey(*), chat_reactions(*)")
+          .select(
+              "*, profiles!messages_user_id_fkey(*), chat_reactions(*), read_receipts(user_id)")
           .order('created_at');
-      logger.d("getInitialMessages: $ret");
+      logger.d(ret);
       messages = ret
           .map(
             (e) => Message.fromMap(
@@ -47,6 +48,9 @@ class ChatCubit extends Cubit<ChatState> {
               reactions: (e['chat_reactions'] as List<dynamic>)
                   .map((reactionRet) => Reaction.fromMap(map: reactionRet))
                   .toList(),
+              readReceipts: (e['read_receipts'] as List<dynamic>)
+                  .map((receiptRet) => receiptRet['user_id'] as String)
+                  .toSet(),
             ),
           )
           .toList();
@@ -74,6 +78,7 @@ class ChatCubit extends Cubit<ChatState> {
                 myUserId: supabase.auth.currentUser!.id,
                 profile: Profile.fromMap(map: profileRet),
                 reactions: [],
+                readReceipts: {},
               );
               logger.d("setMessagesListener: $message");
               messages = [message, ...messages];
@@ -122,6 +127,7 @@ class ChatCubit extends Cubit<ChatState> {
         type: type,
         isMine: true,
         reactions: [],
+        readReceipts: {},
       );
       await supabase.from('messages').upsert(message.toMap());
     } catch (e) {

@@ -19,7 +19,7 @@ class Message {
     required this.isMine,
     this.imagePath,
     required this.reactions,
-    // required this.readReceipts,
+    required this.readReceipts,
     this.image,
     this.imageUrl,
   });
@@ -35,7 +35,7 @@ class Message {
   final Uint8List? image;
   final String? imagePath;
   List<Reaction> reactions;
-  // final Set<String> readRecefipts;
+  Set<String> readReceipts;
   String? imageUrl;
 
   Map<String, dynamic> toMap() {
@@ -52,7 +52,7 @@ class Message {
     required Map<String, dynamic> map,
     required String myUserId,
     required this.reactions,
-    // required this.readReceipts,
+    required this.readReceipts,
     this.profile,
     this.image,
     this.imageUrl,
@@ -75,7 +75,7 @@ class Message {
     DateTime? createdAt,
     bool? isMine,
     List<Reaction>? reactions,
-    // Set<String>? readReceipts,
+    Set<String>? readReceipts,
     Uint8List? image,
     String? imageUrl,
     String? imagePath,
@@ -90,7 +90,7 @@ class Message {
       profile: profile ?? this.profile,
       isMine: isMine ?? this.isMine,
       reactions: reactions ?? this.reactions,
-      // readReceipts: readReceipts ?? this.readReceipts,
+      readReceipts: readReceipts ?? this.readReceipts,
       image: image ?? this.image,
       imageUrl: imageUrl ?? this.imageUrl,
       imagePath: imagePath ?? this.imagePath,
