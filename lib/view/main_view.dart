@@ -9,7 +9,6 @@ import 'package:udaadaa/view/feed/feed_view.dart';
 import 'package:udaadaa/view/home/home_view.dart';
 import 'package:udaadaa/view/mypage/mypage_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
-import 'package:udaadaa/view/onboarding/first_view.dart';
 import 'package:udaadaa/view/register/register_view.dart';
 
 class MainView extends StatelessWidget {
@@ -128,6 +127,7 @@ class MainView extends StatelessWidget {
           ),
         ),
       ),
+      /*
       floatingActionButton: BlocBuilder<BottomNavCubit, BottomNavState>(
         builder: (context, state) {
           if (state == BottomNavState.feed ||
@@ -164,7 +164,7 @@ class MainView extends StatelessWidget {
           );
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,*/
     );
   }
 }
