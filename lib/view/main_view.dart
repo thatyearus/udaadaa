@@ -67,54 +67,65 @@ class MainView extends StatelessWidget {
           );
         }),
       ),
-      bottomNavigationBar: BlocBuilder<BottomNavCubit, BottomNavState>(
-        builder: (context, state) => BottomNavigationBar(
-          selectedItemColor: AppColors.neutral[800],
-          unselectedItemColor: AppColors.neutral[400],
-          showUnselectedLabels: true,
-          type: BottomNavigationBarType.fixed,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: state == BottomNavState.home
-                  ? const Icon(Icons.home_rounded)
-                  : const Icon(Icons.home_outlined),
-              label: '홈',
-            ),
-            BottomNavigationBarItem(
-              icon: state == BottomNavState.chat
-                  ? const Icon(Icons.chat_rounded)
-                  : const Icon(Icons.chat_bubble_outline_rounded),
-              label: '채팅',
-            ),
-            BottomNavigationBarItem(
-              icon: state == BottomNavState.register
-                  ? const Icon(Icons.add_box_rounded)
-                  : const Icon(Icons.add_box_outlined),
-              label: '신청',
-            ),
-            BottomNavigationBarItem(
-              icon: state == BottomNavState.feed
-                  ? const Icon(Icons.feed_rounded)
-                  : const Icon(Icons.feed_outlined),
-              label: '피드',
-            ),
-            BottomNavigationBarItem(
-              icon: state == BottomNavState.profile
-                  ? const Icon(Icons.person_rounded)
-                  : const Icon(Icons.person_outline_rounded),
-              label: '마이페이지',
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withOpacity(0.05),
+              blurRadius: 4,
+              offset: const Offset(0, -2),
             ),
           ],
-          currentIndex: BottomNavState.values.indexOf(state),
-          onTap: (index) {
-            Analytics().logEvent(
-              "네비게이션바",
-              parameters: {"클릭": labels[index]},
-            );
-            context
-                .read<BottomNavCubit>()
-                .selectTab(BottomNavState.values[index]);
-          },
+        ),
+        child: BlocBuilder<BottomNavCubit, BottomNavState>(
+          builder: (context, state) => BottomNavigationBar(
+            selectedItemColor: AppColors.neutral[800],
+            unselectedItemColor: AppColors.neutral[400],
+            showUnselectedLabels: true,
+            type: BottomNavigationBarType.fixed,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: state == BottomNavState.home
+                    ? const Icon(Icons.home_rounded)
+                    : const Icon(Icons.home_outlined),
+                label: '홈',
+              ),
+              BottomNavigationBarItem(
+                icon: state == BottomNavState.chat
+                    ? const Icon(Icons.chat_rounded)
+                    : const Icon(Icons.chat_bubble_outline_rounded),
+                label: '채팅',
+              ),
+              BottomNavigationBarItem(
+                icon: state == BottomNavState.register
+                    ? const Icon(Icons.add_box_rounded)
+                    : const Icon(Icons.add_box_outlined),
+                label: '신청',
+              ),
+              BottomNavigationBarItem(
+                icon: state == BottomNavState.feed
+                    ? const Icon(Icons.feed_rounded)
+                    : const Icon(Icons.feed_outlined),
+                label: '피드',
+              ),
+              BottomNavigationBarItem(
+                icon: state == BottomNavState.profile
+                    ? const Icon(Icons.person_rounded)
+                    : const Icon(Icons.person_outline_rounded),
+                label: '마이페이지',
+              ),
+            ],
+            currentIndex: BottomNavState.values.indexOf(state),
+            onTap: (index) {
+              Analytics().logEvent(
+                "네비게이션바",
+                parameters: {"클릭": labels[index]},
+              );
+              context
+                  .read<BottomNavCubit>()
+                  .selectTab(BottomNavState.values[index]);
+            },
+          ),
         ),
       ),
       floatingActionButton: BlocBuilder<BottomNavCubit, BottomNavState>(
