@@ -18,6 +18,7 @@ class ChatCubit extends Cubit<ChatState> {
     loadInitialMessages();
     setMessagesListener();
     setReactionListener();
+    setReadReceiptListener();
   }
 
   Future<void> loadChatList() async {
@@ -113,6 +114,28 @@ class ChatCubit extends Cubit<ChatState> {
                 return message;
               }));
               logger.d("setReactionListener: $reaction");
+              emit(ChatMessageLoaded());
+            })
+        .subscribe();
+  }
+
+  void setReadReceiptListener() {
+    supabase
+        .channel('public:read_receipts')
+        .onPostgresChanges(
+            event: PostgresChangeEvent.insert,
+            schema: 'public',
+            table: 'read_receipts',
+            callback: (payload) {
+              messages = List.from(messages.map((message) {
+                if (message.id == payload.newRecord['message_id']) {
+                  message = message.copyWith(readReceipts: {
+                    ...message.readReceipts,
+                    payload.newRecord['user_id'],
+                  });
+                }
+                return message;
+              }));
               emit(ChatMessageLoaded());
             })
         .subscribe();
