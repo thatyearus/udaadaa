@@ -82,35 +82,30 @@ class MainView extends StatelessWidget {
             unselectedItemColor: AppColors.neutral[400],
             showUnselectedLabels: true,
             type: BottomNavigationBarType.fixed,
-            items: <BottomNavigationBarItem>[
+            items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: state == BottomNavState.home
-                    ? const Icon(Icons.home_rounded)
-                    : const Icon(Icons.home_outlined),
+                icon: Icon(Icons.home_outlined),
+                activeIcon: Icon(Icons.home_rounded),
                 label: '홈',
               ),
               BottomNavigationBarItem(
-                icon: state == BottomNavState.chat
-                    ? const Icon(Icons.chat_rounded)
-                    : const Icon(Icons.chat_bubble_outline_rounded),
+                icon: Icon(Icons.chat_bubble_outline),
+                activeIcon: Icon(Icons.chat_rounded),
                 label: '채팅',
               ),
               BottomNavigationBarItem(
-                icon: state == BottomNavState.register
-                    ? const Icon(Icons.add_box_rounded)
-                    : const Icon(Icons.add_box_outlined),
+                icon: Icon(Icons.add_box_outlined),
+                activeIcon: Icon(Icons.add_box_rounded),
                 label: '신청',
               ),
               BottomNavigationBarItem(
-                icon: state == BottomNavState.feed
-                    ? const Icon(Icons.feed_rounded)
-                    : const Icon(Icons.feed_outlined),
+                icon: Icon(Icons.feed_outlined),
+                activeIcon: Icon(Icons.feed_rounded),
                 label: '피드',
               ),
               BottomNavigationBarItem(
-                icon: state == BottomNavState.profile
-                    ? const Icon(Icons.person_rounded)
-                    : const Icon(Icons.person_outline_rounded),
+                icon: Icon(Icons.person_outline_rounded),
+                activeIcon: Icon(Icons.person_rounded),
                 label: '마이페이지',
               ),
             ],
