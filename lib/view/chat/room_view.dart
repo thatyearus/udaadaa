@@ -24,7 +24,7 @@ class RoomView extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => ChatView(
-                    roomId: rooms[index].id,
+                    roomInfo: rooms[index],
                   ),
                 ),
               );

@@ -6,6 +6,7 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/models/message.dart';
+import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/widgets/chat_bubble.dart';
 
@@ -13,7 +14,7 @@ import 'package:udaadaa/widgets/chat_bubble.dart';
 ///
 /// Displays chat bubbles as a ListView and TextField to enter new chat.
 class ChatView extends StatelessWidget {
-  const ChatView({super.key, required this.roomId});
+  const ChatView({super.key, required this.roomInfo});
 
   /*static Route<void> route(String roomId) {
     return MaterialPageRoute(
@@ -23,7 +24,7 @@ class ChatView extends StatelessWidget {
       ),
     );
   }*/
-  final String roomId;
+  final Room roomInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class ChatView extends StatelessWidget {
         (cubit) => cubit.getCurProfile?.nickname ?? "");
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: Text(roomInfo.roomName),
         backgroundColor: AppColors.primary[100],
         surfaceTintColor: AppColors.primary[100],
       ),
@@ -196,7 +197,7 @@ class ChatView extends StatelessWidget {
                 // context.read<ChatCubit>().sendMessage(message.text);
                 context
                     .read<ChatCubit>()
-                    .sendMessage(message.text, "textMessage", roomId);
+                    .sendMessage(message.text, "textMessage", roomInfo.id);
               },
               messages: asDashChatMessages(messages),
             ),
