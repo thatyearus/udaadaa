@@ -85,8 +85,8 @@ class MainView extends StatelessWidget {
             type: BottomNavigationBarType.fixed,
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined),
-                activeIcon: Icon(Icons.home_rounded),
+                icon: Icon(FluentIcons.home_24_regular),
+                activeIcon: Icon(FluentIcons.home_24_filled),
                 label: '홈',
               ),
               BottomNavigationBarItem(
@@ -95,18 +95,18 @@ class MainView extends StatelessWidget {
                 label: '채팅',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.add_box_outlined),
-                activeIcon: Icon(Icons.add_box_rounded),
+                icon: Icon(FluentIcons.add_square_24_regular),
+                activeIcon: Icon(FluentIcons.add_square_24_filled),
                 label: '신청',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.feed_outlined),
-                activeIcon: Icon(Icons.feed_rounded),
+                icon: Icon(FluentIcons.channel_24_regular),
+                activeIcon: Icon(FluentIcons.channel_24_filled),
                 label: '피드',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline_rounded),
-                activeIcon: Icon(Icons.person_rounded),
+                icon: Icon(FluentIcons.person_24_regular),
+                activeIcon: Icon(FluentIcons.person_24_filled),
                 label: '마이페이지',
               ),
             ],
