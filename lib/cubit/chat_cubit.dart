@@ -23,9 +23,20 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> loadChatList() async {
     try {
-      final ret = await supabase.from('rooms').select();
-      logger.d("loadChatList: $ret");
-      chatList = ret.map((e) => Room.fromMap(e)).toList();
+      final ret = await supabase.from('rooms').select('*, profiles(*)');
+      logger.d(ret);
+      chatList = ret
+          .map(
+            (e) => Room.fromMap(
+              e,
+              members: (e['profiles'] as List<dynamic>)
+                  .map((profileRet) => Profile.fromMap(map: profileRet))
+                  .toList(),
+            ),
+          )
+          .toList();
+      logger.d("loadChatList: ${chatList[0].members}");
+      logger.d("loadChatList: ${chatList[0].memberMap}");
       emit(ChatListLoaded());
     } catch (e) {
       logger.e("loadChatList error: $e");
