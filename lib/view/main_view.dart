@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
@@ -89,8 +90,8 @@ class MainView extends StatelessWidget {
                 label: '홈',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.chat_bubble_outline),
-                activeIcon: Icon(Icons.chat_rounded),
+                icon: Icon(FluentIcons.chat_multiple_24_regular),
+                activeIcon: Icon(FluentIcons.chat_multiple_24_filled),
                 label: '채팅',
               ),
               BottomNavigationBarItem(
