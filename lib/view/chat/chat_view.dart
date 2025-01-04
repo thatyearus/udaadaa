@@ -1,4 +1,5 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
@@ -38,6 +39,34 @@ class ChatView extends StatelessWidget {
       ),
       body: Column(
         children: [
+          Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.black.withOpacity(0.25),
+                    blurRadius: 2,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Icon(FluentIcons.megaphone_24_regular,
+                      color: AppColors.neutral[500]),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(AppSpacing.s),
+                      child: Text(
+                        '우측 하단의 + 버튼을 눌러 인증을 진행해 주세요.',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ),
+                ],
+              )),
           Expanded(
             child: DashChat(
               currentUser:
