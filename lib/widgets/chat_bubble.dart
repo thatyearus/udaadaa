@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:udaadaa/cubit/chat_cubit.dart';
+import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class ChatBubble extends StatelessWidget {
@@ -19,18 +22,19 @@ class ChatBubble extends StatelessWidget {
   final bool isLastInSequence;
 
   void _showDetailReactions(BuildContext context) {
-    List<String> emojis = [];
-    List<String> members = [];
-
-    for (var reaction in message.customProperties?['message'].reactions) {
-      emojis.add(reaction.content);
-      members.add(reaction.userId);
-      // TODO: get user name from user id
-    }
-
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
+          List<String> emojis = [];
+          List<String> members = [];
+
+          for (var reaction in message.customProperties?['message'].reactions) {
+            emojis.add(reaction.content);
+            Profile? profile = context.read<ChatCubit>().getProfile(
+                message.customProperties?['message'].roomId ?? "",
+                reaction.userId);
+            members.add(profile?.nickname ?? "정보 없음");
+          }
           return Container(
             padding: const EdgeInsets.all(16.0),
             child: Column(
