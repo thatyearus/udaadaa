@@ -183,7 +183,8 @@ class ChatView extends StatelessWidget {
                     bool isAfterDateSeparator,
                     bool isBeforeDateSeparator) {
                   bool isFirstInSequence = previousMessage == null ||
-                      previousMessage.user.id != message.user.id;
+                      previousMessage.user.id != message.user.id ||
+                      isAfterDateSeparator;
                   bool isLastInSequence = nextMessage == null ||
                       nextMessage.user.id != message.user.id ||
                       isBeforeDateSeparator;
