@@ -271,7 +271,12 @@ class ChatCubit extends Cubit<ChatState> {
             .from('ImageMessages')
             .createSignedUrl(message.imagePath!, 3600);
         logger.d("makeImageUrl: $url");
-        message.imageUrl = url;
+        messages = List.from(messages.map((m) {
+          if (m.id == message.id) {
+            m = message.copyWith(imageUrl: url);
+          }
+          return m;
+        }));
         emit(ChatMessageLoaded());
       } catch (e) {
         logger.e("makeImageUrl error: $e");
