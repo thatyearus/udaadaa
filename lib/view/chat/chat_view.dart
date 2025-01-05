@@ -185,7 +185,8 @@ class ChatView extends StatelessWidget {
                   bool isFirstInSequence = previousMessage == null ||
                       previousMessage.user.id != message.user.id;
                   bool isLastInSequence = nextMessage == null ||
-                      nextMessage.user.id != message.user.id;
+                      nextMessage.user.id != message.user.id ||
+                      isBeforeDateSeparator;
                   return ChatBubble(
                     message: message,
                     isMine: message.customProperties?['message'].isMine,
