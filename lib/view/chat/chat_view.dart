@@ -120,7 +120,8 @@ class ChatView extends StatelessWidget {
                     IconButton(
                       icon: Icon(Icons.photo_outlined,
                           color: AppColors.neutral[500]),
-                      onPressed: () async {
+                      onPressed: () {
+                        context.read<ChatCubit>().sendImageMessage(roomInfo.id);
                         // final img = await context.read<ChatCubit>().pickImage();
                         // context.read<ChatCubit>().sendFileMessage(img);
                       },

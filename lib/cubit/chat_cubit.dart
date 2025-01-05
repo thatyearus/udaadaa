@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
+import 'package:image/image.dart' as img;
+import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/models/chat_reaction.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/models/room.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 part 'chat_state.dart';
@@ -12,6 +18,7 @@ part 'chat_state.dart';
 class ChatCubit extends Cubit<ChatState> {
   List<Room> chatList = [];
   List<Message> messages = [];
+  XFile? _selectedImage;
 
   ChatCubit() : super(ChatInitial()) {
     loadChatList();
@@ -170,6 +177,89 @@ class ChatCubit extends Cubit<ChatState> {
       await supabase.from('messages').upsert(message.toMap());
     } catch (e) {
       logger.e("sendMessage error: $e");
+    }
+  }
+
+  Future<void> selectImage(ImageSource pickertype) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: pickertype);
+
+    if (pickedFile != null) {
+      _selectedImage = pickedFile;
+    }
+  }
+
+  Future<File?> compressImage(File file) async {
+    try {
+      final img.Image? image = img.decodeImage(file.readAsBytesSync());
+
+      if (image == null) {
+        throw Exception('Unable to decode image');
+      }
+
+      img.Image resizedImage = img.copyResize(image, width: 1024);
+
+      final Directory tempDir = await getTemporaryDirectory();
+      final String tempPath = tempDir.path;
+      final File compressedImage =
+          File('$tempPath/${DateTime.now().microsecondsSinceEpoch}.jpg')
+            ..writeAsBytesSync(img.encodeJpg(resizedImage, quality: 70));
+
+      return compressedImage;
+    } catch (e) {
+      Analytics().logEvent("업로드_압축실패", parameters: {"에러": e.toString()});
+      logger.e(e);
+      return null;
+    }
+  }
+
+  Future<String?> uploadImage(String type, String roomId) async {
+    final XFile? file = _selectedImage;
+    if (file == null) {
+      logger.e('No image selected');
+      return null;
+    }
+
+    try {
+      final File? compressedImage = await compressImage(File(file.path));
+      if (compressedImage == null) {
+        logger.e('Failed to compress image');
+        return null;
+      }
+      final userId = supabase.auth.currentUser!.id;
+      final imagePath =
+          '$roomId/${DateTime.now().microsecondsSinceEpoch}_$userId.jpg';
+      await supabase.storage
+          .from('ImageMessages')
+          .upload(imagePath, compressedImage);
+      return imagePath;
+    } catch (e) {
+      logger.e(e);
+      Analytics().logEvent("업로드_이미지실패", parameters: {"에러": e.toString()});
+      return null;
+    }
+  }
+
+  Future<void> sendImageMessage(String roomId) async {
+    try {
+      await selectImage(ImageSource.gallery);
+      final imagePath = await uploadImage('imageMessage', roomId);
+      if (imagePath == null) {
+        logger.e('Failed to upload image');
+        return;
+      }
+      final message = Message(
+        roomId: roomId,
+        userId: supabase.auth.currentUser!.id,
+        imagePath: imagePath,
+        type: 'imageMessage',
+        isMine: true,
+        reactions: [],
+        readReceipts: {},
+      );
+      await supabase.from('messages').upsert(message.toMap());
+    } catch (e) {
+      logger.e("sendImageMessage error: $e");
     }
   }
 
