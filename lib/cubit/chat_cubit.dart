@@ -67,6 +67,9 @@ class ChatCubit extends Cubit<ChatState> {
           )
           .toList();
       emit(ChatMessageLoaded());
+      for (var message in messages) {
+        if (message.type == 'imageMessage') makeImageUrlMessage(message);
+      }
     } catch (e) {
       logger.e("getInitialMessages error : $e");
     }
@@ -92,6 +95,7 @@ class ChatCubit extends Cubit<ChatState> {
                 reactions: [],
                 readReceipts: {},
               );
+              if (message.type == 'imageMessage') makeImageUrlMessage(message);
               logger.d("setMessagesListener: $message");
               messages = [message, ...messages];
               emit(ChatMessageLoaded());
@@ -166,6 +170,22 @@ class ChatCubit extends Cubit<ChatState> {
       await supabase.from('messages').upsert(message.toMap());
     } catch (e) {
       logger.e("sendMessage error: $e");
+    }
+  }
+
+  void makeImageUrlMessage(Message message) async {
+    if (message.type == 'imageMessage' && message.imagePath != null) {
+      try {
+        logger.d("makeImageUrl: ${message.imagePath}");
+        final url = await supabase.storage
+            .from('ImageMessages')
+            .createSignedUrl(message.imagePath!, 3600);
+        logger.d("makeImageUrl: $url");
+        message.imageUrl = url;
+        emit(ChatMessageLoaded());
+      } catch (e) {
+        logger.e("makeImageUrl error: $e");
+      }
     }
   }
 

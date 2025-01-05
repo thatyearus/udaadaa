@@ -233,7 +233,7 @@ class ChatView extends StatelessWidget {
                 'message': message,
               }),
         );
-      } else if (message.type == "FileMessage") {
+      } else if (message.type == "imageMessage") {
         result.add(
           ChatMessage(
               createdAt: message.createdAt!,
