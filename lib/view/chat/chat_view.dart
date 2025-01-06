@@ -26,6 +26,130 @@ class ChatView extends StatelessWidget {
   }*/
   final Room roomInfo;
 
+  Drawer showDrawer(BuildContext context) {
+    return Drawer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SafeArea(
+            minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  roomInfo.roomName,
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
+                Text('${roomInfo.members.length}명 참여중',
+                    style: Theme.of(context).textTheme.bodyLarge),
+                /*Text("채팅방 일자: ${roomInfo.createdAt}",
+                    style: Theme.of(context).textTheme.bodyMedium),*/
+              ],
+            ),
+          ),
+          Divider(color: AppColors.neutral[200]),
+/*
+          DrawerHeader(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  roomInfo.roomName,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                Text('${roomInfo.members.length}명 참여중',
+                    style: Theme.of(context).textTheme.bodyLarge),
+              ],
+            ),
+          ),*/
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.xs),
+            child:
+                Text('사진 모아보기', style: Theme.of(context).textTheme.titleSmall),
+          ),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: AppSpacing.xxs,
+            ),
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return Container(
+                decoration: const BoxDecoration(color: AppColors.primary),
+              );
+            },
+          ),
+          AppSpacing.verticalSizedBoxXs,
+          Divider(color: AppColors.neutral[200]),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:
+                Text('참여자 목록', style: Theme.of(context).textTheme.titleSmall),
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.zero,
+              itemCount: roomInfo.members.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: AppColors.primary[50],
+                    child: const Icon(Icons.person, color: AppColors.primary),
+                  ),
+                  title: Text(roomInfo.members[index].nickname,
+                      style: Theme.of(context).textTheme.bodyMedium),
+                  onTap: () {
+                    /*navigateToProfileView(
+                      context,
+                      _members[index].profileUrl!,
+                      _members[index].nickname,
+                      _members[index].userId,
+                      widget.groupChannel,
+                      getMessages,
+                    );*/
+                  },
+                );
+              },
+            ),
+          ),
+          Divider(color: AppColors.neutral[200]),
+          ListTile(
+            leading: IconButton(
+              icon: Icon(Icons.logout, color: AppColors.neutral[500]),
+              onPressed: () {},
+              /*onPressed: () async {
+                  await SendbirdSdk().disconnect();
+                  await supabase.Supabase.instance.client.auth.signOut();
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.remove('user');
+                  await prefs.remove('group_channel');
+                  await prefs.remove('personal_channel');
+                  await prefs.remove('entrance_code');
+                  Navigator.popAndPushNamed(context, '/entrance');
+                }*/
+            ),
+            trailing: IconButton(
+              icon: /*Icon(_pushTriggerOption == GroupChannelPushTriggerOption.off
+                  ? Icons.notifications_off
+                  : Icons.notifications_active),*/
+
+                  Icon(Icons.notifications_active,
+                      color: AppColors.neutral[500]),
+              //  onPressed: _toogglePushOption,
+              onPressed: () {},
+            ),
+          ),
+          const SizedBox(height: 16.0),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final messages = context.select<ChatCubit, List<Message>>(
@@ -38,6 +162,7 @@ class ChatView extends StatelessWidget {
         backgroundColor: AppColors.primary[100],
         surfaceTintColor: AppColors.primary[100],
       ),
+      endDrawer: showDrawer(context),
       body: Column(
         children: [
           Container(
