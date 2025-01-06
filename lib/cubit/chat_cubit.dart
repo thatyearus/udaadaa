@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
@@ -17,7 +18,7 @@ part 'chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   List<Room> chatList = [];
-  List<Message> messages = [];
+  Map<String, List<Message>> messages = {};
   XFile? _selectedImage;
 
   ChatCubit() : super(ChatInitial()) {
@@ -58,6 +59,26 @@ class ChatCubit extends Cubit<ChatState> {
               "*, profiles!messages_user_id_fkey(*), chat_reactions(*), read_receipts(user_id)")
           .order('created_at');
       logger.d(ret);
+      for (var row in ret) {
+        final roomId = row['room_id'];
+        if (!messages.containsKey(roomId)) {
+          messages[roomId] = [];
+        }
+        messages[roomId]!.add(
+          Message.fromMap(
+            map: row,
+            myUserId: supabase.auth.currentUser!.id,
+            profile: Profile.fromMap(map: row['profiles']),
+            reactions: (row['chat_reactions'] as List<dynamic>)
+                .map((reactionRet) => Reaction.fromMap(map: reactionRet))
+                .toList(),
+            readReceipts: (row['read_receipts'] as List<dynamic>)
+                .map((receiptRet) => receiptRet['user_id'] as String)
+                .toSet(),
+          ),
+        );
+      }
+      /*
       messages = ret
           .map(
             (e) => Message.fromMap(
@@ -72,10 +93,13 @@ class ChatCubit extends Cubit<ChatState> {
                   .toSet(),
             ),
           )
-          .toList();
+          .toList();*/
       emit(ChatMessageLoaded());
-      for (var message in messages) {
-        if (message.type == 'imageMessage') makeImageUrlMessage(message);
+      for (var room in messages.keys) {
+        for (var message in messages[room]!) {
+          if (message.type == 'imageMessage') makeImageUrlMessage(message);
+        }
+        // if (message.type == 'imageMessage') makeImageUrlMessage(message);
       }
     } catch (e) {
       logger.e("getInitialMessages error : $e");
@@ -104,7 +128,11 @@ class ChatCubit extends Cubit<ChatState> {
               );
               if (message.type == 'imageMessage') makeImageUrlMessage(message);
               logger.d("setMessagesListener: $message");
-              messages = [message, ...messages];
+              // messages = [message, ...messages];
+              messages[message.roomId] = [
+                message,
+                ...messages[message.roomId]!
+              ];
               emit(ChatMessageLoaded());
             })
         .subscribe();
@@ -128,7 +156,8 @@ class ChatCubit extends Cubit<ChatState> {
                 }
                 return message;
               }).toList();*/
-              messages = List.from(messages.map((message) {
+              messages[reaction.roomId] =
+                  List.from(messages[reaction.roomId]!.map((message) {
                 if (message.id == reaction.messageId) {
                   message = message
                       .copyWith(reactions: [reaction, ...message.reactions]);
@@ -149,7 +178,8 @@ class ChatCubit extends Cubit<ChatState> {
             schema: 'public',
             table: 'read_receipts',
             callback: (payload) {
-              messages = List.from(messages.map((message) {
+              final roomId = payload.newRecord['room_id'];
+              messages[roomId] = List.from(messages[roomId]!.map((message) {
                 if (message.id == payload.newRecord['message_id']) {
                   message = message.copyWith(readReceipts: {
                     ...message.readReceipts,
@@ -271,7 +301,7 @@ class ChatCubit extends Cubit<ChatState> {
             .from('ImageMessages')
             .createSignedUrl(message.imagePath!, 3600);
         logger.d("makeImageUrl: $url");
-        messages = List.from(messages.map((m) {
+        messages[message.roomId] = List.from(messages[message.roomId]!.map((m) {
           if (m.id == message.id) {
             m = message.copyWith(imageUrl: url);
           }
@@ -290,6 +320,8 @@ class ChatCubit extends Cubit<ChatState> {
   Profile? getProfile(String roomId, String userId) =>
       getRoom(roomId).memberMap[userId]!;
 
+  List<Message> getMessagesByRoomId(String roomId) => messages[roomId] ?? [];
+
   List<Room> get getChatList => chatList;
-  List<Message> get getMessages => messages;
+  Map<String, List<Message>> get getMessages => messages;
 }

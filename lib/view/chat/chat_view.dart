@@ -28,8 +28,8 @@ class ChatView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final messages =
-        context.select<ChatCubit, List<Message>>((cubit) => cubit.getMessages);
+    final messages = context.select<ChatCubit, List<Message>>(
+        (cubit) => cubit.getMessagesByRoomId(roomInfo.id));
     final userName = context.select<AuthCubit, String>(
         (cubit) => cubit.getCurProfile?.nickname ?? "");
     return Scaffold(
