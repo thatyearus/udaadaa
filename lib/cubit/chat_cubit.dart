@@ -308,6 +308,9 @@ class ChatCubit extends Cubit<ChatState> {
           }
           return m;
         }));
+        if (!imageMessages.containsKey(message.roomId)) {
+          imageMessages[message.roomId] = [];
+        }
         imageMessages[message.roomId] = [
           message,
           ...imageMessages[message.roomId]!,
