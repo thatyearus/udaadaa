@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +30,11 @@ class ChatView extends StatelessWidget {
   final Room roomInfo;
 
   Drawer showDrawer(BuildContext context) {
+    List<Message> imagemessages = context.select<ChatCubit, List<Message>>(
+        (cubit) => cubit
+            .getMessagesByRoomId(roomInfo.id)
+            .where((element) => element.type == "imageMessage")
+            .toList());
     return Drawer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,10 +85,14 @@ class ChatView extends StatelessWidget {
               crossAxisCount: 3,
               crossAxisSpacing: AppSpacing.xxs,
             ),
-            itemCount: 3,
+            itemCount: min(imagemessages.length, 3),
             itemBuilder: (context, index) {
               return Container(
                 decoration: const BoxDecoration(color: AppColors.primary),
+                child: CachedNetworkImage(
+                  imageUrl: imagemessages[index].imageUrl!,
+                  fit: BoxFit.cover,
+                ),
               );
             },
           ),

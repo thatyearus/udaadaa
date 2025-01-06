@@ -19,6 +19,7 @@ part 'chat_state.dart';
 class ChatCubit extends Cubit<ChatState> {
   List<Room> chatList = [];
   Map<String, List<Message>> messages = {};
+  Map<String, List<Message>> imageMessages = {};
   XFile? _selectedImage;
 
   ChatCubit() : super(ChatInitial()) {
@@ -307,6 +308,10 @@ class ChatCubit extends Cubit<ChatState> {
           }
           return m;
         }));
+        imageMessages[message.roomId] = [
+          message,
+          ...imageMessages[message.roomId]!,
+        ];
         emit(ChatMessageLoaded());
       } catch (e) {
         logger.e("makeImageUrl error: $e");
@@ -321,6 +326,8 @@ class ChatCubit extends Cubit<ChatState> {
       getRoom(roomId).memberMap[userId]!;
 
   List<Message> getMessagesByRoomId(String roomId) => messages[roomId] ?? [];
+  List<Message> getImageMessagesByRoomId(String roomId) =>
+      imageMessages[roomId] ?? [];
 
   List<Room> get getChatList => chatList;
   Map<String, List<Message>> get getMessages => messages;
