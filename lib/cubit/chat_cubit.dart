@@ -163,6 +163,20 @@ class ChatCubit extends Cubit<ChatState> {
               if (message.type == 'imageMessage') makeImageUrlMessage(message);
               logger.d("setMessagesListener: $message");
               // messages = [message, ...messages];
+              final updatedChatList = List<Room>.from(chatList);
+              final roomIndex = updatedChatList
+                  .indexWhere((room) => room.id == message.roomId);
+
+              if (roomIndex != -1) {
+                updatedChatList[roomIndex] =
+                    updatedChatList[roomIndex].copyWith(
+                  lastMessage: message,
+                );
+              }
+              chatList = updatedChatList;
+              chatList.sort((a, b) => b.lastMessage!.createdAt!
+                  .compareTo(a.lastMessage!.createdAt!));
+
               messages[message.roomId] = [
                 message,
                 ...messages[message.roomId]!
