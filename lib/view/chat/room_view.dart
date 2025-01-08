@@ -19,7 +19,10 @@ class RoomView extends StatelessWidget {
         itemBuilder: (context, index) {
           return ListTile(
             title: Text(rooms[index].roomName),
-            subtitle: const Text("Hello"),
+            subtitle: Text(rooms[index].lastMessage?.content ??
+                (rooms[index].lastMessage?.imagePath != null ? '사진' : '')),
+            trailing:
+                Text(rooms[index].lastMessage?.createdAt?.toString() ?? ''),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
