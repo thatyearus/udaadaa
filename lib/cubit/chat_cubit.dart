@@ -23,7 +23,7 @@ class ChatCubit extends Cubit<ChatState> {
   XFile? _selectedImage;
 
   ChatCubit() : super(ChatInitial()) {
-    loadChatList();
+    loadChatList().then((_) => fetchLatestMessages());
     loadInitialMessages();
     setMessagesListener();
     setReactionListener();
@@ -49,6 +49,39 @@ class ChatCubit extends Cubit<ChatState> {
       emit(ChatListLoaded());
     } catch (e) {
       logger.e("loadChatList error: $e");
+    }
+  }
+
+  Future<void> fetchLatestMessages() async {
+    try {
+      final updatedChatList = await Future.wait(
+        chatList.map((room) async {
+          final response = await supabase
+              .from('messages')
+              .select('*')
+              .eq('room_id', room.id)
+              .order('created_at', ascending: false)
+              .limit(1)
+              .single();
+
+          final message = Message.fromMap(
+            map: response,
+            myUserId: supabase.auth.currentUser!.id,
+            profile: room.memberMap[response['user_id']]!,
+            reactions: [],
+            readReceipts: {},
+          );
+
+          return room.copyWith(lastMessage: message); // 새로운 Room 객체 반환
+        }),
+      );
+
+      chatList = updatedChatList;
+      chatList.sort((a, b) =>
+          b.lastMessage!.createdAt!.compareTo(a.lastMessage!.createdAt!));
+      emit(ChatListLoaded());
+    } catch (e) {
+      logger.e('Error fetching latest messages: $e');
     }
   }
 
