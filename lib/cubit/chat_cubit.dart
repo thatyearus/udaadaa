@@ -177,6 +177,9 @@ class ChatCubit extends Cubit<ChatState> {
               chatList.sort((a, b) => b.lastMessage!.createdAt!
                   .compareTo(a.lastMessage!.createdAt!));
 
+              if (!messages.containsKey(message.roomId)) {
+                messages[message.roomId] = [];
+              }
               messages[message.roomId] = [
                 message,
                 ...messages[message.roomId]!
