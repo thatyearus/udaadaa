@@ -216,6 +216,9 @@ class ChatCubit extends Cubit<ChatState> {
                 message,
                 ...messages[message.roomId]!
               ];
+              if (message.roomId == currentRoomId) {
+                sendReadReceipt(message.roomId, message.id!);
+              }
               emit(ChatMessageLoaded());
             })
         .subscribe();
@@ -434,6 +437,20 @@ class ChatCubit extends Cubit<ChatState> {
       } catch (e) {
         logger.e("makeImageUrl error: $e");
       }
+    }
+  }
+
+  void sendReadReceipt(String roomId, String messageId) async {
+    try {
+      logger.d("sendReadReceipt: $roomId $messageId");
+      await supabase.from('read_receipts').upsert({
+        'room_id': roomId,
+        'message_id': messageId,
+        'user_id': supabase.auth.currentUser!.id,
+      });
+      readReceipts[roomId] = DateTime.now().add(const Duration(hours: 9));
+    } catch (e) {
+      logger.e("sendReadReceipt error: $e");
     }
   }
 
