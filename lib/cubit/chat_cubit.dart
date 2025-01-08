@@ -20,10 +20,14 @@ class ChatCubit extends Cubit<ChatState> {
   List<Room> chatList = [];
   Map<String, List<Message>> messages = {};
   Map<String, List<Message>> imageMessages = {};
+  Map<String, DateTime?> readReceipts = {};
   XFile? _selectedImage;
 
   ChatCubit() : super(ChatInitial()) {
-    loadChatList().then((_) => fetchLatestMessages());
+    loadChatList().then((_) {
+      fetchLatestMessages();
+      fetchLatestReceipt();
+    });
     loadInitialMessages();
     setMessagesListener();
     setReactionListener();
@@ -82,6 +86,33 @@ class ChatCubit extends Cubit<ChatState> {
       emit(ChatListLoaded());
     } catch (e) {
       logger.e('Error fetching latest messages: $e');
+    }
+  }
+
+  Future<void> fetchLatestReceipt() async {
+    try {
+      final futures = chatList.map((room) async {
+        final response = await supabase
+            .from('read_receipts')
+            .select('created_at')
+            .eq('room_id', room.id)
+            .eq('user_id', supabase.auth.currentUser!.id)
+            .order('created_at', ascending: false)
+            .limit(1);
+        if (response.isNotEmpty) {
+          if (readReceipts[room.id] == null ||
+              readReceipts[room.id]!.isBefore(response[0]['created_at'])) {
+            readReceipts[room.id] = DateTime.parse(response[0]['created_at'])
+                .add(const Duration(hours: 9));
+          }
+        }
+      });
+      await Future.wait(futures);
+      for (var room in chatList) {
+        logger.d("fetchLatestReceipt: ${room.id} ${readReceipts[room.id]}");
+      }
+    } catch (e) {
+      logger.e('Error fetching latest read receipts: $e');
     }
   }
 
