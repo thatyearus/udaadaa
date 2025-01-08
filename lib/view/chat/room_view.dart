@@ -47,6 +47,7 @@ class RoomView extends StatelessWidget {
                   ),
                 ),
               );
+              context.read<ChatCubit>().enterRoom(rooms[index].id);
             },
           );
         },

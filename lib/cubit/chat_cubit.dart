@@ -275,6 +275,33 @@ class ChatCubit extends Cubit<ChatState> {
         .subscribe();
   }
 
+  Future<void> enterRoom(String roomId) async {
+    try {
+      final unreadMessages = messages[roomId]!
+          .where((message) =>
+              message.createdAt != null &&
+              (readReceipts[roomId] == null ||
+                  message.createdAt!.isAfter(readReceipts[roomId]!)))
+          .toList();
+      logger.d("readReceipts: ${readReceipts[roomId]}");
+      logger.d("enterRoom: $unreadMessages");
+      final readReceiptsMap = unreadMessages
+          .map((message) => {
+                'room_id': roomId,
+                'message_id': message.id,
+                'user_id': supabase.auth.currentUser!.id,
+              })
+          .toList();
+      if (readReceiptsMap.isEmpty) return;
+      await supabase.from('read_receipts').upsert(readReceiptsMap);
+      readReceipts[roomId] = unreadMessages.isNotEmpty
+          ? unreadMessages.first.createdAt
+          : DateTime.now();
+    } catch (e) {
+      logger.e("enterRoom error: $e");
+    }
+  }
+
   Future<void> sendMessage(String content, String type, String roomId) async {
     try {
       final message = Message(
