@@ -59,7 +59,7 @@ class ChatCubit extends Cubit<ChatState> {
           .select(
               "*, profiles!messages_user_id_fkey(*), chat_reactions(*), read_receipts(user_id)")
           .order('created_at');
-      logger.d(ret);
+      // logger.d(ret);
       for (var row in ret) {
         final roomId = row['room_id'];
         if (!messages.containsKey(roomId)) {
@@ -297,11 +297,11 @@ class ChatCubit extends Cubit<ChatState> {
   void makeImageUrlMessage(Message message) async {
     if (message.type == 'imageMessage' && message.imagePath != null) {
       try {
-        logger.d("makeImageUrl: ${message.imagePath}");
+        // logger.d("makeImageUrl: ${message.imagePath}");
         final url = await supabase.storage
             .from('ImageMessages')
             .createSignedUrl(message.imagePath!, 3600);
-        logger.d("makeImageUrl: $url");
+        // logger.d("makeImageUrl: $url");
         messages[message.roomId] = List.from(messages[message.roomId]!.map((m) {
           if (m.id == message.id) {
             m = message.copyWith(imageUrl: url);
