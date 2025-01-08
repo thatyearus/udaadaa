@@ -1,3 +1,4 @@
+import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/profile.dart';
 
 class Room {
@@ -6,7 +7,7 @@ class Room {
     required this.createdAt,
     required this.roomName,
     required this.members,
-//    this.lastMessage,
+    this.lastMessage,
   });
 
   final String id;
@@ -14,7 +15,7 @@ class Room {
   final String roomName;
   List<Profile> members = [];
   Map<String, Profile> memberMap = {};
-//  final Message? lastMessage;
+  final Message? lastMessage;
 
   Map<String, dynamic> toMap() {
     return {
@@ -28,22 +29,22 @@ class Room {
       : id = map['id'],
         roomName = map['room_name'],
         createdAt = DateTime.parse(map['created_at']),
-        memberMap = {for (var member in members) member.id: member};
-//        lastMessage = null;
+        memberMap = {for (var member in members) member.id: member},
+        lastMessage = null;
 
   Room copyWith({
     String? id,
     DateTime? createdAt,
     String? roomName,
     List<Profile>? members,
-//    Message? lastMessage,
+    Message? lastMessage,
   }) {
     return Room(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       roomName: roomName ?? this.roomName,
       members: members ?? this.members,
-      //    lastMessage: lastMessage ?? this.lastMessage,
+      lastMessage: lastMessage ?? this.lastMessage,
     );
   }
 }
