@@ -22,6 +22,7 @@ class ChatCubit extends Cubit<ChatState> {
   Map<String, List<Message>> imageMessages = {};
   Map<String, DateTime?> readReceipts = {};
   XFile? _selectedImage;
+  String? currentRoomId;
 
   ChatCubit() : super(ChatInitial()) {
     loadChatList().then((_) {
@@ -277,6 +278,7 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> enterRoom(String roomId) async {
     try {
+      currentRoomId = roomId;
       final unreadMessages = messages[roomId]!
           .where((message) =>
               message.createdAt != null &&
@@ -300,6 +302,11 @@ class ChatCubit extends Cubit<ChatState> {
     } catch (e) {
       logger.e("enterRoom error: $e");
     }
+  }
+
+  void leaveRoom(String roomId) {
+    logger.d("leaveRoom: $roomId");
+    currentRoomId = null;
   }
 
   Future<void> sendMessage(String content, String type, String roomId) async {
