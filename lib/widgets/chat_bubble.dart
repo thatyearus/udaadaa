@@ -128,40 +128,43 @@ class ChatBubble extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget bubble(BuildContext context) {
     List<Widget> bubbleContents = [
-      Container(
-        padding: (message.medias == null || message.medias!.isEmpty)
-            ? const EdgeInsets.symmetric(
-                vertical: 8,
-                horizontal: 10,
-              )
-            : null,
-        decoration: (message.medias == null || message.medias!.isEmpty)
-            ? BoxDecoration(
-                color: isMine ? AppColors.primary[200] : AppColors.neutral[100],
-                borderRadius: BorderRadius.circular(10),
-              )
-            : null,
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.6,
-        ),
-        child: (message.medias == null || message.medias!.isEmpty
-            ? Text(
-                message.text,
-                style: AppTextStyles.bodyLarge(
-                  TextStyle(
-                    color: AppColors.neutral[800],
+      GestureDetector(
+        child: Container(
+          padding: (message.medias == null || message.medias!.isEmpty)
+              ? const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 10,
+                )
+              : null,
+          decoration: (message.medias == null || message.medias!.isEmpty)
+              ? BoxDecoration(
+                  color:
+                      isMine ? AppColors.primary[200] : AppColors.neutral[100],
+                  borderRadius: BorderRadius.circular(10),
+                )
+              : null,
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.6,
+          ),
+          child: (message.medias == null || message.medias!.isEmpty
+              ? Text(
+                  message.text,
+                  style: AppTextStyles.bodyLarge(
+                    TextStyle(
+                      color: AppColors.neutral[800],
+                    ),
                   ),
-                ),
-              )
-            : (message.medias != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: CachedNetworkImage(imageUrl: message.medias![0].url),
-                  )
-                : const CircularProgressIndicator())),
+                )
+              : (message.medias != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child:
+                          CachedNetworkImage(imageUrl: message.medias![0].url),
+                    )
+                  : const CircularProgressIndicator())),
+        ),
       ),
       const SizedBox(width: 4),
       Column(
@@ -233,5 +236,10 @@ class ChatBubble extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return bubble(context);
   }
 }
