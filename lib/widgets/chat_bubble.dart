@@ -146,7 +146,8 @@ class ChatBubble extends StatelessWidget {
     );
   }
 
-  void _showDetailReactions(BuildContext context) {
+  void _showDetailReactions(BuildContext context, bool isInDialog) {
+    if (isInDialog) return;
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -190,7 +191,7 @@ class ChatBubble extends StatelessWidget {
         });
   }
 
-  Widget _buildReaction(BuildContext context) {
+  Widget _buildReaction(BuildContext context, bool isInDialog) {
     Map<String, int> reactionCounts = {};
     for (var reaction in message.customProperties?['message'].reactions) {
       if (reactionCounts.containsKey(reaction.content)) {
@@ -208,7 +209,7 @@ class ChatBubble extends StatelessWidget {
             isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           GestureDetector(
-            onTap: () => _showDetailReactions(context),
+            onTap: () => _showDetailReactions(context, isInDialog),
             child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
@@ -359,7 +360,7 @@ class ChatBubble extends StatelessWidget {
           if (message.customProperties?['message'].reactions.isNotEmpty)
             const SizedBox(height: 4),
           if (message.customProperties?['message'].reactions.isNotEmpty)
-            _buildReaction(context),
+            _buildReaction(context, isInDialog),
         ],
       ),
     );
