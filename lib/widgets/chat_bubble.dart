@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +25,22 @@ class ChatBubble extends StatelessWidget {
 
   void _showReactionOverlay(BuildContext context, bool isInDialog) {
     if (isInDialog) return;
-    showDialog(
+    showGeneralDialog(
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: AppColors.black.withOpacity(0.25),
+      transitionDuration: const Duration(milliseconds: 500),
+      transitionBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation, Widget child) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(
+              sigmaX: 4 * animation.value, sigmaY: 4 * animation.value),
+          child: FadeTransition(opacity: animation, child: child),
+        );
+      },
       context: context,
-      builder: (BuildContext context) {
+      pageBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
         return Center(
           child: GestureDetector(
             onTap: () {
