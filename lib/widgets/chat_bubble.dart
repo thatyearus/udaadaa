@@ -21,6 +21,116 @@ class ChatBubble extends StatelessWidget {
   final bool isFirstInSequence;
   final bool isLastInSequence;
 
+  void _showReactionOverlay(BuildContext context, bool isInDialog) {
+    if (isInDialog) return;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                /*decoration: BoxDecoration(
+                color: AppColors.neutral[100],
+                borderRadius: BorderRadius.circular(16),
+              ),*/
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: isMine
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
+                  children: [
+                    // 리액션 선택 부분
+                    Container(
+                      margin: EdgeInsets.only(left: isMine ? 0 : 40 + 12),
+                      child: Wrap(
+                        spacing: AppSpacing.m,
+                        children: ['👍', '❤️', '✔️', '👍🏻'].map((emoji) {
+                          return GestureDetector(
+                            onTap: () {
+                              // 리액션 선택 처리
+                              Navigator.pop(context);
+                            },
+                            child: CircleAvatar(
+                              backgroundColor: AppColors.neutral[100],
+                              child: Text(
+                                emoji,
+                                style: AppTextStyles.titleLarge(
+                                  const TextStyle(
+                                    fontFamily: 'tossface',
+                                  ),
+                                ),
+                              ), // 리액션 아이콘
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    bubble(context, isInDialog: true),
+                    const SizedBox(height: 16),
+
+                    // 옵션
+                    Container(
+                      margin: EdgeInsets.only(left: isMine ? 0 : 40 + 12),
+                      decoration: BoxDecoration(
+                        color: AppColors.neutral[100],
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              // 신고하기 로직
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              '신고하기',
+                              style: AppTextStyles.bodyLarge(
+                                  TextStyle(color: AppColors.grayscale[800])),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // 차단하기 로직
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              '차단하기',
+                              style: AppTextStyles.bodyLarge(
+                                  TextStyle(color: AppColors.grayscale[800])),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // 복사하기 로직
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              '복사하기',
+                              style: AppTextStyles.bodyLarge(
+                                  TextStyle(color: AppColors.grayscale[800])),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _showDetailReactions(BuildContext context) {
     showModalBottomSheet(
         context: context,
@@ -128,9 +238,10 @@ class ChatBubble extends StatelessWidget {
     );
   }
 
-  Widget bubble(BuildContext context) {
+  Widget bubble(BuildContext context, {bool isInDialog = false}) {
     List<Widget> bubbleContents = [
       GestureDetector(
+        onLongPress: () => _showReactionOverlay(context, isInDialog),
         child: Container(
           padding: (message.medias == null || message.medias!.isEmpty)
               ? const EdgeInsets.symmetric(
@@ -216,8 +327,9 @@ class ChatBubble extends StatelessWidget {
       chatContents = chatContents.reversed.toList();
     }
     return Padding(
-      padding:
-          const EdgeInsets.symmetric(vertical: 4, horizontal: AppSpacing.xs),
+      padding: isInDialog
+          ? const EdgeInsets.all(0)
+          : const EdgeInsets.symmetric(vertical: 4, horizontal: AppSpacing.xs),
       child: Column(
         crossAxisAlignment:
             isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
