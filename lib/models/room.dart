@@ -7,6 +7,7 @@ class Room {
     required this.createdAt,
     required this.roomName,
     required this.members,
+    this.memberMap = const {},
     this.lastMessage,
   });
 
@@ -37,6 +38,7 @@ class Room {
     DateTime? createdAt,
     String? roomName,
     List<Profile>? members,
+    Map<String, Profile>? memberMap,
     Message? lastMessage,
   }) {
     return Room(
@@ -44,6 +46,7 @@ class Room {
       createdAt: createdAt ?? this.createdAt,
       roomName: roomName ?? this.roomName,
       members: members ?? this.members,
+      memberMap: memberMap ?? this.memberMap,
       lastMessage: lastMessage ?? this.lastMessage,
     );
   }

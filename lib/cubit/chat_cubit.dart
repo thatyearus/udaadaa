@@ -458,7 +458,7 @@ class ChatCubit extends Cubit<ChatState> {
       chatList.firstWhere((element) => element.id == roomId);
 
   Profile? getProfile(String roomId, String userId) =>
-      getRoom(roomId).memberMap[userId]!;
+      getRoom(roomId).memberMap[userId];
 
   List<Message> getMessagesByRoomId(String roomId) => messages[roomId] ?? [];
   List<Message> getImageMessagesByRoomId(String roomId) =>
