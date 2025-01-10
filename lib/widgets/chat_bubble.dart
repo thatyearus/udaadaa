@@ -157,14 +157,14 @@ class ChatBubble extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           List<String> emojis = [];
-          List<String> members = [];
+          List<Profile?> members = [];
 
           for (var reaction in message.customProperties?['message'].reactions) {
             emojis.add(reaction.content);
             Profile? profile = context.read<ChatCubit>().getProfile(
                 message.customProperties?['message'].roomId ?? "",
                 reaction.userId);
-            members.add(profile?.nickname ?? "정보 없음");
+            members.add(profile);
           }
           return Container(
             padding: const EdgeInsets.all(16.0),
@@ -180,7 +180,7 @@ class ChatBubble extends StatelessWidget {
                   itemCount: emojis.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                      title: Text(members[index]),
+                      title: Text(members[index]?.nickname ?? "정보 없음"),
                       trailing: CircleAvatar(
                         backgroundColor: AppColors.neutral[100],
                         child: Text(emojis[index],
