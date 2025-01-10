@@ -5,7 +5,7 @@ class Reaction {
     required this.userId,
     required this.messageId,
     required this.content,
-    required this.createdAt,
+    this.createdAt,
   });
 
   final String? id;
@@ -13,7 +13,7 @@ class Reaction {
   final String roomId;
   final String content;
   final String messageId;
-  final DateTime createdAt;
+  final DateTime? createdAt;
 
   Map<String, dynamic> toMap() {
     return {
