@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/chat/profile_view.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
@@ -187,6 +188,12 @@ class ChatBubble extends StatelessWidget {
                             style: AppTextStyles.bodyLarge(
                                 const TextStyle(fontFamily: 'tossface'))),
                       ),
+                      onTap: () => (members[index] != null
+                          ? navigateToProfileView(
+                              context,
+                              members[index]?.nickname ?? "정보 없음",
+                              members[index]?.id ?? "")
+                          : null),
                     );
                   },
                 ),
