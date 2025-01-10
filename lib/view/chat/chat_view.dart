@@ -11,6 +11,7 @@ import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/chat/profile_view.dart';
 import 'package:udaadaa/widgets/chat_bubble.dart';
 
 /// Page to chat with someone.
@@ -116,14 +117,11 @@ class ChatView extends StatelessWidget {
                   title: Text(roomInfo.members[index].nickname,
                       style: Theme.of(context).textTheme.bodyMedium),
                   onTap: () {
-                    /*navigateToProfileView(
+                    navigateToProfileView(
                       context,
-                      _members[index].profileUrl!,
-                      _members[index].nickname,
-                      _members[index].userId,
-                      widget.groupChannel,
-                      getMessages,
-                    );*/
+                      roomInfo.members[index].nickname,
+                      roomInfo.members[index].id,
+                    );
                   },
                 );
               },
