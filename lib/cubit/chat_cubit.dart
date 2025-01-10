@@ -454,6 +454,26 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  void sendReaction(String roomId, String messageId, String emoji) async {
+    try {
+      Reaction reaction = Reaction(
+        roomId: roomId,
+        messageId: messageId,
+        userId: supabase.auth.currentUser!.id,
+        content: emoji,
+      );
+      await supabase.from('chat_reactions').upsert(reaction.toMap());
+      /*await supabase.from('chat_reactions').upsert({
+        'room_id': roomId,
+        'message_id': messageId,
+        'user_id': supabase.auth.currentUser!.id,
+        'emoji': emoji,
+      });*/
+    } catch (e) {
+      logger.e("sendReaction error: $e");
+    }
+  }
+
   Room getRoom(String roomId) =>
       chatList.firstWhere((element) => element.id == roomId);
 
