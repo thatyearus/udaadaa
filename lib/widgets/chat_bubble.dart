@@ -327,11 +327,15 @@ class ChatBubble extends StatelessWidget {
     }
     List<Widget> chatContents = [
       (!isMine && isFirstInSequence)
-          ? CircleAvatar(
-              backgroundColor: AppColors.primary[50],
-              child: const Icon(
-                Icons.person,
-                color: AppColors.primary,
+          ? GestureDetector(
+              onTap: () => navigateToProfileView(
+                  context, message.user.firstName ?? "", message.user.id),
+              child: CircleAvatar(
+                backgroundColor: AppColors.primary[50],
+                child: const Icon(
+                  Icons.person,
+                  color: AppColors.primary,
+                ),
               ),
             )
           : !isMine
