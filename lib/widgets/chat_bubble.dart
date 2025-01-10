@@ -69,6 +69,11 @@ class ChatBubble extends StatelessWidget {
                           return GestureDetector(
                             onTap: () {
                               // 리액션 선택 처리
+                              context.read<ChatCubit>().sendReaction(
+                                  message.customProperties?['message'].roomId ??
+                                      "",
+                                  message.customProperties?['message'].id,
+                                  emoji);
                               Navigator.pop(context);
                             },
                             child: CircleAvatar(
