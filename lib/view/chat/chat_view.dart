@@ -160,6 +160,72 @@ class ChatView extends StatelessWidget {
     );
   }
 
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(AppSpacing.m),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.s),
+                child: Text('인증하기', style: AppTextStyles.textTheme.titleMedium),
+              ),
+              Divider(color: AppColors.neutral[200]),
+              GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 1.2,
+                  //crossAxisSpacing: 2.0,
+                  // mainAxisSpacing: 2.0,
+                ),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 6,
+                itemBuilder: (context, index) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.circular(AppSpacing.xs),
+                                border: Border.all(
+                                    color: AppColors.neutral[400]!, width: 2),
+                              ),
+                              child: Icon(Icons.add,
+                                  color: AppColors.neutral[400], size: 40),
+                            ),
+                          ],
+                        ),
+                        onPressed: () {
+                          // context.read<ChatCubit>().sendMessage();
+                          _showBottomSheet(context);
+                        },
+                      ),
+                      AppSpacing.verticalSizedBoxXs,
+                      Text(
+                        '인증',
+                        style: AppTextStyles.textTheme.bodyLarge,
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final messages = context.select<ChatCubit, List<Message>>(
@@ -289,6 +355,7 @@ class ChatView extends StatelessWidget {
                         ),
                         onPressed: () {
                           // context.read<ChatCubit>().sendMessage();
+                          _showBottomSheet(context);
                         },
                       ),
                     ]),
