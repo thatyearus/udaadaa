@@ -365,8 +365,8 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-  Future<String?> uploadImage(String type, String roomId) async {
-    final XFile? file = _selectedImage;
+  Future<String?> uploadImage(String roomId, XFile? otherFile) async {
+    final XFile? file = otherFile ?? _selectedImage;
     if (file == null) {
       logger.e('No image selected');
       return null;
@@ -395,7 +395,7 @@ class ChatCubit extends Cubit<ChatState> {
   Future<void> sendImageMessage(String roomId) async {
     try {
       await selectImage(ImageSource.gallery);
-      final imagePath = await uploadImage('imageMessage', roomId);
+      final imagePath = await uploadImage(roomId, null);
       if (imagePath == null) {
         logger.e('Failed to upload image');
         return;
