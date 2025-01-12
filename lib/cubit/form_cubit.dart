@@ -143,6 +143,66 @@ class FormCubit extends Cubit<FormState> {
     }
   }
 
+  Future<dynamic> feedInfo({
+    required FeedType type,
+    required String review,
+    // String? mealType,
+    String? weight,
+    String? exerciseTime,
+    String? mealContent,
+    Calorie? calorie,
+    required String contentType,
+  }) async {
+    try {
+      if (state is FormLoading) {
+        return;
+      }
+      emit(FormLoading());
+      String? imagePath = await uploadImage(contentType);
+      if (imagePath == null) {
+        emit(FormError('Failed to upload image'));
+        return;
+      }
+      return {
+        "user_id": supabase.auth.currentUser!.id,
+        "review": review,
+        "type": type,
+        "image_path": imagePath,
+        "calorie": calorie?.totalCalories,
+        "is_challenge": profileCubit.getIsChallenger,
+      };
+    } catch (e) {
+      Analytics().logEvent("업로드_제출실패", parameters: {"에러": e.toString()});
+      logger.e(e);
+      emit(FormError(e.toString()));
+    }
+  }
+
+  void missionComplete(
+      {required FeedType type,
+      required String review,
+      String? mealType,
+      String? weight,
+      String? exerciseTime,
+      String? mealContent,
+      Calorie? calorie,
+      required String contentType,
+      required String feedId}) {
+    emit(FormSuccess());
+    updateReport(
+      type: type,
+      review: review,
+      contentType: contentType,
+      mealType: mealType,
+      weight: weight,
+      exerciseTime: exerciseTime,
+      mealContent: mealContent,
+      feedId: feedId,
+      calorie: calorie,
+    );
+    feedCubit.fetchMyFeeds();
+  }
+
   Future<void> submit(
       {required FeedType type,
       required String review,
