@@ -10,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/chat_reaction.dart';
+import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/models/room.dart';
@@ -474,6 +475,81 @@ class ChatCubit extends Cubit<ChatState> {
       });*/
     } catch (e) {
       logger.e("sendReaction error: $e");
+    }
+  }
+
+  void missionComplete({
+    required FeedType type,
+    required String review,
+    String? weight,
+    String? exerciseTime,
+    String? mealContent,
+    Calorie? calorie,
+    required String contentType,
+  }) async {
+    if (currentRoomId == null) return;
+    final userId = supabase.auth.currentUser!.id;
+    /*
+  // 인증 데이터
+  final feedData = {
+    'user_id': userId,
+    'review': content,
+    'image_path': imageUrl,
+    'type': 'certification',
+  };*/
+    final [imagePath, feedData] = await Future.wait([
+      uploadImage(currentRoomId!, formCubit.selectedImages['FOOD']),
+      formCubit.feedInfo(
+        type: type,
+        review: review,
+        contentType: contentType,
+        calorie: calorie,
+        mealContent: mealContent,
+      ),
+    ]);
+    if (imagePath == null) {
+      logger.e('Failed to upload image');
+      return;
+    }
+    feedData['type'] = (feedData['type'] as FeedType).name;
+
+    /*final feedData = await formCubit.feedInfo(
+      type: type,
+      review: review,
+      contentType: contentType,
+      calorie: calorie,
+      mealContent: mealContent,
+    );*/
+
+    logger.d(feedData);
+    // 채팅 메시지 데이터
+    final messageData = {
+      'room_id': currentRoomId,
+      'user_id': userId,
+      'image_path': imagePath,
+      'content': mealContent,
+      'type': 'missionMessage',
+    };
+    logger.d(messageData);
+
+    try {
+      // 트랜잭션 실행
+      final feedId = await supabase.rpc('mission_complete', params: {
+        'user_id': userId,
+        'review': feedData['review'],
+        'feed_type': feedData['type'],
+        'feed_image_path': feedData['image_path'],
+        'calorie': feedData['calorie'],
+        'room_id': messageData['room_id'],
+        'content': messageData['content'],
+        'message_image_path': messageData['image_path'],
+        'message_type': messageData['type'],
+      });
+      formCubit.missionComplete(
+          type: type, review: review, contentType: contentType, feedId: feedId);
+      logger.d('Certification uploaded successfully!');
+    } catch (e) {
+      logger.e('Error uploading certification: $e');
     }
   }
 
