@@ -8,10 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 
 import 'package:udaadaa/cubit/chat_cubit.dart';
+import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/chat/profile_view.dart';
+import 'package:udaadaa/view/onboarding/first_view.dart';
 import 'package:udaadaa/widgets/chat_bubble.dart';
 
 /// Page to chat with someone.
@@ -207,7 +209,18 @@ class ChatView extends StatelessWidget {
                         ),
                         onPressed: () {
                           // context.read<ChatCubit>().sendMessage();
-                          _showBottomSheet(context);
+                          // _showBottomSheet(context);
+                          // context.read<ChatCubit>().missionComplete();
+                          if (index < 4) {
+                            context
+                                .read<FormCubit>()
+                                .updateMealSelection(index);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const FirstView(),
+                              ),
+                            );
+                          }
                         },
                       ),
                       AppSpacing.verticalSizedBoxXs,
