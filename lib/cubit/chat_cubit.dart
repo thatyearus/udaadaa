@@ -7,6 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udaadaa/cubit/form_cubit.dart';
+import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/chat_reaction.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/profile.dart';
@@ -17,6 +19,7 @@ import 'package:udaadaa/utils/constant.dart';
 part 'chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
+  FormCubit formCubit;
   List<Room> chatList = [];
   Map<String, List<Message>> messages = {};
   Map<String, List<Message>> imageMessages = {};
@@ -24,7 +27,7 @@ class ChatCubit extends Cubit<ChatState> {
   XFile? _selectedImage;
   String? currentRoomId;
 
-  ChatCubit() : super(ChatInitial()) {
+  ChatCubit(this.formCubit) : super(ChatInitial()) {
     loadChatList().then((_) {
       fetchLatestMessages();
       fetchLatestReceipt();

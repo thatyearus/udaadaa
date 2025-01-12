@@ -92,7 +92,9 @@ class MyApp extends StatelessWidget {
           ),
         ),
         BlocProvider<ChatCubit>(
-          create: (context) => ChatCubit(),
+          create: (context) => ChatCubit(
+            context.read<FormCubit>(),
+          ),
         ),
       ],
       child: MaterialApp(
