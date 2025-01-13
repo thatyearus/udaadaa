@@ -33,10 +33,10 @@ class ChatView extends StatelessWidget {
   final Room roomInfo;
 
   Drawer showDrawer(BuildContext context) {
-    List<Message> imagemessages = context.select<ChatCubit, List<Message>>(
+    List<Message> imageMessages = context.select<ChatCubit, List<Message>>(
         (cubit) => cubit
             .getMessagesByRoomId(roomInfo.id)
-            .where((element) => element.type == "imageMessage")
+            .where((element) => element.imageUrl != null)
             .toList());
     return Drawer(
       child: Column(
@@ -88,12 +88,12 @@ class ChatView extends StatelessWidget {
               crossAxisCount: 3,
               crossAxisSpacing: AppSpacing.xxs,
             ),
-            itemCount: min(imagemessages.length, 3),
+            itemCount: min(imageMessages.length, 3),
             itemBuilder: (context, index) {
               return Container(
                 decoration: const BoxDecoration(color: AppColors.primary),
                 child: CachedNetworkImage(
-                  imageUrl: imagemessages[index].imageUrl!,
+                  imageUrl: imageMessages[index].imageUrl!,
                   fit: BoxFit.cover,
                 ),
               );
