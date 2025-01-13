@@ -253,7 +253,10 @@ class ChatView extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(roomInfo.roomName),
+          title: Text(
+            roomInfo.roomName,
+            style: AppTextStyles.textTheme.headlineLarge,
+          ),
           backgroundColor: AppColors.primary[100],
           surfaceTintColor: AppColors.primary[100],
         ),
