@@ -177,6 +177,7 @@ class ChatView extends StatelessWidget {
   }
 
   void _showBottomSheet(BuildContext context) {
+    final missionName = ["아침", "점심", "저녁", "간식", "체중", "운동"];
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -239,7 +240,7 @@ class ChatView extends StatelessWidget {
                       ),
                       AppSpacing.verticalSizedBoxXs,
                       Text(
-                        '인증',
+                        missionName[index],
                         style: AppTextStyles.textTheme.bodyLarge,
                       ),
                     ],
