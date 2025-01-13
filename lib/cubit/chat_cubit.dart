@@ -167,7 +167,7 @@ class ChatCubit extends Cubit<ChatState> {
       emit(ChatMessageLoaded());
       for (var room in messages.keys) {
         for (var message in messages[room]!) {
-          if (message.type == 'imageMessage') makeImageUrlMessage(message);
+          if (message.imagePath != null) makeImageUrlMessage(message);
         }
         // if (message.type == 'imageMessage') makeImageUrlMessage(message);
       }
@@ -196,7 +196,7 @@ class ChatCubit extends Cubit<ChatState> {
                 reactions: [],
                 readReceipts: {},
               );
-              if (message.type == 'imageMessage') makeImageUrlMessage(message);
+              if (message.imagePath != null) makeImageUrlMessage(message);
               logger.d("setMessagesListener: $message");
               // messages = [message, ...messages];
               final updatedChatList = List<Room>.from(chatList);
@@ -417,7 +417,7 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   void makeImageUrlMessage(Message message) async {
-    if (message.type == 'imageMessage' && message.imagePath != null) {
+    if (message.imagePath != null) {
       try {
         // logger.d("makeImageUrl: ${message.imagePath}");
         final url = await supabase.storage
