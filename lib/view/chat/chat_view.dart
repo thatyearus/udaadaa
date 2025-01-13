@@ -465,7 +465,7 @@ class ChatView extends StatelessWidget {
         result.add(
           ChatMessage(
               createdAt: message.createdAt!,
-              user: asDashChatUser(user, user),
+              user: asDashChatUser(user, message.profile?.nickname ?? user),
               medias: (message.imageUrl != null
                   ? [
                       ChatMedia(
@@ -487,7 +487,7 @@ class ChatView extends StatelessWidget {
         result.add(
           ChatMessage(
               createdAt: message.createdAt!,
-              user: asDashChatUser(user, user),
+              user: asDashChatUser(user, message.profile?.nickname ?? user),
               text: message.content ?? "",
               medias: (message.imageUrl != null
                   ? [
