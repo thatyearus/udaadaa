@@ -416,6 +416,7 @@ class ChatView extends StatelessWidget {
                       isMine: message.customProperties?['message'].isMine,
                       isFirstInSequence: isFirstInSequence,
                       isLastInSequence: isLastInSequence,
+                      memberCount: roomInfo.members.length,
                     );
                   },
                 ),

@@ -17,12 +17,14 @@ class ChatBubble extends StatelessWidget {
     required this.isMine,
     required this.isFirstInSequence,
     required this.isLastInSequence,
+    required this.memberCount,
   });
 
   final ChatMessage message;
   final bool isMine;
   final bool isFirstInSequence;
   final bool isLastInSequence;
+  final int memberCount;
 
   void _showReactionOverlay(BuildContext context, bool isInDialog) {
     if (isInDialog) return;
@@ -311,9 +313,9 @@ class ChatBubble extends StatelessWidget {
               isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             Text(
-              message.customProperties?['message'].readReceipts.length
-                      .toString() ??
-                  "",
+              (memberCount -
+                      message.customProperties?['message'].readReceipts.length)
+                  .toString(),
               style: AppTextStyles.labelSmall(
                   const TextStyle(color: AppColors.primary)),
             ),
