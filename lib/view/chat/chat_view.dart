@@ -482,6 +482,29 @@ class ChatView extends StatelessWidget {
                 'message': message,
               }),
         );
+      } else if (message.type == 'missionMessage') {
+        result.add(
+          ChatMessage(
+              createdAt: message.createdAt!,
+              user: asDashChatUser(user, user),
+              text: message.content ?? "",
+              medias: (message.imageUrl != null
+                  ? [
+                      ChatMedia(
+                        url: message.imageUrl!,
+                        fileName: "사진",
+                        type: MediaType.image,
+                      )
+                    ]
+                  : []),
+              customProperties: {
+                // 'reactions': message.reactions,
+                'messageId': message.id,
+                'channelUrl': message.roomId,
+                // 'unreadCount': message.readReceipts.length,
+                'message': message,
+              }),
+        );
       }
     }
 
