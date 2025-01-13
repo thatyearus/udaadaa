@@ -270,42 +270,84 @@ class ChatBubble extends StatelessWidget {
 
   Widget bubble(BuildContext context, {bool isInDialog = false}) {
     List<Widget> bubbleContents = [
-      GestureDetector(
-        onLongPress: () => _showReactionOverlay(context, isInDialog),
-        child: Container(
-          padding: (message.medias == null || message.medias!.isEmpty)
-              ? const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 10,
-                )
-              : null,
-          decoration: (message.medias == null || message.medias!.isEmpty)
-              ? BoxDecoration(
-                  color:
-                      isMine ? AppColors.primary[200] : AppColors.neutral[100],
-                  borderRadius: BorderRadius.circular(10),
-                )
-              : null,
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.6,
-          ),
-          child: (message.medias == null || message.medias!.isEmpty
-              ? Text(
-                  message.text,
-                  style: AppTextStyles.bodyLarge(
-                    TextStyle(
-                      color: AppColors.neutral[800],
+      Column(
+        crossAxisAlignment:
+            isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [
+          (message.medias != null &&
+                  message.medias!.isNotEmpty &&
+                  message.text != '')
+              ? GestureDetector(
+                  onLongPress: () => _showReactionOverlay(context, isInDialog),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isMine
+                          ? AppColors.primary[200]
+                          : AppColors.neutral[100],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.6,
+                    ),
+                    child: Text(
+                      message.text,
+                      style: AppTextStyles.bodyLarge(
+                        TextStyle(
+                          color: AppColors.neutral[800],
+                        ),
+                      ),
                     ),
                   ),
                 )
-              : (message.medias != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child:
-                          CachedNetworkImage(imageUrl: message.medias![0].url),
+              : const SizedBox.shrink(),
+          (message.medias != null &&
+                  message.medias!.isNotEmpty &&
+                  message.text != '')
+              ? AppSpacing.verticalSizedBoxXs
+              : const SizedBox.shrink(),
+          GestureDetector(
+            onLongPress: () => _showReactionOverlay(context, isInDialog),
+            child: Container(
+              padding: (message.medias == null || message.medias!.isEmpty)
+                  ? const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 10,
                     )
-                  : const CircularProgressIndicator())),
-        ),
+                  : null,
+              decoration: (message.medias == null || message.medias!.isEmpty)
+                  ? BoxDecoration(
+                      color: isMine
+                          ? AppColors.primary[200]
+                          : AppColors.neutral[100],
+                      borderRadius: BorderRadius.circular(10),
+                    )
+                  : null,
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.6,
+              ),
+              child: (message.medias == null || message.medias!.isEmpty
+                  ? Text(
+                      message.text,
+                      style: AppTextStyles.bodyLarge(
+                        TextStyle(
+                          color: AppColors.neutral[800],
+                        ),
+                      ),
+                    )
+                  : (message.medias != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: CachedNetworkImage(
+                              imageUrl: message.medias![0].url),
+                        )
+                      : const CircularProgressIndicator())),
+            ),
+          ),
+        ],
       ),
       const SizedBox(width: 4),
       Column(
