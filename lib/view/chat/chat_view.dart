@@ -12,6 +12,7 @@ import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/chat/image_list_view.dart';
 import 'package:udaadaa/view/chat/profile_view.dart';
 import 'package:udaadaa/view/onboarding/first_view.dart';
 import 'package:udaadaa/widgets/chat_bubble.dart';
@@ -75,10 +76,23 @@ class ChatView extends StatelessWidget {
               ],
             ),
           ),*/
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.xs),
-            child:
+          ListTile(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+            title:
                 Text('사진 모아보기', style: Theme.of(context).textTheme.titleSmall),
+            trailing: Icon(Icons.arrow_forward_ios_rounded,
+                color: AppColors.neutral[500]),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ImageListView(
+                    roomInfo: roomInfo,
+                    imageMessages: imageMessages,
+                  ),
+                ),
+              );
+            },
           ),
           GridView.builder(
             shrinkWrap: true,
