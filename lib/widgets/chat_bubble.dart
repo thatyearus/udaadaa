@@ -124,9 +124,39 @@ class ChatBubble extends StatelessWidget {
                             onPressed: () {
                               // 차단하기 로직
                               Navigator.pop(context);
+                              // TODO: alert 창 띄우기
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('사용자 차단'),
+                                    content: const Text('사용자를 차단하시겠습니까?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('취소'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          context.read<ChatCubit>().blockUser(
+                                              message
+                                                      .customProperties?[
+                                                          'message']
+                                                      .userId ??
+                                                  "");
+                                        },
+                                        child: const Text('확인'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                             child: Text(
-                              '차단하기',
+                              '사용자 차단',
                               style: AppTextStyles.bodyLarge(
                                   TextStyle(color: AppColors.grayscale[800])),
                             ),
