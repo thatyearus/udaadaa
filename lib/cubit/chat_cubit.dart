@@ -34,10 +34,16 @@ class ChatCubit extends Cubit<ChatState> {
       fetchLatestMessages();
       fetchLatestReceipt();
     });
-    loadInitialMessages();
-    setMessagesListener();
-    setReactionListener();
-    setReadReceiptListener();
+    Future.wait([
+      fetchBlockedUsers(),
+    ]).then(
+      (value) {
+        loadInitialMessages();
+        setMessagesListener();
+        setReactionListener();
+        setReadReceiptListener();
+      },
+    );
   }
 
   Future<void> loadChatList() async {
@@ -119,6 +125,19 @@ class ChatCubit extends Cubit<ChatState> {
       }
     } catch (e) {
       logger.e('Error fetching latest read receipts: $e');
+    }
+  }
+
+  Future<void> fetchBlockedUsers() async {
+    try {
+      final response = await supabase
+          .from('blocked_users')
+          .select('block_user_id')
+          .eq('user_id', supabase.auth.currentUser!.id);
+      blockedUsers = response.map((e) => e['block_user_id'] as String).toList();
+      logger.d("fetchBlockedUsers: $blockedUsers");
+    } catch (e) {
+      logger.e('Error fetching blocked users: $e');
     }
   }
 
