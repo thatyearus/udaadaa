@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/chat/image_detail_view.dart';
 import 'package:udaadaa/view/chat/profile_view.dart';
 
 class ChatBubble extends StatelessWidget {
@@ -311,6 +312,21 @@ class ChatBubble extends StatelessWidget {
               : const SizedBox.shrink(),
           GestureDetector(
             onLongPress: () => _showReactionOverlay(context, isInDialog),
+            onTap: () {
+              if (message.medias != null && message.medias!.isNotEmpty) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ImageDetailView(
+                      imageMessage: message.customProperties?['message'],
+                      roomInfo: context.read<ChatCubit>().getRoom(
+                            message.customProperties?['message'].roomId ?? "",
+                          ),
+                    ),
+                  ),
+                );
+              }
+            },
             child: Container(
               padding: (message.medias == null || message.medias!.isEmpty)
                   ? const EdgeInsets.symmetric(
