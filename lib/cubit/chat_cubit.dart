@@ -27,6 +27,7 @@ class ChatCubit extends Cubit<ChatState> {
   Map<String, DateTime?> readReceipts = {};
   XFile? _selectedImage;
   String? currentRoomId;
+  List<String> blockedUsers = [];
 
   ChatCubit(this.formCubit) : super(ChatInitial()) {
     loadChatList().then((_) {
@@ -476,6 +477,19 @@ class ChatCubit extends Cubit<ChatState> {
       });*/
     } catch (e) {
       logger.e("sendReaction error: $e");
+    }
+  }
+
+  void blockUser(String userId) async {
+    try {
+      await supabase.from('blocked_users').upsert({
+        'block_user_id': userId,
+        'user_id': supabase.auth.currentUser!.id,
+      });
+      blockedUsers.add(userId);
+      logger.d("blockUser: $userId");
+    } catch (e) {
+      logger.e("blockUser error: $e");
     }
   }
 
