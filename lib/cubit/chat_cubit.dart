@@ -52,16 +52,25 @@ class ChatCubit extends Cubit<ChatState> {
     try {
       final ret = await supabase.from('rooms').select('*, profiles(*)');
       logger.d(ret);
-      chatList = ret
-          .map(
-            (e) => Room.fromMap(
-              e,
-              members: (e['profiles'] as List<dynamic>)
-                  .map((profileRet) => Profile.fromMap(map: profileRet))
-                  .toList(),
-            ),
-          )
-          .toList();
+      chatList = ret.map(
+        (e) {
+          Room room = Room.fromMap(
+            e,
+            members: (e['profiles'] as List<dynamic>)
+                .map((profileRet) => Profile.fromMap(map: profileRet))
+                .toList(),
+          );
+          room.members.sort(
+            ((a, b) => a.id == supabase.auth.currentUser!.id
+                ? -1
+                : b.id == supabase.auth.currentUser!.id
+                    ? 1
+                    : 0),
+          );
+          return room;
+        },
+      ).toList();
+
       logger.d("loadChatList: ${chatList[0].members}");
       logger.d("loadChatList: ${chatList[0].memberMap}");
       emit(ChatListLoaded());
