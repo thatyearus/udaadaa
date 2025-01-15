@@ -106,12 +106,9 @@ class ChatView extends StatelessWidget {
             ),
             itemCount: min(imageMessages.length, 3),
             itemBuilder: (context, index) {
-              return Container(
-                decoration: const BoxDecoration(color: AppColors.primary),
-                child: CachedNetworkImage(
-                  imageUrl: imageMessages[index].imageUrl!,
-                  fit: BoxFit.cover,
-                ),
+              return CachedNetworkImage(
+                imageUrl: imageMessages[index].imageUrl!,
+                fit: BoxFit.cover,
               );
             },
           ),
