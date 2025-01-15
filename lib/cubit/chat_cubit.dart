@@ -530,6 +530,24 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  void blockMessage(String messageId, String roomId) async {
+    try {
+      await supabase.from('blocked_messages').upsert({
+        'message_id': messageId,
+        'user_id': supabase.auth.currentUser!.id,
+        'room_id': roomId,
+      });
+      blockedMessages.add(messageId);
+      messages[roomId] = List.from(messages[roomId]!.where((message) {
+        return message.id != messageId;
+      }));
+      emit(ChatMessageLoaded());
+      logger.d("blockMessage: $messageId");
+    } catch (e) {
+      logger.e("blockMessage error: $e");
+    }
+  }
+
   void missionComplete({
     required FeedType type,
     required String review,
