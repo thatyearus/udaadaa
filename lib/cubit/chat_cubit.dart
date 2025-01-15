@@ -28,6 +28,7 @@ class ChatCubit extends Cubit<ChatState> {
   XFile? _selectedImage;
   String? currentRoomId;
   List<String> blockedUsers = [];
+  List<String> blockedMessages = [];
 
   ChatCubit(this.formCubit) : super(ChatInitial()) {
     loadChatList().then((_) {
@@ -36,6 +37,7 @@ class ChatCubit extends Cubit<ChatState> {
     });
     Future.wait([
       fetchBlockedUsers(),
+      fetchBlockedMessages(),
     ]).then(
       (value) {
         loadInitialMessages();
@@ -138,6 +140,19 @@ class ChatCubit extends Cubit<ChatState> {
       logger.d("fetchBlockedUsers: $blockedUsers");
     } catch (e) {
       logger.e('Error fetching blocked users: $e');
+    }
+  }
+
+  Future<void> fetchBlockedMessages() async {
+    try {
+      final response = await supabase
+          .from('blocked_messages')
+          .select('message_id')
+          .eq('user_id', supabase.auth.currentUser!.id);
+      blockedMessages = response.map((e) => e['message_id'] as String).toList();
+      logger.d("fetchBlockedMessages: $blockedMessages");
+    } catch (e) {
+      logger.e('Error fetching blocked messages: $e');
     }
   }
 
