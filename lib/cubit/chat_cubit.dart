@@ -524,6 +524,12 @@ class ChatCubit extends Cubit<ChatState> {
         'user_id': supabase.auth.currentUser!.id,
       });
       blockedUsers.add(userId);
+      messages.forEach((roomId, messageList) {
+        messages[roomId] = List.from(messageList.where((message) {
+          return message.userId != userId;
+        }));
+      });
+      emit(BlockUserFinished());
       logger.d("blockUser: $userId");
     } catch (e) {
       logger.e("blockUser error: $e");
