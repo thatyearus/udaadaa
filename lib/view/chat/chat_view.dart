@@ -39,6 +39,8 @@ class ChatView extends StatelessWidget {
             .getMessagesByRoomId(roomInfo.id)
             .where((element) => element.imageUrl != null)
             .toList());
+    List<String> blockedUsers = context
+        .select<ChatCubit, List<String>>((cubit) => cubit.getBlockedUsers);
     return Drawer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,13 +127,51 @@ class ChatView extends StatelessWidget {
               padding: EdgeInsets.zero,
               itemCount: roomInfo.members.length,
               itemBuilder: (context, index) {
+                bool isBlocked =
+                    blockedUsers.contains(roomInfo.members[index].id);
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: AppColors.primary[50],
-                    child: const Icon(Icons.person, color: AppColors.primary),
+                    backgroundColor: (isBlocked
+                        ? AppColors.neutral[200]
+                        : AppColors.primary[50]),
+                    child: Icon(Icons.person,
+                        color: (isBlocked
+                            ? AppColors.neutral[500]
+                            : AppColors.primary)),
                   ),
                   title: Text(roomInfo.members[index].nickname,
                       style: Theme.of(context).textTheme.bodyMedium),
+                  trailing: (roomInfo.members[index].id ==
+                          supabase.auth.currentUser!.id)
+                      ? Container(
+                          padding: AppSpacing.edgeInsetsXs,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary[50],
+                            borderRadius: BorderRadius.circular(AppSpacing.s),
+                          ),
+                          child: Text(
+                            "나",
+                            style: AppTextStyles.bodyMedium(
+                              TextStyle(color: AppColors.primary[500]),
+                            ),
+                          ),
+                        )
+                      : (isBlocked)
+                          ? Container(
+                              padding: AppSpacing.edgeInsetsXs,
+                              decoration: BoxDecoration(
+                                color: AppColors.neutral[200],
+                                borderRadius:
+                                    BorderRadius.circular(AppSpacing.s),
+                              ),
+                              child: Text(
+                                "차단됨",
+                                style: AppTextStyles.bodyMedium(
+                                  TextStyle(color: AppColors.neutral[500]),
+                                ),
+                              ),
+                            )
+                          : null,
                   onTap: () {
                     navigateToProfileView(
                       context,

@@ -641,4 +641,5 @@ class ChatCubit extends Cubit<ChatState> {
 
   List<Room> get getChatList => chatList;
   Map<String, List<Message>> get getMessages => messages;
+  List<String> get getBlockedUsers => blockedUsers;
 }
