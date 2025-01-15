@@ -111,11 +111,47 @@ class ChatBubble extends StatelessWidget {
                         children: [
                           TextButton(
                             onPressed: () {
-                              // 신고하기 로직
+                              // 메세지 차단 로직
                               Navigator.pop(context);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('메세지 차단'),
+                                    content: const Text('메세지를 차단하시겠습니까?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('취소'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          context
+                                              .read<ChatCubit>()
+                                              .blockMessage(
+                                                  message
+                                                          .customProperties?[
+                                                              'message']
+                                                          .id ??
+                                                      "",
+                                                  message
+                                                          .customProperties?[
+                                                              'message']
+                                                          .roomId ??
+                                                      "");
+                                        },
+                                        child: const Text('확인'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                             child: Text(
-                              '신고하기',
+                              '메세지 차단',
                               style: AppTextStyles.bodyLarge(
                                   TextStyle(color: AppColors.grayscale[800])),
                             ),
@@ -124,7 +160,6 @@ class ChatBubble extends StatelessWidget {
                             onPressed: () {
                               // 차단하기 로직
                               Navigator.pop(context);
-                              // TODO: alert 창 띄우기
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
