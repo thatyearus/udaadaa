@@ -147,6 +147,7 @@ class ChatCubit extends Cubit<ChatState> {
           .from('messages')
           .select(
               "*, profiles!messages_user_id_fkey(*), chat_reactions(*), read_receipts(user_id)")
+          .not('user_id', 'in', blockedUsers)
           .order('created_at');
       // logger.d(ret);
       for (var row in ret) {
@@ -204,6 +205,7 @@ class ChatCubit extends Cubit<ChatState> {
             schema: 'public',
             table: 'messages',
             callback: (payload) async {
+              if (blockedUsers.contains(payload.newRecord['user_id'])) return;
               final profileRet = await supabase
                   .from('profiles')
                   .select()
