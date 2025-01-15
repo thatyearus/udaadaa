@@ -163,6 +163,7 @@ class ChatCubit extends Cubit<ChatState> {
           .select(
               "*, profiles!messages_user_id_fkey(*), chat_reactions(*), read_receipts(user_id)")
           .not('user_id', 'in', blockedUsers)
+          .not('id', 'in', blockedMessages)
           .order('created_at');
       // logger.d(ret);
       for (var row in ret) {
