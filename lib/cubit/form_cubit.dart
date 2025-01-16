@@ -203,6 +203,7 @@ class FormCubit extends Cubit<FormState> {
     feedCubit.fetchMyFeeds();
   }
 
+/*
   Future<void> submit(
       {required FeedType type,
       required String review,
@@ -250,7 +251,7 @@ class FormCubit extends Cubit<FormState> {
       logger.e(e);
       emit(FormError(e.toString()));
     }
-  }
+  }*/
 
   Future<void> submitWeight(
       {required String weight, required String contentType}) async {
