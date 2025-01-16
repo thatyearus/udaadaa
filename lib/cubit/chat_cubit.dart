@@ -570,8 +570,8 @@ class ChatCubit extends Cubit<ChatState> {
   void missionComplete({
     required FeedType type,
     required String review,
-    String? weight,
-    String? exerciseTime,
+    double? weight,
+    int? exerciseTime,
     String? mealContent,
     Calorie? calorie,
     required String contentType,
@@ -586,14 +586,17 @@ class ChatCubit extends Cubit<ChatState> {
     'image_path': imageUrl,
     'type': 'certification',
   };*/
+
     final [imagePath, feedData] = await Future.wait([
-      uploadImage(currentRoomId!, formCubit.selectedImages['FOOD']),
+      uploadImage(currentRoomId!, formCubit.selectedImages[contentType]),
       formCubit.feedInfo(
         type: type,
         review: review,
         contentType: contentType,
         calorie: calorie,
         mealContent: mealContent,
+        weight: weight,
+        exerciseTime: exerciseTime,
       ),
     ]);
     if (imagePath == null) {
@@ -633,9 +636,19 @@ class ChatCubit extends Cubit<ChatState> {
         'content': messageData['content'],
         'message_image_path': messageData['image_path'],
         'message_type': messageData['type'],
+        'weight_date': DateTime.now().toIso8601String(),
+        'weight': feedData['weight'],
       });
       formCubit.missionComplete(
-          type: type, review: review, contentType: contentType, feedId: feedId);
+        type: type,
+        review: review,
+        contentType: contentType,
+        feedId: feedId,
+        calorie: calorie,
+        mealContent: mealContent,
+        weight: weight,
+      );
+
       logger.d('Certification uploaded successfully!');
     } catch (e) {
       logger.e('Error uploading certification: $e');
