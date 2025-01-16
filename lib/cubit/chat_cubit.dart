@@ -31,15 +31,15 @@ class ChatCubit extends Cubit<ChatState> {
   List<String> blockedMessages = [];
 
   ChatCubit(this.formCubit) : super(ChatInitial()) {
-    loadChatList().then((_) {
-      fetchLatestMessages();
-      fetchLatestReceipt();
-    });
     Future.wait([
       fetchBlockedUsers(),
       fetchBlockedMessages(),
     ]).then(
       (value) {
+        loadChatList().then((_) {
+          fetchLatestMessages();
+          fetchLatestReceipt();
+        });
         loadInitialMessages();
         setMessagesListener();
         setReactionListener();
@@ -65,7 +65,11 @@ class ChatCubit extends Cubit<ChatState> {
                 ? -1
                 : b.id == supabase.auth.currentUser!.id
                     ? 1
-                    : 0),
+                    : blockedUsers.contains(a.id)
+                        ? 1
+                        : blockedUsers.contains(b.id)
+                            ? -1
+                            : 0),
           );
           return room;
         },
