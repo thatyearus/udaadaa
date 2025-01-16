@@ -14,6 +14,7 @@ import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/chat/image_list_view.dart';
 import 'package:udaadaa/view/chat/profile_view.dart';
+import 'package:udaadaa/view/form/weight/weight_first_view.dart';
 import 'package:udaadaa/view/onboarding/first_view.dart';
 import 'package:udaadaa/widgets/chat_bubble.dart';
 
@@ -272,7 +273,13 @@ class ChatView extends StatelessWidget {
                                 builder: (context) => const FirstView(),
                               ),
                             );
-                          }
+                          } else if (index == 4) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const WeightFirstView(),
+                              ),
+                            );
+                          } else {}
                         },
                       ),
                       AppSpacing.verticalSizedBoxXs,
