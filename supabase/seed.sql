@@ -1021,7 +1021,69 @@ INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created
 	('00000000-0000-0000-0000-000000000000', '66c4e5f7-fe89-47c4-a2df-d53481732af5', '{"action":"token_revoked","actor_id":"3353f6a4-2263-40a9-a09e-7e82ce6a6f20","actor_username":"","actor_via_sso":false,"log_type":"token"}', '2025-01-05 02:08:00.349743+00', ''),
 	('00000000-0000-0000-0000-000000000000', 'c7c946db-e6f7-4b9b-95ef-c31f42dd75c5', '{"action":"login","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-01-05 02:32:06.629084+00', ''),
 	('00000000-0000-0000-0000-000000000000', '1313cbbe-2d74-4003-aee8-adadcefcccd3', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-05 03:31:28.540998+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'faa8e390-406a-4765-8b2e-6f508de480c9', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-05 03:31:28.547579+00', '');
+	('00000000-0000-0000-0000-000000000000', 'faa8e390-406a-4765-8b2e-6f508de480c9', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-05 03:31:28.547579+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'af9686cd-8473-46f3-9a23-c4d9a93a8652', '{"action":"login","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2025-01-16 08:48:45.027358+00', ''),
+	('00000000-0000-0000-0000-000000000000', '7e4d43dd-2f97-4463-ba73-6026e23ebbaf', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 09:48:10.781927+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'ca88a71b-735c-4022-86c2-5f5cfb436417', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 09:48:10.787264+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'ce96a99c-4a6e-45a6-a795-a60251b26a87', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 10:47:30.935623+00', ''),
+	('00000000-0000-0000-0000-000000000000', '3e74d911-2082-4e1d-a190-1467cb15eda6', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 10:47:30.949342+00', ''),
+	('00000000-0000-0000-0000-000000000000', '09533437-2245-4da1-90c9-fe770ab45337', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 11:46:57.945256+00', ''),
+	('00000000-0000-0000-0000-000000000000', '576d80d7-de50-4743-88cc-bab37ba65b87', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 11:46:57.951083+00', ''),
+	('00000000-0000-0000-0000-000000000000', '15cd3f64-252d-4746-9cd0-7c15c4085802', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 12:46:18.44526+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'e14fc1e9-e85e-48e9-b609-a2644d030a87', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 12:46:18.450846+00', ''),
+	('00000000-0000-0000-0000-000000000000', '0219ce61-e231-466f-913f-312a1c034091', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 13:45:37.63909+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'cff429b3-b4db-48a0-be42-231fb8e80365', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 13:45:37.641353+00', ''),
+	('00000000-0000-0000-0000-000000000000', '8f4d2a09-7981-48dc-a956-3fd12f8bd7b1', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 14:44:58.435011+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'c61f31b8-2f89-4639-a788-de96d5de3725', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 14:44:58.438382+00', ''),
+	('00000000-0000-0000-0000-000000000000', '7df54e18-8109-4969-968d-911150cb7c98', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 15:44:20.678288+00', ''),
+	('00000000-0000-0000-0000-000000000000', '92d0cd79-531f-4f1c-8540-d15786920126', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 15:44:20.68446+00', ''),
+	('00000000-0000-0000-0000-000000000000', '3357714e-1a77-4051-9d24-92206eef900c', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 16:43:40.427334+00', ''),
+	('00000000-0000-0000-0000-000000000000', '71ebceaa-0326-40d9-a0b9-389910b13924', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 16:43:40.429512+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'fe61a79f-9190-48d0-8331-cfb0de960565', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 17:43:00.382665+00', ''),
+	('00000000-0000-0000-0000-000000000000', '87678a88-866c-42df-97a7-c6d7dc609308', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 17:43:00.385995+00', ''),
+	('00000000-0000-0000-0000-000000000000', '6c5a28b9-9c5d-49ee-b0b3-3bf35be35356', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 18:42:20.423841+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'adeab1ed-7b01-40e4-8d53-a69384280987', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 18:42:20.425303+00', ''),
+	('00000000-0000-0000-0000-000000000000', '28f95317-f09b-4d0f-94b4-7ebf5ab0e8e7', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 19:41:39.73877+00', ''),
+	('00000000-0000-0000-0000-000000000000', '132bf50a-cf0c-427a-81ad-fd5ac706e944', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 19:41:39.7441+00', ''),
+	('00000000-0000-0000-0000-000000000000', '9ad947c2-76ac-4702-a2ab-bb23ef4d7b41', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 20:41:00.317392+00', ''),
+	('00000000-0000-0000-0000-000000000000', '23db8d49-3646-4f48-9772-fcece4e7e61f', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 20:41:00.319128+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'b91a4db0-dd52-4cac-8292-247eb781a90e', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 21:40:20.344479+00', ''),
+	('00000000-0000-0000-0000-000000000000', '7bee9761-0e4a-4973-b9a0-c7e1a7ccf95a', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 21:40:20.347015+00', ''),
+	('00000000-0000-0000-0000-000000000000', '8c74869a-0e74-48ab-a2cf-f1b0d02776bc', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 22:39:40.348607+00', ''),
+	('00000000-0000-0000-0000-000000000000', '40ccff88-06c8-40c8-87f7-1d998beec5f3', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 22:39:40.351115+00', ''),
+	('00000000-0000-0000-0000-000000000000', '00e4e588-9b5d-41ec-80d4-f147cc2b1ce3', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 23:39:00.346918+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'fb9524b7-8381-4c0d-a952-e179c2828d46', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-16 23:39:00.350137+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'ae53461b-fda8-4366-9120-13b8e6309d1e', '{"action":"user_updated_password","actor_id":"34e3d7c7-e4fc-4b44-86ee-c00de52d5998","actor_username":"","actor_via_sso":false,"log_type":"user"}', '2025-01-17 13:11:52.104132+00', ''),
+	('00000000-0000-0000-0000-000000000000', '4ecc89a1-de0b-46a6-8b22-8f6b2d35b09e', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 00:38:19.637069+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'd31e6979-86c0-4e96-b840-1ed3f5d09960', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 00:38:19.639165+00', ''),
+	('00000000-0000-0000-0000-000000000000', '50166b0f-2ffb-4945-aeda-c51129ea6aa4', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 01:37:40.401688+00', ''),
+	('00000000-0000-0000-0000-000000000000', '3de14ef2-7c28-4c64-be1d-68a5d8c1fc8c', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 01:37:40.405748+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'e66f935a-96c8-468c-a098-6763431d9af0', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 02:37:00.514896+00', ''),
+	('00000000-0000-0000-0000-000000000000', '05e0af24-dd8f-4560-b24b-0df3f2878786', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 02:37:00.517971+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'a9d39bae-d1cc-4b10-ae1b-a5d996a34c49', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 03:36:20.44835+00', ''),
+	('00000000-0000-0000-0000-000000000000', '06ceff7d-b9a8-419f-93af-22d49b46cb86', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 03:36:20.453738+00', ''),
+	('00000000-0000-0000-0000-000000000000', '464745ad-a5bf-436c-9ac2-4518797726ad', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 04:35:39.560049+00', ''),
+	('00000000-0000-0000-0000-000000000000', '1158599a-c639-437b-af19-265d61e35f01', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 04:35:39.562199+00', ''),
+	('00000000-0000-0000-0000-000000000000', '24f5cc14-f00d-452e-8edb-6a4455d26e62', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 05:34:59.64783+00', ''),
+	('00000000-0000-0000-0000-000000000000', '05444824-db05-4ce6-98a9-5caaf2539302', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 05:34:59.652456+00', ''),
+	('00000000-0000-0000-0000-000000000000', '9e8944fb-b4f0-494e-9587-b2faaf3d3dca', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 06:34:20.298915+00', ''),
+	('00000000-0000-0000-0000-000000000000', '88592957-271a-463b-a26c-33357fd97ee9', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 06:34:20.302152+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'dbf4ad1d-96ca-44ba-a50c-36c730e079ca', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 07:33:39.643581+00', ''),
+	('00000000-0000-0000-0000-000000000000', '2892aa9b-73fa-47a9-8be9-5e7b4f2c25a6', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 07:33:39.647066+00', ''),
+	('00000000-0000-0000-0000-000000000000', '58a92cca-1395-4e65-b3f7-7681c74326c4', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 08:33:00.322752+00', ''),
+	('00000000-0000-0000-0000-000000000000', '01278372-a46d-4e01-aaa5-802e0c2c6e0f', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 08:33:00.327192+00', ''),
+	('00000000-0000-0000-0000-000000000000', '654f20ad-8225-44a5-b5dd-7299c6b28528', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 09:32:20.4075+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'acb22f45-1a17-4667-abce-8d93897cdb49', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 09:32:20.410924+00', ''),
+	('00000000-0000-0000-0000-000000000000', '26680b64-52f9-423f-9a99-d689ed16e478', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 10:31:40.30165+00', ''),
+	('00000000-0000-0000-0000-000000000000', '4511343b-46a0-4ce2-9df5-7d1906708e63', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 10:31:40.305621+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'dd2213f5-66ad-42d4-b73e-ae6a0e7457c2', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 11:31:08.924778+00', ''),
+	('00000000-0000-0000-0000-000000000000', '145dbe05-4c84-41a7-a60b-1c138f9389b0', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 11:31:08.928768+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'e813775b-f904-41b2-8a0e-dd561e706489', '{"action":"token_refreshed","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 12:30:34.424234+00', ''),
+	('00000000-0000-0000-0000-000000000000', '90feb925-4f6f-4127-81ad-b95db138b9c7', '{"action":"token_revoked","actor_id":"ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7","actor_username":"new_user@gmail.com","actor_via_sso":false,"log_type":"token"}', '2025-01-17 12:30:34.430635+00', ''),
+	('00000000-0000-0000-0000-000000000000', '19a4467a-1aae-446e-b8ea-ff8d0d5886b9', '{"action":"token_refreshed","actor_id":"34e3d7c7-e4fc-4b44-86ee-c00de52d5998","actor_username":"","actor_via_sso":false,"log_type":"token"}', '2025-01-17 12:59:56.490648+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'a9f5ab6c-f821-4666-8755-5124ca925181', '{"action":"token_revoked","actor_id":"34e3d7c7-e4fc-4b44-86ee-c00de52d5998","actor_username":"","actor_via_sso":false,"log_type":"token"}', '2025-01-17 12:59:56.498604+00', ''),
+	('00000000-0000-0000-0000-000000000000', '19de4451-5f03-4371-a6f1-92943806e4a2', '{"action":"user_modified","actor_id":"34e3d7c7-e4fc-4b44-86ee-c00de52d5998","actor_username":"","actor_via_sso":false,"log_type":"user"}', '2025-01-17 13:11:52.107199+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'f6e8aa28-c2e1-4edb-b070-eb2a61628b05', '{"action":"user_modified","actor_id":"34e3d7c7-e4fc-4b44-86ee-c00de52d5998","actor_username":"new_user2@gmail.com","actor_via_sso":false,"log_type":"user"}', '2025-01-17 13:11:52.114495+00', '');
 
 
 --
@@ -1037,7 +1099,9 @@ INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created
 INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous") VALUES
 	('00000000-0000-0000-0000-000000000000', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', 'authenticated', 'authenticated', NULL, '', NULL, NULL, '', NULL, '', NULL, '', '', NULL, '2024-12-18 15:38:14.846945+00', '{}', '{}', NULL, '2024-12-18 15:38:14.796824+00', '2025-01-05 02:08:00.364561+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, true),
 	('00000000-0000-0000-0000-000000000000', '1b4ee6e4-748d-4c7b-b644-713a84056078', 'authenticated', 'authenticated', NULL, '', NULL, NULL, '', NULL, '', NULL, '', '', NULL, '2025-01-05 02:30:04.127326+00', '{}', '{}', NULL, '2025-01-05 02:30:04.045925+00', '2025-01-05 02:30:04.21421+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, true),
-	('00000000-0000-0000-0000-000000000000', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'authenticated', 'authenticated', 'new_user@gmail.com', '$2a$10$ghwIZV266Blw8YLIpUrbPu5BeaChePAmR3IZb4pmjdQdMUOAMQNI.', '2024-12-29 01:37:12.764475+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-01-05 02:32:06.669545+00', '{"provider": "email", "providers": ["email"]}', '{}', NULL, '2024-12-29 01:37:12.728108+00', '2025-01-05 03:31:28.56254+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
+	('00000000-0000-0000-0000-000000000000', 'e0778ea3-40f9-4d47-8e8a-163f68950674', 'authenticated', 'authenticated', NULL, '', NULL, NULL, '', NULL, '', NULL, '', '', NULL, '2025-01-16 08:45:00.840424+00', '{}', '{}', NULL, '2025-01-16 08:45:00.752891+00', '2025-01-16 08:45:00.873962+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, true),
+	('00000000-0000-0000-0000-000000000000', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'authenticated', 'authenticated', 'new_user@gmail.com', '$2a$10$ghwIZV266Blw8YLIpUrbPu5BeaChePAmR3IZb4pmjdQdMUOAMQNI.', '2024-12-29 01:37:12.764475+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-01-16 08:48:45.036961+00', '{"provider": "email", "providers": ["email"]}', '{}', NULL, '2024-12-29 01:37:12.728108+00', '2025-01-17 12:30:34.445542+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
+	('00000000-0000-0000-0000-000000000000', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'authenticated', 'authenticated', 'new_user2@gmail.com', '$2a$10$tdocXKq2CmjD/4hKwwe8luuhMghNcIHJ9i2FnKHsbJ2lQAJEZz/kO', '2025-01-17 13:11:52.112665+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-01-17 12:00:27.176997+00', '{}', '{}', NULL, '2025-01-17 12:00:27.15017+00', '2025-01-17 13:11:52.112934+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
 
 
 --
@@ -1045,7 +1109,8 @@ INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encryp
 --
 
 INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "provider", "last_sign_in_at", "created_at", "updated_at", "id") VALUES
-	('ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{"sub": "ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7", "email": "new_user@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2024-12-29 01:37:12.739983+00', '2024-12-29 01:37:12.740569+00', '2024-12-29 01:37:12.740569+00', 'f4be280e-c744-4eb5-a37e-efdfcf4ce6b9');
+	('ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{"sub": "ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7", "email": "new_user@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2024-12-29 01:37:12.739983+00', '2024-12-29 01:37:12.740569+00', '2024-12-29 01:37:12.740569+00', 'f4be280e-c744-4eb5-a37e-efdfcf4ce6b9'),
+	('34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '{"sub": "34e3d7c7-e4fc-4b44-86ee-c00de52d5998", "email": "new_user2@gmail.com", "email_verified": true, "phone_verified": false}', 'email', '2025-01-17 13:11:52.108718+00', '2025-01-17 13:11:52.108735+00', '2025-01-17 13:11:52.114013+00', '302e229f-b2dc-4457-84b3-eb9149efd35a');
 
 
 --
@@ -1061,7 +1126,10 @@ INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "pro
 INSERT INTO "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "factor_id", "aal", "not_after", "refreshed_at", "user_agent", "ip", "tag") VALUES
 	('23435ba8-d7df-49e1-b91f-4ff7d93b52cd', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '2024-12-18 15:38:14.847363+00', '2025-01-05 02:08:00.374698+00', NULL, 'aal1', NULL, '2025-01-05 02:08:00.374396', 'Dart/3.5 (dart:io)', '172.18.0.1', NULL),
 	('42455367-9614-4be9-9cb4-a3f3a210cf27', '1b4ee6e4-748d-4c7b-b644-713a84056078', '2025-01-05 02:30:04.12841+00', '2025-01-05 02:30:04.12841+00', NULL, 'aal1', NULL, NULL, 'Dart/3.5 (dart:io)', '172.18.0.1', NULL),
-	('6384db9f-109d-46e9-8038-1b8d9d082f74', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-05 02:32:06.67032+00', '2025-01-05 03:31:28.570874+00', NULL, 'aal1', NULL, '2025-01-05 03:31:28.570813', 'Dart/3.5 (dart:io)', '172.18.0.1', NULL);
+	('6384db9f-109d-46e9-8038-1b8d9d082f74', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-05 02:32:06.67032+00', '2025-01-05 03:31:28.570874+00', NULL, 'aal1', NULL, '2025-01-05 03:31:28.570813', 'Dart/3.5 (dart:io)', '172.18.0.1', NULL),
+	('0d6853e9-956e-48ab-8b48-7fbe81964aa8', 'e0778ea3-40f9-4d47-8e8a-163f68950674', '2025-01-16 08:45:00.841391+00', '2025-01-16 08:45:00.841391+00', NULL, 'aal1', NULL, NULL, 'Dart/3.5 (dart:io)', '172.18.0.1', NULL),
+	('3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 08:48:45.037013+00', '2025-01-17 12:30:34.449605+00', NULL, 'aal1', NULL, '2025-01-17 12:30:34.449579', 'Dart/3.5 (dart:io)', '172.18.0.1', NULL),
+	('0ff6f50d-87d2-49eb-947b-96f0c6e1a5d2', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '2025-01-17 12:00:27.177702+00', '2025-01-17 12:59:56.518422+00', NULL, 'aal1', NULL, '2025-01-17 12:59:56.518376', 'Dart/3.5 (dart:io)', '172.18.0.1', NULL);
 
 
 --
@@ -1071,7 +1139,10 @@ INSERT INTO "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "fac
 INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "authentication_method", "id") VALUES
 	('23435ba8-d7df-49e1-b91f-4ff7d93b52cd', '2024-12-18 15:38:14.872117+00', '2024-12-18 15:38:14.872117+00', 'anonymous', '61051fbf-91e0-49e7-a191-502fd568a8f1'),
 	('42455367-9614-4be9-9cb4-a3f3a210cf27', '2025-01-05 02:30:04.218784+00', '2025-01-05 02:30:04.218784+00', 'anonymous', '38764fb1-aeca-44d0-8fa5-907fd0d875b7'),
-	('6384db9f-109d-46e9-8038-1b8d9d082f74', '2025-01-05 02:32:06.760453+00', '2025-01-05 02:32:06.760453+00', 'password', '5ca52e83-5f08-4676-a983-1a1f5c28a571');
+	('6384db9f-109d-46e9-8038-1b8d9d082f74', '2025-01-05 02:32:06.760453+00', '2025-01-05 02:32:06.760453+00', 'password', '5ca52e83-5f08-4676-a983-1a1f5c28a571'),
+	('0d6853e9-956e-48ab-8b48-7fbe81964aa8', '2025-01-16 08:45:00.876032+00', '2025-01-16 08:45:00.876032+00', 'anonymous', 'da401e78-29dd-4c20-89f3-b11169a7c433'),
+	('3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3', '2025-01-16 08:48:45.050169+00', '2025-01-16 08:48:45.050169+00', 'password', '017feecb-ed68-47b3-8685-7c994f1fad46'),
+	('0ff6f50d-87d2-49eb-947b-96f0c6e1a5d2', '2025-01-17 12:00:27.257077+00', '2025-01-17 12:00:27.257077+00', 'anonymous', '28df3515-82f9-40f5-aa49-7206d5712c50');
 
 
 --
@@ -1597,7 +1668,39 @@ INSERT INTO "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "r
 	('00000000-0000-0000-0000-000000000000', 489, '_TB02bP1Tq7Q3Zto-1AssQ', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', true, '2025-01-04 17:13:44.660216+00', '2025-01-04 18:13:04.804643+00', 'SbajSwtwipgk2WM86kSJJA', '23435ba8-d7df-49e1-b91f-4ff7d93b52cd'),
 	('00000000-0000-0000-0000-000000000000', 490, '-drLrX6mOU73sgKqovA4Zg', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', true, '2025-01-04 18:13:04.808043+00', '2025-01-04 19:12:24.876839+00', '_TB02bP1Tq7Q3Zto-1AssQ', '23435ba8-d7df-49e1-b91f-4ff7d93b52cd'),
 	('00000000-0000-0000-0000-000000000000', 500, 'rnFdsUrjYcJDcilv7ge-fg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-05 02:32:06.694867+00', '2025-01-05 03:31:28.548502+00', NULL, '6384db9f-109d-46e9-8038-1b8d9d082f74'),
-	('00000000-0000-0000-0000-000000000000', 501, 'gP3SYpEo9zHJ5Ncy4rVJGQ', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', false, '2025-01-05 03:31:28.556726+00', '2025-01-05 03:31:28.556726+00', 'rnFdsUrjYcJDcilv7ge-fg', '6384db9f-109d-46e9-8038-1b8d9d082f74');
+	('00000000-0000-0000-0000-000000000000', 501, 'gP3SYpEo9zHJ5Ncy4rVJGQ', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', false, '2025-01-05 03:31:28.556726+00', '2025-01-05 03:31:28.556726+00', 'rnFdsUrjYcJDcilv7ge-fg', '6384db9f-109d-46e9-8038-1b8d9d082f74'),
+	('00000000-0000-0000-0000-000000000000', 502, 'AZeHiocGCinkforoRehV7A', 'e0778ea3-40f9-4d47-8e8a-163f68950674', false, '2025-01-16 08:45:00.853494+00', '2025-01-16 08:45:00.853494+00', NULL, '0d6853e9-956e-48ab-8b48-7fbe81964aa8'),
+	('00000000-0000-0000-0000-000000000000', 503, '1SDfe0cXeEuvNQvmD9ApXg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 08:48:45.042262+00', '2025-01-16 09:48:10.788505+00', NULL, '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 504, 'pDgRjDDrgkeEKydvBB3dBg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 09:48:10.799952+00', '2025-01-16 10:47:30.951036+00', '1SDfe0cXeEuvNQvmD9ApXg', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 505, 'tPcuD1B7lyB1X-8FMJ6exg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 10:47:30.963108+00', '2025-01-16 11:46:57.951693+00', 'pDgRjDDrgkeEKydvBB3dBg', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 506, 'L2D5S5vW4wXuEWpNJwyP0Q', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 11:46:57.958533+00', '2025-01-16 12:46:18.452562+00', 'tPcuD1B7lyB1X-8FMJ6exg', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 507, 'tt1dVM-a0rGUifyjHDvuAg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 12:46:18.461718+00', '2025-01-16 13:45:37.642173+00', 'L2D5S5vW4wXuEWpNJwyP0Q', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 508, 'TtR_w-r-SxcIypUlyECKSA', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 13:45:37.645675+00', '2025-01-16 14:44:58.439069+00', 'tt1dVM-a0rGUifyjHDvuAg', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 509, 'TjAUfYg0jF23RSiQrsqeKQ', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 14:44:58.443878+00', '2025-01-16 15:44:20.686493+00', 'TtR_w-r-SxcIypUlyECKSA', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 510, 'asHKhPiFYuEQyfqrjQd1WQ', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 15:44:20.692488+00', '2025-01-16 16:43:40.430036+00', 'TjAUfYg0jF23RSiQrsqeKQ', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 511, 'iwjkEOQEbTZrwGGe412nXg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 16:43:40.432037+00', '2025-01-16 17:43:00.387024+00', 'asHKhPiFYuEQyfqrjQd1WQ', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 512, '1TQC5YoT3Ck2BC0ATGXGQQ', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 17:43:00.388629+00', '2025-01-16 18:42:20.427195+00', 'iwjkEOQEbTZrwGGe412nXg', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 513, 'HwBG73b1t7NyKR0kHYeycg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 18:42:20.429381+00', '2025-01-16 19:41:39.744338+00', '1TQC5YoT3Ck2BC0ATGXGQQ', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 514, 'JXcubvvaLO-6EWnga932rQ', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 19:41:39.748813+00', '2025-01-16 20:41:00.319862+00', 'HwBG73b1t7NyKR0kHYeycg', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 515, 'Fwdo8lmj-24E-ot9B8Wt7g', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 20:41:00.32235+00', '2025-01-16 21:40:20.347892+00', 'JXcubvvaLO-6EWnga932rQ', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 516, 'zbe5iZqb2pdJQ4URjebB5A', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 21:40:20.349662+00', '2025-01-16 22:39:40.351848+00', 'Fwdo8lmj-24E-ot9B8Wt7g', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 517, '6NF_g-ym0Wxx_KkuC9FfiA', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 22:39:40.354217+00', '2025-01-16 23:39:00.351434+00', 'zbe5iZqb2pdJQ4URjebB5A', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 518, 'lBDTW3Mj5M4cn8bJ7lowqQ', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-16 23:39:00.355723+00', '2025-01-17 00:38:19.640438+00', '6NF_g-ym0Wxx_KkuC9FfiA', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 519, '2ZUtWjYA36U7LT_l05xJJQ', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-17 00:38:19.646021+00', '2025-01-17 01:37:40.406039+00', 'lBDTW3Mj5M4cn8bJ7lowqQ', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 520, 'jvUNgtNnuh20axEJh-7JPA', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-17 01:37:40.412601+00', '2025-01-17 02:37:00.5192+00', '2ZUtWjYA36U7LT_l05xJJQ', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 521, 'yXqcPmQ8HMBeso1qeZiBZA', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-17 02:37:00.525887+00', '2025-01-17 03:36:20.454813+00', 'jvUNgtNnuh20axEJh-7JPA', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 522, '0af_7433M0pT_PggdAPATQ', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-17 03:36:20.461306+00', '2025-01-17 04:35:39.563228+00', 'yXqcPmQ8HMBeso1qeZiBZA', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 523, 'ZtONusOepu9lEKVHUyMlHg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-17 04:35:39.5667+00', '2025-01-17 05:34:59.653006+00', '0af_7433M0pT_PggdAPATQ', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 524, 'Rcki457XLURuyJaGw8tPCQ', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-17 05:34:59.658799+00', '2025-01-17 06:34:20.302689+00', 'ZtONusOepu9lEKVHUyMlHg', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 525, 'Crt7nZx6qrgIjNE50N87cA', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-17 06:34:20.309717+00', '2025-01-17 07:33:39.647957+00', 'Rcki457XLURuyJaGw8tPCQ', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 526, 'fSvZSyZf9qSHpRli4fzczQ', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-17 07:33:39.652641+00', '2025-01-17 08:33:00.328105+00', 'Crt7nZx6qrgIjNE50N87cA', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 527, 'bFqRDoL4fessRY3GGbjyHg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-17 08:33:00.333046+00', '2025-01-17 09:32:20.41176+00', 'fSvZSyZf9qSHpRli4fzczQ', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 528, 'j5yNmpbV7oneMTMgPpbSeg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-17 09:32:20.416845+00', '2025-01-17 10:31:40.306733+00', 'bFqRDoL4fessRY3GGbjyHg', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 529, 'Fh7CK2j21PXIk0Ubmv8Vhg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-17 10:31:40.311888+00', '2025-01-17 11:31:08.930198+00', 'j5yNmpbV7oneMTMgPpbSeg', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 530, 'Tr3_1BWnQD9EawONJkwbgg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', true, '2025-01-17 11:31:08.936687+00', '2025-01-17 12:30:34.431762+00', 'Fh7CK2j21PXIk0Ubmv8Vhg', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 532, 'w_t0W28erJqDQXxru_cJOQ', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', false, '2025-01-17 12:30:34.440912+00', '2025-01-17 12:30:34.440912+00', 'Tr3_1BWnQD9EawONJkwbgg', '3bb85cf6-f6c8-4a4f-888c-2cd8fe1088c3'),
+	('00000000-0000-0000-0000-000000000000', 531, 'LknTQvMfBUdxJvgfQD78sA', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', true, '2025-01-17 12:00:27.203063+00', '2025-01-17 12:59:56.499561+00', NULL, '0ff6f50d-87d2-49eb-947b-96f0c6e1a5d2'),
+	('00000000-0000-0000-0000-000000000000', 533, '91V8DS7lmPq9BPSKl7U1EQ', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', false, '2025-01-17 12:59:56.5072+00', '2025-01-17 12:59:56.5072+00', 'LknTQvMfBUdxJvgfQD78sA', '0ff6f50d-87d2-49eb-947b-96f0c6e1a5d2');
 
 
 --
@@ -1637,7 +1740,9 @@ INSERT INTO "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "r
 INSERT INTO "public"."profiles" ("id", "created_at", "nickname", "push_option", "fcm_token") VALUES
 	('3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '2024-12-18 15:38:15.04339+00', '창의적인 다람쥐 5184', true, 'cOCgVSefJUwbmPriJ4d4p_:APA91bEEh9skyiO6h6dHzkagdRfYbHbsY-Kvyvm7R7-Q1Au9lz__6oJUj_3S_AuL94O9qiMG0zbWn0Rab30NXP__3ugj8EII6NF_DYT3jeuLfJXL8aJ1LUg'),
 	('ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2024-12-29 01:37:35.388168+00', '다른사람', true, NULL),
-	('1b4ee6e4-748d-4c7b-b644-713a84056078', '2025-01-05 02:30:04.764756+00', '행복한 여우 2644', true, 'cz_kEcE7zkAtnzqtCdSrQH:APA91bGpmyqnG4Kp69WIf7_jsqOeSI1NIV5N5L0Ym48THFPS3EqeiUYEHo33G_a5Y1E3zdnhc9TRRJ2eQkvoIwwEb8d9WeKdusU6cmhabBiYlm1Bex5Ntzs');
+	('1b4ee6e4-748d-4c7b-b644-713a84056078', '2025-01-05 02:30:04.764756+00', '행복한 여우 2644', true, 'cz_kEcE7zkAtnzqtCdSrQH:APA91bGpmyqnG4Kp69WIf7_jsqOeSI1NIV5N5L0Ym48THFPS3EqeiUYEHo33G_a5Y1E3zdnhc9TRRJ2eQkvoIwwEb8d9WeKdusU6cmhabBiYlm1Bex5Ntzs'),
+	('e0778ea3-40f9-4d47-8e8a-163f68950674', '2025-01-16 08:45:00.954896+00', '긍정적인 고양이 5573', true, NULL),
+	('34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '2025-01-17 12:00:27.333494+00', '행복한 여우 9645', true, NULL);
 
 
 --
@@ -1647,7 +1752,15 @@ INSERT INTO "public"."profiles" ("id", "created_at", "nickname", "push_option", 
 INSERT INTO "public"."feed" ("user_id", "created_at", "review", "type", "image_path", "id", "visibility", "calorie", "is_challenge") VALUES
 	('3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '2024-12-18 15:38:39.289565+00', '', 'breakfast', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20/FOOD/1734536318897175.jpg', 'c5f6aa95-a4a9-47a9-a3e7-ae071abc2505', true, 0, false),
 	('3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '2025-01-02 06:29:43.195433+00', '하하', 'breakfast', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20/FOOD/1735799382699194.jpg', 'dfc20b38-d85d-44b3-a9ee-243a5ab45e86', true, 0, false),
-	('1b4ee6e4-748d-4c7b-b644-713a84056078', '2025-01-05 02:30:29.613679+00', '', 'breakfast', '1b4ee6e4-748d-4c7b-b644-713a84056078/FOOD/1736044226463370.jpg', '8bb1bbb6-ccb4-4255-b5a0-3c12acfc654e', true, 0, false);
+	('1b4ee6e4-748d-4c7b-b644-713a84056078', '2025-01-05 02:30:29.613679+00', '', 'breakfast', '1b4ee6e4-748d-4c7b-b644-713a84056078/FOOD/1736044226463370.jpg', '8bb1bbb6-ccb4-4255-b5a0-3c12acfc654e', true, 0, false),
+	('ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 05:18:27.359469+00', '음냐', 'dinner', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/FOOD/1737004706939268.jpg', '51b686a1-23d7-46ff-804e-26878dbc8d2c', true, 100, true),
+	('ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 11:13:40.587551+00', '55', 'exercise', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/EXERCISE/1737026020400064.jpg', '1d209b32-0402-49a4-b2dc-3037520e87bd', true, 55, true),
+	('ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 11:14:23.775976+00', '55', 'exercise', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/EXERCISE/1737026063593334.jpg', 'f85563f4-3e30-469b-8664-617b04fb4ad5', true, 55, true),
+	('ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 11:51:52.574175+00', '20', 'exercise', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/EXERCISE/1737114712301853.jpg', '54afa84d-2317-457f-8d4d-b49f1f430a41', true, 20, true),
+	('ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 11:54:00.469227+00', '30', 'exercise', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/EXERCISE/1737114840227659.jpg', '52f42444-8a14-4eaf-a822-1ca0fe0fccc3', true, 30, true),
+	('ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 11:55:33.145932+00', '30', 'exercise', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/EXERCISE/1737114932942776.jpg', '76509a6a-51da-4df0-a1ba-d756b016450e', true, 30, true),
+	('ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 13:04:47.415564+00', '', 'dinner', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/FOOD/1737119086991642.jpg', '86440cf1-07f5-4949-8f0a-3d7ac68c2710', true, 285, true),
+	('ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 13:05:14.83281+00', '30', 'exercise', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/EXERCISE/1737119114731806.jpg', '25e08248-014b-492c-9512-4ebada638e32', true, 30, true);
 
 
 --
@@ -1657,19 +1770,12 @@ INSERT INTO "public"."feed" ("user_id", "created_at", "review", "type", "image_p
 
 
 --
--- Data for Name: challenge; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO "public"."challenge" ("id", "created_at", "start_day", "end_day", "user_id", "is_success") VALUES
-	('a72f9f0d-4837-4a1e-b801-f778ec910187', '2025-01-05 02:31:39.50229+00', '2025-01-05', '2025-01-11', '1b4ee6e4-748d-4c7b-b644-713a84056078', false);
-
-
---
 -- Data for Name: rooms; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO "public"."rooms" ("id", "created_at", "room_name", "end_day", "start_day") VALUES
-	('7dde027d-13b9-4a1b-b50b-e09c596c92e8', '2024-12-19 05:04:31.39613+00', '우다다 테스트', NULL, NULL);
+	('7dde027d-13b9-4a1b-b50b-e09c596c92e8', '2024-12-19 05:04:31.39613+00', '우다다 테스트', NULL, NULL),
+	('cbf06b73-87f0-49bd-8689-e5fd3b6a87b2', '2025-01-17 13:12:16.398185+00', '1:1 테스트', NULL, '2025-01-25');
 
 
 --
@@ -1722,7 +1828,41 @@ INSERT INTO "public"."messages" ("created_at", "content", "type", "user_id", "id
 	('2025-01-01 10:01:52.601118+00', '다시 나와라', 'textMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'f3f5e09d-9019-46f1-a410-5e86dc4e2d5f', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', NULL),
 	('2025-01-02 08:37:41.026702+00', 'send', 'textMessage', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', 'b6c42160-e720-4929-bdb1-bf71ace10d73', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', NULL),
 	('2025-01-02 08:45:25.748248+00', 'good!', 'textMessage', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '9135ca0b-f652-4434-b8b6-5e8d8e363024', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', NULL),
-	('2025-01-05 02:02:20.699261+00', NULL, 'imageMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'a44226c5-0528-4a05-bb3d-8c3188638001', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/kakao.png');
+	('2025-01-05 02:02:20.699261+00', NULL, 'imageMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'a44226c5-0528-4a05-bb3d-8c3188638001', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/kakao.png'),
+	('2025-01-16 05:03:48.384251+00', '51.3 kg', 'missionMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'd94efbf9-76cf-4b30-8f08-c0c7cbc3b121', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737003828210971_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg'),
+	('2025-01-16 05:18:27.359469+00', '그릭요거트', 'missionMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2d1dcef3-d9cb-471c-a563-ef659dc22d32', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737004706883345_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg'),
+	('2025-01-16 08:51:35.504777+00', NULL, 'imageMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'e353507c-65bf-44f6-86b9-c80a3523bbd7', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737017495234141_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg'),
+	('2025-01-16 11:13:40.587551+00', '55 분', 'missionMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '8f0ed2d7-84e8-4dd3-9096-27fe77aaf0d4', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737026020318618_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg'),
+	('2025-01-16 11:14:23.775976+00', '55 분', 'missionMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '3e0f296f-6677-497c-8c6b-c7b9a7737226', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737026063533377_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg'),
+	('2025-01-17 11:51:52.574175+00', '20 분', 'missionMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '355e1a28-ce6f-4a9d-a844-550b4c7d6250', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737114712253373_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg'),
+	('2025-01-17 11:54:00.469227+00', '30 분', 'missionMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '69dbd06c-be87-4dbf-b007-5850a8f70a59', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737114840177062_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg'),
+	('2025-01-17 11:55:33.145932+00', '30 분', 'missionMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '0c5fe399-f693-4cd3-ac98-22f5756753ec', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737114932899031_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg'),
+	('2025-01-17 13:04:47.415564+00', 'pizza', 'missionMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '21796049-e3c3-4322-b4f3-b9766b079a0d', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737119086928692_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg'),
+	('2025-01-17 13:05:14.83281+00', '30 분', 'missionMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '835549da-bcbe-447b-bde3-1939c9458d73', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737119114682148_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg'),
+	('2025-01-17 13:05:28.093877+00', '49.2 kg', 'missionMessage', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '5a9823cc-3d67-4a97-b72c-bb47e64c3e1d', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737119127909057_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg'),
+	('2025-01-17 13:13:27.340828+00', '1:1 테스트방', 'textMessage', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '3f5224d7-451c-47f0-901e-269d9642f90d', 'cbf06b73-87f0-49bd-8689-e5fd3b6a87b2', NULL);
+
+
+--
+-- Data for Name: blocked_messages; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: blocked_users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."blocked_users" ("created_at", "user_id", "block_user_id") VALUES
+	('2025-01-17 13:11:00.342845+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20');
+
+
+--
+-- Data for Name: challenge; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."challenge" ("id", "created_at", "start_day", "end_day", "user_id", "is_success") VALUES
+	('a72f9f0d-4837-4a1e-b801-f778ec910187', '2025-01-05 02:31:39.50229+00', '2025-01-05', '2025-01-11', '1b4ee6e4-748d-4c7b-b644-713a84056078', false);
 
 
 --
@@ -1755,7 +1895,75 @@ INSERT INTO "public"."read_receipts" ("created_at", "user_id", "message_id", "ro
 	('2025-01-03 04:51:29.002849+00', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '00982bc9-ce1c-4fb8-a39e-bccc6c1ce5c4', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
 	('2025-01-03 04:53:46.345559+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '9135ca0b-f652-4434-b8b6-5e8d8e363024', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
 	('2025-01-03 04:52:31.13863+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'c227f27c-74e7-480c-a4b1-2c71f5b3855d', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
-	('2025-01-03 13:44:13.944171+00', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '9135ca0b-f652-4434-b8b6-5e8d8e363024', '7dde027d-13b9-4a1b-b50b-e09c596c92e8');
+	('2025-01-03 13:44:13.944171+00', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '9135ca0b-f652-4434-b8b6-5e8d8e363024', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-16 05:03:38.120584+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'a44226c5-0528-4a05-bb3d-8c3188638001', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-16 05:04:40.095799+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'd94efbf9-76cf-4b30-8f08-c0c7cbc3b121', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-16 05:18:27.61749+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2d1dcef3-d9cb-471c-a563-ef659dc22d32', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-16 08:51:35.65852+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'e353507c-65bf-44f6-86b9-c80a3523bbd7', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-16 11:13:40.939749+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '8f0ed2d7-84e8-4dd3-9096-27fe77aaf0d4', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-16 11:14:24.041433+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '3e0f296f-6677-497c-8c6b-c7b9a7737226', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 11:51:52.819627+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '355e1a28-ce6f-4a9d-a844-550b4c7d6250', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 11:54:00.80212+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '69dbd06c-be87-4dbf-b007-5850a8f70a59', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 11:55:33.398427+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '0c5fe399-f693-4cd3-ac98-22f5756753ec', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:05:00.13219+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '21796049-e3c3-4322-b4f3-b9766b079a0d', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:06:47.456631+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '5a9823cc-3d67-4a97-b72c-bb47e64c3e1d', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:06:47.456631+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '835549da-bcbe-447b-bde3-1939c9458d73', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '5a9823cc-3d67-4a97-b72c-bb47e64c3e1d', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '835549da-bcbe-447b-bde3-1939c9458d73', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '21796049-e3c3-4322-b4f3-b9766b079a0d', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '0c5fe399-f693-4cd3-ac98-22f5756753ec', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '69dbd06c-be87-4dbf-b007-5850a8f70a59', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '355e1a28-ce6f-4a9d-a844-550b4c7d6250', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '3e0f296f-6677-497c-8c6b-c7b9a7737226', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '8f0ed2d7-84e8-4dd3-9096-27fe77aaf0d4', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'e353507c-65bf-44f6-86b9-c80a3523bbd7', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '2d1dcef3-d9cb-471c-a563-ef659dc22d32', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'd94efbf9-76cf-4b30-8f08-c0c7cbc3b121', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'a44226c5-0528-4a05-bb3d-8c3188638001', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '9135ca0b-f652-4434-b8b6-5e8d8e363024', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'b6c42160-e720-4929-bdb1-bf71ace10d73', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'f3f5e09d-9019-46f1-a410-5e86dc4e2d5f', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'aa30361e-26fe-4f47-b49d-af6e4d97ab66', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'fd697ecd-395c-4ccd-97fa-0a62ff174605', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'dd59c287-955a-4f32-814c-21276f503e83', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'dc0f7e71-2186-4260-bf88-bfc621d19ee1', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '8ee951a3-3dd2-4ec5-b3e5-5af794eb42fc', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '71d33efa-ee8f-4661-b2ff-602406d3b89e', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '7e578a7e-3856-418b-86d8-a6b07e719d1b', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '7a55975a-ae1d-49fa-aa10-807048f81844', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '03b4085c-6b7f-43e5-a34f-a00548aad06d', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '53c2f117-897b-416e-9889-0031e8acd7eb', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'b2546bb0-1af7-43cd-88cd-5a4474837396', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '11004cc6-f045-4da9-b3e0-cc1fc2b1565a', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '6d6b4981-9353-4a59-ba0b-52a9cab649b5', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '0131764b-c9a8-422d-94eb-c01fff7f83a6', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '32d9d2fe-84ba-4b09-9327-36cd17e89de9', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '08922bb5-7205-4b48-8bec-b308a4329673', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '15645759-6268-4788-b77c-0d67fcfe6c54', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '6b138025-db83-4b76-acaf-a1f330e10ada', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '1efc29b1-87b6-4351-bd2f-daa78fce8e2b', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '09215e59-e6a8-402d-81da-b41bc04d76dc', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'e17b5c34-fbab-428b-b189-aedc1fec0be6', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '2baf9ca8-e569-421e-9443-6d0b1c91f2ad', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'f92ed9c8-0129-4b5c-9d63-932f4518a2ee', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '62adc7d6-c963-4cb7-aa8c-e72c8645a964', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'e21929f7-d0d4-4ca5-a4e1-67fc17397fde', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '8dd5cd07-3c68-4398-b9e8-0a0cf9665a08', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '9cf07084-b362-43c3-a909-06e1f9210b95', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '17966fef-f0cf-4c20-8e37-cd0b999f8110', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '6ab12ca9-bdc2-42de-bda1-d154dc05fce4', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '9be3486e-5759-428c-90be-1536d27a71e8', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '3c29b16f-3d28-437d-809d-a054679b6772', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '69fc52a1-51bc-4885-a2d2-750708744af5', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '082eee81-d8fe-4bd6-9ed7-c5205266e3c3', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '5d0587a0-a009-422f-a91c-2585c163bfd3', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '35c2abbd-c6f6-4705-88b1-0d8f114b5fb0', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'c227f27c-74e7-480c-a4b1-2c71f5b3855d', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '4272766a-dbaf-4310-9ddf-153f24c7770f', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '00982bc9-ce1c-4fb8-a39e-bccc6c1ce5c4', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '29e5e0bc-bf9f-451b-8ff0-3b853ac6fa39', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'dd490226-fcbf-4f9f-9175-e6e4c823f1b9', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
+	('2025-01-17 13:10:38.804732+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '19a934b6-ea9a-4fa2-81f9-903abda9ab37', '7dde027d-13b9-4a1b-b50b-e09c596c92e8');
 
 
 --
@@ -1765,22 +1973,35 @@ INSERT INTO "public"."read_receipts" ("created_at", "user_id", "message_id", "ro
 INSERT INTO "public"."report" ("id", "user_id", "date", "created_at", "breakfast", "lunch", "dinner", "snack", "exercise", "weight") VALUES
 	('e216b50c-5b48-4a90-ab53-12ef87b7e02e', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '2024-12-19', '2024-12-18 15:38:39.445997+00', 0, NULL, NULL, NULL, NULL, NULL),
 	('0c15d1a9-eb68-4513-86bf-dc556a67a432', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '2025-01-02', '2025-01-02 06:29:43.407119+00', 0, NULL, NULL, NULL, NULL, NULL),
-	('3826232e-bfe4-45e3-aa9c-9936c0fb033b', '1b4ee6e4-748d-4c7b-b644-713a84056078', '2025-01-05', '2025-01-05 02:30:30.003335+00', 0, NULL, NULL, NULL, NULL, NULL);
+	('3826232e-bfe4-45e3-aa9c-9936c0fb033b', '1b4ee6e4-748d-4c7b-b644-713a84056078', '2025-01-05', '2025-01-05 02:30:30.003335+00', 0, NULL, NULL, NULL, NULL, NULL),
+	('021d3cdf-033e-4b30-b80f-ad6861a902fe', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16', '2025-01-16 05:03:48.453071+00', NULL, NULL, 100, NULL, NULL, 51.3),
+	('ccf04b1e-cfe6-4d07-a29f-49927f50e11c', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17', '2025-01-17 11:55:33.279392+00', NULL, NULL, 285, NULL, 60, 49.2);
 
 
 --
 -- Data for Name: room_participants; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."room_participants" ("created_at", "user_id", "room_id") VALUES
-	('2024-12-19 05:05:32.77139+00', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '7dde027d-13b9-4a1b-b50b-e09c596c92e8'),
-	('2025-01-04 11:27:30.468065+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '7dde027d-13b9-4a1b-b50b-e09c596c92e8');
+INSERT INTO "public"."room_participants" ("created_at", "user_id", "room_id", "push_option") VALUES
+	('2024-12-19 05:05:32.77139+00', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', true),
+	('2025-01-04 11:27:30.468065+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', true),
+	('2025-01-17 13:10:27.856658+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', '7dde027d-13b9-4a1b-b50b-e09c596c92e8', true),
+	('2025-01-17 13:12:30.219448+00', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'cbf06b73-87f0-49bd-8689-e5fd3b6a87b2', true),
+	('2025-01-17 13:12:46.603973+00', '34e3d7c7-e4fc-4b44-86ee-c00de52d5998', 'cbf06b73-87f0-49bd-8689-e5fd3b6a87b2', true);
 
 
 --
 -- Data for Name: weight; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO "public"."weight" ("id", "created_at", "weight", "date", "user_id", "image_path") VALUES
+	('46abc930-7de9-41b1-ac21-9a6016507b5a', '2025-01-16 05:03:48.384251+00', 51.3, '2025-01-16', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/WEIGHT/1737003828265422.jpg'),
+	('f07e25a4-4721-462e-ad68-d6c3997bc7db', '2025-01-17 13:05:28.093877+00', 49.2, '2025-01-17', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/WEIGHT/1737119127961597.jpg');
+
+
+--
+-- Data for Name: buckets; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
+--
 
 --
 -- Data for Name: objects; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
@@ -1790,7 +2011,30 @@ INSERT INTO "storage"."objects" ("id", "bucket_id", "name", "owner", "created_at
 	('98e1fcea-21e8-4d30-90f0-169ec2fc7f04', 'FeedImages', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20/FOOD/1734536318897175.jpg', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '2024-12-18 15:38:39.2613+00', '2024-12-18 15:38:39.2613+00', '2024-12-18 15:38:39.2613+00', '{"eTag": "\"257cc22a93089fd501e126108ebf2749\"", "size": 191335, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-12-18T15:38:39.184Z", "contentLength": 191335, "httpStatusCode": 200}', 'c8cc4d05-7416-4150-b608-dc2098e23353', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '{}'),
 	('9fd91af0-fffd-4f77-92f8-72a5855140c3', 'FeedImages', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20/FOOD/1735799382699194.jpg', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '2025-01-02 06:29:43.117936+00', '2025-01-02 06:29:43.117936+00', '2025-01-02 06:29:43.117936+00', '{"eTag": "\"1d7bf40759990c9b752458ce3745ab37\"", "size": 272880, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-02T06:29:43.089Z", "contentLength": 272880, "httpStatusCode": 200}', '0797cff3-10b7-4925-a5b6-89b67d589af8', '3353f6a4-2263-40a9-a09e-7e82ce6a6f20', '{}'),
 	('f6431fa9-a655-46f2-9746-932563844115', 'FeedImages', '1b4ee6e4-748d-4c7b-b644-713a84056078/FOOD/1736044226463370.jpg', '1b4ee6e4-748d-4c7b-b644-713a84056078', '2025-01-05 02:30:29.129548+00', '2025-01-05 02:30:29.129548+00', '2025-01-05 02:30:29.129548+00', '{"eTag": "\"1d7bf40759990c9b752458ce3745ab37\"", "size": 272880, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-05T02:30:28.897Z", "contentLength": 272880, "httpStatusCode": 200}', 'f6fe70fc-5b66-4f7b-b094-1be7870a0187', '1b4ee6e4-748d-4c7b-b644-713a84056078', '{}'),
-	('1ad5ea27-185e-4820-9cb8-f0eee8b9a122', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/kakao.png', NULL, '2025-01-05 03:12:47.145593+00', '2025-01-05 03:13:33.048142+00', '2025-01-05 03:12:47.145593+00', '{"eTag": "\"71a8f88d0d9eca2f0ff226ff756b797a\"", "size": 3310, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2025-01-05T03:13:33.041Z", "contentLength": 3310, "httpStatusCode": 200}', '10838245-a0fd-47f8-8626-721460f301a7', NULL, NULL);
+	('1ad5ea27-185e-4820-9cb8-f0eee8b9a122', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/kakao.png', NULL, '2025-01-05 03:12:47.145593+00', '2025-01-05 03:13:33.048142+00', '2025-01-05 03:12:47.145593+00', '{"eTag": "\"71a8f88d0d9eca2f0ff226ff756b797a\"", "size": 3310, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2025-01-05T03:13:33.041Z", "contentLength": 3310, "httpStatusCode": 200}', '10838245-a0fd-47f8-8626-721460f301a7', NULL, NULL),
+	('0196eda9-79a4-4f55-9ac5-03a294ac1f0a', 'FeedImages', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/WEIGHT/1737003828265422.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 05:03:48.327581+00', '2025-01-16 05:03:48.327581+00', '2025-01-16 05:03:48.327581+00', '{"eTag": "\"c2163e207dae3d01b71ed21accf05cc2\"", "size": 190800, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-16T05:03:48.318Z", "contentLength": 190800, "httpStatusCode": 200}', 'a065684d-0db6-43c6-ad3b-4298792e7b14', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('ea996f3c-cbe3-492c-9b57-a9a14ab65ce5', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737003828210971_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 05:03:48.326946+00', '2025-01-16 05:03:48.326946+00', '2025-01-16 05:03:48.326946+00', '{"eTag": "\"c2163e207dae3d01b71ed21accf05cc2\"", "size": 190800, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-16T05:03:48.318Z", "contentLength": 190800, "httpStatusCode": 200}', '458630b7-de56-4b17-ba4d-42648783d5b9', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('d9717e7e-b833-4414-b1a1-0c590dec4648', 'FeedImages', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/FOOD/1737004706939268.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 05:18:27.265067+00', '2025-01-16 05:18:27.265067+00', '2025-01-16 05:18:27.265067+00', '{"eTag": "\"1d7bf40759990c9b752458ce3745ab37\"", "size": 272880, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-16T05:18:27.251Z", "contentLength": 272880, "httpStatusCode": 200}', 'b9048f5a-f9ef-4686-87a0-c0f4be2c759d', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('f72ef789-d8c1-4733-96f9-e9a05175d662', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737004706883345_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 05:18:27.265322+00', '2025-01-16 05:18:27.265322+00', '2025-01-16 05:18:27.265322+00', '{"eTag": "\"1d7bf40759990c9b752458ce3745ab37\"", "size": 272880, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-16T05:18:27.251Z", "contentLength": 272880, "httpStatusCode": 200}', '04238e24-e86d-4d05-8a47-4ac1c7f2b893', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('b559d84a-f88f-48fe-a3bc-fdc24791cade', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737017495234141_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 08:51:35.427855+00', '2025-01-16 08:51:35.427855+00', '2025-01-16 08:51:35.427855+00', '{"eTag": "\"86f8d2e1b7d977dfe4a182c6430a1700\"", "size": 120136, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-16T08:51:35.411Z", "contentLength": 120136, "httpStatusCode": 200}', '7035ee0b-5198-4aea-beda-858059c04078', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('9f3a4d2f-cf9d-4776-9ac5-e0b56894bfb1', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737025930795946_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 11:12:11.193893+00', '2025-01-16 11:12:11.193893+00', '2025-01-16 11:12:11.193893+00', '{"eTag": "\"1d7bf40759990c9b752458ce3745ab37\"", "size": 272880, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-16T11:12:11.184Z", "contentLength": 272880, "httpStatusCode": 200}', '73487c8a-4fa7-4602-b5e6-d350717db77e', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('07557bd2-c6df-43a5-929c-ea2ae8ada37c', 'FeedImages', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/EXERCISE/1737026020400064.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 11:13:40.516166+00', '2025-01-16 11:13:40.516166+00', '2025-01-16 11:13:40.516166+00', '{"eTag": "\"1d7bf40759990c9b752458ce3745ab37\"", "size": 272880, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-16T11:13:40.507Z", "contentLength": 272880, "httpStatusCode": 200}', 'd145ff9c-2fd7-435b-8052-bdab79fed844', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('c45b8503-06d8-4385-a684-a3209c78f2ce', 'FeedImages', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/EXERCISE/1737026063593334.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 11:14:23.723626+00', '2025-01-16 11:14:23.723626+00', '2025-01-16 11:14:23.723626+00', '{"eTag": "\"1d7bf40759990c9b752458ce3745ab37\"", "size": 272880, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-16T11:14:23.716Z", "contentLength": 272880, "httpStatusCode": 200}', 'ced38748-f5c6-4f00-8697-8d66d11c864d', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('3a91f989-fa7a-47ac-b56d-ef3ad7d39297', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737026020318618_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 11:13:40.51589+00', '2025-01-16 11:13:40.51589+00', '2025-01-16 11:13:40.51589+00', '{"eTag": "\"1d7bf40759990c9b752458ce3745ab37\"", "size": 272880, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-16T11:13:40.507Z", "contentLength": 272880, "httpStatusCode": 200}', '774779b8-dfae-485b-b255-578a1d7592b7', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('21381127-d5bc-485f-8889-aa851682b4db', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737026063533377_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 11:14:23.723443+00', '2025-01-16 11:14:23.723443+00', '2025-01-16 11:14:23.723443+00', '{"eTag": "\"1d7bf40759990c9b752458ce3745ab37\"", "size": 272880, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-16T11:14:23.716Z", "contentLength": 272880, "httpStatusCode": 200}', 'e4bdba2a-c069-497e-bac1-77e2b93554cf', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('bc10ce26-18a2-4ba8-b126-b15c15b00451', 'FeedImages', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/EXERCISE/1737114712301853.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 11:51:52.511325+00', '2025-01-17 11:51:52.511325+00', '2025-01-17 11:51:52.511325+00', '{"eTag": "\"5a91cafea6818b13633a1001e3d371de\"", "size": 94901, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-17T11:51:52.490Z", "contentLength": 94901, "httpStatusCode": 200}', '914fb509-5782-4b10-9758-626fbe5eb296', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('d4f2f1b5-eea4-4b12-9ecd-4a84e0252653', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737114712253373_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 11:51:52.512913+00', '2025-01-17 11:51:52.512913+00', '2025-01-17 11:51:52.512913+00', '{"eTag": "\"5a91cafea6818b13633a1001e3d371de\"", "size": 94901, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-17T11:51:52.490Z", "contentLength": 94901, "httpStatusCode": 200}', '41103a37-ed0c-4a25-a368-4264e0455acc', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('330eb3dd-1371-4524-8717-92f89b04e032', 'FeedImages', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/EXERCISE/1737114840227659.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 11:54:00.414676+00', '2025-01-17 11:54:00.414676+00', '2025-01-17 11:54:00.414676+00', '{"eTag": "\"5a91cafea6818b13633a1001e3d371de\"", "size": 94901, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-17T11:54:00.406Z", "contentLength": 94901, "httpStatusCode": 200}', '3e2e17fa-7016-4708-bedb-ac57029febac', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('9eb20fd8-fd3e-4ddc-97b7-74f3e7bf8cac', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737114840177062_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 11:54:00.414819+00', '2025-01-17 11:54:00.414819+00', '2025-01-17 11:54:00.414819+00', '{"eTag": "\"5a91cafea6818b13633a1001e3d371de\"", "size": 94901, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-17T11:54:00.406Z", "contentLength": 94901, "httpStatusCode": 200}', '70aa87f6-2ae5-476b-9a80-ee2e8d6744bf', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('e486256f-6e56-4815-81e3-c0c0d58bb56c', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737114932899031_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 11:55:33.09389+00', '2025-01-17 11:55:33.09389+00', '2025-01-17 11:55:33.09389+00', '{"eTag": "\"5a91cafea6818b13633a1001e3d371de\"", "size": 94901, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-17T11:55:33.084Z", "contentLength": 94901, "httpStatusCode": 200}', '4fd6966b-c81a-495c-9cd0-c69454b55316', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('d9cafb33-2fbd-47df-b85d-e9185ea958e3', 'FeedImages', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/EXERCISE/1737114932942776.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 11:55:33.094117+00', '2025-01-17 11:55:33.094117+00', '2025-01-17 11:55:33.094117+00', '{"eTag": "\"5a91cafea6818b13633a1001e3d371de\"", "size": 94901, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-17T11:55:33.085Z", "contentLength": 94901, "httpStatusCode": 200}', 'c9e7e9b7-d83a-4812-990b-05c9d7066b21', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('c88b8f19-3056-4977-9ecf-6fb8d7e23e66', 'FeedImages', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/EXERCISE/1737025930857416.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-16 11:12:11.194133+00', '2025-01-16 11:12:11.194133+00', '2025-01-16 11:12:11.194133+00', '{"eTag": "\"1d7bf40759990c9b752458ce3745ab37\"", "size": 272880, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-16T11:12:11.184Z", "contentLength": 272880, "httpStatusCode": 200}', '14f8525e-5e55-44cf-ab20-265921f9c8c4', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('4d396299-7bf7-4720-9436-b77016d77d3e', 'FeedImages', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/FOOD/1737119086991642.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 13:04:47.332753+00', '2025-01-17 13:04:47.332753+00', '2025-01-17 13:04:47.332753+00', '{"eTag": "\"1d7bf40759990c9b752458ce3745ab37\"", "size": 272880, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-17T13:04:47.316Z", "contentLength": 272880, "httpStatusCode": 200}', '89aa0f89-c37d-4f5b-83a3-5eb3e457a2e9', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('c50cf08a-7bda-4105-b45a-2fe587775d50', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737119086928692_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 13:04:47.335303+00', '2025-01-17 13:04:47.335303+00', '2025-01-17 13:04:47.335303+00', '{"eTag": "\"1d7bf40759990c9b752458ce3745ab37\"", "size": 272880, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-17T13:04:47.321Z", "contentLength": 272880, "httpStatusCode": 200}', '64aadc6e-cdb5-4e4c-8cd6-c9a00f74941d', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('9230f589-7f97-4040-b963-36815bd46d25', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737119114682148_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 13:05:14.743628+00', '2025-01-17 13:05:14.743628+00', '2025-01-17 13:05:14.743628+00', '{"eTag": "\"86f8d2e1b7d977dfe4a182c6430a1700\"", "size": 120136, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-17T13:05:14.737Z", "contentLength": 120136, "httpStatusCode": 200}', 'dfeddfd9-4546-4fc6-a6e3-09ad6844ab07', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('0d8cebde-5302-42a1-b90b-18e598255044', 'FeedImages', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/EXERCISE/1737119114731806.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 13:05:14.783647+00', '2025-01-17 13:05:14.783647+00', '2025-01-17 13:05:14.783647+00', '{"eTag": "\"86f8d2e1b7d977dfe4a182c6430a1700\"", "size": 120136, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-17T13:05:14.779Z", "contentLength": 120136, "httpStatusCode": 200}', 'f7cec337-0cc6-4eb8-8c68-2a0b296023ae', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('f613bd23-8c6f-4a92-a405-2001c7fc629d', 'ImageMessages', '7dde027d-13b9-4a1b-b50b-e09c596c92e8/1737119127909057_ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 13:05:28.066576+00', '2025-01-17 13:05:28.066576+00', '2025-01-17 13:05:28.066576+00', '{"eTag": "\"c2163e207dae3d01b71ed21accf05cc2\"", "size": 190800, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-17T13:05:28.059Z", "contentLength": 190800, "httpStatusCode": 200}', '0c517077-28ca-4b69-bde3-62e834c73ef9', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}'),
+	('cd8c8ddf-623a-4d42-be4d-ab81d2cb2c39', 'FeedImages', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7/WEIGHT/1737119127961597.jpg', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '2025-01-17 13:05:28.066405+00', '2025-01-17 13:05:28.066405+00', '2025-01-17 13:05:28.066405+00', '{"eTag": "\"c2163e207dae3d01b71ed21accf05cc2\"", "size": 190800, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-01-17T13:05:28.059Z", "contentLength": 190800, "httpStatusCode": 200}', '2886f498-d8b5-4705-a41b-92f793bfcddb', 'ccb5b2c2-8dff-4a06-8bd2-42f93368f2e7', '{}');
 
 
 --
@@ -1821,7 +2065,7 @@ INSERT INTO "storage"."objects" ("id", "bucket_id", "name", "owner", "created_at
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
 --
 
-SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 501, true);
+SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 533, true);
 
 
 --
