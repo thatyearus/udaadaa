@@ -7,7 +7,7 @@ class WeeklyReport extends StatefulWidget {
   const WeeklyReport({super.key});
 
   @override
-  _WeeklyReportState createState() => _WeeklyReportState();
+  State<WeeklyReport> createState() => _WeeklyReportState();
 }
 
 class _WeeklyReportState extends State<WeeklyReport> {
