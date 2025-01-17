@@ -40,7 +40,7 @@ create table "public"."rooms" (
 
 alter table "public"."rooms" enable row level security;
 
-alter table "public"."reactions" add column "message_id" uuid not null;
+alter table "public"."reactions" add column "message_id" uuid;
 
 CREATE UNIQUE INDEX messages_pkey ON public.messages USING btree (id);
 
