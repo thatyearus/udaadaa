@@ -7,7 +7,6 @@ import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/widgets/calendar.dart';
 import 'package:udaadaa/widgets/daily_report.dart';
 import 'package:udaadaa/widgets/weekly_report.dart';
-import 'package:udaadaa/widgets/weight_report.dart';
 
 class ReportView extends StatelessWidget {
   const ReportView({super.key});
@@ -43,11 +42,7 @@ class ReportView extends StatelessWidget {
                 AppSpacing.verticalSizedBoxXxl,
                 const SelectToggleButtons(),
                 AppSpacing.verticalSizedBoxL,
-                (selection[0]
-                    ? const DailyReport()
-                    : (selection[1]
-                        ? const WeeklyReport()
-                        : const WeightReport())),
+                (selection[0] ? const DailyReport() : const WeeklyReport()),
               ],
             ),
           ),
