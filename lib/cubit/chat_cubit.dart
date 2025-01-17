@@ -647,6 +647,7 @@ class ChatCubit extends Cubit<ChatState> {
         calorie: calorie,
         mealContent: mealContent,
         weight: weight,
+        exerciseTime: exerciseTime,
       );
 
       logger.d('Certification uploaded successfully!');
