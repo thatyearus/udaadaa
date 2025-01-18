@@ -13,22 +13,16 @@ class WeeklyReport extends StatefulWidget {
 class _WeeklyReportState extends State<WeeklyReport> {
   @override
   Widget build(BuildContext context) {
+    List<Widget> pages = [
+      const CalorieReport(),
+      const WeightReport(),
+      const ExerciseReport()
+    ];
     return SizedBox(
       height: 400,
       child: PageView.builder(
         itemCount: 3,
-        itemBuilder: (context, index) {
-          switch (index) {
-            case 0:
-              return const CalorieReport();
-            case 1:
-              return const WeightReport();
-            case 2:
-              return const ExerciseReport();
-            default:
-              return const CalorieReport();
-          }
-        },
+        itemBuilder: (context, index) => pages[index],
       ),
     );
   }
