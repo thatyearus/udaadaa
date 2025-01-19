@@ -68,7 +68,7 @@ class _WeeklyReportState extends State<WeeklyReport> {
         children: [
           Expanded(
             child: PageView.builder(
-              itemCount: 3,
+              itemCount: pages.length,
               itemBuilder: (context, index) => pages[index],
               controller: _pageController,
               onPageChanged: (index) {
