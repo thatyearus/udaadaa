@@ -1,7 +1,9 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
+import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/chat/room_view.dart';
@@ -78,33 +80,51 @@ class MainView extends StatelessWidget {
           ],
         ),
         child: BlocBuilder<BottomNavCubit, BottomNavState>(
-          builder: (context, state) => BottomNavigationBar(
+            builder: (context, state) {
+          final unreadMessagesCount = context.select<ChatCubit, int>(
+            (cubit) => cubit.getUnreadMessageCount,
+          );
+          return BottomNavigationBar(
             selectedItemColor: AppColors.neutral[800],
             unselectedItemColor: AppColors.neutral[400],
             showUnselectedLabels: true,
             type: BottomNavigationBarType.fixed,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
+            items: <BottomNavigationBarItem>[
+              const BottomNavigationBarItem(
                 icon: Icon(FluentIcons.home_24_regular),
                 activeIcon: Icon(FluentIcons.home_24_filled),
                 label: '홈',
               ),
               BottomNavigationBarItem(
-                icon: Icon(FluentIcons.chat_multiple_24_regular),
-                activeIcon: Icon(FluentIcons.chat_multiple_24_filled),
+                icon: badges.Badge(
+                  showBadge: unreadMessagesCount > 0,
+                  badgeContent: Text(
+                    unreadMessagesCount.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  child: const Icon(FluentIcons.chat_multiple_24_regular),
+                ),
+                activeIcon: badges.Badge(
+                  showBadge: unreadMessagesCount > 0,
+                  badgeContent: Text(
+                    unreadMessagesCount.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  child: const Icon(FluentIcons.chat_multiple_24_filled),
+                ),
                 label: '채팅',
               ),
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                 icon: Icon(FluentIcons.add_square_24_regular),
                 activeIcon: Icon(FluentIcons.add_square_24_filled),
                 label: '신청',
               ),
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                 icon: Icon(FluentIcons.channel_24_regular),
                 activeIcon: Icon(FluentIcons.channel_24_filled),
                 label: '피드',
               ),
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                 icon: Icon(FluentIcons.person_24_regular),
                 activeIcon: Icon(FluentIcons.person_24_filled),
                 label: '마이페이지',
@@ -120,8 +140,8 @@ class MainView extends StatelessWidget {
                   .read<BottomNavCubit>()
                   .selectTab(BottomNavState.values[index]);
             },
-          ),
-        ),
+          );
+        }),
       ),
       /*
       floatingActionButton: BlocBuilder<BottomNavCubit, BottomNavState>(
