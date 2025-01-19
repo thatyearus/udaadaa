@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/models/room.dart';
+import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/chat/chat_view.dart';
 
 class RoomView extends StatelessWidget {
@@ -25,6 +27,8 @@ class RoomView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Room> rooms = context.select((ChatCubit cubit) => cubit.getChatList);
+    Map<String, int> unreadCount =
+        context.select((ChatCubit cubit) => cubit.getUnreadMessages);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat'),
@@ -36,9 +40,32 @@ class RoomView extends StatelessWidget {
             title: Text(rooms[index].roomName),
             subtitle: Text(rooms[index].lastMessage?.content ??
                 (rooms[index].lastMessage?.imagePath != null ? '사진' : '')),
-            trailing: Text(rooms[index].lastMessage != null
-                ? _formatTimestamp(rooms[index].lastMessage?.createdAt)
-                : ''),
+            trailing: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  rooms[index].lastMessage != null
+                      ? _formatTimestamp(rooms[index].lastMessage?.createdAt)
+                      : '',
+                  style: AppTextStyles.labelSmall(
+                    TextStyle(color: AppColors.neutral[500]),
+                  ),
+                ),
+                if (unreadCount[rooms[index].id] != null &&
+                    unreadCount[rooms[index].id]! > 0)
+                  badges.Badge(
+                    badgeContent: Text(
+                      unreadCount[rooms[index].id].toString(),
+                      style: AppTextStyles.labelSmall(
+                        const TextStyle(
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
