@@ -303,6 +303,10 @@ class ChatCubit extends Cubit<ChatState> {
               ];
               if (message.roomId == currentRoomId) {
                 sendReadReceipt(message.roomId, message.id!);
+              } else {
+                unreadMessages[message.roomId] =
+                    (unreadMessages[message.roomId] ?? 0) + 1;
+                unreadMessageCount++;
               }
               emit(ChatMessageLoaded());
             })
