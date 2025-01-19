@@ -38,16 +38,26 @@ class ChatCubit extends Cubit<ChatState> {
       fetchBlockedMessages(),
     ]).then(
       (value) {
-        loadChatList().then((_) {
-          fetchLatestMessages();
-          fetchLatestReceipt();
+        Future.wait([
+          loadChatList().then((_) async {
+            fetchLatestMessages();
+            await fetchLatestReceipt();
+          }).catchError((e) {
+            logger.e("loadChatList error: $e");
+          }),
+          loadInitialMessages(),
+        ]).then((_) {
+          calculateUnreadMessages();
+        }).catchError((e) {
+          logger.e("loadInitialMessages error: $e");
         });
-        loadInitialMessages();
         setMessagesListener();
         setReactionListener();
         setReadReceiptListener();
       },
-    );
+    ).catchError((e) {
+      logger.e("fetchBlockedUsers error: $e");
+    });
   }
 
   Future<void> loadChatList() async {
@@ -226,6 +236,24 @@ class ChatCubit extends Cubit<ChatState> {
     } catch (e) {
       logger.e("getInitialMessages error : $e");
     }
+  }
+
+  void calculateUnreadMessages() {
+    unreadMessageCount = 0;
+    for (var room in chatList) {
+      final unreadMessagesList = messages[room.id]!
+          .where((message) =>
+              message.createdAt != null &&
+              (readReceipts[room.id] == null ||
+                  message.createdAt!.isAfter(readReceipts[room.id]!)))
+          .toList();
+      logger.d("calculateUnreadMessages: $unreadMessagesList");
+      logger.d("calculateUnreadMessages: ${unreadMessagesList.length}");
+      logger.d("readReceipts: ${readReceipts[room.id]}");
+      unreadMessages[room.id] = unreadMessagesList.length;
+      unreadMessageCount += unreadMessagesList.length;
+    }
+    emit(ChatMessageLoaded());
   }
 
   void setMessagesListener() {
