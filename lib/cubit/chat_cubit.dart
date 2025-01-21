@@ -182,6 +182,37 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  Future<void> fetchRoomRanking(Room roomInfo) async {
+    try {
+      final results = await Future.wait(roomInfo.members.map((member) async {
+        logger.d(member);
+        final response = await supabase
+            .from('weight')
+            .select('weight')
+            .eq('user_id', member.id)
+            .lte('created_at', roomInfo.endDay!.toIso8601String())
+            .gte('created_at', roomInfo.startDay!.toIso8601String());
+        if (response.isNotEmpty) {
+          final weight = (response[response.length - 1]['weight'] as num) -
+              (response[0]['weight'] as num);
+          return MapEntry(member, weight.toDouble());
+          //ranking.add(MapEntry(member, weight.toDouble()));
+        } else {
+          return MapEntry(member, 0.0);
+          //ranking.add(MapEntry(member, 0.0));
+        }
+      }));
+      ranking = [];
+      ranking.addAll(results);
+      logger.d("fetchRoomRanking: $ranking");
+      ranking.sort((a, b) => a.value.compareTo(b.value));
+
+      emit(ChatListLoaded());
+    } catch (e) {
+      logger.e('Error fetching room ranking: $e');
+    }
+  }
+
   Future<void> loadInitialMessages() async {
     try {
       final ret = await supabase
