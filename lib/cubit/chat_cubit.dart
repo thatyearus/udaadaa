@@ -31,6 +31,7 @@ class ChatCubit extends Cubit<ChatState> {
   List<String> blockedMessages = [];
   Map<String, int> unreadMessages = {};
   int unreadMessageCount = 0;
+  List<MapEntry<Profile, double>> ranking = [];
 
   ChatCubit(this.formCubit) : super(ChatInitial()) {
     Future.wait([
@@ -713,4 +714,5 @@ class ChatCubit extends Cubit<ChatState> {
   List<String> get getBlockedUsers => blockedUsers;
   Map<String, int> get getUnreadMessages => unreadMessages;
   int get getUnreadMessageCount => unreadMessageCount;
+  List<MapEntry<Profile, double>> get getRanking => ranking;
 }
