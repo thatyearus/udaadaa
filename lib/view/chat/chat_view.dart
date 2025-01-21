@@ -14,6 +14,7 @@ import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/chat/image_list_view.dart';
 import 'package:udaadaa/view/chat/profile_view.dart';
+import 'package:udaadaa/view/chat/ranking_view.dart';
 import 'package:udaadaa/view/form/exercise/exercise_first_view.dart';
 import 'package:udaadaa/view/form/weight/weight_first_view.dart';
 import 'package:udaadaa/view/onboarding/first_view.dart';
@@ -185,8 +186,15 @@ class ChatView extends StatelessWidget {
           Divider(color: AppColors.neutral[200]),
           ListTile(
             leading: IconButton(
-              icon: Icon(Icons.logout, color: AppColors.neutral[500]),
-              onPressed: () {},
+              icon: Icon(Icons.leaderboard_rounded,
+                  color: AppColors.neutral[500]),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const RankingView(),
+                  ),
+                );
+              },
               /*onPressed: () async {
                   await SendbirdSdk().disconnect();
                   await supabase.Supabase.instance.client.auth.signOut();
