@@ -1,5 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class RankingView extends StatelessWidget {
@@ -74,9 +76,7 @@ class RankingView extends StatelessWidget {
 }
 
 class RankingChart extends StatelessWidget {
-  RankingChart({super.key});
-
-  final List<double> data = [-2.5, 2.8, 3, 4, 5, 6, 7, -5, -6, 3.0];
+  const RankingChart({super.key});
 
   BarChartGroupData makeGroupData(int x, double y, Color color) {
     return BarChartGroupData(
@@ -94,6 +94,7 @@ class RankingChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final data = context.select((ChatCubit cubit) => cubit.getRanking);
     return AspectRatio(
       aspectRatio: 1.4,
       child: BarChart(
@@ -101,15 +102,20 @@ class RankingChart extends StatelessWidget {
           alignment: BarChartAlignment.spaceAround,
           rotationQuarterTurns: 1,
           barGroups: data
-              .asMap()
+              .map((e) => makeGroupData(e.hashCode, e.value, AppColors.primary))
+              .toList(),
+          /* data
               .map(
-                (key, value) => MapEntry(
-                  key,
-                  makeGroupData(key, value.toDouble(), AppColors.primary),
+                (value) => MapEntry(
+                  value.key,
+                  makeGroupData(
+                      key.hashCode, value.value, AppColors.primary),
                 ),
               )
               .values
-              .toList(),
+              .toList(),*/
+
+          borderData: FlBorderData(show: false),
         ),
       ),
     );
