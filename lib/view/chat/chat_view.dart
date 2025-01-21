@@ -189,6 +189,7 @@ class ChatView extends StatelessWidget {
               icon: Icon(Icons.leaderboard_rounded,
                   color: AppColors.neutral[500]),
               onPressed: () {
+                context.read<ChatCubit>().fetchRoomRanking(roomInfo);
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => RankingView(
