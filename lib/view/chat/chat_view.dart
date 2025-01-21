@@ -191,7 +191,9 @@ class ChatView extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const RankingView(),
+                    builder: (context) => RankingView(
+                      roomId: roomInfo.id,
+                    ),
                   ),
                 );
               },

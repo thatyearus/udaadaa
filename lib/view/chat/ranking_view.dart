@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class RankingView extends StatelessWidget {
-  const RankingView({super.key});
+  const RankingView({super.key, required this.roomId});
+
+  final String roomId;
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +58,6 @@ class RankingView extends StatelessWidget {
                 },
               ),
             ),*/
-            const SizedBox(height: AppSpacing.l),
-            const Text(
-              '순위',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             const SizedBox(height: AppSpacing.l),
             Expanded(
               child: RankingChart(),
