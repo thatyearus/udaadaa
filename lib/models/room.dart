@@ -7,6 +7,8 @@ class Room {
     required this.createdAt,
     required this.roomName,
     required this.members,
+    this.startDay,
+    this.endDay,
     this.memberMap = const {},
     this.lastMessage,
   });
@@ -14,6 +16,7 @@ class Room {
   final String id;
   final DateTime createdAt;
   final String roomName;
+  final DateTime? startDay, endDay;
   List<Profile> members = [];
   Map<String, Profile> memberMap = {};
   final Message? lastMessage;
@@ -31,7 +34,10 @@ class Room {
         roomName = map['room_name'],
         createdAt = DateTime.parse(map['created_at']),
         memberMap = {for (var member in members) member.id: member},
-        lastMessage = null;
+        lastMessage = null,
+        startDay =
+            map['start_day'] != null ? DateTime.parse(map['start_day']) : null,
+        endDay = map['end_day'] != null ? DateTime.parse(map['end_day']) : null;
 
   Room copyWith({
     String? id,
@@ -40,6 +46,8 @@ class Room {
     List<Profile>? members,
     Map<String, Profile>? memberMap,
     Message? lastMessage,
+    DateTime? startDay,
+    DateTime? endDay,
   }) {
     return Room(
       id: id ?? this.id,
@@ -48,6 +56,8 @@ class Room {
       members: members ?? this.members,
       memberMap: memberMap ?? this.memberMap,
       lastMessage: lastMessage ?? this.lastMessage,
+      startDay: startDay ?? this.startDay,
+      endDay: endDay ?? this.endDay,
     );
   }
 }
