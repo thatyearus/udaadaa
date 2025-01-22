@@ -4,19 +4,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
+import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 
-class WeightSecondView extends StatefulWidget {
-  const WeightSecondView({super.key});
+class ExerciseSecondView extends StatefulWidget {
+  const ExerciseSecondView({super.key});
 
   @override
-  State<WeightSecondView> createState() => _WeightSecondViewState();
+  State<ExerciseSecondView> createState() => _ExerciseSecondViewState();
 }
 
-class _WeightSecondViewState extends State<WeightSecondView> {
+class _ExerciseSecondViewState extends State<ExerciseSecondView> {
   final TextEditingController commentController = TextEditingController();
   bool isCommentEmpty = true;
 
@@ -53,7 +54,7 @@ class _WeightSecondViewState extends State<WeightSecondView> {
               );
             } else if (state is form.FormError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("몸무게 인증에 실패했습니다")),
+                const SnackBar(content: Text("운동 인증에 실패했습니다")),
               );
             }
           },
@@ -71,7 +72,7 @@ class _WeightSecondViewState extends State<WeightSecondView> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("오늘의 몸무게는\n몇 kg인지 적어볼까요?",
+                  Text("오늘의 운동\n몇 분했는지 적어볼까요?",
                       style: AppTextStyles.textTheme.displayMedium),
                   AppSpacing.verticalSizedBoxL,
                   foodCommentText(context),
@@ -87,7 +88,7 @@ class _WeightSecondViewState extends State<WeightSecondView> {
         child: BlocBuilder<form.FormCubit, form.FormState>(
           builder: (context, state) {
             return FloatingActionButton.extended(
-              heroTag: 'weight2',
+              heroTag: 'exercise2',
               backgroundColor: (state is form.FormLoading || isCommentEmpty)
                   ? AppColors.neutral[300]
                   : AppColors.primary,
@@ -96,7 +97,7 @@ class _WeightSecondViewState extends State<WeightSecondView> {
                   return;
                 }
                 Analytics().logEvent(
-                  "기록_체중기록",
+                  "기록_운동기록",
                   parameters: {
                     "인증하기": "클릭",
                   },
@@ -104,11 +105,15 @@ class _WeightSecondViewState extends State<WeightSecondView> {
                 /*context.read<form.FormCubit>().submitWeight(
                     weight: commentController.text, contentType: "WEIGHT");*/
                 context.read<ChatCubit>().missionComplete(
-                      type: FeedType.weight,
-                      contentType: 'WEIGHT',
-                      mealContent: '${commentController.text} kg',
+                      type: FeedType.exercise,
+                      contentType: 'EXERCISE',
+                      mealContent: '${commentController.text} 분',
+                      calorie: Calorie(
+                          totalCalories: int.parse(commentController.text),
+                          aiText: '',
+                          items: []),
                       review: commentController.text,
-                      weight: double.parse(commentController.text),
+                      exerciseTime: int.parse(commentController.text),
                     );
               },
               label: Text(
@@ -132,11 +137,11 @@ class _WeightSecondViewState extends State<WeightSecondView> {
       controller: commentController,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
+        FilteringTextInputFormatter.allow(RegExp(r'^\d+')),
       ],
       decoration: InputDecoration(
-        labelText: '몸무게',
-        hintText: '55.5',
+        labelText: '운동 시간(분)',
+        hintText: '55',
         hintStyle:
             AppTextStyles.bodyMedium(TextStyle(color: AppColors.neutral[500])),
         enabledBorder: UnderlineInputBorder(

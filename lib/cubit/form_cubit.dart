@@ -143,6 +143,69 @@ class FormCubit extends Cubit<FormState> {
     }
   }
 
+  Future<dynamic> feedInfo({
+    required FeedType type,
+    required String review,
+    // String? mealType,
+    double? weight,
+    int? exerciseTime,
+    String? mealContent,
+    Calorie? calorie,
+    required String contentType,
+  }) async {
+    try {
+      if (state is FormLoading) {
+        return;
+      }
+      emit(FormLoading());
+      String? imagePath = await uploadImage(contentType);
+      if (imagePath == null) {
+        emit(FormError('Failed to upload image'));
+        return;
+      }
+      return {
+        "user_id": supabase.auth.currentUser!.id,
+        "review": review,
+        "type": type,
+        "image_path": imagePath,
+        "calorie": calorie?.totalCalories,
+        "is_challenge": profileCubit.getIsChallenger,
+        'weight': weight,
+        'exercise_time': exerciseTime,
+      };
+    } catch (e) {
+      Analytics().logEvent("업로드_제출실패", parameters: {"에러": e.toString()});
+      logger.e(e);
+      emit(FormError(e.toString()));
+    }
+  }
+
+  void missionComplete(
+      {required FeedType type,
+      required String review,
+      String? mealType,
+      double? weight,
+      int? exerciseTime,
+      String? mealContent,
+      Calorie? calorie,
+      required String contentType,
+      String? feedId}) {
+    emit(FormSuccess());
+    updateReport(
+      type: type,
+      review: review,
+      contentType: contentType,
+      mealType: mealType,
+      weight: weight,
+      exerciseTime: exerciseTime,
+      mealContent: mealContent,
+      feedId: feedId,
+      calorie: calorie,
+    );
+    feedCubit.fetchMyFeeds();
+  }
+
+/*
   Future<void> submit(
       {required FeedType type,
       required String review,
@@ -190,7 +253,7 @@ class FormCubit extends Cubit<FormState> {
       logger.e(e);
       emit(FormError(e.toString()));
     }
-  }
+  }*/
 
   Future<void> submitWeight(
       {required String weight, required String contentType}) async {
@@ -211,11 +274,11 @@ class FormCubit extends Cubit<FormState> {
         imagePath: imagePath,
       );
       await supabase.from('weight').insert(curWeight.toMap());
-      updateReport(
+      /*updateReport(
         type: FeedType.weight,
         contentType: contentType,
         weight: weight,
-      );
+      );*/
       emit(FormSuccess());
       feedCubit.fetchMyFeeds();
       feedCubit.updateMission();
@@ -232,8 +295,8 @@ class FormCubit extends Cubit<FormState> {
     required String contentType,
     String? feedId,
     String? mealType,
-    String? weight,
-    String? exerciseTime,
+    double? weight,
+    int? exerciseTime,
     String? mealContent,
     Calorie? calorie,
   }) async {
@@ -285,7 +348,7 @@ class FormCubit extends Cubit<FormState> {
               .upsert(report.toMap(), onConflict: 'user_id, date');
           break;
         case FeedType.exercise:
-          final int exerciseValue = int.parse(exerciseTime!);
+          final int exerciseValue = exerciseTime!;
           logger.d(
               "${supabase.auth.currentUser!.id} $exerciseValue ${DateTime.now()}");
           final Report report = Report(
@@ -298,7 +361,7 @@ class FormCubit extends Cubit<FormState> {
               .upsert(report.toMap(), onConflict: 'user_id, date');
           break;
         case FeedType.weight:
-          final double weightValue = double.parse(weight!);
+          final double weightValue = weight!;
           logger.d(
               "${supabase.auth.currentUser!.id} $weightValue ${DateTime.now()}");
           final Report report = Report(

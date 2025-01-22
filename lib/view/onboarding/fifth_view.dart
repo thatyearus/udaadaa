@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/feed.dart';
@@ -95,13 +96,20 @@ class FifthView extends StatelessWidget {
                   },
                 );
                 FeedType cur = context.read<form.FormCubit>().feedType;
-                context.read<form.FormCubit>().submit(
+                context.read<ChatCubit>().missionComplete(
                       type: cur,
                       contentType: 'FOOD',
                       review: foodComment,
                       mealContent: foodContent,
                       calorie: calorie,
                     );
+                /*context.read<form.FormCubit>().submit(
+                      type: cur,
+                      contentType: 'FOOD',
+                      review: foodComment,
+                      mealContent: foodContent,
+                      calorie: calorie,
+                    );*/
               },
               label: Text(
                 '응원받기',

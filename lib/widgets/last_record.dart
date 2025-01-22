@@ -16,7 +16,44 @@ class LastRecord extends StatelessWidget {
       (cubit) => cubit.getMyFeeds,
     );
     if (myFeedRecord.isEmpty || myFeedRecord.length <= page) {
-      return const Center();
+      return Container(
+        decoration: BoxDecoration(
+          color: AppColors.neutral[0],
+          border: Border.all(color: AppColors.primary[100]!),
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary[100]!,
+              offset: const Offset(0, 2),
+              blurRadius: 4,
+            ),
+          ],
+        ),
+        margin: AppSpacing.edgeInsetsXxs,
+        padding: AppSpacing.edgeInsetsM,
+        width: double.infinity,
+        height: double.infinity,
+        alignment: Alignment.centerLeft,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "피드가 존재하지 않습니다.",
+                style: AppTextStyles.headlineLarge(
+                  TextStyle(color: AppColors.neutral[500]),
+                ),
+              ),
+              Text(
+                "채팅방에서 인증을 통해 피드를 올려보세요!",
+                style: AppTextStyles.bodyMedium(
+                  TextStyle(color: AppColors.neutral[500]),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
     }
     // final date = myFeedRecord.isEmpty ? null : myFeedRecord[page].createdAt;
     // final year = (date != null) ? date.year : "";

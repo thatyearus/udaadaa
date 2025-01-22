@@ -7,7 +7,6 @@ import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/widgets/calendar.dart';
 import 'package:udaadaa/widgets/daily_report.dart';
 import 'package:udaadaa/widgets/weekly_report.dart';
-import 'package:udaadaa/widgets/weight_report.dart';
 
 class ReportView extends StatelessWidget {
   const ReportView({super.key});
@@ -43,11 +42,7 @@ class ReportView extends StatelessWidget {
                 AppSpacing.verticalSizedBoxXxl,
                 const SelectToggleButtons(),
                 AppSpacing.verticalSizedBoxL,
-                (selection[0]
-                    ? const DailyReport()
-                    : (selection[1]
-                        ? const WeeklyReport()
-                        : const WeightReport())),
+                (selection[0] ? const DailyReport() : const WeeklyReport()),
               ],
             ),
           ),
@@ -92,7 +87,7 @@ class SelectToggleButtons extends StatelessWidget {
     final selection = context.select<ProfileCubit, List<bool>>(
       (cubit) => cubit.getSelectedType,
     );
-    final List<String> type = ['일일 리포트', '주간 리포트', '체중 변화'];
+    final List<String> type = ['일일 리포트', '주간 리포트'];
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -108,7 +103,7 @@ class SelectToggleButtons extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final buttonWidth = constraints.maxWidth / 3;
+          final buttonWidth = constraints.maxWidth / 2;
           return ToggleButtons(
             renderBorder: false,
             isSelected: selection,
@@ -118,7 +113,7 @@ class SelectToggleButtons extends StatelessWidget {
             children: <Widget>[
               button('일일 리포트', selection[0], context),
               button('주간 리포트', selection[1], context),
-              button("체중 변화", selection[2], context),
+              // button("체중 변화", selection[2], context),
             ],
             onPressed: (int index) {
               Analytics().logEvent(
