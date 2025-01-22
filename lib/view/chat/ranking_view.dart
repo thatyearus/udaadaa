@@ -101,9 +101,11 @@ class RankingChart extends StatelessWidget {
         BarChartData(
           alignment: BarChartAlignment.spaceAround,
           rotationQuarterTurns: 1,
-          barGroups: data
-              .map((e) => makeGroupData(e.hashCode, e.value, AppColors.primary))
-              .toList(),
+          barGroups: List.generate(
+            data.length,
+            (index) =>
+                makeGroupData(index, data[index].value, AppColors.primary),
+          ),
           /* data
               .map(
                 (value) => MapEntry(
@@ -116,6 +118,38 @@ class RankingChart extends StatelessWidget {
               .toList(),*/
 
           borderData: FlBorderData(show: false),
+          titlesData: FlTitlesData(
+            topTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) => Padding(
+                  padding: AppSpacing.edgeInsetsXxs,
+                  child: RotatedBox(
+                    quarterTurns: -1,
+                    child: Text(
+                      data[value.toInt()].key.nickname,
+                      style: AppTextStyles.textTheme.bodySmall,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ),
+                reservedSize: 130,
+              ),
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                maxIncluded: false,
+              ),
+            ),
+            rightTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+          ),
         ),
       ),
     );
