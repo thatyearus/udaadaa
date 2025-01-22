@@ -145,6 +145,7 @@ class RankingChart extends StatelessWidget {
               sideTitles: SideTitles(
                 showTitles: true,
                 maxIncluded: false,
+                reservedSize: 26,
               ),
             ),
             rightTitles: AxisTitles(
