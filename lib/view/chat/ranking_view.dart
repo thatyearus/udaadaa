@@ -11,6 +11,7 @@ class RankingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final average = context.select((ChatCubit cubit) => cubit.getWeightAverage);
     return Scaffold(
       appBar: AppBar(
         title: Text('랭킹', style: AppTextStyles.textTheme.headlineLarge),
@@ -65,7 +66,7 @@ class RankingView extends StatelessWidget {
               child: RankingChart(),
             ),
             Text(
-              "평균 몸무게 변화: 3.0kg",
+              "평균 몸무게 변화: ${average > 0 ? "+" : ""}${average.toStringAsPrecision(3)} kg",
               style: AppTextStyles.textTheme.headlineMedium,
             ),
           ],
