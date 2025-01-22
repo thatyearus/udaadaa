@@ -32,6 +32,7 @@ class ChatCubit extends Cubit<ChatState> {
   Map<String, int> unreadMessages = {};
   int unreadMessageCount = 0;
   List<MapEntry<Profile, double>> ranking = [];
+  double weightAverage = 0.0;
 
   ChatCubit(this.formCubit) : super(ChatInitial()) {
     Future.wait([
@@ -206,6 +207,10 @@ class ChatCubit extends Cubit<ChatState> {
       ranking.addAll(results);
       logger.d("fetchRoomRanking: $ranking");
       ranking.sort((a, b) => a.value.compareTo(b.value));
+
+      final sum = ranking.fold<double>(
+          0, (previousValue, element) => previousValue + element.value);
+      weightAverage = sum / ranking.length;
 
       emit(ChatListLoaded());
     } catch (e) {
@@ -746,4 +751,5 @@ class ChatCubit extends Cubit<ChatState> {
   Map<String, int> get getUnreadMessages => unreadMessages;
   int get getUnreadMessageCount => unreadMessageCount;
   List<MapEntry<Profile, double>> get getRanking => ranking;
+  double get getWeightAverage => weightAverage;
 }
