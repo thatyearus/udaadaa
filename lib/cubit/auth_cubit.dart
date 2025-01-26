@@ -283,6 +283,57 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
+  Future<void> makeProfile() async {
+    Profile profile = Profile(
+      id: supabase.auth.currentUser!.id,
+      nickname: RandomNicknameGenerator.generateNickname(),
+    );
+
+    bool insertSuccess = false;
+    int retryCount = 0;
+    const maxRetries = 5; // 원하는 만큼 재시도 횟수를 설정
+
+    while (!insertSuccess && retryCount < maxRetries) {
+      try {
+        final res = await supabase
+            .from('profiles')
+            .insert(profile.toMap())
+            .select()
+            .single();
+
+        profile = Profile.fromMap(map: res);
+        _profile = profile;
+        emit(Authenticated(profile));
+        insertSuccess = true; // 성공적으로 삽입된 경우 루프를 탈출
+        FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+          _updateFCMToken(token, profile);
+        });
+      } catch (error) {
+        // UNIQUE 제약 조건 위반 시 새로운 닉네임을 생성하고 다시 시도
+        if (error is PostgrestException && error.code == '23505') {
+          // 23505는 PostgreSQL에서 고유 제약 조건 위반에 대한 에러 코드입니다.
+          logger.d("Nickname ${profile.nickname} already exists");
+          profile = profile.copyWith(
+            nickname: RandomNicknameGenerator.generateNickname(),
+          );
+          _profile = profile;
+          retryCount++;
+        } else {
+          // 다른 오류에 대한 처리
+          logger.e(error.toString());
+          break; // 반복을 중지하고 에러 처리를 할 수 있습니다.
+        }
+      }
+    }
+
+    if (!insertSuccess) {
+      // 최종적으로 실패한 경우에 대한 처리 (예: 에러 메시지 표시)
+      logger.e('Failed to insert profile');
+      emit(AuthError());
+      // 필요에 따라 추가 처리 (예: 사용자에게 알림, 다른 로직 시도 등)
+    }
+  }
+
   Future<void> signOut() async {
     await supabase.auth.signOut();
     emit(AuthInitial());
