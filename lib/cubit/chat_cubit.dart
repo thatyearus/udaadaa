@@ -405,6 +405,20 @@ class ChatCubit extends Cubit<ChatState> {
         .subscribe();
   }
 
+  Future<void> joinRoom(String roomId) async {
+    try {
+      logger.d(supabase.auth.currentUser!.id);
+      await supabase.from('room_participants').insert({
+        'room_id': roomId,
+        'user_id': supabase.auth.currentUser!.id,
+      });
+      await loadChatList();
+      emit(ChatListLoaded());
+    } catch (e) {
+      logger.e("participateRoom error: $e");
+    }
+  }
+
   Future<void> enterRoom(String roomId) async {
     try {
       currentRoomId = roomId;
