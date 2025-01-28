@@ -20,6 +20,7 @@ final Logger logger = Logger(
 );
 
 final String apiUrl = dotenv.env['API_URL']!;
+final String redirectUrl = dotenv.env['REDIRECT_URL']!;
 final String supabaseUrl = dotenv.env['SUPABASE_URL']!;
 final String supabaseKey = dotenv.env['SUPABASE_KEY']!;
 final String amplitudeToken = dotenv.env['AMPLITUDE_TOKEN']!;
