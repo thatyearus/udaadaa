@@ -28,12 +28,15 @@
 	<true/>
 	<key>CFBundleURLTypes</key>
 	<array>
-	<dict>
-	<key>CFBundleURLSchemes</key>
-	<array>
-		<string>fb${FACEBOOK_APP_ID}</string>
-	</array>
-	</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb${FACEBOOK_APP_ID}</string>
+				<string>${APP_BUNDLE_URL}</string>
+			</array>
+		</dict>
 	</array>
 	<key>FacebookAppID</key>
 	<string>${FACEBOOK_APP_ID}</string>
