@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
+import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/mypage/push_setting_view.dart';
@@ -401,7 +402,7 @@ class MyPageView extends StatelessWidget {
                                       AppColors.neutral[500]?.withOpacity(0.5),
                                   child: Text(
                                     (myFeeds[index].calorie != null
-                                        ? "${myFeeds[index].calorie} kcal"
+                                        ? "${myFeeds[index].calorie} ${myFeeds[index].type == FeedType.exercise ? "분" : "kcal"}"
                                         : ""),
                                     style: AppTextStyles.headlineSmall(
                                       TextStyle(
