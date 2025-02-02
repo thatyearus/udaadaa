@@ -62,11 +62,23 @@ class LoginView extends StatelessWidget {
                   const Color(0xFFFFD700),
                   onPressed: () {
                     // 카카오 로그인 로직 추가
+                    context.read<AuthCubit>().signInWithKakao().then((_) {
+                      context.read<AuthCubit>().makeProfile().then((_) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const EnterRoomView(),
+                          ),
+                        );
+                      });
+                    }).catchError((e) {
+                      logger.e(e.toString());
+                    });
+                    /*
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const EnterRoomView(),
                       ),
-                    );
+                    );*/
                   },
                 ),
                 AppSpacing.verticalSizedBoxS,
