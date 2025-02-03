@@ -25,6 +25,8 @@ final String supabaseUrl = dotenv.env['SUPABASE_URL']!;
 final String supabaseKey = dotenv.env['SUPABASE_KEY']!;
 final String amplitudeToken = dotenv.env['AMPLITUDE_TOKEN']!;
 final String mixpanelToken = dotenv.env['MIXPANEL_TOKEN']!;
+final String schemeName = dotenv.env['SCHEME_NAME']!;
+final String hostName = dotenv.env['HOST_NAME']!;
 
 final supabase = Supabase.instance.client;
 final dioClient = DioClient();
