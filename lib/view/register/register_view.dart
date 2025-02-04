@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/register/enter_room_view.dart';
 import 'package:udaadaa/view/register/login_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -53,9 +54,14 @@ class RegisterView extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
+                  final provider =
+                      supabase.auth.currentUser?.appMetadata['provider'];
+                  final nextView = (provider == 'apple' || provider == 'kakao')
+                      ? const EnterRoomView()
+                      : const LoginView();
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const LoginView(),
+                      builder: (context) => nextView,
                     ),
                   );
                 },
