@@ -122,8 +122,11 @@ class ChatCubit extends Cubit<ChatState> {
       );
 
       chatList = updatedChatList;
-      chatList.sort((a, b) =>
-          b.lastMessage!.createdAt!.compareTo(a.lastMessage!.createdAt!));
+      chatList.sort((a, b) {
+        if (a.lastMessage == null) return 1;
+        if (b.lastMessage == null) return -1;
+        return b.lastMessage!.createdAt!.compareTo(a.lastMessage!.createdAt!);
+      });
       emit(ChatListLoaded());
     } catch (e) {
       logger.e('Error fetching latest messages: $e');
