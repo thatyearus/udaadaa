@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/register/enter_room_view.dart';
+import 'package:uni_links/uni_links.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -63,12 +64,16 @@ class LoginView extends StatelessWidget {
                   onPressed: () {
                     // 카카오 로그인 로직 추가
                     context.read<AuthCubit>().signInWithKakao().then((_) {
-                      context.read<AuthCubit>().makeProfile().then((_) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const EnterRoomView(),
-                          ),
-                        );
+                      uriLinkStream.listen((Uri? uri) {
+                        if (uri != null &&
+                            uri.scheme == schemeName &&
+                            uri.host == hostName) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const EnterRoomView(),
+                            ),
+                          );
+                        }
                       });
                     }).catchError((e) {
                       logger.e(e.toString());
