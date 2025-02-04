@@ -39,6 +39,16 @@ class AuthCubit extends Cubit<AuthState> {
     } else {
       _anonymousLogin();
     }
+    supabase.auth.onAuthStateChange.listen((data) {
+      if (data.event == AuthChangeEvent.signedIn) {
+        makeProfile();
+      } else if (data.event == AuthChangeEvent.signedOut) {
+        emit(AuthInitial());
+      }
+    }, onError: (error) {
+      logger.e(error.toString());
+      emit(AuthError());
+    });
   }
 
   Future<void> _anonymousLogin() async {
