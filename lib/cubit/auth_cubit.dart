@@ -309,6 +309,9 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> makeProfile() async {
+    if (_profile?.id == supabase.auth.currentUser!.id) {
+      return;
+    }
     Profile profile = Profile(
       id: supabase.auth.currentUser!.id,
       nickname: RandomNicknameGenerator.generateNickname(),
