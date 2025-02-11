@@ -181,7 +181,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> turnOffPush(Profile profile) async {
     try {
-      profile = profile.copyWith(fcmToken: "");
+      profile = profile.copyWith(pushOption: false);
       _profile = profile;
       await supabase.from('profiles').upsert(profile.toMap());
     } catch (e) {
@@ -204,8 +204,8 @@ class AuthCubit extends Cubit<AuthState> {
         Profile profile = Profile.fromMap(map: res);
         _profile = profile;
       }
-      if (_profile?.fcmToken == null) {
-        await _setFCMToken(_profile!);
+      if (_profile?.pushOption == false) {
+        await _setFCMToken(_profile!.copyWith(pushOption: true));
       } else {
         await turnOffPush(_profile!);
       }
@@ -379,7 +379,7 @@ class AuthCubit extends Cubit<AuthState> {
   bool? get getPushOption {
     logger.d("${getCurProfile?.fcmToken}");
     logger.d("getPushOption: ${getCurProfile?.fcmToken != null}");
-    return getCurProfile?.fcmToken != null;
+    return getCurProfile?.pushOption == true && getCurProfile?.fcmToken != null;
   }
 
   bool get getIsChallenger => _isChallenger;
