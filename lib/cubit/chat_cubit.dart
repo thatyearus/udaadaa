@@ -720,6 +720,15 @@ class ChatCubit extends Cubit<ChatState> {
     };
     logger.d(messageData);
 
+    Map<FeedType, String> feedHash = {
+      FeedType.weight: '#운동',
+      FeedType.breakfast: '#아침',
+      FeedType.lunch: '#점심',
+      FeedType.dinner: '#저녁',
+      FeedType.snack: '#간식',
+      FeedType.exercise: '#운동',
+    };
+
     try {
       // 트랜잭션 실행
       final feedId = await supabase.rpc('mission_complete', params: {
@@ -729,7 +738,7 @@ class ChatCubit extends Cubit<ChatState> {
         'feed_image_path': feedData['image_path'],
         'calorie': feedData['calorie'],
         'room_id': messageData['room_id'],
-        'content': messageData['content'],
+        'content': '${feedHash[type]} ${messageData['content']}',
         'message_image_path': messageData['image_path'],
         'message_type': messageData['type'],
         'weight_date': DateTime.now().toIso8601String(),
