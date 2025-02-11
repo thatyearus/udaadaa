@@ -96,13 +96,11 @@ class LoginView extends StatelessWidget {
                   onPressed: () {
                     // 애플 로그인 로직 추가
                     context.read<AuthCubit>().signInWithApple().then((_) {
-                      context.read<AuthCubit>().makeProfile().then((_) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const EnterRoomView(),
-                          ),
-                        );
-                      });
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const EnterRoomView(),
+                        ),
+                      );
                     }).catchError((e) {
                       logger.e(e.toString());
                     });
