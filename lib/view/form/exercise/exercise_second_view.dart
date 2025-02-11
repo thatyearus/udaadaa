@@ -7,6 +7,7 @@ import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/form/exercise/exercise_third_view.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 
@@ -104,7 +105,7 @@ class _ExerciseSecondViewState extends State<ExerciseSecondView> {
                 );
                 /*context.read<form.FormCubit>().submitWeight(
                     weight: commentController.text, contentType: "WEIGHT");*/
-                context.read<ChatCubit>().missionComplete(
+                /*context.read<ChatCubit>().missionComplete(
                       type: FeedType.exercise,
                       contentType: 'EXERCISE',
                       mealContent: '${commentController.text} 분',
@@ -114,7 +115,14 @@ class _ExerciseSecondViewState extends State<ExerciseSecondView> {
                           items: []),
                       review: commentController.text,
                       exerciseTime: int.parse(commentController.text),
-                    );
+                    );*/
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ExerciseThirdView(
+                      foodContent: commentController.text,
+                    ),
+                  ),
+                );
               },
               label: Text(
                 '인증하기',
