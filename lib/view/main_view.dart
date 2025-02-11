@@ -6,6 +6,7 @@ import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/chat/chat_view.dart';
 import 'package:udaadaa/view/chat/room_view.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/feed/feed_view.dart';
@@ -62,9 +63,37 @@ class MainView extends StatelessWidget {
                 );
               }
             },
-            child: IndexedStack(
-              index: BottomNavState.values.indexOf(state),
-              children: children,
+            child: BlocListener<ChatCubit, ChatState>(
+              listener: (context, state) {
+                if (state is ChatPushNotification) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      action: SnackBarAction(
+                        label: '바로가기 >',
+                        textColor: Colors.yellow,
+                        onPressed: () {
+                          context
+                              .read<BottomNavCubit>()
+                              .selectTab(BottomNavState.chat);
+                          context.read<ChatCubit>().enterRoom(state.roomId);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ChatView(
+                                roomInfo: state.roomInfo,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      content: Text(state.text),
+                    ),
+                  );
+                }
+              },
+              child: IndexedStack(
+                index: BottomNavState.values.indexOf(state),
+                children: children,
+              ),
             ),
           );
         }),
