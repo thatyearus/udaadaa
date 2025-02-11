@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -44,6 +45,14 @@ class ChatCubit extends Cubit<ChatState> {
           loadChatList().then((_) async {
             fetchLatestMessages();
             await fetchLatestReceipt();
+            FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+              if (message.data['roomId'] != null) {
+                final roomId = message.data['roomId'];
+                final roomInfo =
+                    chatList.firstWhere((room) => room.id == roomId);
+                emit(ChatPushNotification(roomId, "새로운 메시지가 도착했습니다", roomInfo));
+              }
+            });
           }).catchError((e) {
             logger.e("loadChatList error: $e");
           }),
