@@ -34,6 +34,7 @@ class ChatCubit extends Cubit<ChatState> {
   int unreadMessageCount = 0;
   List<MapEntry<Profile, double>> ranking = [];
   double weightAverage = 0.0;
+  Map<String, bool> _pushOptions = {};
 
   ChatCubit(this.formCubit) : super(ChatInitial()) {
     Future.wait([
@@ -787,4 +788,5 @@ class ChatCubit extends Cubit<ChatState> {
   int get getUnreadMessageCount => unreadMessageCount;
   List<MapEntry<Profile, double>> get getRanking => ranking;
   double get getWeightAverage => weightAverage;
+  Map<String, bool> get getPushOptions => _pushOptions;
 }
