@@ -17,3 +17,5 @@ final class ChatPushNotification extends ChatState {
 
   ChatPushNotification(this.roomId, this.text, this.roomInfo);
 }
+
+final class ChatPushLoaded extends ChatState {}

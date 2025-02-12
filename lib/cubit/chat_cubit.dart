@@ -43,6 +43,7 @@ class ChatCubit extends Cubit<ChatState> {
     ]).then(
       (value) {
         Future.wait([
+          fetchPushOptions(),
           loadChatList().then((_) async {
             fetchLatestMessages();
             await fetchLatestReceipt();
@@ -70,6 +71,26 @@ class ChatCubit extends Cubit<ChatState> {
     ).catchError((e) {
       logger.e("fetchBlockedUsers error: $e");
     });
+  }
+
+  Future<void> fetchPushOptions() async {
+    try {
+      final response = await supabase
+          .from('room_participants')
+          .select('push_option, room_id')
+          .eq('user_id', supabase.auth.currentUser!.id);
+      logger.d(response);
+      _pushOptions = response.fold<Map<String, bool>>(
+        {},
+        (previousValue, element) => {
+          ...previousValue,
+          element['room_id'] as String: element['push_option'] as bool
+        },
+      );
+      logger.d("fetchPushOptions: $_pushOptions");
+    } catch (e) {
+      logger.e('Error fetching push options: $e');
+    }
   }
 
   Future<void> loadChatList() async {
