@@ -44,6 +44,8 @@ class ChatView extends StatelessWidget {
             .toList());
     List<String> blockedUsers = context
         .select<ChatCubit, List<String>>((cubit) => cubit.getBlockedUsers);
+    Map<String, bool> pushOptions = context
+        .select<ChatCubit, Map<String, bool>>((cubit) => cubit.getPushOptions);
     return Drawer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,7 +216,10 @@ class ChatView extends StatelessWidget {
                   ? Icons.notifications_off
                   : Icons.notifications_active),*/
 
-                  Icon(Icons.notifications_active,
+                  Icon(
+                      pushOptions[roomInfo.id] == true
+                          ? Icons.notifications_active
+                          : Icons.notifications_off,
                       color: AppColors.neutral[500]),
               //  onPressed: _toogglePushOption,
               onPressed: () {},
