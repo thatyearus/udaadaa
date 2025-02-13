@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/chat_reaction.dart';
@@ -22,6 +23,7 @@ part 'chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   FormCubit formCubit;
+  ChallengeCubit challengeCubit;
   List<Room> chatList = [];
   Map<String, List<Message>> messages = {};
   // Map<String, List<Message>> imageMessages = {};
@@ -36,7 +38,7 @@ class ChatCubit extends Cubit<ChatState> {
   double weightAverage = 0.0;
   Map<String, bool> _pushOptions = {};
 
-  ChatCubit(this.formCubit) : super(ChatInitial()) {
+  ChatCubit(this.formCubit, this.challengeCubit) : super(ChatInitial()) {
     Future.wait([
       fetchBlockedUsers(),
       fetchBlockedMessages(),
