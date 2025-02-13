@@ -83,6 +83,25 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     }
   }
 
+  Future<void> enterChallengeByDay(DateTime startDay, DateTime endDay) async {
+    try {
+      final Challenge challenge = Challenge(
+        startDay: startDay,
+        endDay: endDay,
+        userId: supabase.auth.currentUser!.id,
+        isSuccess: false,
+      );
+      final challengeMap = challenge.toMap();
+      _challenge = challenge;
+      await supabase.from('challenge').insert(challengeMap);
+      emit(ChallengeSuccess());
+      authCubit.setIsChallenger(true);
+      selectDay(DateTime.now());
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
   Future<bool> isEntered() async {
     try {
       final r = await supabase

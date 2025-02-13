@@ -449,6 +449,21 @@ class ChatCubit extends Cubit<ChatState> {
         'user_id': supabase.auth.currentUser!.id,
       });
       await loadChatList();
+      final roomInfo = chatList.firstWhere((room) => room.id == roomId);
+      fetchRoomRanking(roomInfo);
+      if (roomInfo.startDay != null && roomInfo.endDay != null) {
+        try {
+          await challengeCubit.enterChallengeByDay(
+              roomInfo.startDay!, roomInfo.endDay!);
+        } catch (e) {
+          logger.e("joinRoom error: $e");
+          supabase
+              .from('room_participants')
+              .delete()
+              .eq('room_id', roomId)
+              .eq('user_id', supabase.auth.currentUser!.id);
+        }
+      }
       emit(ChatListLoaded());
     } catch (e) {
       logger.e("participateRoom error: $e");
