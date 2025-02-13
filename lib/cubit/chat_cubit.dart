@@ -694,6 +694,27 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  Future<void> togglePushOption(String roomId, bool value) async {
+    try {
+      final res = await supabase
+          .from('room_participants')
+          .update({
+            'push_option': value,
+          })
+          .eq('room_id', roomId)
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .select();
+      logger.d(res);
+      _pushOptions = {
+        ..._pushOptions,
+        roomId: value,
+      };
+      emit(ChatPushLoaded());
+    } catch (e) {
+      logger.e('Error toggling push option: $e');
+    }
+  }
+
   void missionComplete({
     required FeedType type,
     required String review,

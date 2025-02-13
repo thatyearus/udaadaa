@@ -222,7 +222,11 @@ class ChatView extends StatelessWidget {
                           : Icons.notifications_off,
                       color: AppColors.neutral[500]),
               //  onPressed: _toogglePushOption,
-              onPressed: () {},
+              onPressed: () {
+                context
+                    .read<ChatCubit>()
+                    .togglePushOption(roomInfo.id, !pushOptions[roomInfo.id]!);
+              },
             ),
           ),
           const SizedBox(height: 16.0),
