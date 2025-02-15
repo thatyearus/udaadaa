@@ -5,9 +5,7 @@ import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/feed.dart';
-import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/onboarding/fifth_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 
 class ExerciseThirdView extends StatelessWidget {
