@@ -25,9 +25,8 @@ class _CategoryButtonsContainerState extends State<CategoryButtonsContainer> {
 
   @override
   Widget build(BuildContext context) {
-    FeedCategory _selectedCategory = context
+    FeedCategory selectedCategory = context
         .select<FeedCubit, FeedCategory>((cubit) => cubit.getFeedCategory);
-    logger.d(_selectedCategory);
     return Align(
       alignment: Alignment.topLeft, // 카테고리 위치를 조정하고 싶다면 이 부분 수정
       child: Padding(
@@ -38,14 +37,14 @@ class _CategoryButtonsContainerState extends State<CategoryButtonsContainer> {
             _CategoryButton(
               emoji: "👏",
               text: "전체",
-              isSelected: _selectedCategory == FeedCategory.all,
+              isSelected: selectedCategory == FeedCategory.all,
               onPressed: () => _selectCategory(FeedCategory.all),
             ),
             const SizedBox(width: 10), // 버튼 간격
             _CategoryButton(
               emoji: "👟",
               text: "운동",
-              isSelected: _selectedCategory == FeedCategory.exercise,
+              isSelected: selectedCategory == FeedCategory.exercise,
               onPressed: () => _selectCategory(FeedCategory.exercise),
             ),
           ],
