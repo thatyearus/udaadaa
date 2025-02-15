@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:meta/meta.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
-import 'package:udaadaa/models/challenge.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/models/report.dart';
