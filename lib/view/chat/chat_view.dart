@@ -356,7 +356,7 @@ class ChatView extends StatelessWidget {
                   color: AppColors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.black.withOpacity(0.25),
+                      color: AppColors.black.withValues(alpha: 0.25),
                       blurRadius: 2,
                       offset: const Offset(0, 1),
                     ),
@@ -390,7 +390,7 @@ class ChatView extends StatelessWidget {
                     inputToolbarStyle:
                         BoxDecoration(color: AppColors.white, boxShadow: [
                       BoxShadow(
-                        color: AppColors.black.withOpacity(0.1),
+                        color: AppColors.black.withValues(alpha: 0.1),
                         blurRadius: 4,
                         offset: const Offset(0, -4),
                       ),
