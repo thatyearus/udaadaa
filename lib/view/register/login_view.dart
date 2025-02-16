@@ -69,6 +69,7 @@ class LoginView extends StatelessWidget {
                         if (uri != null &&
                             uri.scheme == schemeName &&
                             uri.host == hostName) {
+                          if (!context.mounted) return;
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const EnterRoomView(),
@@ -96,6 +97,7 @@ class LoginView extends StatelessWidget {
                   onPressed: () {
                     // 애플 로그인 로직 추가
                     context.read<AuthCubit>().signInWithApple().then((_) {
+                      if (!context.mounted) return;
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const EnterRoomView(),
