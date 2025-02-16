@@ -102,11 +102,11 @@ class _EnterRoomViewState extends State<EnterRoomView> {
               ),
               onPressed: _isButtonEnabled
                   ? () {
-                      // 다음 단계 이동 로직 추가 필요.
                       context
                           .read<ChatCubit>()
                           .joinRoom(_codeController.text)
                           .then((_) {
+                        if (!context.mounted) return;
                         context
                             .read<BottomNavCubit>()
                             .selectTab(BottomNavState.chat);
