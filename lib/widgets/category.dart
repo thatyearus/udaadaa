@@ -72,7 +72,7 @@ class _CategoryButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
           backgroundColor: isSelected
               ? Theme.of(context).primaryColor
-              : Colors.grey.withOpacity(0.8),
+              : Colors.grey.withValues(alpha: 0.8),
           foregroundColor: isSelected ? Colors.white : Colors.black,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
