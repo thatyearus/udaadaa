@@ -102,7 +102,7 @@ class MainView extends StatelessWidget {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.05),
+              color: AppColors.black.withValues(alpha: 0.05),
               blurRadius: 4,
               offset: const Offset(0, -2),
             ),
