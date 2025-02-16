@@ -398,8 +398,8 @@ class MyPageView extends StatelessWidget {
                                   alignment: Alignment.center,
                                   width: double.infinity,
                                   height: double.infinity,
-                                  color:
-                                      AppColors.neutral[500]?.withOpacity(0.5),
+                                  color: AppColors.neutral[500]
+                                      ?.withValues(alpha: 0.5),
                                   child: Text(
                                     (myFeeds[index].calorie != null
                                         ? "${myFeeds[index].calorie} ${myFeeds[index].type == FeedType.exercise ? "분" : "kcal"}"
