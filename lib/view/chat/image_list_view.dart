@@ -20,6 +20,7 @@ class ImageListView extends StatelessWidget {
           roomInfo.roomName,
           style: AppTextStyles.textTheme.headlineLarge,
         ),
+        centerTitle: true,
         backgroundColor: AppColors.white,
         surfaceTintColor: AppColors.white,
       ),
