@@ -12,6 +12,7 @@ import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/chat/image_detail_view.dart';
 import 'package:udaadaa/view/chat/image_list_view.dart';
 import 'package:udaadaa/view/chat/profile_view.dart';
 import 'package:udaadaa/view/chat/ranking_view.dart';
@@ -111,9 +112,21 @@ class ChatView extends StatelessWidget {
             ),
             itemCount: min(imageMessages.length, 3),
             itemBuilder: (context, index) {
-              return CachedNetworkImage(
-                imageUrl: imageMessages[index].imageUrl!,
-                fit: BoxFit.cover,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ImageDetailView(
+                        roomInfo: roomInfo,
+                        imageMessage: imageMessages[index],
+                      ),
+                    ),
+                  );
+                },
+                child: CachedNetworkImage(
+                  imageUrl: imageMessages[index].imageUrl!,
+                  fit: BoxFit.cover,
+                ),
               );
             },
           ),
