@@ -345,6 +345,7 @@ class ChatView extends StatelessWidget {
           ),
           backgroundColor: AppColors.primary[100],
           surfaceTintColor: AppColors.primary[100],
+          centerTitle: true,
         ),
         endDrawer: showDrawer(context),
         body: Column(
