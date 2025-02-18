@@ -33,10 +33,8 @@ class LoginView extends StatelessWidget {
                 children: [
                   Text(
                     "우다다",
-                    style: AppTextStyles.textTheme.displayLarge?.copyWith(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFFFFB6C1), // 핑크색
+                    style: AppTextStyles.displayLarge(
+                      TextStyle(color: AppColors.primary),
                     ),
                   ),
                   AppSpacing.verticalSizedBoxXs,
