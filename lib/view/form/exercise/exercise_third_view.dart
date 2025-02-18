@@ -27,7 +27,7 @@ class ExerciseThirdView extends StatelessWidget {
               Navigator.of(context).popUntil((route) => route.isFirst);
             } else if (state is form.FormError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("칼로리 측정에 실패했습니다")),
+                const SnackBar(content: Text("인증에 실패했습니다")),
               );
             }
           },
