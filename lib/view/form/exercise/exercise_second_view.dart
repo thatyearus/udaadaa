@@ -59,8 +59,8 @@ class _ExerciseSecondViewState extends State<ExerciseSecondView> {
           builder: (context, state) {
             if (state is form.FormLoading) {
               return Center(
-                child:
-                    Lottie.asset('assets/loading_animation.json', width: 150),
+                child: Lottie.asset('assets/loading_pink_animation.json',
+                    width: 150),
               );
             }
 
