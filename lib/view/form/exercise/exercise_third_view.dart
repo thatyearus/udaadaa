@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/calorie.dart';
@@ -33,14 +34,8 @@ class ExerciseThirdView extends StatelessWidget {
           builder: (context, state) {
             if (state is form.FormLoading) {
               return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("AI 칼로리 측정중",
-                        style: AppTextStyles.textTheme.displaySmall),
-                    Image.asset('assets/calorie_loading.gif'),
-                  ],
-                ),
+                child: Lottie.asset('assets/loading_pink_animation.json',
+                    width: 150),
               );
             }
 
