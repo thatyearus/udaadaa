@@ -790,7 +790,7 @@ class ChatCubit extends Cubit<ChatState> {
     logger.d(messageData);
 
     Map<FeedType, String> feedHash = {
-      FeedType.weight: '#운동',
+      FeedType.weight: '#체중',
       FeedType.breakfast: '#아침',
       FeedType.lunch: '#점심',
       FeedType.dinner: '#저녁',
