@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
+import 'package:udaadaa/utils/constant.dart';
 
 class CategoryButtonsContainer extends StatefulWidget {
   final ValueChanged<FeedCategory> onCategorySelected;
@@ -72,8 +73,8 @@ class _CategoryButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
           backgroundColor: isSelected
               ? Theme.of(context).primaryColor
-              : Colors.grey.withValues(alpha: 0.8),
-          foregroundColor: isSelected ? Colors.white : Colors.black,
+              : AppColors.neutral[400]!.withValues(alpha: 0.8),
+          foregroundColor: AppColors.neutral[800],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
