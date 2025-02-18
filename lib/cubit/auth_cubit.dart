@@ -293,6 +293,15 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
+  Future<bool> signInWithAppleAndroid() async {
+    return supabase.auth.signInWithOAuth(
+      OAuthProvider.apple,
+      redirectTo: redirectUrl,
+      authScreenLaunchMode:
+          kIsWeb ? LaunchMode.platformDefault : LaunchMode.externalApplication,
+    );
+  }
+
   Future<void> signInWithKakao() async {
     try {
       await supabase.auth.signInWithOAuth(
