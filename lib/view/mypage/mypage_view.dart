@@ -282,7 +282,12 @@ class MyPageView extends StatelessWidget {
                               );
                               Navigator.of(context).pop();
                             },
-                            child: const Text('취소'),
+                            child: Text(
+                              '취소',
+                              style: AppTextStyles.bodyLarge(
+                                TextStyle(color: AppColors.neutral[800]),
+                              ),
+                            ),
                           ),
                           TextButton(
                             onPressed: () {
@@ -295,7 +300,12 @@ class MyPageView extends StatelessWidget {
                                   .updateNickname(nicknameController.text);
                               Navigator.of(context).pop();
                             },
-                            child: const Text('확인'),
+                            child: Text(
+                              '확인',
+                              style: AppTextStyles.bodyLarge(
+                                TextStyle(color: AppColors.neutral[800]),
+                              ),
+                            ),
                           ),
                         ],
                       );
