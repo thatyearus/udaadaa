@@ -18,6 +18,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   DateTime _selectedDate = DateTime.now();
   DateTime _focusDate = DateTime.now();
   int _consecutiveDays = 0;
+  int _completeDays = 0;
   DateTime? _finalStartDate;
   final Map<String, int> _selectedMissionComplete = {
     "feed": 0,
@@ -449,4 +450,5 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   Map<String, int> get getSelectedMission => _selectedMissionComplete;
   bool get getSelectedDayChallenge => _selectedDayChallenge;
   bool get getTodayChallengeComplete => _todayChallengeComplete;
+  int get getCompleteDays => _completeDays;
 }
