@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
+import 'package:udaadaa/utils/constant.dart';
 
 class CategoryButtonsContainer extends StatefulWidget {
   final ValueChanged<FeedCategory> onCategorySelected;
@@ -13,7 +14,7 @@ class CategoryButtonsContainer extends StatefulWidget {
 }
 
 class _CategoryButtonsContainerState extends State<CategoryButtonsContainer> {
-  FeedCategory _selectedCategory = FeedCategory.all; // 기본 선택 카테고리
+  // FeedCategory _selectedCategory = FeedCategory.all; // 기본 선택 카테고리
 
   void _selectCategory(FeedCategory category) {
     /*setState(() {
@@ -24,7 +25,7 @@ class _CategoryButtonsContainerState extends State<CategoryButtonsContainer> {
 
   @override
   Widget build(BuildContext context) {
-    _selectedCategory = context
+    FeedCategory selectedCategory = context
         .select<FeedCubit, FeedCategory>((cubit) => cubit.getFeedCategory);
     return Align(
       alignment: Alignment.topLeft, // 카테고리 위치를 조정하고 싶다면 이 부분 수정
@@ -36,15 +37,15 @@ class _CategoryButtonsContainerState extends State<CategoryButtonsContainer> {
             _CategoryButton(
               emoji: "👏",
               text: "전체",
-              isSelected: _selectedCategory == FeedCategory.all,
+              isSelected: selectedCategory == FeedCategory.all,
               onPressed: () => _selectCategory(FeedCategory.all),
             ),
             const SizedBox(width: 10), // 버튼 간격
             _CategoryButton(
-              emoji: "🏆️",
-              text: "챌린지",
-              isSelected: _selectedCategory == FeedCategory.challenge,
-              onPressed: () => _selectCategory(FeedCategory.challenge),
+              emoji: "👟",
+              text: "운동",
+              isSelected: selectedCategory == FeedCategory.exercise,
+              onPressed: () => _selectCategory(FeedCategory.exercise),
             ),
           ],
         ),
@@ -72,8 +73,8 @@ class _CategoryButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
           backgroundColor: isSelected
               ? Theme.of(context).primaryColor
-              : Colors.grey.withOpacity(0.8),
-          foregroundColor: isSelected ? Colors.white : Colors.black,
+              : AppColors.neutral[400]!.withValues(alpha: 0.8),
+          foregroundColor: AppColors.neutral[800],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),

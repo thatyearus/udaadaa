@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
+import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/mypage/push_setting_view.dart';
@@ -281,7 +282,12 @@ class MyPageView extends StatelessWidget {
                               );
                               Navigator.of(context).pop();
                             },
-                            child: const Text('취소'),
+                            child: Text(
+                              '취소',
+                              style: AppTextStyles.bodyLarge(
+                                TextStyle(color: AppColors.neutral[800]),
+                              ),
+                            ),
                           ),
                           TextButton(
                             onPressed: () {
@@ -294,7 +300,12 @@ class MyPageView extends StatelessWidget {
                                   .updateNickname(nicknameController.text);
                               Navigator.of(context).pop();
                             },
-                            child: const Text('확인'),
+                            child: Text(
+                              '확인',
+                              style: AppTextStyles.bodyLarge(
+                                TextStyle(color: AppColors.neutral[800]),
+                              ),
+                            ),
                           ),
                         ],
                       );
@@ -397,11 +408,11 @@ class MyPageView extends StatelessWidget {
                                   alignment: Alignment.center,
                                   width: double.infinity,
                                   height: double.infinity,
-                                  color:
-                                      AppColors.neutral[500]?.withOpacity(0.5),
+                                  color: AppColors.neutral[500]
+                                      ?.withValues(alpha: 0.5),
                                   child: Text(
                                     (myFeeds[index].calorie != null
-                                        ? "${myFeeds[index].calorie} kcal"
+                                        ? "${myFeeds[index].calorie} ${myFeeds[index].type == FeedType.exercise ? "분" : "kcal"}"
                                         : ""),
                                     style: AppTextStyles.headlineSmall(
                                       TextStyle(

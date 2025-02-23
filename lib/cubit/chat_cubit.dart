@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/chat_reaction.dart';
@@ -21,6 +23,7 @@ part 'chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   FormCubit formCubit;
+  ChallengeCubit challengeCubit;
   List<Room> chatList = [];
   Map<String, List<Message>> messages = {};
   // Map<String, List<Message>> imageMessages = {};
@@ -33,17 +36,27 @@ class ChatCubit extends Cubit<ChatState> {
   int unreadMessageCount = 0;
   List<MapEntry<Profile, double>> ranking = [];
   double weightAverage = 0.0;
+  Map<String, bool> _pushOptions = {};
 
-  ChatCubit(this.formCubit) : super(ChatInitial()) {
+  ChatCubit(this.formCubit, this.challengeCubit) : super(ChatInitial()) {
     Future.wait([
       fetchBlockedUsers(),
       fetchBlockedMessages(),
     ]).then(
       (value) {
         Future.wait([
+          fetchPushOptions(),
           loadChatList().then((_) async {
             fetchLatestMessages();
             await fetchLatestReceipt();
+            FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+              if (message.data['roomId'] != null) {
+                final roomId = message.data['roomId'];
+                final roomInfo =
+                    chatList.firstWhere((room) => room.id == roomId);
+                emit(ChatPushNotification(roomId, "새로운 메시지가 도착했습니다", roomInfo));
+              }
+            });
           }).catchError((e) {
             logger.e("loadChatList error: $e");
           }),
@@ -60,6 +73,26 @@ class ChatCubit extends Cubit<ChatState> {
     ).catchError((e) {
       logger.e("fetchBlockedUsers error: $e");
     });
+  }
+
+  Future<void> fetchPushOptions() async {
+    try {
+      final response = await supabase
+          .from('room_participants')
+          .select('push_option, room_id')
+          .eq('user_id', supabase.auth.currentUser!.id);
+      logger.d(response);
+      _pushOptions = response.fold<Map<String, bool>>(
+        {},
+        (previousValue, element) => {
+          ...previousValue,
+          element['room_id'] as String: element['push_option'] as bool
+        },
+      );
+      logger.d("fetchPushOptions: $_pushOptions");
+    } catch (e) {
+      logger.e('Error fetching push options: $e');
+    }
   }
 
   Future<void> loadChatList() async {
@@ -122,8 +155,11 @@ class ChatCubit extends Cubit<ChatState> {
       );
 
       chatList = updatedChatList;
-      chatList.sort((a, b) =>
-          b.lastMessage!.createdAt!.compareTo(a.lastMessage!.createdAt!));
+      chatList.sort((a, b) {
+        if (a.lastMessage == null) return 1;
+        if (b.lastMessage == null) return -1;
+        return b.lastMessage!.createdAt!.compareTo(a.lastMessage!.createdAt!);
+      });
       emit(ChatListLoaded());
     } catch (e) {
       logger.e('Error fetching latest messages: $e');
@@ -405,6 +441,35 @@ class ChatCubit extends Cubit<ChatState> {
         .subscribe();
   }
 
+  Future<void> joinRoom(String roomId) async {
+    try {
+      logger.d(supabase.auth.currentUser!.id);
+      await supabase.from('room_participants').insert({
+        'room_id': roomId,
+        'user_id': supabase.auth.currentUser!.id,
+      });
+      await loadChatList();
+      final roomInfo = chatList.firstWhere((room) => room.id == roomId);
+      fetchRoomRanking(roomInfo);
+      if (roomInfo.startDay != null && roomInfo.endDay != null) {
+        try {
+          await challengeCubit.enterChallengeByDay(
+              roomInfo.startDay!, roomInfo.endDay!);
+        } catch (e) {
+          logger.e("joinRoom error: $e");
+          supabase
+              .from('room_participants')
+              .delete()
+              .eq('room_id', roomId)
+              .eq('user_id', supabase.auth.currentUser!.id);
+        }
+      }
+      emit(ChatListLoaded());
+    } catch (e) {
+      logger.e("participateRoom error: $e");
+    }
+  }
+
   Future<void> enterRoom(String roomId) async {
     try {
       currentRoomId = roomId;
@@ -646,6 +711,27 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  Future<void> togglePushOption(String roomId, bool value) async {
+    try {
+      final res = await supabase
+          .from('room_participants')
+          .update({
+            'push_option': value,
+          })
+          .eq('room_id', roomId)
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .select();
+      logger.d(res);
+      _pushOptions = {
+        ..._pushOptions,
+        roomId: value,
+      };
+      emit(ChatPushLoaded());
+    } catch (e) {
+      logger.e('Error toggling push option: $e');
+    }
+  }
+
   void missionComplete({
     required FeedType type,
     required String review,
@@ -703,6 +789,15 @@ class ChatCubit extends Cubit<ChatState> {
     };
     logger.d(messageData);
 
+    Map<FeedType, String> feedHash = {
+      FeedType.weight: '#체중',
+      FeedType.breakfast: '#아침',
+      FeedType.lunch: '#점심',
+      FeedType.dinner: '#저녁',
+      FeedType.snack: '#간식',
+      FeedType.exercise: '#운동',
+    };
+
     try {
       // 트랜잭션 실행
       final feedId = await supabase.rpc('mission_complete', params: {
@@ -712,7 +807,7 @@ class ChatCubit extends Cubit<ChatState> {
         'feed_image_path': feedData['image_path'],
         'calorie': feedData['calorie'],
         'room_id': messageData['room_id'],
-        'content': messageData['content'],
+        'content': '${feedHash[type]} ${messageData['content']}',
         'message_image_path': messageData['image_path'],
         'message_type': messageData['type'],
         'weight_date': DateTime.now().toIso8601String(),
@@ -752,4 +847,5 @@ class ChatCubit extends Cubit<ChatState> {
   int get getUnreadMessageCount => unreadMessageCount;
   List<MapEntry<Profile, double>> get getRanking => ranking;
   double get getWeightAverage => weightAverage;
+  Map<String, bool> get getPushOptions => _pushOptions;
 }

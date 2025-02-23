@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
+import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -6,10 +9,10 @@ class EnterRoomView extends StatefulWidget {
   const EnterRoomView({super.key});
 
   @override
-  State<EnterRoomView> createState() => _SecondViewState();
+  State<EnterRoomView> createState() => _EnterRoomViewState();
 }
 
-class _SecondViewState extends State<EnterRoomView> {
+class _EnterRoomViewState extends State<EnterRoomView> {
   final TextEditingController _codeController = TextEditingController();
   bool _isButtonEnabled = false;
 
@@ -99,7 +102,20 @@ class _SecondViewState extends State<EnterRoomView> {
               ),
               onPressed: _isButtonEnabled
                   ? () {
-                      // 다음 단계 이동 로직 추가 필요.
+                      context
+                          .read<ChatCubit>()
+                          .joinRoom(_codeController.text)
+                          .then((_) {
+                        if (!context.mounted) return;
+                        context
+                            .read<BottomNavCubit>()
+                            .selectTab(BottomNavState.chat);
+                        Navigator.of(context).popUntil(
+                          (route) => route.isFirst,
+                        );
+                      }).catchError((e) {
+                        logger.e(e.toString());
+                      });
                     }
                   : null,
               child: Text(

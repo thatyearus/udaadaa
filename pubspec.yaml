@@ -50,7 +50,6 @@ dependencies:
   firebase_analytics: ^11.3.1
   firebase_messaging: ^15.1.1
   flutter_local_notifications: ^18.0.1
-  amplitude_flutter: ^3.16.4
   mixpanel_flutter: ^2.3.2
   shared_preferences: ^2.3.2
   video_player: ^2.9.1
@@ -61,11 +60,15 @@ dependencies:
   fl_chart: ^0.70.2
   url_launcher: ^6.3.1
   share_plus: ^10.1.1
-  image_gallery_saver: ^2.0.3
   timezone: ^0.10.0
   dash_chat_2: ^0.0.21
   fluentui_system_icons: ^1.1.270
   badges: ^3.1.2
+  crypto: ^3.0.6
+  sign_in_with_apple: ^6.1.4
+  app_links: ^6.3.3
+  image_gallery_saver_plus: ^3.0.5
+  amplitude_flutter: ^3.16.7
 
 
 dev_dependencies:

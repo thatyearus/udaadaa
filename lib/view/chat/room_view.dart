@@ -31,7 +31,12 @@ class RoomView extends StatelessWidget {
         context.select((ChatCubit cubit) => cubit.getUnreadMessages);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: Text(
+          '채팅',
+          style: AppTextStyles.textTheme.headlineLarge,
+        ),
+        centerTitle: false,
+        surfaceTintColor: AppColors.white,
       ),
       body: ListView.builder(
         itemCount: rooms.length,

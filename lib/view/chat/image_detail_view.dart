@@ -36,6 +36,7 @@ class ImageDetailView extends StatelessWidget {
                 style: AppTextStyles.textTheme.bodyMedium),
           ],
         ),
+        centerTitle: true,
       ),
       body: CachedNetworkImage(
         imageUrl: imageMessage.imageUrl!,

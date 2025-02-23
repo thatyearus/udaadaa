@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/register/enter_room_view.dart';
+import 'package:app_links/app_links.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -28,10 +33,8 @@ class LoginView extends StatelessWidget {
                 children: [
                   Text(
                     "우다다",
-                    style: AppTextStyles.textTheme.displayLarge?.copyWith(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFFFFB6C1), // 핑크색
+                    style: AppTextStyles.displayLarge(
+                      TextStyle(color: AppColors.primary),
                     ),
                   ),
                   AppSpacing.verticalSizedBoxXs,
@@ -60,11 +63,29 @@ class LoginView extends StatelessWidget {
                   const Color(0xFFFFD700),
                   onPressed: () {
                     // 카카오 로그인 로직 추가
+                    context.read<AuthCubit>().signInWithKakao().then((_) {
+                      final appLinks = AppLinks();
+                      appLinks.uriLinkStream.listen((Uri? uri) {
+                        if (uri != null &&
+                            uri.scheme == schemeName &&
+                            uri.host == hostName) {
+                          if (!context.mounted) return;
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const EnterRoomView(),
+                            ),
+                          );
+                        }
+                      });
+                    }).catchError((e) {
+                      logger.e(e.toString());
+                    });
+                    /*
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const EnterRoomView(),
                       ),
-                    );
+                    );*/
                   },
                 ),
                 AppSpacing.verticalSizedBoxS,
@@ -75,6 +96,88 @@ class LoginView extends StatelessWidget {
                   textColor: AppColors.white,
                   onPressed: () {
                     // 애플 로그인 로직 추가
+                    if (Platform.isAndroid) {
+                      /*context
+                          .read<AuthCubit>()
+                          .signInWithAppleAndroid()
+                          .then((_) {
+                        final appLinks = AppLinks();
+                        appLinks.uriLinkStream.listen((Uri? uri) {
+                          if (uri != null &&
+                              uri.scheme == schemeName &&
+                              uri.host == hostName) {
+                            if (!context.mounted) return;
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const EnterRoomView(),
+                              ),
+                            );
+                          }
+                        });
+                      }).catchError((e) {
+                        logger.e(e.toString());
+                      });*/
+                      // Android에서는 Apple 로그인을 지원하지 않는다는 팝업창을 띄웁니다
+
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          actionsOverflowDirection: VerticalDirection.down,
+                          actions: [
+                            Column(
+                              children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: AppSpacing.s),
+                                      foregroundColor: AppColors.white,
+                                      backgroundColor: AppColors.primary,
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      minimumSize:
+                                          const Size(double.infinity, 0),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      '확인',
+                                      style: AppTextStyles
+                                          .textTheme.headlineSmall
+                                          ?.copyWith(
+                                        color:
+                                            AppColors.neutral[800], // 텍스트 색상 설정
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                          title: Text('알림',
+                              style: AppTextStyles.textTheme.headlineMedium),
+                          content: Text('Android에서는 Apple 로그인을 지원하지 않습니다.',
+                              style: AppTextStyles.textTheme.bodyLarge),
+                        ),
+                      );
+                      return;
+                    }
+                    context.read<AuthCubit>().signInWithApple().then((_) {
+                      if (!context.mounted) return;
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const EnterRoomView(),
+                        ),
+                      );
+                    }).catchError((e) {
+                      logger.e(e.toString());
+                    });
                   },
                 ),
                 AppSpacing.verticalSizedBoxXxl,

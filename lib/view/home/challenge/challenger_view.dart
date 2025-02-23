@@ -55,7 +55,7 @@ class Calendar extends StatelessWidget {
           shape: BoxShape.circle,
         ),
         todayDecoration: BoxDecoration(
-          color: AppColors.primary[200],
+          color: AppColors.primary[100],
           shape: BoxShape.circle,
         ),
       ),
@@ -112,6 +112,8 @@ class StreakCard extends StatelessWidget {
     int streak = context.select<ChallengeCubit, int>(
       (cubit) => cubit.getConsecutiveDays,
     );
+    int completedDays =
+        context.select<ChallengeCubit, int>((cubit) => cubit.getCompleteDays);
     final todayComplete = context.select<ChallengeCubit, bool>(
       (cubit) => cubit.getTodayChallengeComplete,
     );
@@ -126,7 +128,7 @@ class StreakCard extends StatelessWidget {
             color: AppColors.primary,
           ),
           Text(
-            "현재 연속 $streak일 인증 완료",
+            "이번 챌린지 $completedDays일 인증 완료!",
             style: AppTextStyles.textTheme.headlineLarge,
           ),
           Text(

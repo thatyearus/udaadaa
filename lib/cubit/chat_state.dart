@@ -10,3 +10,12 @@ final class ChatListLoaded extends ChatState {}
 final class ChatMessageLoaded extends ChatState {}
 
 final class BlockUserFinished extends ChatState {}
+
+final class ChatPushNotification extends ChatState {
+  final String roomId, text;
+  final Room roomInfo;
+
+  ChatPushNotification(this.roomId, this.text, this.roomInfo);
+}
+
+final class ChatPushLoaded extends ChatState {}

@@ -32,7 +32,7 @@ class ChatBubble extends StatelessWidget {
     showGeneralDialog(
       barrierDismissible: true,
       barrierLabel: '',
-      barrierColor: AppColors.black.withOpacity(0.25),
+      barrierColor: AppColors.black.withValues(alpha: 0.25),
       transitionDuration: const Duration(milliseconds: 500),
       transitionBuilder: (BuildContext context, Animation<double> animation,
           Animation<double> secondaryAnimation, Widget child) {

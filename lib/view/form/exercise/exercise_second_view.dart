@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
-import 'package:udaadaa/models/calorie.dart';
-import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/form/exercise/exercise_third_view.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 
@@ -61,8 +59,8 @@ class _ExerciseSecondViewState extends State<ExerciseSecondView> {
           builder: (context, state) {
             if (state is form.FormLoading) {
               return Center(
-                child:
-                    Lottie.asset('assets/loading_animation.json', width: 150),
+                child: Lottie.asset('assets/loading_pink_animation.json',
+                    width: 150),
               );
             }
 
@@ -104,7 +102,7 @@ class _ExerciseSecondViewState extends State<ExerciseSecondView> {
                 );
                 /*context.read<form.FormCubit>().submitWeight(
                     weight: commentController.text, contentType: "WEIGHT");*/
-                context.read<ChatCubit>().missionComplete(
+                /*context.read<ChatCubit>().missionComplete(
                       type: FeedType.exercise,
                       contentType: 'EXERCISE',
                       mealContent: '${commentController.text} 분',
@@ -114,7 +112,14 @@ class _ExerciseSecondViewState extends State<ExerciseSecondView> {
                           items: []),
                       review: commentController.text,
                       exerciseTime: int.parse(commentController.text),
-                    );
+                    );*/
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ExerciseThirdView(
+                      foodContent: commentController.text,
+                    ),
+                  ),
+                );
               },
               label: Text(
                 '인증하기',

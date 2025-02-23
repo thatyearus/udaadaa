@@ -12,6 +12,7 @@ import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/chat/image_detail_view.dart';
 import 'package:udaadaa/view/chat/image_list_view.dart';
 import 'package:udaadaa/view/chat/profile_view.dart';
 import 'package:udaadaa/view/chat/ranking_view.dart';
@@ -44,6 +45,8 @@ class ChatView extends StatelessWidget {
             .toList());
     List<String> blockedUsers = context
         .select<ChatCubit, List<String>>((cubit) => cubit.getBlockedUsers);
+    Map<String, bool> pushOptions = context
+        .select<ChatCubit, Map<String, bool>>((cubit) => cubit.getPushOptions);
     return Drawer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,9 +112,21 @@ class ChatView extends StatelessWidget {
             ),
             itemCount: min(imageMessages.length, 3),
             itemBuilder: (context, index) {
-              return CachedNetworkImage(
-                imageUrl: imageMessages[index].imageUrl!,
-                fit: BoxFit.cover,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ImageDetailView(
+                        roomInfo: roomInfo,
+                        imageMessage: imageMessages[index],
+                      ),
+                    ),
+                  );
+                },
+                child: CachedNetworkImage(
+                  imageUrl: imageMessages[index].imageUrl!,
+                  fit: BoxFit.cover,
+                ),
               );
             },
           ),
@@ -214,10 +229,17 @@ class ChatView extends StatelessWidget {
                   ? Icons.notifications_off
                   : Icons.notifications_active),*/
 
-                  Icon(Icons.notifications_active,
+                  Icon(
+                      pushOptions[roomInfo.id] == true
+                          ? Icons.notifications_active
+                          : Icons.notifications_off,
                       color: AppColors.neutral[500]),
               //  onPressed: _toogglePushOption,
-              onPressed: () {},
+              onPressed: () {
+                context
+                    .read<ChatCubit>()
+                    .togglePushOption(roomInfo.id, !pushOptions[roomInfo.id]!);
+              },
             ),
           ),
           const SizedBox(height: 16.0),
@@ -336,6 +358,7 @@ class ChatView extends StatelessWidget {
           ),
           backgroundColor: AppColors.primary[100],
           surfaceTintColor: AppColors.primary[100],
+          centerTitle: true,
         ),
         endDrawer: showDrawer(context),
         body: Column(
@@ -347,7 +370,7 @@ class ChatView extends StatelessWidget {
                   color: AppColors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.black.withOpacity(0.25),
+                      color: AppColors.black.withValues(alpha: 0.25),
                       blurRadius: 2,
                       offset: const Offset(0, 1),
                     ),
@@ -381,7 +404,7 @@ class ChatView extends StatelessWidget {
                     inputToolbarStyle:
                         BoxDecoration(color: AppColors.white, boxShadow: [
                       BoxShadow(
-                        color: AppColors.black.withOpacity(0.1),
+                        color: AppColors.black.withValues(alpha: 0.1),
                         blurRadius: 4,
                         offset: const Offset(0, -4),
                       ),

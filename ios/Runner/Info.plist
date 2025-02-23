@@ -22,29 +22,32 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
 	<key>CFBundleURLTypes</key>
 	<array>
-	<dict>
-	<key>CFBundleURLSchemes</key>
-	<array>
-		<string>fb${FACEBOOK_APP_ID}</string>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb${FACEBOOK_APP_ID}</string>
+				<string>${APP_BUNDLE_URL}</string>
+			</array>
+		</dict>
 	</array>
-	</dict>
-	</array>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FacebookAppID</key>
 	<string>${FACEBOOK_APP_ID}</string>
 	<key>FacebookClientToken</key>
 	<string>${FACEBOOK_CLIENT_TOKEN}</string>
 	<key>FacebookDisplayName</key>
 	<string>우다다</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>피드 업로드 및 칼로리 분석에 사진이 활용됩니다</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>몸무게 인증 사진 촬영에 활용됩니다</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>피드 업로드 및 칼로리 분석에 사진이 활용됩니다</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
