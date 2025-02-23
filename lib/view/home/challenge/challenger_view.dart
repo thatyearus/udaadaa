@@ -128,7 +128,7 @@ class StreakCard extends StatelessWidget {
             color: AppColors.primary,
           ),
           Text(
-            "현재 연속 $streak일 인증 완료",
+            "이번 챌린지 $completedDays일 인증 완료!",
             style: AppTextStyles.textTheme.headlineLarge,
           ),
           Text(
