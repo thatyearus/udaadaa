@@ -227,6 +227,63 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     }
   }
 
+  Future<int> getCurrentChallengeCompletedDays() async {
+    if (_challenge == null) return 0;
+
+    int completedDays = 0;
+    DateTime startDate = _challenge!.startDay;
+    DateTime today = DateTime.now();
+
+    for (DateTime date = startDate;
+        date.isBefore(today) ||
+            (date.year == today.year &&
+                date.month == today.month &&
+                date.day == today.day);
+        date = date.add(Duration(days: 1))) {
+      if (challenge!.endDay.isBefore(date)) {
+        break;
+      }
+      DateTime dayStart = DateTime(date.year, date.month, date.day, -9);
+      DateTime dayEnd =
+          dayStart.add(Duration(days: 1)).subtract(Duration(seconds: 1));
+
+      final feedCount = await supabase
+          .from('feed')
+          .select('id')
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .gte('created_at', dayStart.toIso8601String())
+          .lte('created_at', dayEnd.toIso8601String())
+          .count(CountOption.exact)
+          .then((res) => res.count);
+
+      final weightCount = await supabase
+          .from('weight')
+          .select('id')
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .gte('created_at', dayStart.toIso8601String())
+          .lte('created_at', dayEnd.toIso8601String())
+          .count(CountOption.exact)
+          .then((res) => res.count);
+
+      final reactionCount = await supabase
+          .from('reactions')
+          .select('id')
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .gte('created_at', dayStart.toIso8601String())
+          .lte('created_at', dayEnd.toIso8601String())
+          .count(CountOption.exact)
+          .then((res) => res.count);
+
+      if (feedCount >= 2 && reactionCount >= 3 && weightCount >= 1) {
+        completedDays++;
+      }
+    }
+
+    _completeDays = completedDays;
+    emit(ChallengeSuccess());
+    return completedDays;
+  }
+
   Future<int> getConsecutiveChallengeDays(
       String userId, DateTime startDate, DateTime endDate) async {
     int consecutiveDays = 0;
@@ -381,6 +438,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
       _todayMissionComplete['reaction'] = reactionCount;
       if (feedCount >= 2 && reactionCount >= 3 && weightCount >= 1) {
         _todayChallengeComplete = true;
+        getCurrentChallengeCompletedDays();
       }
       emit(ChallengeSuccess());
     } catch (e) {

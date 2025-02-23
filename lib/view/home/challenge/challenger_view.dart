@@ -112,6 +112,8 @@ class StreakCard extends StatelessWidget {
     int streak = context.select<ChallengeCubit, int>(
       (cubit) => cubit.getConsecutiveDays,
     );
+    int completedDays =
+        context.select<ChallengeCubit, int>((cubit) => cubit.getCompleteDays);
     final todayComplete = context.select<ChallengeCubit, bool>(
       (cubit) => cubit.getTodayChallengeComplete,
     );
