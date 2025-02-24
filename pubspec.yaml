@@ -69,6 +69,7 @@ dependencies:
   app_links: ^6.3.3
   image_gallery_saver_plus: ^3.0.5
   amplitude_flutter: ^3.16.7
+  tutorial_coach_mark: ^1.2.13
 
 
 dev_dependencies:
