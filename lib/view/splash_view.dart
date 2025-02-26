@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/view/main_view.dart';
-import 'package:udaadaa/view/onboarding/eighth_view.dart';
-import 'package:udaadaa/view/onboarding/initial_view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -19,7 +16,7 @@ class SplashViewState extends State<SplashView> {
   }
 
   void _checkOnboardingStatus() {
-    bool isOnboardingComplete =
+    /*bool isOnboardingComplete =
         PreferencesService().getBool('isOnboardingComplete') ?? false;
     bool isMealCompleted =
         PreferencesService().getBool('isMealCompleted') ?? false;
@@ -37,6 +34,11 @@ class SplashViewState extends State<SplashView> {
           MaterialPageRoute(builder: (context) => const InitialView()),
         );
       }
+    });*/
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const MainView()),
+      );
     });
   }
 
