@@ -1,11 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/register/enter_room_view.dart';
 import 'package:udaadaa/view/register/login_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class RegisterView extends StatelessWidget {
+class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
+
+  @override
+  State<RegisterView> createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
+  void showTutorial(BuildContext context) {
+    final onboardingCubit = context.read<TutorialCubit>();
+
+    TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
+      targets: [
+        /*TargetFocus(
+          identify: "challenge_code",
+          keyTarget: onboardingCubit.challengeCodeKey,
+          contents: [TargetContent(child: Text("여기에 챌린지 코드를 입력하세요!"))],
+        ),*/
+        TargetFocus(
+          identify: "verify_button",
+          keyTarget: onboardingCubit.verifyButtonKey,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  "챌린지에 참여해볼까요?",
+                  style: AppTextStyles.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+      onClickTarget: (target) {
+        logger.d("onClickTarget: ${target.identify}");
+        if (target.identify == "verify_button") {
+          final provider = supabase.auth.currentUser?.appMetadata['provider'];
+          final nextView = (provider == 'apple' || provider == 'kakao')
+              ? const EnterRoomView()
+              : const LoginView();
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => nextView,
+            ),
+          );
+        }
+      },
+      onFinish: () {
+        logger.d("finish tutorial");
+      },
+    );
+
+    tutorialCoachMark.show(context: context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      logger.d("Show tutorial");
+      showTutorial(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +113,7 @@ class RegisterView extends StatelessWidget {
               const SizedBox(height: 24),
 
               ElevatedButton(
+                key: context.read<TutorialCubit>().verifyButtonKey,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   minimumSize: const Size(double.infinity, 56),
