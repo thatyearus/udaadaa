@@ -169,6 +169,7 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                         Navigator.of(context).popUntil(
                           (route) => route.isFirst,
                         );
+                        context.read<TutorialCubit>().showTutorialRoom();
                       }).catchError((e) {
                         logger.e(e.toString());
                       });
