@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
+import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/chat/chat_view.dart';
@@ -24,6 +26,47 @@ class RoomView extends StatelessWidget {
     }
   }
 
+  void showTutorial(BuildContext context) {
+    final onboardingCubit = context.read<TutorialCubit>();
+
+    TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
+      targets: [
+        /*TargetFocus(
+          identify: "challenge_code",
+          keyTarget: onboardingCubit.challengeCodeKey,
+          contents: [TargetContent(child: Text("여기에 챌린지 코드를 입력하세요!"))],
+        ),*/
+        TargetFocus(
+          identify: "first_room",
+          keyTarget: onboardingCubit.chatRoomKey,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  "채팅방에 입장해볼까요?",
+                  style: AppTextStyles.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+      onClickTarget: (target) {
+        logger.d("onClickTarget: ${target.identify}");
+      },
+      onFinish: () {
+        logger.d("finish tutorial room view");
+      },
+    );
+
+    tutorialCoachMark.show(context: context);
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Room> rooms = context.select((ChatCubit cubit) => cubit.getChatList);
@@ -38,51 +81,67 @@ class RoomView extends StatelessWidget {
         centerTitle: false,
         surfaceTintColor: AppColors.white,
       ),
-      body: ListView.builder(
-        itemCount: rooms.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(rooms[index].roomName),
-            subtitle: Text(rooms[index].lastMessage?.content ??
-                (rooms[index].lastMessage?.imagePath != null ? '사진' : '')),
-            trailing: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  rooms[index].lastMessage != null
-                      ? _formatTimestamp(rooms[index].lastMessage?.createdAt)
-                      : '',
-                  style: AppTextStyles.labelSmall(
-                    TextStyle(color: AppColors.neutral[500]),
+      body: BlocListener<TutorialCubit, TutorialState>(
+        listener: (context, state) {
+          if (state is TutorialRoom && rooms.isNotEmpty) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Future.delayed(const Duration(milliseconds: 500), () {
+                if (context.mounted) {
+                  showTutorial(context);
+                }
+              });
+            });
+          }
+        },
+        child: ListView.builder(
+          itemCount: rooms.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              key: (index == 0
+                  ? context.read<TutorialCubit>().chatRoomKey
+                  : null),
+              title: Text(rooms[index].roomName),
+              subtitle: Text(rooms[index].lastMessage?.content ??
+                  (rooms[index].lastMessage?.imagePath != null ? '사진' : '')),
+              trailing: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    rooms[index].lastMessage != null
+                        ? _formatTimestamp(rooms[index].lastMessage?.createdAt)
+                        : '',
+                    style: AppTextStyles.labelSmall(
+                      TextStyle(color: AppColors.neutral[500]),
+                    ),
                   ),
-                ),
-                if (unreadCount[rooms[index].id] != null &&
-                    unreadCount[rooms[index].id]! > 0)
-                  badges.Badge(
-                    badgeContent: Text(
-                      unreadCount[rooms[index].id].toString(),
-                      style: AppTextStyles.labelSmall(
-                        const TextStyle(
-                          color: AppColors.white,
+                  if (unreadCount[rooms[index].id] != null &&
+                      unreadCount[rooms[index].id]! > 0)
+                    badges.Badge(
+                      badgeContent: Text(
+                        unreadCount[rooms[index].id].toString(),
+                        style: AppTextStyles.labelSmall(
+                          const TextStyle(
+                            color: AppColors.white,
+                          ),
                         ),
                       ),
                     ),
+                ],
+              ),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ChatView(
+                      roomInfo: rooms[index],
+                    ),
                   ),
-              ],
-            ),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ChatView(
-                    roomInfo: rooms[index],
-                  ),
-                ),
-              );
-              context.read<ChatCubit>().enterRoom(rooms[index].id);
-            },
-          );
-        },
+                );
+                context.read<ChatCubit>().enterRoom(rooms[index].id);
+              },
+            );
+          },
+        ),
       ),
     );
   }

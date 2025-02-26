@@ -12,7 +12,9 @@ class TutorialCubit extends Cubit<TutorialState> {
 
   final GlobalKey _enterRoomKey = GlobalKey();
   final GlobalKey _verifyButtonKey = GlobalKey();
+  final GlobalKey _chatRoomKey = GlobalKey();
 
   GlobalKey get enterRoomKey => _enterRoomKey;
+  GlobalKey get chatRoomKey => _chatRoomKey;
   GlobalKey get verifyButtonKey => _verifyButtonKey;
 }
