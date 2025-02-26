@@ -6,6 +6,10 @@ part 'tutorial_state.dart';
 class TutorialCubit extends Cubit<TutorialState> {
   TutorialCubit() : super(TutorialInitial());
 
+  void showTutorialRoom() {
+    emit(TutorialRoom());
+  }
+
   final GlobalKey _enterRoomKey = GlobalKey();
   final GlobalKey _verifyButtonKey = GlobalKey();
 

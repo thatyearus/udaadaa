@@ -4,3 +4,5 @@ part of 'tutorial_cubit.dart';
 sealed class TutorialState {}
 
 final class TutorialInitial extends TutorialState {}
+
+final class TutorialRoom extends TutorialState {}
