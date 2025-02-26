@@ -399,6 +399,7 @@ class ChatView extends StatelessWidget {
                 currentUser:
                     asDashChatUser(supabase.auth.currentUser!.id, userName),
                 inputOptions: InputOptions(
+                    inputDisabled: !enabled,
                     sendOnEnter: false,
                     textInputAction: TextInputAction.newline,
                     inputMaxLines: 2,
