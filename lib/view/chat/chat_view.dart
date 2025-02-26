@@ -5,10 +5,12 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart';
+import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -36,6 +38,51 @@ class ChatView extends StatelessWidget {
     );
   }*/
   final Room roomInfo;
+
+  void showTutorial(BuildContext context) {
+    final onboardingCubit = context.read<TutorialCubit>();
+
+    TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
+      showSkipInLastTarget: false,
+      targets: [
+        /*TargetFocus(
+          identify: "challenge_code",
+          keyTarget: onboardingCubit.challengeCodeKey,
+          contents: [TargetContent(child: Text("여기에 챌린지 코드를 입력하세요!"))],
+        ),*/
+        TargetFocus(
+          identify: "plus_button",
+          keyTarget: onboardingCubit.chatButtonKey,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  "인증을 하기 위해선 이 버튼을 눌러주세요",
+                  style: AppTextStyles.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+      onClickTarget: (target) {
+        logger.d("onClickTarget: ${target.identify}");
+        if (target.identify == "plus_button") {
+          _showBottomSheet(context);
+        }
+      },
+      onFinish: () {
+        logger.d("finish tutorial chat view");
+      },
+    );
+
+    tutorialCoachMark.show(context: context);
+  }
 
   Drawer showDrawer(BuildContext context) {
     List<Message> imageMessages = context.select<ChatCubit, List<Message>>(
@@ -340,6 +387,7 @@ class ChatView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    showTutorial(context);
     final messages = context.select<ChatCubit, List<Message>>(
         (cubit) => cubit.getMessagesByRoomId(roomInfo.id));
     final userName = context.select<AuthCubit, String>(
@@ -364,179 +412,194 @@ class ChatView extends StatelessWidget {
           centerTitle: true,
         ),
         endDrawer: showDrawer(context),
-        body: Column(
-          children: [
-            Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.black.withValues(alpha: 0.25),
-                      blurRadius: 2,
-                      offset: const Offset(0, 1),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Icon(FluentIcons.megaphone_24_regular,
-                        color: AppColors.neutral[500]),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(AppSpacing.s),
-                        child: Text(
-                          '우측 하단의 + 버튼을 눌러 인증을 진행해 주세요.',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ),
-                    ),
-                  ],
-                )),
-            Expanded(
-              child: DashChat(
-                currentUser:
-                    asDashChatUser(supabase.auth.currentUser!.id, userName),
-                inputOptions: InputOptions(
-                    inputDisabled: !enabled,
-                    sendOnEnter: false,
-                    textInputAction: TextInputAction.newline,
-                    inputMaxLines: 2,
-                    inputToolbarMargin: EdgeInsets.zero,
-                    inputToolbarPadding: const EdgeInsets.all(2),
-                    inputToolbarStyle:
-                        BoxDecoration(color: AppColors.white, boxShadow: [
+        body: BlocListener<TutorialCubit, TutorialState>(
+          listener: (context, state) {
+            if (state is TutorialChat) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  if (context.mounted) {
+                    showTutorial(context);
+                  }
+                });
+              });
+            }
+          },
+          child: Column(
+            children: [
+              Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    boxShadow: [
                       BoxShadow(
-                        color: AppColors.black.withValues(alpha: 0.1),
-                        blurRadius: 4,
-                        offset: const Offset(0, -4),
-                      ),
-                    ]),
-                    inputTextStyle: Theme.of(context).textTheme.bodyMedium,
-                    inputDecoration: InputDecoration(
-                      isDense: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(AppSpacing.m),
-                        /*
-                      borderSide: BorderSide(
-                        color: AppColors.neutral[200]!,
-                      ),*/
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(AppSpacing.m),
-                        /*
-                      borderSide: BorderSide(
-                        color: AppColors.neutral[200]!,
-                      ),*/
-                        borderSide: BorderSide.none,
-                      ),
-                      hintText: '메시지를 입력하세요',
-                      hintStyle: AppTextStyles.bodyMedium(
-                        TextStyle(color: AppColors.neutral[500]),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.s,
-                        vertical: AppSpacing.xs,
-                      ),
-                      filled: true,
-                      fillColor: AppColors.neutral[50],
-                    ),
-                    leading: [
-                      IconButton(
-                        icon: Icon(Icons.photo_outlined,
-                            color: AppColors.neutral[500]),
-                        onPressed: () {
-                          context
-                              .read<ChatCubit>()
-                              .sendImageMessage(roomInfo.id);
-                          // final img = await context.read<ChatCubit>().pickImage();
-                          // context.read<ChatCubit>().sendFileMessage(img);
-                        },
+                        color: AppColors.black.withValues(alpha: 0.25),
+                        blurRadius: 2,
+                        offset: const Offset(0, 1),
                       ),
                     ],
-                    trailing: [
-                      IconButton(
-                        icon: Stack(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(AppSpacing.xs),
-                                border: Border.all(
-                                    color: AppColors.neutral[500]!, width: 1),
-                              ),
-                              child: Icon(Icons.add,
-                                  color: AppColors.neutral[500], size: 20),
-                            ),
-                          ],
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(FluentIcons.megaphone_24_regular,
+                          color: AppColors.neutral[500]),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(AppSpacing.s),
+                          child: Text(
+                            '우측 하단의 + 버튼을 눌러 인증을 진행해 주세요.',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
                         ),
-                        onPressed: () {
-                          // context.read<ChatCubit>().sendMessage();
-                          _showBottomSheet(context);
-                        },
                       ),
-                    ]),
-                messageListOptions: MessageListOptions(
-                  dateSeparatorBuilder: (date) => Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.only(
-                      top: AppSpacing.m,
-                      bottom: AppSpacing.xxs,
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.neutral[800]?.withAlpha(100),
-                        borderRadius: BorderRadius.circular(17),
+                    ],
+                  )),
+              Expanded(
+                child: DashChat(
+                  currentUser:
+                      asDashChatUser(supabase.auth.currentUser!.id, userName),
+                  inputOptions: InputOptions(
+                      inputDisabled: !enabled,
+                      sendOnEnter: false,
+                      textInputAction: TextInputAction.newline,
+                      inputMaxLines: 2,
+                      inputToolbarMargin: EdgeInsets.zero,
+                      inputToolbarPadding: const EdgeInsets.all(2),
+                      inputToolbarStyle:
+                          BoxDecoration(color: AppColors.white, boxShadow: [
+                        BoxShadow(
+                          color: AppColors.black.withValues(alpha: 0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, -4),
+                        ),
+                      ]),
+                      inputTextStyle: Theme.of(context).textTheme.bodyMedium,
+                      inputDecoration: InputDecoration(
+                        isDense: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppSpacing.m),
+                          /*
+                      borderSide: BorderSide(
+                        color: AppColors.neutral[200]!,
+                      ),*/
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppSpacing.m),
+                          /*
+                      borderSide: BorderSide(
+                        color: AppColors.neutral[200]!,
+                      ),*/
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: '메시지를 입력하세요',
+                        hintStyle: AppTextStyles.bodyMedium(
+                          TextStyle(color: AppColors.neutral[500]),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.s,
+                          vertical: AppSpacing.xs,
+                        ),
+                        filled: true,
+                        fillColor: AppColors.neutral[50],
                       ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.s,
-                        vertical: 6,
+                      leading: [
+                        IconButton(
+                          icon: Icon(Icons.photo_outlined,
+                              color: AppColors.neutral[500]),
+                          onPressed: () {
+                            context
+                                .read<ChatCubit>()
+                                .sendImageMessage(roomInfo.id);
+                            // final img = await context.read<ChatCubit>().pickImage();
+                            // context.read<ChatCubit>().sendFileMessage(img);
+                          },
+                        ),
+                      ],
+                      trailing: [
+                        IconButton(
+                          key: context.read<TutorialCubit>().chatButtonKey,
+                          icon: Stack(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.circular(AppSpacing.xs),
+                                  border: Border.all(
+                                      color: AppColors.neutral[500]!, width: 1),
+                                ),
+                                child: Icon(Icons.add,
+                                    color: AppColors.neutral[500], size: 20),
+                              ),
+                            ],
+                          ),
+                          onPressed: () {
+                            // context.read<ChatCubit>().sendMessage();
+                            _showBottomSheet(context);
+                          },
+                        ),
+                      ]),
+                  messageListOptions: MessageListOptions(
+                    dateSeparatorBuilder: (date) => Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(
+                        top: AppSpacing.m,
+                        bottom: AppSpacing.xxs,
                       ),
-                      child: Text(
-                        '${date.year}년 ${date.month}월 ${date.day}일',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.white,
-                            ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.neutral[800]?.withAlpha(100),
+                          borderRadius: BorderRadius.circular(17),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.s,
+                          vertical: 6,
+                        ),
+                        child: Text(
+                          '${date.year}년 ${date.month}월 ${date.day}일',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                messageOptions: MessageOptions(
-                  showCurrentUserAvatar: false,
-                  showOtherUsersAvatar: true,
-                  messageRowBuilder: (ChatMessage message,
-                      ChatMessage? previousMessage,
-                      ChatMessage? nextMessage,
-                      bool isAfterDateSeparator,
-                      bool isBeforeDateSeparator) {
-                    bool isFirstInSequence = previousMessage == null ||
-                        previousMessage.user.id != message.user.id ||
-                        isAfterDateSeparator;
-                    bool isLastInSequence = nextMessage == null ||
-                        nextMessage.user.id != message.user.id ||
-                        isBeforeDateSeparator;
-                    return ChatBubble(
-                      message: message,
-                      isMine: message.customProperties?['message'].isMine,
-                      isFirstInSequence: isFirstInSequence,
-                      isLastInSequence: isLastInSequence,
-                      memberCount: roomInfo.members.length,
-                    );
+                  messageOptions: MessageOptions(
+                    showCurrentUserAvatar: false,
+                    showOtherUsersAvatar: true,
+                    messageRowBuilder: (ChatMessage message,
+                        ChatMessage? previousMessage,
+                        ChatMessage? nextMessage,
+                        bool isAfterDateSeparator,
+                        bool isBeforeDateSeparator) {
+                      bool isFirstInSequence = previousMessage == null ||
+                          previousMessage.user.id != message.user.id ||
+                          isAfterDateSeparator;
+                      bool isLastInSequence = nextMessage == null ||
+                          nextMessage.user.id != message.user.id ||
+                          isBeforeDateSeparator;
+                      return ChatBubble(
+                        message: message,
+                        isMine: message.customProperties?['message'].isMine,
+                        isFirstInSequence: isFirstInSequence,
+                        isLastInSequence: isLastInSequence,
+                        memberCount: roomInfo.members.length,
+                      );
+                    },
+                  ),
+                  onSend: (ChatMessage message) {
+                    // context.read<ChatCubit>().sendMessage(message.text);
+                    context
+                        .read<ChatCubit>()
+                        .sendMessage(message.text, "textMessage", roomInfo.id);
                   },
+                  messages: asDashChatMessages(messages),
                 ),
-                onSend: (ChatMessage message) {
-                  // context.read<ChatCubit>().sendMessage(message.text);
-                  context
-                      .read<ChatCubit>()
-                      .sendMessage(message.text, "textMessage", roomInfo.id);
-                },
-                messages: asDashChatMessages(messages),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
