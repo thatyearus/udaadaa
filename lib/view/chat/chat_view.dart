@@ -344,6 +344,9 @@ class ChatView extends StatelessWidget {
         (cubit) => cubit.getMessagesByRoomId(roomInfo.id));
     final userName = context.select<AuthCubit, String>(
         (cubit) => cubit.getCurProfile?.nickname ?? "");
+    final enabled = (roomInfo.endDay == null && roomInfo.startDay == null) ||
+        (roomInfo.endDay!.isAfter(DateTime.now()) &&
+            roomInfo.startDay!.isBefore(DateTime.now()));
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
