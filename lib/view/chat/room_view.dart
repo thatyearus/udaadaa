@@ -61,6 +61,7 @@ class RoomView extends StatelessWidget {
       },
       onFinish: () {
         logger.d("finish tutorial room view");
+        context.read<TutorialCubit>().showTutorialChat();
       },
     );
 
@@ -138,6 +139,7 @@ class RoomView extends StatelessWidget {
                   ),
                 );
                 context.read<ChatCubit>().enterRoom(rooms[index].id);
+                context.read<TutorialCubit>().showTutorialChat();
               },
             );
           },
