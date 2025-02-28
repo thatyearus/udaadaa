@@ -414,7 +414,7 @@ class ChatView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    showTutorial(context);
+    // showTutorial(context);
     final messages = context.select<ChatCubit, List<Message>>(
         (cubit) => cubit.getMessagesByRoomId(roomInfo.id));
     final userName = context.select<AuthCubit, String>(
@@ -443,7 +443,7 @@ class ChatView extends StatelessWidget {
           listener: (context, state) {
             if (state is TutorialChat) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                Future.delayed(const Duration(milliseconds: 500), () {
+                Future.delayed(const Duration(milliseconds: 1000), () {
                   if (context.mounted) {
                     showTutorial(context);
                   }

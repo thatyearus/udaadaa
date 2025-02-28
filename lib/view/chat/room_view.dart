@@ -104,7 +104,7 @@ class RoomView extends StatelessWidget {
         listener: (context, state) {
           if (state is TutorialRoom && rooms.isNotEmpty) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              Future.delayed(const Duration(milliseconds: 500), () {
+              Future.delayed(const Duration(milliseconds: 1000), () {
                 if (context.mounted) {
                   showTutorial(context);
                 }
