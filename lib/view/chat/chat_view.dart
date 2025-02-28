@@ -98,6 +98,8 @@ class ChatView extends StatelessWidget {
           Future.delayed(const Duration(milliseconds: 1000), () {
             tutorialCoachMark.next();
           });
+        } else if (target.identify == "plus_detail_button") {
+          Navigator.of(context).pop();
         }
       },
       onFinish: () {
