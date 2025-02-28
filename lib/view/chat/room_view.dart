@@ -58,10 +58,28 @@ class RoomView extends StatelessWidget {
       ],
       onClickTarget: (target) {
         logger.d("onClickTarget: ${target.identify}");
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => BlocProvider.value(
+              value: onboardingCubit,
+              child: ChatView(
+                roomInfo: context.read<ChatCubit>().getChatList.first,
+              ),
+            ),
+          ),
+        );
+        context
+            .read<ChatCubit>()
+            .enterRoom(context.read<ChatCubit>().getChatList.first.id);
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (context.mounted) {
+            context.read<TutorialCubit>().showTutorialChat();
+          }
+        });
       },
       onFinish: () {
         logger.d("finish tutorial room view");
-        context.read<TutorialCubit>().showTutorialChat();
+        // context.read<TutorialCubit>().showTutorialChat();
       },
     );
 
@@ -133,8 +151,11 @@ class RoomView extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => ChatView(
-                      roomInfo: rooms[index],
+                    builder: (context) => BlocProvider.value(
+                      value: context.read<TutorialCubit>(),
+                      child: ChatView(
+                        roomInfo: rooms[index],
+                      ),
                     ),
                   ),
                 );
