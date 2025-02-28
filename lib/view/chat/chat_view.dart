@@ -42,7 +42,9 @@ class ChatView extends StatelessWidget {
   void showTutorial(BuildContext context) {
     final onboardingCubit = context.read<TutorialCubit>();
 
-    TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
+    late TutorialCoachMark tutorialCoachMark;
+    tutorialCoachMark = TutorialCoachMark(
+      hideSkip: true,
       showSkipInLastTarget: false,
       targets: [
         /*TargetFocus(
@@ -69,11 +71,33 @@ class ChatView extends StatelessWidget {
             ),
           ],
         ),
+        TargetFocus(
+          identify: "plus_detail_button",
+          keyTarget: onboardingCubit.chatButtonDetailKey,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  "식단, 운동 및 체중을 인증할 수 있습니다.",
+                  style: AppTextStyles.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
       ],
       onClickTarget: (target) {
         logger.d("onClickTarget: ${target.identify}");
         if (target.identify == "plus_button") {
           _showBottomSheet(context);
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            tutorialCoachMark.next();
+          });
         }
       },
       onFinish: () {
@@ -326,6 +350,9 @@ class ChatView extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
+                        key: (index == 0
+                            ? context.read<TutorialCubit>().chatButtonDetailKey
+                            : null),
                         icon: Stack(
                           children: [
                             Container(
