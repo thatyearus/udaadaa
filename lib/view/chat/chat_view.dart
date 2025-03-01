@@ -104,6 +104,25 @@ class ChatView extends StatelessWidget {
             ),
           ],
         ),
+        TargetFocus(
+          identify: "ranking_button",
+          keyTarget: onboardingCubit.rankingButtonKey,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  "아이콘을 눌러 랭킹을 확인할 수 있습니다.",
+                  style: AppTextStyles.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
       ],
       onClickTarget: (target) {
         logger.d("onClickTarget: ${target.identify}");
