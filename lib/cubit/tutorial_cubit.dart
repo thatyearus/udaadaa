@@ -21,6 +21,7 @@ class TutorialCubit extends Cubit<TutorialState> {
   final GlobalKey _chatButtonDetailKey = GlobalKey();
   final GlobalKey _chatMenuButtonKey = GlobalKey();
   final GlobalKey _rankingButtonKey = GlobalKey();
+  final GlobalKey _pushButtonKey = GlobalKey();
 
   GlobalKey get enterRoomKey => _enterRoomKey;
   GlobalKey get chatRoomKey => _chatRoomKey;
@@ -29,4 +30,5 @@ class TutorialCubit extends Cubit<TutorialState> {
   GlobalKey get chatButtonDetailKey => _chatButtonDetailKey;
   GlobalKey get chatMenuButtonKey => _chatMenuButtonKey;
   GlobalKey get rankingButtonKey => _rankingButtonKey;
+  GlobalKey get pushButtonKey => _pushButtonKey;
 }
