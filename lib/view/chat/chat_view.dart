@@ -123,6 +123,25 @@ class ChatView extends StatelessWidget {
             ),
           ],
         ),
+        TargetFocus(
+          identify: "push_button",
+          keyTarget: onboardingCubit.pushButtonKey,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  "채팅 알림 발송에 권한 동의가 필요합니다.\n아이콘을 눌러 푸시 알림 설정을 변경할 수도 있습니다.",
+                  style: AppTextStyles.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
       ],
       onClickTarget: (target) {
         logger.d("onClickTarget: ${target.identify}");
