@@ -47,11 +47,6 @@ class ChatView extends StatelessWidget {
       hideSkip: true,
       showSkipInLastTarget: false,
       targets: [
-        /*TargetFocus(
-          identify: "challenge_code",
-          keyTarget: onboardingCubit.challengeCodeKey,
-          contents: [TargetContent(child: Text("여기에 챌린지 코드를 입력하세요!"))],
-        ),*/
         TargetFocus(
           identify: "plus_button",
           keyTarget: onboardingCubit.chatButtonKey,
