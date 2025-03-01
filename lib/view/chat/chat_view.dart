@@ -310,6 +310,7 @@ class ChatView extends StatelessWidget {
           Divider(color: AppColors.neutral[200]),
           ListTile(
             leading: IconButton(
+              key: context.read<TutorialCubit>().rankingButtonKey,
               icon: Icon(Icons.leaderboard_rounded,
                   color: AppColors.neutral[500]),
               onPressed: () {
