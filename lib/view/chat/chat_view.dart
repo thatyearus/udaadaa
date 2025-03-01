@@ -456,6 +456,17 @@ class ChatView extends StatelessWidget {
           backgroundColor: AppColors.primary[100],
           surfaceTintColor: AppColors.primary[100],
           centerTitle: true,
+          actions: [
+            Builder(
+              builder: (context) => IconButton(
+                key: context.read<TutorialCubit>().chatMenuButtonKey,
+                icon: Icon(Icons.menu_rounded, color: AppColors.neutral[800]),
+                onPressed: () {
+                  Scaffold.of(context).openEndDrawer();
+                },
+              ),
+            ),
+          ],
         ),
         endDrawer: showDrawer(context),
         body: BlocListener<TutorialCubit, TutorialState>(
