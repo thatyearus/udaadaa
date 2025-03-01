@@ -363,6 +363,7 @@ class ChatView extends StatelessWidget {
                 }*/
             ),
             trailing: IconButton(
+              key: context.read<TutorialCubit>().pushButtonKey,
               icon: /*Icon(_pushTriggerOption == GroupChannelPushTriggerOption.off
                   ? Icons.notifications_off
                   : Icons.notifications_active),*/
