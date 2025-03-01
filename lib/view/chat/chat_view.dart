@@ -85,6 +85,25 @@ class ChatView extends StatelessWidget {
             ),
           ],
         ),
+        TargetFocus(
+          identify: "menu_detail_button",
+          keyTarget: onboardingCubit.chatMenuButtonKey,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  "메뉴 버튼을 눌러 사진 및 참여자 목록을 확인할 수 있습니다.",
+                  style: AppTextStyles.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
       ],
       onClickTarget: (target) {
         logger.d("onClickTarget: ${target.identify}");
@@ -95,6 +114,9 @@ class ChatView extends StatelessWidget {
           });
         } else if (target.identify == "plus_detail_button") {
           Navigator.of(context).pop();
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            tutorialCoachMark.next();
+          });
         }
       },
       onFinish: () {
