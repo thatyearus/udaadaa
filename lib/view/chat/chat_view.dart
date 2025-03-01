@@ -136,6 +136,15 @@ class ChatView extends StatelessWidget {
           Future.delayed(const Duration(milliseconds: 1000), () {
             tutorialCoachMark.next();
           });
+        } else if (target.identify == "menu_detail_button") {
+          Scaffold.of(context).openEndDrawer();
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            tutorialCoachMark.next();
+          });
+        } else if (target.identify == "ranking_button") {
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            tutorialCoachMark.next();
+          });
         }
       },
       onFinish: () {
