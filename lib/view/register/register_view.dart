@@ -19,6 +19,7 @@ class _RegisterViewState extends State<RegisterView> {
     final onboardingCubit = context.read<TutorialCubit>();
 
     TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
+      hideSkip: true,
       targets: [
         TargetFocus(
           identify: "verify_button",
