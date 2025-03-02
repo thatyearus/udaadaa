@@ -12,3 +12,5 @@ final class TutorialChat extends TutorialState {}
 final class TutorialRoom2 extends TutorialState {}
 
 final class TutorialProfile extends TutorialState {}
+
+final class TutorialPush extends TutorialState {}
