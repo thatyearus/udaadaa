@@ -164,6 +164,8 @@ class ChatView extends StatelessWidget {
           Future.delayed(const Duration(milliseconds: 1000), () {
             tutorialCoachMark.next();
           });
+        } else if (target.identify == "push_button") {
+          context.read<AuthCubit>().setFCMToken();
         }
       },
       onFinish: () {
