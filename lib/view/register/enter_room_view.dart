@@ -22,6 +22,7 @@ class _EnterRoomViewState extends State<EnterRoomView> {
     final onboardingCubit = context.read<TutorialCubit>();
 
     TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
+      hideSkip: true,
       targets: [
         /*TargetFocus(
           identify: "challenge_code",
