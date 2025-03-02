@@ -97,7 +97,7 @@ class _ExerciseSecondViewState extends State<ExerciseSecondView> {
                 Analytics().logEvent(
                   "기록_운동기록",
                   parameters: {
-                    "인증하기": "클릭",
+                    "다음": "클릭",
                   },
                 );
                 /*context.read<form.FormCubit>().submitWeight(
@@ -122,7 +122,7 @@ class _ExerciseSecondViewState extends State<ExerciseSecondView> {
                 );
               },
               label: Text(
-                '인증하기',
+                '다음',
                 style: AppTextStyles.textTheme.titleMedium
                     ?.copyWith(color: AppColors.white),
               ),
