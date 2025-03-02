@@ -7,7 +7,6 @@ import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/onboarding/eighth_view.dart';
 
 class PushSettingView extends StatefulWidget {
   const PushSettingView({super.key});
