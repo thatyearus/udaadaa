@@ -35,6 +35,8 @@ class RoomView extends StatelessWidget {
         TargetFocus(
           identify: "first_room",
           keyTarget: onboardingCubit.chatRoomKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
           contents: [
             TargetContent(
               align: ContentAlign.top,
