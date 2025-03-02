@@ -32,7 +32,7 @@ class _RegisterViewState extends State<RegisterView> {
                 padding: AppSpacing.edgeInsetsS,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   "챌린지에 참여해볼까요?",
