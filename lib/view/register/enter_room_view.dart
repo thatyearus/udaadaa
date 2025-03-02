@@ -35,11 +35,12 @@ class _EnterRoomViewState extends State<EnterRoomView> {
           radius: 8,
           contents: [
             TargetContent(
-              align: ContentAlign.top,
+              align: ContentAlign.bottom,
               child: Container(
+                padding: AppSpacing.edgeInsetsS,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   "챌린지 입장 코드를 입력하세요.",
