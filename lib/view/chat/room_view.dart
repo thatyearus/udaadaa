@@ -39,11 +39,12 @@ class RoomView extends StatelessWidget {
           radius: 8,
           contents: [
             TargetContent(
-              align: ContentAlign.top,
+              align: ContentAlign.bottom,
               child: Container(
+                padding: AppSpacing.edgeInsetsS,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   "채팅방에 입장해볼까요?",
