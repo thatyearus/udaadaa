@@ -18,6 +18,10 @@ class TutorialCubit extends Cubit<TutorialState> {
     emit(TutorialRoom2());
   }
 
+  void showTutorialProfile() {
+    emit(TutorialProfile());
+  }
+
   final GlobalKey _enterRoomKey = GlobalKey();
   final GlobalKey _verifyButtonKey = GlobalKey();
   final GlobalKey _chatRoomKey = GlobalKey();
