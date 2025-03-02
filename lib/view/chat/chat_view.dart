@@ -171,10 +171,19 @@ class ChatView extends StatelessWidget {
           });
         } else if (target.identify == "push_button") {
           context.read<AuthCubit>().setFCMToken();
+          Navigator.of(context).pop();
         }
       },
       onFinish: () {
         logger.d("finish tutorial chat view");
+        Navigator.of(context).pop();
+
+        context.read<TutorialCubit>().showTutorialRoom2();
+        /* 
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          if (!context.mounted) return;
+          context.read<TutorialCubit>().showTutorialRoom2();
+        });*/
       },
     );
 
