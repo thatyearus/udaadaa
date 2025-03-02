@@ -451,6 +451,7 @@ class _PushSettingViewState extends State<PushSettingView> {
               "푸시설정_완료",
               parameters: {"버튼": "클릭"},
             );
+            /*
             if (context.read<AuthCubit>().getIsChallenger == false &&
                 _isMissionPushOn) {
               showDialog(
@@ -528,7 +529,7 @@ class _PushSettingViewState extends State<PushSettingView> {
                 ),
               );
               return;
-            }
+            }*/
             if (_isMissionPushOn) {
               context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
             } else {
