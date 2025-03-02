@@ -37,6 +37,7 @@ class TutorialCubit extends Cubit<TutorialState> {
   final GlobalKey _settingButtonKey = GlobalKey();
   final GlobalKey _pushSettingButtonKey = GlobalKey();
   final GlobalKey _missionPushSettingButtonKey = GlobalKey();
+  final GlobalKey _addMissionPushButtonKey = GlobalKey();
 
   GlobalKey get enterRoomKey => _enterRoomKey;
   GlobalKey get chatRoomKey => _chatRoomKey;
@@ -49,4 +50,5 @@ class TutorialCubit extends Cubit<TutorialState> {
   GlobalKey get settingButtonKey => _settingButtonKey;
   GlobalKey get pushSettingButtonKey => _pushSettingButtonKey;
   GlobalKey get missionPushSettingButtonKey => _missionPushSettingButtonKey;
+  GlobalKey get addMissionPushButtonKey => _addMissionPushButtonKey;
 }
