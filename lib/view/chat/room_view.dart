@@ -60,6 +60,7 @@ class RoomView extends StatelessWidget {
         logger.d("onClickTarget: ${target.identify}");
         Navigator.of(context).push(
           MaterialPageRoute(
+            settings: RouteSettings(name: 'ChatView'),
             builder: (context) => BlocProvider.value(
               value: onboardingCubit,
               child: ChatView(
@@ -216,6 +217,7 @@ class RoomView extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
+                    settings: RouteSettings(name: 'ChatView'),
                     builder: (context) => BlocProvider.value(
                       value: context.read<TutorialCubit>(),
                       child: ChatView(
