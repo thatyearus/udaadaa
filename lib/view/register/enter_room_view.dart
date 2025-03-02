@@ -31,6 +31,8 @@ class _EnterRoomViewState extends State<EnterRoomView> {
         TargetFocus(
           identify: "enter_room_code",
           keyTarget: onboardingCubit.enterRoomKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
           contents: [
             TargetContent(
               align: ContentAlign.top,
