@@ -69,7 +69,7 @@ class ExerciseThirdView extends StatelessWidget {
         child: BlocBuilder<form.FormCubit, form.FormState>(
           builder: (context, state) {
             return FloatingActionButton.extended(
-              heroTag: 'onboarding4',
+              heroTag: 'exercise3',
               backgroundColor: (state is form.FormLoading)
                   ? AppColors.neutral[300]
                   : AppColors.primary,
