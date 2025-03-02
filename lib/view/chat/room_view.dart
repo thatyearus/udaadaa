@@ -31,11 +31,6 @@ class RoomView extends StatelessWidget {
 
     TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
       targets: [
-        /*TargetFocus(
-          identify: "challenge_code",
-          keyTarget: onboardingCubit.challengeCodeKey,
-          contents: [TargetContent(child: Text("여기에 챌린지 코드를 입력하세요!"))],
-        ),*/
         TargetFocus(
           identify: "first_room",
           keyTarget: onboardingCubit.chatRoomKey,
