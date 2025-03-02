@@ -117,20 +117,20 @@ class RoomView extends StatelessWidget {
       ],
       onClickTarget: (target) {
         logger.d("onClickTarget: ${target.identify}");
-        context.read<BottomNavCubit>().selectTab(BottomNavState.profile);
 
         Future.delayed(const Duration(milliseconds: 500), () {
           if (context.mounted) {
-            // context.read<TutorialCubit>().showTutorialChat();
+            context.read<BottomNavCubit>().selectTab(BottomNavState.profile);
+            context.read<TutorialCubit>().showTutorialProfile();
           }
         });
       },
       onClickOverlay: (target) {
         logger.d("onClickOverlay: ${target.identify}");
-        context.read<BottomNavCubit>().selectTab(BottomNavState.profile);
         Future.delayed(const Duration(milliseconds: 500), () {
           if (context.mounted) {
-            // context.read<TutorialCubit>().showTutorialChat();
+            context.read<BottomNavCubit>().selectTab(BottomNavState.profile);
+            context.read<TutorialCubit>().showTutorialProfile();
           }
         });
       },
