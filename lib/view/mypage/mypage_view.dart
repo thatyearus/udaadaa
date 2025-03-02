@@ -45,6 +45,28 @@ class MyPageView extends StatelessWidget {
             ),
           ],
         ),
+        TargetFocus(
+          identify: "push_setting_button",
+          keyTarget: onboardingCubit.pushSettingButtonKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              child: Container(
+                padding: AppSpacing.edgeInsetsS,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  "푸시 알림을 설정하러 가볼까요?",
+                  style: AppTextStyles.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
       ],
       onClickTarget: (target) {
         logger.d("onClickTarget: ${target.identify}");
@@ -53,7 +75,16 @@ class MyPageView extends StatelessWidget {
               context.read<TutorialCubit>().settingButtonKey.currentState;
           if (popupMenu != null) {
             popupMenu.showButtonMenu();
+            Future.delayed(const Duration(milliseconds: 500), () {
+              tutorialCoachMark.next();
+            });
           }
+        } else if (target.identify == "push_setting_button") {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const PushSettingView(),
+            ),
+          );
         }
       },
       onFinish: () {
@@ -283,7 +314,8 @@ class MyPageView extends StatelessWidget {
                 value: 'change_nickname',
                 child: Text('닉네임 변경'),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
+                key: context.read<TutorialCubit>().pushSettingButtonKey,
                 value: 'push_setting',
                 child: Text('알림 설정'),
               ),
