@@ -30,6 +30,7 @@ class RoomView extends StatelessWidget {
     final onboardingCubit = context.read<TutorialCubit>();
 
     TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
+      hideSkip: true,
       targets: [
         TargetFocus(
           identify: "first_room",
