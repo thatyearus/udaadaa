@@ -54,9 +54,10 @@ class ChatView extends StatelessWidget {
             TargetContent(
               align: ContentAlign.top,
               child: Container(
+                padding: AppSpacing.edgeInsetsS,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   "인증을 하기 위해선 이 버튼을 눌러주세요",
@@ -73,9 +74,10 @@ class ChatView extends StatelessWidget {
             TargetContent(
               align: ContentAlign.top,
               child: Container(
+                padding: AppSpacing.edgeInsetsS,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   "식단, 운동 및 체중을 인증할 수 있습니다.",
@@ -92,9 +94,10 @@ class ChatView extends StatelessWidget {
             TargetContent(
               align: ContentAlign.bottom,
               child: Container(
+                padding: AppSpacing.edgeInsetsS,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   "메뉴 버튼을 눌러 사진 및 참여자 목록을 확인할 수 있습니다.",
@@ -111,9 +114,10 @@ class ChatView extends StatelessWidget {
             TargetContent(
               align: ContentAlign.top,
               child: Container(
+                padding: AppSpacing.edgeInsetsS,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   "아이콘을 눌러 랭킹을 확인할 수 있습니다.",
@@ -130,9 +134,10 @@ class ChatView extends StatelessWidget {
             TargetContent(
               align: ContentAlign.top,
               child: Container(
+                padding: AppSpacing.edgeInsetsS,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   "채팅 알림 발송에 권한 동의가 필요합니다.\n아이콘을 눌러 푸시 알림 설정을 변경할 수도 있습니다.",
