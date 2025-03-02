@@ -73,6 +73,28 @@ class _PushSettingViewState extends State<PushSettingView> {
             ),
           ],
         ),
+        TargetFocus(
+          identify: "setting_finish",
+          keyTarget: onboardingCubit.pushSettingFinishButtonKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              child: Container(
+                padding: AppSpacing.edgeInsetsS,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  "버튼을 눌러 설정을 완료해주세요.",
+                  style: AppTextStyles.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
       ],
       onClickTarget: (target) {
         logger.d("onClickTarget: ${target.identify}");
@@ -83,6 +105,26 @@ class _PushSettingViewState extends State<PushSettingView> {
           Future.delayed(const Duration(milliseconds: 500), () {
             if (context.mounted) {
               tutorialCoachMark.next();
+            }
+          });
+        } else if (target.identify == "add_mission_push") {
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (context.mounted) {
+              tutorialCoachMark.next();
+            }
+          });
+        } else if (target.identify == "setting_finish") {
+          if (_isMissionPushOn) {
+            context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
+          } else {
+            context.read<ChallengeCubit>().cancelNotifications();
+          }
+          if (_isReactionPushOn != context.read<AuthCubit>().getPushOption) {
+            context.read<AuthCubit>().togglePush();
+          }
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (context.mounted) {
+              Navigator.of(context).pop();
             }
           });
         }
@@ -399,6 +441,7 @@ class _PushSettingViewState extends State<PushSettingView> {
         ),
       ),
       floatingActionButton: Container(
+        key: context.read<TutorialCubit>().pushSettingFinishButtonKey,
         margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         width: double.infinity,
         child: FloatingActionButton.extended(
