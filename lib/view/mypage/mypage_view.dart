@@ -89,6 +89,7 @@ class MyPageView extends StatelessWidget {
       },
       onFinish: () {
         logger.d("finish tutorial mypage view");
+        context.read<TutorialCubit>().showTutorialPush();
       },
     );
 
