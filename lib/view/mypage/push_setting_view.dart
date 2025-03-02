@@ -46,7 +46,27 @@ class _PushSettingViewState extends State<PushSettingView> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  "다양한 설정을 변경할 수 있어요.",
+                  "매일 인증을 까먹지 않게 미션 알림을 설정해보세요.",
+                  style: AppTextStyles.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          identify: "add_mission_push",
+          keyTarget: onboardingCubit.addMissionPushButtonKey,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              child: Container(
+                padding: AppSpacing.edgeInsetsS,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  "시간을 추가하면 미션 알림을 받을 수 있어요.",
                   style: AppTextStyles.textTheme.bodyMedium,
                 ),
               ),
@@ -59,6 +79,11 @@ class _PushSettingViewState extends State<PushSettingView> {
         if (target.identify == "mission_push") {
           setState(() {
             _isMissionPushOn = true;
+          });
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (context.mounted) {
+              tutorialCoachMark.next();
+            }
           });
         }
       },
@@ -155,6 +180,7 @@ class _PushSettingViewState extends State<PushSettingView> {
                 ],
               ),
               IconButton(
+                key: context.read<TutorialCubit>().addMissionPushButtonKey,
                 onPressed: _addAlarmTime,
                 icon: const Icon(Icons.add_rounded, color: AppColors.primary),
                 alignment: Alignment.center,
