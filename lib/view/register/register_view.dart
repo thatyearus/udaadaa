@@ -29,6 +29,7 @@ class _RegisterViewState extends State<RegisterView> {
             TargetContent(
               align: ContentAlign.top,
               child: Container(
+                padding: AppSpacing.edgeInsetsS,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
