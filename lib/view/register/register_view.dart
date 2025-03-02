@@ -28,6 +28,8 @@ class _RegisterViewState extends State<RegisterView> {
         TargetFocus(
           identify: "verify_button",
           keyTarget: onboardingCubit.verifyButtonKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
           contents: [
             TargetContent(
               align: ContentAlign.top,
