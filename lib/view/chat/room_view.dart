@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/models/room.dart';
@@ -85,6 +86,63 @@ class RoomView extends StatelessWidget {
     tutorialCoachMark.show(context: context);
   }
 
+  void showTutorial2(BuildContext context) {
+    final onboardingCubit = context.read<TutorialCubit>();
+
+    TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
+      hideSkip: true,
+      targets: [
+        TargetFocus(
+          identify: "first_room",
+          keyTarget: onboardingCubit.chatRoomKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              child: Container(
+                padding: AppSpacing.edgeInsetsS,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  "빠른 시일 내에 1:1 문의방이 자동으로 생성될 예정입니다.",
+                  style: AppTextStyles.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+      onClickTarget: (target) {
+        logger.d("onClickTarget: ${target.identify}");
+        context.read<BottomNavCubit>().selectTab(BottomNavState.profile);
+
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (context.mounted) {
+            // context.read<TutorialCubit>().showTutorialChat();
+          }
+        });
+      },
+      onClickOverlay: (target) {
+        logger.d("onClickOverlay: ${target.identify}");
+        context.read<BottomNavCubit>().selectTab(BottomNavState.profile);
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (context.mounted) {
+            // context.read<TutorialCubit>().showTutorialChat();
+          }
+        });
+      },
+      onFinish: () {
+        logger.d("finish tutorial room view2");
+        // context.read<TutorialCubit>().showTutorialChat();
+      },
+    );
+
+    tutorialCoachMark.show(context: context);
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Room> rooms = context.select((ChatCubit cubit) => cubit.getChatList);
@@ -106,6 +164,14 @@ class RoomView extends StatelessWidget {
               Future.delayed(const Duration(milliseconds: 1000), () {
                 if (context.mounted) {
                   showTutorial(context);
+                }
+              });
+            });
+          } else if (state is TutorialRoom2 && rooms.isNotEmpty) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Future.delayed(const Duration(milliseconds: 1000), () {
+                if (context.mounted) {
+                  showTutorial2(context);
                 }
               });
             });
