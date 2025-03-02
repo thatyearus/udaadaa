@@ -60,6 +60,7 @@ class AuthCubit extends Cubit<AuthState> {
       Profile profile = Profile(
         id: response.user!.id,
         nickname: RandomNicknameGenerator.generateNickname(),
+        pushOption: true,
       );
 
       bool insertSuccess = false;
@@ -323,6 +324,7 @@ class AuthCubit extends Cubit<AuthState> {
     Profile profile = Profile(
       id: supabase.auth.currentUser!.id,
       nickname: RandomNicknameGenerator.generateNickname(),
+      pushOption: true,
     );
 
     bool insertSuccess = false;
