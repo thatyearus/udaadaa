@@ -10,8 +10,6 @@ import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
-import 'package:udaadaa/view/main_view.dart';
-import 'package:udaadaa/view/onboarding/sixth_view.dart';
 
 class FifthView extends StatelessWidget {
   const FifthView(
@@ -35,6 +33,7 @@ class FifthView extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('기록이 추가되었습니다')),
               );
+              /*
               bool onboardingFinish =
                   PreferencesService().getBool('isOnboardingComplete') ?? false;
               logger.d("onboardingFinish: $onboardingFinish");
@@ -44,7 +43,9 @@ class FifthView extends StatelessWidget {
                       onboardingFinish ? const MainView() : SixthView(),
                 ),
                 (Route<dynamic> route) => false,
-              );
+              );*/
+              Navigator.of(context)
+                  .popUntil((route) => route.settings.name == 'ChatView');
             } else if (state is form.FormError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("기록 추가에 실패했습니다")),
