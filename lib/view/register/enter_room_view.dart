@@ -169,6 +169,11 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                           .joinRoom(_codeController.text)
                           .then((_) {
                         if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("채팅방에 입장했습니다."),
+                          ),
+                        );
                         context
                             .read<BottomNavCubit>()
                             .selectTab(BottomNavState.chat);
