@@ -504,7 +504,9 @@ class ChatView extends StatelessWidget {
         (cubit) => cubit.getMessagesByRoomId(roomInfo.id));
     final userName = context.select<AuthCubit, String>(
         (cubit) => cubit.getCurProfile?.nickname ?? "");
-    final enabled = (roomInfo.endDay == null && roomInfo.startDay == null) ||
+    final personalChannel =
+        (roomInfo.endDay == null && roomInfo.startDay == null);
+    final enabled = personalChannel ||
         (roomInfo.endDay!.isAfter(DateTime.now()) &&
             roomInfo.startDay!.isBefore(DateTime.now()));
     return PopScope(
@@ -629,41 +631,52 @@ class ChatView extends StatelessWidget {
                         fillColor: AppColors.neutral[50],
                       ),
                       leading: [
-                        IconButton(
-                          icon: Icon(Icons.photo_outlined,
-                              color: AppColors.neutral[500]),
-                          onPressed: () {
-                            context
-                                .read<ChatCubit>()
-                                .sendImageMessage(roomInfo.id);
-                            // final img = await context.read<ChatCubit>().pickImage();
-                            // context.read<ChatCubit>().sendFileMessage(img);
-                          },
-                        ),
+                        enabled
+                            ? IconButton(
+                                icon: Icon(Icons.photo_outlined,
+                                    color: AppColors.neutral[500]),
+                                onPressed: () {
+                                  context
+                                      .read<ChatCubit>()
+                                      .sendImageMessage(roomInfo.id);
+                                  // final img = await context.read<ChatCubit>().pickImage();
+                                  // context.read<ChatCubit>().sendFileMessage(img);
+                                },
+                              )
+                            : Container(
+                                padding: const EdgeInsets.all(2),
+                              ),
                       ],
                       trailing: [
-                        IconButton(
-                          key: context.read<TutorialCubit>().chatButtonKey,
-                          icon: Stack(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.circular(AppSpacing.xs),
-                                  border: Border.all(
-                                      color: AppColors.neutral[500]!, width: 1),
+                        (!personalChannel && enabled)
+                            ? IconButton(
+                                key:
+                                    context.read<TutorialCubit>().chatButtonKey,
+                                icon: Stack(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            AppSpacing.xs),
+                                        border: Border.all(
+                                            color: AppColors.neutral[500]!,
+                                            width: 1),
+                                      ),
+                                      child: Icon(Icons.add,
+                                          color: AppColors.neutral[500],
+                                          size: 20),
+                                    ),
+                                  ],
                                 ),
-                                child: Icon(Icons.add,
-                                    color: AppColors.neutral[500], size: 20),
+                                onPressed: () {
+                                  // context.read<ChatCubit>().sendMessage();
+                                  _showBottomSheet(context);
+                                },
+                              )
+                            : Container(
+                                padding: const EdgeInsets.all(2),
                               ),
-                            ],
-                          ),
-                          onPressed: () {
-                            // context.read<ChatCubit>().sendMessage();
-                            _showBottomSheet(context);
-                          },
-                        ),
                       ]),
                   messageListOptions: MessageListOptions(
                     dateSeparatorBuilder: (date) => Container(
