@@ -70,6 +70,8 @@ class MyPageView extends StatelessWidget {
         ),
       ],
       onClickTarget: (target) {
+        Analytics().logEvent('튜토리얼_마이페이지',
+            parameters: {'target': target.identify.toString()});
         logger.d("onClickTarget: ${target.identify}");
         if (target.identify == "setting_button") {
           final dynamic popupMenu =
