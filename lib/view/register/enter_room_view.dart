@@ -5,6 +5,7 @@ import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -54,6 +55,8 @@ class _EnterRoomViewState extends State<EnterRoomView> {
         ),
       ],
       onClickTarget: (target) {
+        Analytics().logEvent('튜토리얼_입장코드',
+            parameters: {'target': target.identify.toString()});
         logger.d("onClickTarget: ${target.identify}");
       },
       onFinish: () {
