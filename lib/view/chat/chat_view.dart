@@ -354,21 +354,22 @@ class ChatView extends StatelessWidget {
           ),
           Divider(color: AppColors.neutral[200]),
           ListTile(
-            leading: IconButton(
-              key: context.read<TutorialCubit>().rankingButtonKey,
-              icon: Icon(Icons.leaderboard_rounded,
-                  color: AppColors.neutral[500]),
-              onPressed: () {
-                context.read<ChatCubit>().fetchRoomRanking(roomInfo);
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => RankingView(
-                      roomId: roomInfo.id,
-                    ),
-                  ),
-                );
-              },
-              /*onPressed: () async {
+            leading: (roomInfo.endDay != null)
+                ? IconButton(
+                    key: context.read<TutorialCubit>().rankingButtonKey,
+                    icon: Icon(Icons.leaderboard_rounded,
+                        color: AppColors.neutral[500]),
+                    onPressed: () {
+                      context.read<ChatCubit>().fetchRoomRanking(roomInfo);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => RankingView(
+                            roomId: roomInfo.id,
+                          ),
+                        ),
+                      );
+                    },
+                    /*onPressed: () async {
                   await SendbirdSdk().disconnect();
                   await supabase.Supabase.instance.client.auth.signOut();
                   final prefs = await SharedPreferences.getInstance();
@@ -378,7 +379,8 @@ class ChatView extends StatelessWidget {
                   await prefs.remove('entrance_code');
                   Navigator.popAndPushNamed(context, '/entrance');
                 }*/
-            ),
+                  )
+                : null,
             trailing: IconButton(
               key: context.read<TutorialCubit>().pushButtonKey,
               icon: /*Icon(_pushTriggerOption == GroupChannelPushTriggerOption.off
