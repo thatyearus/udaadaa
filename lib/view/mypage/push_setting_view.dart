@@ -96,6 +96,8 @@ class _PushSettingViewState extends State<PushSettingView> {
         ),
       ],
       onClickTarget: (target) {
+        Analytics().logEvent('튜토리얼_푸시설정',
+            parameters: {'target': target.identify.toString()});
         logger.d("onClickTarget: ${target.identify}");
         if (target.identify == "mission_push") {
           setState(() {
