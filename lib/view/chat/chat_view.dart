@@ -13,6 +13,7 @@ import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/room.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/chat/image_detail_view.dart';
 import 'package:udaadaa/view/chat/image_list_view.dart';
@@ -539,7 +540,9 @@ class ChatView extends StatelessWidget {
             if (state is TutorialChat) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Future.delayed(const Duration(milliseconds: 1000), () {
-                  if (context.mounted) {
+                  if (context.mounted &&
+                      PreferencesService().getBool('isTutorialFinished') !=
+                          true) {
                     showTutorial(context);
                   }
                 });
