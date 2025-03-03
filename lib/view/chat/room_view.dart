@@ -6,6 +6,7 @@ import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/models/room.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/chat/chat_view.dart';
 
@@ -163,7 +164,9 @@ class RoomView extends StatelessWidget {
           if (state is TutorialRoom && rooms.isNotEmpty) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Future.delayed(const Duration(milliseconds: 1000), () {
-                if (context.mounted) {
+                if (context.mounted &&
+                    PreferencesService().getBool('isTutorialFinished') !=
+                        true) {
                   showTutorial(context);
                 }
               });
@@ -171,7 +174,9 @@ class RoomView extends StatelessWidget {
           } else if (state is TutorialRoom2 && rooms.isNotEmpty) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Future.delayed(const Duration(milliseconds: 1000), () {
-                if (context.mounted) {
+                if (context.mounted &&
+                    PreferencesService().getBool('isTutorialFinished') !=
+                        true) {
                   showTutorial2(context);
                 }
               });
