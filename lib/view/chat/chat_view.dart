@@ -751,6 +751,10 @@ class ChatView extends StatelessWidget {
                   ),
                   onSend: (ChatMessage message) {
                     // context.read<ChatCubit>().sendMessage(message.text);
+                    Analytics().logEvent('채팅_메시지전송', parameters: {
+                      'room_id': roomInfo.id,
+                      'message': message.text,
+                    });
                     context
                         .read<ChatCubit>()
                         .sendMessage(message.text, "textMessage", roomInfo.id);
