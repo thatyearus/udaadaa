@@ -465,6 +465,8 @@ class ChatView extends StatelessWidget {
                           ],
                         ),
                         onPressed: () {
+                          Analytics().logEvent('채팅_인증하기',
+                              parameters: {'mission': missionName[index]});
                           // context.read<ChatCubit>().sendMessage();
                           // _showBottomSheet(context);
                           // context.read<ChatCubit>().missionComplete();
