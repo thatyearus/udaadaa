@@ -7,6 +7,7 @@ import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/chat/chat_view.dart';
 
@@ -58,6 +59,8 @@ class RoomView extends StatelessWidget {
         ),
       ],
       onClickTarget: (target) {
+        Analytics().logEvent('튜토리얼_채팅방1',
+            parameters: {'target': target.identify.toString()});
         logger.d("onClickTarget: ${target.identify}");
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -118,6 +121,8 @@ class RoomView extends StatelessWidget {
         ),
       ],
       onClickTarget: (target) {
+        Analytics().logEvent('튜토리얼_채팅방2',
+            parameters: {'target': target.identify.toString()});
         logger.d("onClickTarget: ${target.identify}");
 
         Future.delayed(const Duration(milliseconds: 500), () {
