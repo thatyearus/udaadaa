@@ -14,12 +14,14 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        /*
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () {
             Navigator.pop(context);
           },
-        ),
+        ),*/
+        automaticallyImplyLeading: false,
         elevation: 0,
       ),
       body: Column(
