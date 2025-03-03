@@ -449,6 +449,11 @@ class ChatCubit extends Cubit<ChatState> {
         'user_id': supabase.auth.currentUser!.id,
       });
       await loadChatList();
+      await Future.wait([
+        fetchLatestMessages(),
+        loadInitialMessages(),
+        fetchLatestReceipt(),
+      ]);
       final roomInfo = chatList.firstWhere((room) => room.id == roomId);
       fetchRoomRanking(roomInfo);
       if (roomInfo.startDay != null && roomInfo.endDay != null) {
