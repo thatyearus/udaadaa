@@ -399,6 +399,10 @@ class ChatView extends StatelessWidget {
                       color: AppColors.neutral[500]),
               //  onPressed: _toogglePushOption,
               onPressed: () {
+                Analytics().logEvent('채팅_푸시알림설정', parameters: {
+                  'room_id': roomInfo.id,
+                  'push_option': pushOptions[roomInfo.id]!.toString(),
+                });
                 context
                     .read<ChatCubit>()
                     .togglePushOption(roomInfo.id, !pushOptions[roomInfo.id]!);
