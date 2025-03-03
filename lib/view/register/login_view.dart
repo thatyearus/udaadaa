@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/register/enter_room_view.dart';
 import 'package:app_links/app_links.dart';
@@ -64,6 +65,7 @@ class LoginView extends StatelessWidget {
                   "assets/kakao_icon.png",
                   const Color(0xFFFFD700),
                   onPressed: () {
+                    Analytics().logEvent('로그인_카카오로그인');
                     // 카카오 로그인 로직 추가
                     context.read<AuthCubit>().signInWithKakao().then((_) {
                       final appLinks = AppLinks();
@@ -97,6 +99,7 @@ class LoginView extends StatelessWidget {
                   AppColors.black,
                   textColor: AppColors.white,
                   onPressed: () {
+                    Analytics().logEvent('로그인_애플로그인');
                     // 애플 로그인 로직 추가
                     if (Platform.isAndroid) {
                       /*context
