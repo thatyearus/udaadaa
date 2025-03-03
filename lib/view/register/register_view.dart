@@ -127,6 +127,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                 ),
                 onPressed: () {
+                  Analytics().logEvent('챌린지참여_버튼클릭');
                   final provider =
                       supabase.auth.currentUser?.appMetadata['provider'];
                   final nextView = (provider == 'apple' || provider == 'kakao')
