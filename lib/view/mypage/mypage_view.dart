@@ -6,6 +6,7 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/mypage/push_setting_view.dart';
@@ -443,7 +444,9 @@ class MyPageView extends StatelessWidget {
           if (state is TutorialProfile) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Future.delayed(const Duration(milliseconds: 1000), () {
-                if (context.mounted) {
+                if (context.mounted &&
+                    PreferencesService().getBool('isTutorialFinished') !=
+                        true) {
                   showTutorial(context);
                 }
               });
