@@ -543,6 +543,7 @@ class ChatView extends StatelessWidget {
                 key: context.read<TutorialCubit>().chatMenuButtonKey,
                 icon: Icon(Icons.menu_rounded, color: AppColors.neutral[800]),
                 onPressed: () {
+                  Analytics().logEvent('채팅_메뉴버튼클릭');
                   Scaffold.of(context).openEndDrawer();
                 },
               ),
