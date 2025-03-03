@@ -347,6 +347,8 @@ class ChatView extends StatelessWidget {
                             )
                           : null,
                   onTap: () {
+                    Analytics().logEvent('채팅_참여자프로필',
+                        parameters: {'user_id': roomInfo.members[index].id});
                     navigateToProfileView(
                       context,
                       roomInfo.members[index].nickname,
