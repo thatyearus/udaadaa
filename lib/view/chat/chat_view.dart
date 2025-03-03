@@ -652,6 +652,7 @@ class ChatView extends StatelessWidget {
                                 icon: Icon(Icons.photo_outlined,
                                     color: AppColors.neutral[500]),
                                 onPressed: () {
+                                  Analytics().logEvent('채팅_사진전송');
                                   context
                                       .read<ChatCubit>()
                                       .sendImageMessage(roomInfo.id);
