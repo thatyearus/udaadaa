@@ -249,6 +249,8 @@ class ChatView extends StatelessWidget {
             trailing: Icon(Icons.arrow_forward_ios_rounded,
                 color: AppColors.neutral[500]),
             onTap: () {
+              Analytics()
+                  .logEvent('채팅_사진모아보기', parameters: {'room_id': roomInfo.id});
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => ImageListView(
