@@ -290,7 +290,9 @@ class _PushSettingViewState extends State<PushSettingView> {
           if (state is TutorialPush) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Future.delayed(const Duration(milliseconds: 1000), () {
-                if (context.mounted) {
+                if (context.mounted &&
+                    PreferencesService().getBool('isTutorialFinished') !=
+                        true) {
                   showTutorial(context);
                 }
               });
