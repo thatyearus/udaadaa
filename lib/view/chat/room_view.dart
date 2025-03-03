@@ -225,6 +225,8 @@ class RoomView extends StatelessWidget {
                 ],
               ),
               onTap: () {
+                Analytics().logEvent('채팅방_입장',
+                    parameters: {'room_id': rooms[index].id});
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     settings: RouteSettings(name: 'ChatView'),
