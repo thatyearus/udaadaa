@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/tutorial_cubit.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/register/enter_room_view.dart';
 import 'package:udaadaa/view/register/login_view.dart';
@@ -69,10 +70,12 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      logger.d("Show tutorial");
-      showTutorial(context);
-    });
+    if (PreferencesService().getBool('isTutorialFinished') != true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        logger.d("Show tutorial");
+        showTutorial(context);
+      });
+    }
   }
 
   @override
