@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/register/enter_room_view.dart';
 import 'package:udaadaa/view/register/login_view.dart';
@@ -46,6 +47,8 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       ],
       onClickTarget: (target) {
+        Analytics().logEvent('튜토리얼_챌린지참여',
+            parameters: {'target': target.identify.toString()});
         logger.d("onClickTarget: ${target.identify}");
         if (target.identify == "verify_button") {
           final provider = supabase.auth.currentUser?.appMetadata['provider'];
