@@ -688,6 +688,7 @@ class ChatView extends StatelessWidget {
                                 ),
                                 onPressed: () {
                                   // context.read<ChatCubit>().sendMessage();
+                                  Analytics().logEvent('채팅_인증하기_버튼클릭');
                                   _showBottomSheet(context);
                                 },
                               )
