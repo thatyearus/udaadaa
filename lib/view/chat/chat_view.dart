@@ -14,6 +14,7 @@ import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/chat/image_detail_view.dart';
 import 'package:udaadaa/view/chat/image_list_view.dart';
@@ -150,6 +151,8 @@ class ChatView extends StatelessWidget {
         ),
       ],
       onClickTarget: (target) {
+        Analytics().logEvent('튜토리얼_채팅',
+            parameters: {'target': target.identify.toString()});
         logger.d("onClickTarget: ${target.identify}");
         if (target.identify == "plus_button") {
           _showBottomSheet(context);
