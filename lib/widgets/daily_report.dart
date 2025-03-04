@@ -87,24 +87,11 @@ class DailyReport extends StatelessWidget {
             (report.snack ?? 0))
         : 0);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            DayMiniReport(
-              title: "총칼로리",
-              content: '$totalCalorie',
-              unit: "kcal",
-            ),
-            AppSpacing.horizontalSizedBoxXs,
-            DayMiniReport(
-              title: "체중",
-              content: '${report?.weight ?? 0}',
-              unit: 'kg',
-              challenger: true,
-            ),
-          ],
-        ),
-        AppSpacing.verticalSizedBoxL,
+        Text("오늘의 섭취 칼로리 : $totalCalorie kcal",
+            style: AppTextStyles.textTheme.headlineLarge),
+        AppSpacing.verticalSizedBoxXs,
         Row(
           children: [
             DayMiniReport(
@@ -124,6 +111,23 @@ class DailyReport extends StatelessWidget {
             AppSpacing.horizontalSizedBoxXs,
             DayMiniReport(
                 title: '간식', content: '${report?.snack ?? 0}', unit: 'kcal'),
+          ],
+        ),
+        AppSpacing.verticalSizedBoxL,
+        Row(
+          children: [
+            DayMiniReport(
+              title: "운동",
+              content: '${report?.exercise ?? 0}',
+              unit: "분",
+            ),
+            AppSpacing.horizontalSizedBoxXs,
+            DayMiniReport(
+              title: "체중",
+              content: '${report?.weight ?? 0}',
+              unit: 'kg',
+              challenger: false,
+            ),
           ],
         ),
       ],

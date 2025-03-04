@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
-import 'package:udaadaa/models/feed.dart';
+// import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 
@@ -95,13 +95,13 @@ class FoodFormView extends StatelessWidget {
                   Analytics().logEvent(
                     "업로드_기록추가",
                   );
-                  FeedType cur = context.read<form.FormCubit>().feedType;
-                  context.read<form.FormCubit>().submit(
+                  // FeedType cur = context.read<form.FormCubit>().feedType;
+                  /*context.read<form.FormCubit>().submit(
                         type: cur,
                         contentType: 'FOOD',
                         review: commentController.text,
                         mealContent: foodContentController.text,
-                      );
+                      );*/
                   commentController.clear();
                   foodContentController.clear();
                 },

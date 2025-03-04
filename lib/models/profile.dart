@@ -18,6 +18,7 @@ class Profile {
       'id': id,
       'nickname': nickname,
       'fcm_token': fcmToken,
+      'push_option': pushOption,
     };
   }
 

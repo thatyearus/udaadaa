@@ -3,14 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/models/calorie.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
-import 'package:udaadaa/view/main_view.dart';
-import 'package:udaadaa/view/onboarding/sixth_view.dart';
 
 class FifthView extends StatelessWidget {
   const FifthView(
@@ -34,6 +33,7 @@ class FifthView extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('기록이 추가되었습니다')),
               );
+              /*
               bool onboardingFinish =
                   PreferencesService().getBool('isOnboardingComplete') ?? false;
               logger.d("onboardingFinish: $onboardingFinish");
@@ -43,7 +43,9 @@ class FifthView extends StatelessWidget {
                       onboardingFinish ? const MainView() : SixthView(),
                 ),
                 (Route<dynamic> route) => false,
-              );
+              );*/
+              Navigator.of(context)
+                  .popUntil((route) => route.settings.name == 'ChatView');
             } else if (state is form.FormError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("기록 추가에 실패했습니다")),
@@ -53,8 +55,8 @@ class FifthView extends StatelessWidget {
           builder: (context, state) {
             if (state is form.FormLoading) {
               return Center(
-                child:
-                    Lottie.asset('assets/loading_animation.json', width: 150),
+                child: Lottie.asset('assets/loading_pink_animation.json',
+                    width: 150),
               );
             }
             return SingleChildScrollView(
@@ -95,13 +97,20 @@ class FifthView extends StatelessWidget {
                   },
                 );
                 FeedType cur = context.read<form.FormCubit>().feedType;
-                context.read<form.FormCubit>().submit(
+                context.read<ChatCubit>().missionComplete(
                       type: cur,
                       contentType: 'FOOD',
                       review: foodComment,
                       mealContent: foodContent,
                       calorie: calorie,
                     );
+                /*context.read<form.FormCubit>().submit(
+                      type: cur,
+                      contentType: 'FOOD',
+                      review: foodComment,
+                      mealContent: foodContent,
+                      calorie: calorie,
+                    );*/
               },
               label: Text(
                 '응원받기',
@@ -130,7 +139,7 @@ class FifthView extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.grey.withValues(alpha: 0.5),
                 spreadRadius: 1,
                 blurRadius: 10,
                 offset: const Offset(0, 3),

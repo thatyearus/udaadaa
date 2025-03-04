@@ -248,28 +248,30 @@ class ReportHomeView extends StatelessWidget {
           children: [
             SizedBox(
               height: 250,
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: min(3, myFeedsLength),
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Analytics().logEvent(
-                        "홈_최근기록",
-                        parameters: {"최근기록_페이지": (index + 1).toString()},
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              MyRecordView(initialPage: index),
-                        ),
-                      );
-                    },
-                    child: LastRecord(page: index),
-                  );
-                },
-              ),
+              child: myFeedsLength != 0
+                  ? PageView.builder(
+                      controller: _pageController,
+                      itemCount: min(3, myFeedsLength),
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Analytics().logEvent(
+                              "홈_최근기록",
+                              parameters: {"최근기록_페이지": (index + 1).toString()},
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    MyRecordView(initialPage: index),
+                              ),
+                            );
+                          },
+                          child: LastRecord(page: index),
+                        );
+                      },
+                    )
+                  : const LastRecord(page: 0),
             ),
             AppSpacing.verticalSizedBoxL,
             GestureDetector(

@@ -22,4 +22,4 @@ final class FeedPushNotification extends FeedState {
   FeedPushNotification(this.feedId, this.text);
 }
 
-enum FeedCategory { all, challenge }
+enum FeedCategory { all, exercise }
