@@ -1,11 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:udaadaa/cubit/tutorial_cubit.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/register/enter_room_view.dart';
 import 'package:udaadaa/view/register/login_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class RegisterView extends StatelessWidget {
+class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
+
+  @override
+  State<RegisterView> createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
+  void showTutorial(BuildContext context) {
+    final onboardingCubit = context.read<TutorialCubit>();
+
+    TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
+      hideSkip: true,
+      targets: [
+        TargetFocus(
+          identify: "verify_button",
+          keyTarget: onboardingCubit.verifyButtonKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              child: Container(
+                padding: AppSpacing.edgeInsetsS,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  "챌린지에 참여해볼까요?",
+                  style: AppTextStyles.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+      onClickTarget: (target) {
+        Analytics().logEvent('튜토리얼_챌린지참여',
+            parameters: {'target': target.identify.toString()});
+        logger.d("onClickTarget: ${target.identify}");
+        if (target.identify == "verify_button") {
+          final provider = supabase.auth.currentUser?.appMetadata['provider'];
+          final nextView = (provider == 'apple' || provider == 'kakao')
+              ? const EnterRoomView()
+              : const LoginView();
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => nextView,
+            ),
+          );
+        }
+      },
+      onFinish: () {
+        logger.d("finish tutorial");
+      },
+    );
+
+    tutorialCoachMark.show(context: context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (PreferencesService().getBool('isTutorialFinished') != true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        logger.d("Show tutorial");
+        showTutorial(context);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +118,7 @@ class RegisterView extends StatelessWidget {
               const SizedBox(height: 24),
 
               ElevatedButton(
+                key: context.read<TutorialCubit>().verifyButtonKey,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   minimumSize: const Size(double.infinity, 56),
@@ -52,6 +127,7 @@ class RegisterView extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
+                  Analytics().logEvent('챌린지참여_버튼클릭');
                   final provider =
                       supabase.auth.currentUser?.appMetadata['provider'];
                   final nextView = (provider == 'apple' || provider == 'kakao')

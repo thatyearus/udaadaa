@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
+import 'package:udaadaa/cubit/tutorial_cubit.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,9 +20,69 @@ class _EnterRoomViewState extends State<EnterRoomView> {
   final TextEditingController _codeController = TextEditingController();
   bool _isButtonEnabled = false;
 
+  void showTutorial(BuildContext context) {
+    final onboardingCubit = context.read<TutorialCubit>();
+
+    TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
+      hideSkip: true,
+      targets: [
+        /*TargetFocus(
+          identify: "challenge_code",
+          keyTarget: onboardingCubit.challengeCodeKey,
+          contents: [TargetContent(child: Text("여기에 챌린지 코드를 입력하세요!"))],
+        ),*/
+        TargetFocus(
+          identify: "enter_room_code",
+          keyTarget: onboardingCubit.enterRoomKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              child: Container(
+                padding: AppSpacing.edgeInsetsS,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  "챌린지 입장 코드를 입력하세요.",
+                  style: AppTextStyles.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+      onClickTarget: (target) {
+        Analytics().logEvent('튜토리얼_입장코드',
+            parameters: {'target': target.identify.toString()});
+        logger.d("onClickTarget: ${target.identify}");
+      },
+      onFinish: () {
+        logger.d("finish tutorial enter room view");
+      },
+    );
+
+    tutorialCoachMark.show(context: context);
+  }
+
   void _onTextChanged(String value) {
     setState(() {
       _isButtonEnabled = value.isNotEmpty;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted &&
+            PreferencesService().getBool('isTutorialFinished') != true) {
+          showTutorial(context);
+        }
+      });
     });
   }
 
@@ -44,6 +108,7 @@ class _EnterRoomViewState extends State<EnterRoomView> {
             ),
             AppSpacing.verticalSizedBoxM,
             TextField(
+              key: context.read<TutorialCubit>().enterRoomKey,
               controller: _codeController,
               onChanged: _onTextChanged,
               decoration: InputDecoration(
@@ -107,12 +172,18 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                           .joinRoom(_codeController.text)
                           .then((_) {
                         if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("채팅방에 입장했습니다."),
+                          ),
+                        );
                         context
                             .read<BottomNavCubit>()
                             .selectTab(BottomNavState.chat);
                         Navigator.of(context).popUntil(
                           (route) => route.isFirst,
                         );
+                        context.read<TutorialCubit>().showTutorialRoom();
                       }).catchError((e) {
                         logger.e(e.toString());
                       });

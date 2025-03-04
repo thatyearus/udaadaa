@@ -5,7 +5,6 @@ import 'package:lottie/lottie.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/form/exercise/exercise_third_view.dart';
-import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 
 class ExerciseSecondView extends StatefulWidget {
@@ -43,6 +42,7 @@ class _ExerciseSecondViewState extends State<ExerciseSecondView> {
         minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         child: BlocConsumer<form.FormCubit, form.FormState>(
           listener: (context, state) {
+            /*
             if (state is form.FormSuccess) {
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
@@ -54,7 +54,7 @@ class _ExerciseSecondViewState extends State<ExerciseSecondView> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("운동 인증에 실패했습니다")),
               );
-            }
+            }*/
           },
           builder: (context, state) {
             if (state is form.FormLoading) {
@@ -97,7 +97,7 @@ class _ExerciseSecondViewState extends State<ExerciseSecondView> {
                 Analytics().logEvent(
                   "기록_운동기록",
                   parameters: {
-                    "인증하기": "클릭",
+                    "다음": "클릭",
                   },
                 );
                 /*context.read<form.FormCubit>().submitWeight(
@@ -122,7 +122,7 @@ class _ExerciseSecondViewState extends State<ExerciseSecondView> {
                 );
               },
               label: Text(
-                '인증하기',
+                '다음',
                 style: AppTextStyles.textTheme.titleMedium
                     ?.copyWith(color: AppColors.white),
               ),

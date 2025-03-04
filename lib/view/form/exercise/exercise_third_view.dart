@@ -23,8 +23,9 @@ class ExerciseThirdView extends StatelessWidget {
         minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         child: BlocConsumer<form.FormCubit, form.FormState>(
           listener: (context, state) {
-            if (state is form.FormCalorie) {
-              Navigator.of(context).popUntil((route) => route.isFirst);
+            if (state is form.FormSuccess) {
+              Navigator.of(context)
+                  .popUntil((route) => route.settings.name == 'ChatView');
             } else if (state is form.FormError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("인증에 실패했습니다")),
@@ -68,7 +69,7 @@ class ExerciseThirdView extends StatelessWidget {
         child: BlocBuilder<form.FormCubit, form.FormState>(
           builder: (context, state) {
             return FloatingActionButton.extended(
-              heroTag: 'onboarding4',
+              heroTag: 'exercise3',
               backgroundColor: (state is form.FormLoading)
                   ? AppColors.neutral[300]
                   : AppColors.primary,

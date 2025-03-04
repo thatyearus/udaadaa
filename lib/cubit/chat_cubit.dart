@@ -139,13 +139,13 @@ class ChatCubit extends Cubit<ChatState> {
               .select('*')
               .eq('room_id', room.id)
               .order('created_at', ascending: false)
-              .limit(1)
-              .single();
+              .limit(1);
+          if (response.isEmpty) return room;
 
           final message = Message.fromMap(
-            map: response,
+            map: response[0],
             myUserId: supabase.auth.currentUser!.id,
-            profile: room.memberMap[response['user_id']]!,
+            profile: room.memberMap[response[0]['user_id']]!,
             reactions: [],
             readReceipts: {},
           );
@@ -449,6 +449,11 @@ class ChatCubit extends Cubit<ChatState> {
         'user_id': supabase.auth.currentUser!.id,
       });
       await loadChatList();
+      await Future.wait([
+        fetchLatestMessages(),
+        loadInitialMessages(),
+        fetchLatestReceipt(),
+      ]);
       final roomInfo = chatList.firstWhere((room) => room.id == roomId);
       fetchRoomRanking(roomInfo);
       if (roomInfo.startDay != null && roomInfo.endDay != null) {
