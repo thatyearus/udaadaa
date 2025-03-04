@@ -44,7 +44,7 @@ class FourthView extends StatelessWidget {
                   children: [
                     Text("AI 칼로리 측정중",
                         style: AppTextStyles.textTheme.displaySmall),
-                    Image.asset('assets/calorie_loading.gif'),
+                    Image.asset('assets/calorie_pink_loading.gif'),
                   ],
                 ),
               );

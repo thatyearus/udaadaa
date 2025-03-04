@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
+import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 
 class WeightSecondView extends StatefulWidget {
@@ -43,12 +44,14 @@ class _WeightSecondViewState extends State<WeightSecondView> {
         child: BlocConsumer<form.FormCubit, form.FormState>(
           listener: (context, state) {
             if (state is form.FormSuccess) {
-              Navigator.of(context).pushAndRemoveUntil(
+              /*Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
                   builder: (context) => const MainView(),
                 ),
                 (Route<dynamic> route) => false,
-              );
+              );*/
+              Navigator.of(context)
+                  .popUntil((route) => route.settings.name == 'ChatView');
             } else if (state is form.FormError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("몸무게 인증에 실패했습니다")),
@@ -58,8 +61,8 @@ class _WeightSecondViewState extends State<WeightSecondView> {
           builder: (context, state) {
             if (state is form.FormLoading) {
               return Center(
-                child:
-                    Lottie.asset('assets/loading_animation.json', width: 150),
+                child: Lottie.asset('assets/loading_pink_animation.json',
+                    width: 150),
               );
             }
 
@@ -99,8 +102,15 @@ class _WeightSecondViewState extends State<WeightSecondView> {
                     "인증하기": "클릭",
                   },
                 );
-                context.read<form.FormCubit>().submitWeight(
-                    weight: commentController.text, contentType: "WEIGHT");
+                /*context.read<form.FormCubit>().submitWeight(
+                    weight: commentController.text, contentType: "WEIGHT");*/
+                context.read<ChatCubit>().missionComplete(
+                      type: FeedType.weight,
+                      contentType: 'WEIGHT',
+                      mealContent: '${commentController.text} kg',
+                      review: commentController.text,
+                      weight: double.parse(commentController.text),
+                    );
               },
               label: Text(
                 '인증하기',

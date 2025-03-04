@@ -29,9 +29,10 @@ class MyProfile extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 30,
-            child: Icon(Icons.person),
+            backgroundColor: AppColors.primary[50],
+            child: const Icon(Icons.person, color: AppColors.primary, size: 30),
           ),
           AppSpacing.horizontalSizedBoxS,
           Text(

@@ -6,8 +6,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
-        android:requestLegacyExternalStorage="true"
-        android:extractNativeLibs="true">
+        android:requestLegacyExternalStorage="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -28,6 +27,15 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with packageID, oauth -->
+                <data android:scheme="com.thatyearus.diet-challenge" android:host="oauth"/>
+                <!--data android:scheme="${APP_SCHEME}" android:host="${APP_HOST}"/-->
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
