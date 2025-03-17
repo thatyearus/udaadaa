@@ -147,7 +147,7 @@ class FeedCubit extends Cubit<FeedState> {
           data.map((item) => item['image_path'] as String).toList();
       final signedUrls = await supabase.storage
           .from('FeedImages')
-          .createSignedUrls(imagePaths, 3600);
+          .createSignedUrls(imagePaths, 3600 * 12);
 
       if (data.isEmpty) {
         logger.e("No data");
@@ -181,7 +181,7 @@ class FeedCubit extends Cubit<FeedState> {
           data.map((item) => item['image_path'] as String).toList();
       final signedUrls = await supabase.storage
           .from('FeedImages')
-          .createSignedUrls(imagePaths, 3600);
+          .createSignedUrls(imagePaths, 3600 * 12);
 
       if (data.isEmpty) {
         logger.e("No data");
@@ -229,7 +229,7 @@ class FeedCubit extends Cubit<FeedState> {
           data.map((item) => item['image_path'] as String).toList();
       final signedUrls = await supabase.storage
           .from('FeedImages')
-          .createSignedUrls(imagePaths, 3600);
+          .createSignedUrls(imagePaths, 3600 * 12);
 
       if (data.isEmpty) {
         logger.e("No data");
@@ -277,7 +277,7 @@ class FeedCubit extends Cubit<FeedState> {
           data.map((item) => item['image_path'] as String).toList();
       final signedUrls = await supabase.storage
           .from('FeedImages')
-          .createSignedUrls(imagePaths, 3600);
+          .createSignedUrls(imagePaths, 3600 * 12);
 
       if (data.isEmpty) {
         logger.e("No data");
@@ -385,7 +385,7 @@ class FeedCubit extends Cubit<FeedState> {
           data.map((item) => item['image_path'] as String).toList();
       final signedUrls = await supabase.storage
           .from('FeedImages')
-          .createSignedUrls(imagePaths, 3600);
+          .createSignedUrls(imagePaths, 3600 * 12);
 
       if (data.isEmpty) {
         logger.e("No data");

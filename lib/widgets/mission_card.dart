@@ -7,15 +7,15 @@ import 'package:udaadaa/utils/constant.dart';
 
 class MissionCard extends StatelessWidget {
   final int index;
-  final List<String> missionName = ["feed", "weight", "reaction"];
-  final List<int> missionRequired = [2, 1, 3];
+  final List<String> missionName = ["feed", "weight" /*, "reaction"*/];
+  final List<int> missionRequired = [2, 1 /*, 3*/];
   final List<String> missionDetail = [
     "피드에 식단 사진 2장 인증하기",
     "오늘의 몸무게 인증하기",
-    "피드에 응원 3개 남기기",
+    /*"피드에 응원 3개 남기기",*/
   ];
-  final List<String> missionTag = ["식단", "몸무게", "응원"];
-  final List<String> missionEmoji = ["🥗", "⚖", "🤗"];
+  final List<String> missionTag = ["식단", "몸무게" /*, "응원"*/];
+  final List<String> missionEmoji = ["🥗", "⚖" /*, "🤗"*/];
 
   MissionCard({super.key, required this.index});
 

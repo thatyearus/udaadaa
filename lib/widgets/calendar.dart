@@ -20,6 +20,7 @@ class Calendar extends StatelessWidget {
       focusedDay: focusedDate,
       firstDay: DateTime(1800),
       lastDay: DateTime(2050),
+      headerVisible: false,
       headerStyle: HeaderStyle(
         formatButtonVisible: false,
         titleCentered: true,
