@@ -495,18 +495,18 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
-				DEVELOPMENT_TEAM = 8ZY6HZ562V;
+				CURRENT_PROJECT_VERSION = 18;
+				DEVELOPMENT_TEAM = 35B37K7XLJ;
 				ENABLE_BITCODE = NO;
-				FLUTTER_BUILD_NAME = 4.0.0;
-				FLUTTER_BUILD_NUMBER = 17;
+				FLUTTER_BUILD_NAME = 4.0.1;
+				FLUTTER_BUILD_NUMBER = 18;
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0.0;
+				MARKETING_VERSION = 4.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.thatyearus.diet-challenge";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -688,18 +688,18 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
-				DEVELOPMENT_TEAM = 8ZY6HZ562V;
+				CURRENT_PROJECT_VERSION = 18;
+				DEVELOPMENT_TEAM = 35B37K7XLJ;
 				ENABLE_BITCODE = NO;
-				FLUTTER_BUILD_NAME = 4.0.0;
-				FLUTTER_BUILD_NUMBER = 17;
+				FLUTTER_BUILD_NAME = 4.0.1;
+				FLUTTER_BUILD_NUMBER = 18;
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0.0;
+				MARKETING_VERSION = 4.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.thatyearus.diet-challenge";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -712,7 +712,7 @@
 		};
 		97C147071CF9000F007C117D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			baseConfigurationReference = 908474DC2CABDDFE00A17B91 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
@@ -720,18 +720,18 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
-				DEVELOPMENT_TEAM = 8ZY6HZ562V;
+				CURRENT_PROJECT_VERSION = 18;
+				DEVELOPMENT_TEAM = 35B37K7XLJ;
 				ENABLE_BITCODE = NO;
-				FLUTTER_BUILD_NAME = 4.0.0;
-				FLUTTER_BUILD_NUMBER = 17;
+				FLUTTER_BUILD_NAME = 4.0.1;
+				FLUTTER_BUILD_NUMBER = 18;
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0.0;
+				MARKETING_VERSION = 4.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.thatyearus.diet-challenge";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
