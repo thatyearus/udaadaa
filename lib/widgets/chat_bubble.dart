@@ -69,7 +69,7 @@ class ChatBubble extends StatelessWidget {
                       margin: EdgeInsets.only(left: isMine ? 0 : 40 + 12),
                       child: Wrap(
                         spacing: AppSpacing.m,
-                        children: ['👍', '❤️', '✔️', '👍🏻'].map((emoji) {
+                        children: ['👍', '❤️', '✔️'].map((emoji) {
                           return GestureDetector(
                             onTap: () {
                               // 리액션 선택 처리
