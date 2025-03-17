@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
-import 'package:udaadaa/models/reaction.dart';
+// import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class LastRecord extends StatelessWidget {
@@ -59,7 +59,7 @@ class LastRecord extends StatelessWidget {
     // final year = (date != null) ? date.year : "";
     // final month = (date != null) ? date.month : "";
     // final day = (date != null) ? date.day : "";
-
+/*
     int countReaction(ReactionType reactionType) {
       return myFeedRecord.isEmpty || myFeedRecord[page].reaction == null
           ? 0
@@ -69,12 +69,13 @@ class LastRecord extends StatelessWidget {
               .length;
     }
 
+
     final reaction1 = countReaction(ReactionType.good);
     final reaction2 = countReaction(ReactionType.cheerup);
     final reaction3 = countReaction(ReactionType.hmmm);
     final reaction4 = countReaction(ReactionType.nope);
     final reaction5 = countReaction(ReactionType.awesome);
-
+*/
     return myFeedRecord.isEmpty
         ? const Center(child: CircularProgressIndicator())
         : Container(
@@ -130,21 +131,22 @@ class LastRecord extends StatelessWidget {
                               ),
                             ],
                           ),
-                          AppSpacing.verticalSizedBoxS,
+                          AppSpacing.verticalSizedBoxXxs,
                           Text(
                             myFeedRecord[page].review,
-                            style: AppTextStyles.textTheme.titleSmall,
+                            style: AppTextStyles.textTheme.bodyMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          AppSpacing.verticalSizedBoxXxs,
+                          AppSpacing.verticalSizedBoxXs,
                           Text("칼로리 : ${myFeedRecord[page].calorie ?? 0} kcal",
-                              style: AppTextStyles.textTheme.bodySmall),
+                              style: AppTextStyles.textTheme.titleSmall),
                         ],
                       ),
                     ),
                   ],
                 ),
+                /*
                 Divider(
                   color: AppColors.neutral[300],
                   thickness: 1,
@@ -213,7 +215,7 @@ class LastRecord extends StatelessWidget {
                       ],
                     ),
                   ],
-                )
+                )*/
               ],
             ),
           );

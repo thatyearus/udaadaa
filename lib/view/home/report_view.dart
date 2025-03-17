@@ -22,6 +22,7 @@ class ReportView extends StatelessWidget {
         title: Text("$nickname 님의 리포트",
             style: AppTextStyles.textTheme.headlineMedium),
         centerTitle: true,
+        surfaceTintColor: AppColors.white,
       ),
       body: RefreshIndicator(
         onRefresh: () {

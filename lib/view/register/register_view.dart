@@ -76,7 +76,10 @@ class _RegisterViewState extends State<RegisterView> {
     if (PreferencesService().getBool('isTutorialFinished') != true) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         logger.d("Show tutorial");
-        showTutorial(context);
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          if (!mounted) return;
+          showTutorial(context);
+        });
       });
     }
   }

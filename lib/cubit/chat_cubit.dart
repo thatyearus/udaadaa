@@ -622,7 +622,7 @@ class ChatCubit extends Cubit<ChatState> {
         // logger.d("makeImageUrl: ${message.imagePath}");
         final url = await supabase.storage
             .from('ImageMessages')
-            .createSignedUrl(message.imagePath!, 3600);
+            .createSignedUrl(message.imagePath!, 3600 * 12);
         // logger.d("makeImageUrl: $url");
         messages[message.roomId] = List.from(messages[message.roomId]!.map((m) {
           if (m.id == message.id) {
