@@ -3,7 +3,7 @@ name: Deploy Function
 on:
   push:
     branches:
-      -  staging
+      - staging
   workflow_dispatch:
 
 jobs:
@@ -22,5 +22,16 @@ jobs:
         with:
           version: latest
 
-      - run: supabase link
-      - run: supabase db push
+      - name: Debug Supabase CLI Version
+        run: supabase --version
+
+      - name: Use Supavisor for IPv4
+        run: |
+          export PGOPTIONS='--client-min-messages=warning'
+          export PGSSLMODE=require
+          export SUPABASE_DB_HOST="aws-0-[aws-region].pooler.supabase.com"
+          export SUPABASE_DB_PORT="6543"  # Supavisor 사용
+          supabase link --project-ref $SUPABASE_PROJECT_ID --debug
+
+      - name: Push Database Changes
+        run: supabase db push
