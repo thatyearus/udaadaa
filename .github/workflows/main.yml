@@ -1,46 +1,28 @@
-name: Deploy Supabase
+name: Deploy Function
 
 on:
   push:
     branches:
-      - staging
-  workflow_dispatch:  # 수동 실행도 가능
+      -  main
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN_STAGING }}
-      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD_STAGING }}
-      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID_STAGING }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Install Supabase CLI
-        uses: supabase/setup-cli@v1
+
+      - uses: supabase/setup-cli@v1
+
         with:
           version: latest
 
-      - name: Debug Supabase CLI Version
-        run: supabase --version
-
-      - name: Debug Supabase ENV Variables  # 환경 변수 확인 (출력값이 비어있으면 GitHub Secrets 설정 문제)
-        run: |
-          echo "SUPABASE_PROJECT_ID=${{ secrets.SUPABASE_PROJECT_ID_STAGING }}"
-          echo "SUPABASE_DB_PASSWORD=${{ secrets.SUPABASE_DB_PASSWORD_STAGING }}"
-          echo "SUPABASE_ACCESS_TOKEN=${{ secrets.SUPABASE_ACCESS_TOKEN_STAGING }}"
-
-      - name: Debug Supabase Link with --debug
-        run: |
-          export PGOPTIONS='--client-min-messages=warning'
-          export PGSSLMODE=require
-          supabase link --project-ref $SUPABASE_PROJECT_ID --debug
-
-      - name: Remove Old Supabase Config (캐시 삭제)
-        run: rm -rf ~/.supabase
-
-      - name: Supabase DB Push (배포)
-        run: supabase db push
+      - run: supabase link
+      - run: supabase db push
