@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:udaadaa/cubit/form_cubit.dart' as form;
-// import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 
 class ExerciseFormView extends StatelessWidget {
@@ -61,12 +61,12 @@ class ExerciseFormView extends StatelessWidget {
                   minimumSize: const Size(double.infinity, 50),
                 ),
                 onPressed: () {
-                  /* context.read<form.FormCubit>().submit(
+                  context.read<form.FormCubit>().submit(
                         type: FeedType.exercise,
                         contentType: 'EXERCISE',
                         review: commentController.text,
                         exerciseTime: exerciseContentController.text,
-                      );*/
+                      );
                   commentController.clear();
                   exerciseContentController.clear();
                 },

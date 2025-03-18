@@ -33,7 +33,7 @@ class Calendar extends StatelessWidget {
           shape: BoxShape.circle,
         ),
         todayDecoration: BoxDecoration(
-          color: AppColors.primary[100],
+          color: AppColors.primary[200],
           shape: BoxShape.circle,
         ),
       ),

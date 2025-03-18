@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/widgets/result_card.dart';
@@ -28,7 +28,7 @@ class ChallengeResultView extends StatelessWidget {
           await image.toByteData(format: ui.ImageByteFormat.png);
 
       if (byteData != null) {
-        final result = await ImageGallerySaverPlus.saveImage(
+        final result = await ImageGallerySaver.saveImage(
           byteData.buffer.asUint8List(),
           quality: 100,
           name: "challenge_result.png",

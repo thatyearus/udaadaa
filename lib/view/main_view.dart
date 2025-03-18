@@ -1,19 +1,14 @@
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:badges/badges.dart' as badges;
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
-import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/chat/chat_view.dart';
-import 'package:udaadaa/view/chat/room_view.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/feed/feed_view.dart';
 import 'package:udaadaa/view/home/home_view.dart';
 import 'package:udaadaa/view/mypage/mypage_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
-import 'package:udaadaa/view/register/register_view.dart';
+import 'package:udaadaa/view/onboarding/first_view.dart';
 
 class MainView extends StatelessWidget {
   const MainView({super.key});
@@ -26,12 +21,10 @@ class MainView extends StatelessWidget {
       const _NavigatorPage(child: FeedView()),
       const _NavigatorPage(child: MyPageView()),*/
       const HomeView(),
-      const RoomView(),
-      const RegisterView(),
       const FeedView(),
       const MyPageView(),
     ];
-    final List<String> labels = ['홈', '채팅', '신청', '피드', '마이페이지'];
+    final List<String> labels = ['홈', '피드', '마이페이지'];
 
     return Scaffold(
       body: SafeArea(
@@ -63,121 +56,44 @@ class MainView extends StatelessWidget {
                 );
               }
             },
-            child: BlocListener<ChatCubit, ChatState>(
-              listener: (context, state) {
-                if (state is ChatPushNotification) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      action: SnackBarAction(
-                        label: '바로가기 >',
-                        textColor: Colors.yellow,
-                        onPressed: () {
-                          context
-                              .read<BottomNavCubit>()
-                              .selectTab(BottomNavState.chat);
-                          context.read<ChatCubit>().enterRoom(state.roomId);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ChatView(
-                                roomInfo: state.roomInfo,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      content: Text(state.text),
-                    ),
-                  );
-                }
-              },
-              child: IndexedStack(
-                index: BottomNavState.values.indexOf(state),
-                children: children,
-              ),
+            child: IndexedStack(
+              index: BottomNavState.values.indexOf(state),
+              children: children,
             ),
           );
         }),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.05),
-              blurRadius: 4,
-              offset: const Offset(0, -2),
+      bottomNavigationBar: BlocBuilder<BottomNavCubit, BottomNavState>(
+        builder: (context, state) => BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_rounded),
+              label: '홈',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.feed_rounded),
+              label: '피드',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_rounded),
+              label: '마이페이지',
             ),
           ],
+          currentIndex: BottomNavState.values.indexOf(state),
+          onTap: (index) {
+            Analytics().logEvent(
+              "네비게이션바",
+              parameters: {"클릭": labels[index]},
+            );
+            context
+                .read<BottomNavCubit>()
+                .selectTab(BottomNavState.values[index]);
+          },
         ),
-        child: BlocBuilder<BottomNavCubit, BottomNavState>(
-            builder: (context, state) {
-          final unreadMessagesCount = context.select<ChatCubit, int>(
-            (cubit) => cubit.getUnreadMessageCount,
-          );
-          return BottomNavigationBar(
-            selectedItemColor: AppColors.neutral[800],
-            unselectedItemColor: AppColors.neutral[400],
-            showUnselectedLabels: true,
-            type: BottomNavigationBarType.fixed,
-            items: <BottomNavigationBarItem>[
-              const BottomNavigationBarItem(
-                icon: Icon(FluentIcons.home_24_regular),
-                activeIcon: Icon(FluentIcons.home_24_filled),
-                label: '홈',
-              ),
-              BottomNavigationBarItem(
-                icon: badges.Badge(
-                  showBadge: unreadMessagesCount > 0,
-                  badgeContent: Text(
-                    unreadMessagesCount.toString(),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  child: const Icon(FluentIcons.chat_multiple_24_regular),
-                ),
-                activeIcon: badges.Badge(
-                  showBadge: unreadMessagesCount > 0,
-                  badgeContent: Text(
-                    unreadMessagesCount.toString(),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  child: const Icon(FluentIcons.chat_multiple_24_filled),
-                ),
-                label: '채팅',
-              ),
-              const BottomNavigationBarItem(
-                icon: Icon(FluentIcons.add_square_24_regular),
-                activeIcon: Icon(FluentIcons.add_square_24_filled),
-                label: '신청',
-              ),
-              const BottomNavigationBarItem(
-                icon: Icon(FluentIcons.channel_24_regular),
-                activeIcon: Icon(FluentIcons.channel_24_filled),
-                label: '피드',
-              ),
-              const BottomNavigationBarItem(
-                icon: Icon(FluentIcons.person_24_regular),
-                activeIcon: Icon(FluentIcons.person_24_filled),
-                label: '마이페이지',
-              ),
-            ],
-            currentIndex: BottomNavState.values.indexOf(state),
-            onTap: (index) {
-              Analytics().logEvent(
-                "네비게이션바",
-                parameters: {"클릭": labels[index]},
-              );
-              context
-                  .read<BottomNavCubit>()
-                  .selectTab(BottomNavState.values[index]);
-            },
-          );
-        }),
       ),
-      /*
       floatingActionButton: BlocBuilder<BottomNavCubit, BottomNavState>(
         builder: (context, state) {
-          if (state == BottomNavState.feed ||
-              state == BottomNavState.chat ||
-              state == BottomNavState.register) {
+          if (state == BottomNavState.feed) {
             return Container();
           }
           return Container(
@@ -209,7 +125,7 @@ class MainView extends StatelessWidget {
           );
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,*/
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

@@ -23,8 +23,7 @@ class FeedPageViewState extends State<FeedPageView> {
 
   @override
   Widget build(BuildContext context) {
-    final feeds =
-        context.select<FeedCubit, List<Feed>>((cubit) => cubit.getFeeds);
+    final feeds = context.select<FeedCubit, List<Feed>>((cubit) => cubit.getFeeds);
     if (feeds.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -98,7 +97,6 @@ class ImageCard extends StatelessWidget {
       FeedType.lunch: '# 점심',
       FeedType.dinner: '# 저녁',
       FeedType.snack: '# 간식',
-      FeedType.exercise: '# 운동',
     });
 
     return Column(
@@ -179,7 +177,7 @@ class ImageDisplay extends StatelessWidget {
         height: double.infinity,
         fit: BoxFit.fitWidth,
         placeholder: (context, url) =>
-            const Center(child: CircularProgressIndicator()),
+        const Center(child: CircularProgressIndicator()),
         errorWidget: (context, url, error) => const Icon(Icons.error),
       ),
     );

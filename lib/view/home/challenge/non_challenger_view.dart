@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/onboarding/eighth_view.dart';
 
 class NonChallengerView extends StatelessWidget {
   const NonChallengerView({super.key});
@@ -38,12 +37,10 @@ class NonChallengerView extends StatelessWidget {
             Analytics().logEvent(
               "홈_챌린지_참여하기",
             );
-            /*
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const EighthView()),
-            );*/
-            context.read<BottomNavCubit>().selectTab(BottomNavState.register);
+            );
           },
           child: Text('챌린지 참여하기', style: AppTextStyles.textTheme.displaySmall),
         ),

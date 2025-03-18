@@ -1,10 +1,6 @@
-import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
-import 'package:crypto/crypto.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:meta/meta.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -38,16 +34,6 @@ class AuthCubit extends Cubit<AuthState> {
     } else {
       _anonymousLogin();
     }
-    supabase.auth.onAuthStateChange.listen((data) {
-      if (data.event == AuthChangeEvent.signedIn) {
-        makeProfile();
-      } else if (data.event == AuthChangeEvent.signedOut) {
-        emit(AuthInitial());
-      }
-    }, onError: (error) {
-      logger.e(error.toString());
-      emit(AuthError());
-    });
   }
 
   Future<void> _anonymousLogin() async {
@@ -60,7 +46,6 @@ class AuthCubit extends Cubit<AuthState> {
       Profile profile = Profile(
         id: response.user!.id,
         nickname: RandomNicknameGenerator.generateNickname(),
-        pushOption: true,
       );
 
       bool insertSuccess = false;
@@ -181,7 +166,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> turnOffPush(Profile profile) async {
     try {
-      profile = profile.copyWith(pushOption: false);
+      profile = profile.copyWith(fcmToken: "");
       _profile = profile;
       await supabase.from('profiles').upsert(profile.toMap());
     } catch (e) {
@@ -204,8 +189,8 @@ class AuthCubit extends Cubit<AuthState> {
         Profile profile = Profile.fromMap(map: res);
         _profile = profile;
       }
-      if (_profile?.pushOption == false) {
-        await _setFCMToken(_profile!.copyWith(pushOption: true));
+      if (_profile?.fcmToken == null) {
+        await _setFCMToken(_profile!);
       } else {
         await turnOffPush(_profile!);
       }
@@ -270,108 +255,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<AuthResponse> signInWithApple() async {
-    final rawNonce = supabase.auth.generateRawNonce();
-    final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
-
-    final credential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-      nonce: hashedNonce,
-    );
-
-    final idToken = credential.identityToken;
-    if (idToken == null) {
-      throw const AuthException(
-          'Could not find ID Token from generated credential');
-    }
-    return supabase.auth.signInWithIdToken(
-      provider: OAuthProvider.apple,
-      idToken: idToken,
-      nonce: rawNonce,
-    );
-  }
-
-  Future<bool> signInWithAppleAndroid() async {
-    return supabase.auth.signInWithOAuth(
-      OAuthProvider.apple,
-      redirectTo: redirectUrl,
-      authScreenLaunchMode:
-          kIsWeb ? LaunchMode.platformDefault : LaunchMode.externalApplication,
-    );
-  }
-
-  Future<void> signInWithKakao() async {
-    try {
-      await supabase.auth.signInWithOAuth(
-        OAuthProvider.kakao,
-        redirectTo: redirectUrl,
-        authScreenLaunchMode: kIsWeb
-            ? LaunchMode.platformDefault
-            : LaunchMode.externalApplication,
-      );
-    } catch (e) {
-      logger.e(e.toString());
-    }
-  }
-
-  Future<void> makeProfile() async {
-    if (_profile?.id == supabase.auth.currentUser!.id) {
-      return;
-    }
-    Profile profile = Profile(
-      id: supabase.auth.currentUser!.id,
-      nickname: RandomNicknameGenerator.generateNickname(),
-      pushOption: true,
-    );
-
-    bool insertSuccess = false;
-    int retryCount = 0;
-    const maxRetries = 5; // 원하는 만큼 재시도 횟수를 설정
-
-    while (!insertSuccess && retryCount < maxRetries) {
-      try {
-        final res = await supabase
-            .from('profiles')
-            .insert(profile.toMap())
-            .select()
-            .single();
-
-        profile = Profile.fromMap(map: res);
-        _profile = profile;
-        emit(Authenticated(profile));
-        insertSuccess = true; // 성공적으로 삽입된 경우 루프를 탈출
-        FirebaseMessaging.instance.onTokenRefresh.listen((token) {
-          _updateFCMToken(token, profile);
-        });
-      } catch (error) {
-        // UNIQUE 제약 조건 위반 시 새로운 닉네임을 생성하고 다시 시도
-        if (error is PostgrestException && error.code == '23505') {
-          // 23505는 PostgreSQL에서 고유 제약 조건 위반에 대한 에러 코드입니다.
-          logger.d("Nickname ${profile.nickname} already exists");
-          profile = profile.copyWith(
-            nickname: RandomNicknameGenerator.generateNickname(),
-          );
-          _profile = profile;
-          retryCount++;
-        } else {
-          // 다른 오류에 대한 처리
-          logger.e(error.toString());
-          break; // 반복을 중지하고 에러 처리를 할 수 있습니다.
-        }
-      }
-    }
-
-    if (!insertSuccess) {
-      // 최종적으로 실패한 경우에 대한 처리 (예: 에러 메시지 표시)
-      logger.e('Failed to insert profile');
-      emit(AuthError());
-      // 필요에 따라 추가 처리 (예: 사용자에게 알림, 다른 로직 시도 등)
-    }
-  }
-
   Future<void> signOut() async {
     await supabase.auth.signOut();
     emit(AuthInitial());
@@ -389,7 +272,7 @@ class AuthCubit extends Cubit<AuthState> {
   bool? get getPushOption {
     logger.d("${getCurProfile?.fcmToken}");
     logger.d("getPushOption: ${getCurProfile?.fcmToken != null}");
-    return getCurProfile?.pushOption == true && getCurProfile?.fcmToken != null;
+    return getCurProfile?.fcmToken != null;
   }
 
   bool get getIsChallenger => _isChallenger;

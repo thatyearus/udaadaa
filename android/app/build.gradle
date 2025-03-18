@@ -41,11 +41,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-        coreLibraryDesugaringEnabled true
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
 
     defaultConfig {
@@ -70,23 +65,11 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
             signingConfig = signingConfigs.release
-        }
-    }
-    packaging {
-        jniLibs {
-            useLegacyPackaging true
         }
     }
 }
 
 flutter {
     source = "../.."
-}
-
-dependencies {
-    implementation 'androidx.core:core-ktx:1.10.1' // 최신 버전 유지
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 }

@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:meta/meta.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
+import 'package:udaadaa/models/challenge.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/models/report.dart';
@@ -64,10 +66,8 @@ class FeedCubit extends Cubit<FeedState> {
     });
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       logger.d('onMessage: $message');
-      if (message.data['feedId'] != null) {
-        emit(FeedPushNotification(
-            message.data['feedId'], message.notification!.body!));
-      }
+      emit(FeedPushNotification(
+          message.data['feedId'], message.notification!.body!));
     });
   }
 
@@ -83,7 +83,7 @@ class FeedCubit extends Cubit<FeedState> {
       if (_currentCategory == FeedCategory.all) {
         _getFeeds();
       } else {
-        _getExerciseFeeds();
+        _getChallengeFeeds();
       }
     }
   }
@@ -212,7 +212,6 @@ class FeedCubit extends Cubit<FeedState> {
             .select('*, profiles(*)')
             .not('id', 'in', _blockedFeedIds.toList())
             .not('id', 'in', _reactionFeedIds.toList())
-            .not('type', 'eq', FeedType.exercise.name)
             .order('created_at', ascending: false)
             .limit(_limit);
       } else {
@@ -221,7 +220,6 @@ class FeedCubit extends Cubit<FeedState> {
             .select('*, profiles(*)')
             .not('id', 'in', _blockedFeedIds.toList())
             .not('id', 'in', _reactionFeedIds.toList())
-            .not('type', 'eq', FeedType.exercise.name)
             .limit(_limit);
       }
 
@@ -250,55 +248,6 @@ class FeedCubit extends Cubit<FeedState> {
     }
   }
 
-  Future<void> _getExerciseFeeds({bool loadMore = false}) async {
-    try {
-      var data = [];
-
-      if (!loadMore) {
-        data = await supabase
-            .from('feed')
-            .select('*, profiles(*)')
-            .not('id', 'in', _blockedFeedIds.toList())
-            .not('id', 'in', _reactionFeedIds.toList())
-            .eq('type', FeedType.exercise.name)
-            .order('created_at', ascending: false)
-            .limit(_limit);
-      } else {
-        data = await supabase
-            .from('random_feed')
-            .select('*, profiles(*)')
-            .not('id', 'in', _blockedFeedIds.toList())
-            .not('id', 'in', _reactionFeedIds.toList())
-            .eq('type', FeedType.exercise.name)
-            .limit(_limit);
-      }
-
-      final imagePaths =
-          data.map((item) => item['image_path'] as String).toList();
-      final signedUrls = await supabase.storage
-          .from('FeedImages')
-          .createSignedUrls(imagePaths, 3600);
-
-      if (data.isEmpty) {
-        logger.e("No data");
-        throw "No data";
-      } else {
-        final List<Feed> newFeeds = [];
-        for (var i = 0; i < data.length; i++) {
-          final item = data[i];
-          item['image_url'] = signedUrls[i].signedUrl;
-          newFeeds.add(Feed.fromMap(map: item));
-        }
-        _feeds = loadMore ? [..._feeds, ...newFeeds] : newFeeds;
-        emit(FeedLoaded());
-      }
-    } catch (e) {
-      logger.e(e);
-      emit(FeedError());
-    }
-  }
-
-/*
   Future<void> _getChallengeFeeds({bool loadMore = false}) async {
     if (_currentCategory != FeedCategory.challenge) return;
 
@@ -345,7 +294,7 @@ class FeedCubit extends Cubit<FeedState> {
       emit(FeedError());
     }
   }
-*/
+
   void changePage(int page) {
     _curFeedPage = page;
     if (page == _feeds.length - 1) {
@@ -435,7 +384,7 @@ class FeedCubit extends Cubit<FeedState> {
     if (_currentCategory == FeedCategory.all) {
       await _getFeeds(loadMore: true);
     } else {
-      await _getExerciseFeeds(loadMore: true);
+      await _getChallengeFeeds(loadMore: true);
     }
   }
 

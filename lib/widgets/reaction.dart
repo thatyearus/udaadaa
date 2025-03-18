@@ -22,7 +22,7 @@ class ReactionButtonsContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.3), // 반투명한 검은색 배경
+        color: Colors.black.withOpacity(0.3), // 반투명한 검은색 배경
         borderRadius: BorderRadius.circular(30), // 둥근 모서리
       ),
       child: Row(
@@ -211,7 +211,7 @@ class ReactionButtonState extends State<ReactionButton>
                   padding: const EdgeInsets.symmetric(
                       vertical: 4.0, horizontal: 8.0),
                   decoration: BoxDecoration(
-                    color: AppColors.white.withValues(alpha: 0.5),
+                    color: AppColors.white.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(

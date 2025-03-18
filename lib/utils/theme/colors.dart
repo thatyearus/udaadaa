@@ -31,22 +31,6 @@ class AppColors {
     },
   );
 
-  static const MaterialColor pink = MaterialColor(
-    0xFFf1a3c0,
-    <int, Color>{
-      50: Color(0xfffae8ef),
-      100: Color(0xFFf5c6d8),
-      200: Color(0xFFf1a3c0),
-      300: Color(0xFFf080a7),
-      400: Color(0xFFf06693),
-      500: Color(0xFFf25480),
-      600: Color(0xFFe04f7b),
-      700: Color(0xFFc94974),
-      800: Color(0xFFb3446e),
-      900: Color(0xFF8e3a63),
-    },
-  );
-
   static const MaterialColor grayscale = MaterialColor(
     0xFF000000,
     <int, Color>{
@@ -64,28 +48,11 @@ class AppColors {
     },
   );
 
-  static const MaterialColor newGrayscale = MaterialColor(
-    0xFF000000,
-    <int, Color>{
-      0: Color(0xFFFFFFFF),
-      50: Color(0xFFF5F6FA),
-      100: Color(0xFFECEFF7),
-      200: Color(0xFFE0E4EB),
-      300: Color(0xFFBEC4C6),
-      400: Color(0xFFA4A9AB),
-      500: Color(0xFF85888A),
-      600: Color(0xFF4F555E),
-      700: Color(0xFF434343),
-      800: Color(0xFF262626),
-      900: Color(0xFF000000),
-    },
-  );
-
   static const black = Color(0xFF000000);
   static const white = Color(0xFFFFFFFF);
 
   // #2 Semantic Colors
-  static const MaterialColor primary = pink;
+  static const MaterialColor primary = red;
   static const MaterialColor secondary = orange;
-  static const MaterialColor neutral = newGrayscale;
+  static const MaterialColor neutral = grayscale;
 }
