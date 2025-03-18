@@ -33,12 +33,13 @@ jobs:
           echo "SUPABASE_DB_PASSWORD=${{ secrets.SUPABASE_DB_PASSWORD_STAGING }}"
           echo "SUPABASE_ACCESS_TOKEN=${{ secrets.SUPABASE_ACCESS_TOKEN_STAGING }}"
 
-      - name: Enable IPv6 for Supabase Link
+      - name: Enable IPv4 for Supabase Link
         run: |
           export PGOPTIONS='--client-min-messages=warning'
           export PGSSLMODE=require
           export SUPABASE_DB_HOST="db.${{ secrets.SUPABASE_PROJECT_ID_STAGING }}.supabase.co"
-          export SUPABASE_DB_PORT="5432"
+          export PGHOST="$(getent ahostsv4 db.${{ secrets.SUPABASE_PROJECT_ID_STAGING }}.supabase.co | awk '{print $1; exit}')"
+          export PGPORT="5432"
           supabase link --project-ref $SUPABASE_PROJECT_ID --debug
 
       - name: Remove Old Supabase Config
