@@ -1,10 +1,10 @@
-name: Deploy Supabase
+name: Deploy to Staging
 
 on:
   push:
     branches:
       - staging
-  workflow_dispatch:  # 수동 실행도 가능
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -27,20 +27,22 @@ jobs:
       - name: Debug Supabase CLI Version
         run: supabase --version
 
-      - name: Debug Supabase ENV Variables  # 환경 변수 확인 (출력값이 비어있으면 GitHub Secrets 설정 문제)
+      - name: Debug Supabase ENV Variables
         run: |
           echo "SUPABASE_PROJECT_ID=${{ secrets.SUPABASE_PROJECT_ID_STAGING }}"
           echo "SUPABASE_DB_PASSWORD=${{ secrets.SUPABASE_DB_PASSWORD_STAGING }}"
           echo "SUPABASE_ACCESS_TOKEN=${{ secrets.SUPABASE_ACCESS_TOKEN_STAGING }}"
 
-      - name: Debug Supabase Link with --debug
+      - name: Enable IPv6 for Supabase Link
         run: |
           export PGOPTIONS='--client-min-messages=warning'
           export PGSSLMODE=require
+          export SUPABASE_DB_HOST="db.${{ secrets.SUPABASE_PROJECT_ID_STAGING }}.supabase.co"
+          export SUPABASE_DB_PORT="5432"
           supabase link --project-ref $SUPABASE_PROJECT_ID --debug
 
-      - name: Remove Old Supabase Config (캐시 삭제)
+      - name: Remove Old Supabase Config
         run: rm -rf ~/.supabase
 
-      - name: Supabase DB Push (배포)
+      - name: Deploy Database Changes
         run: supabase db push
