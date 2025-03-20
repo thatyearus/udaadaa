@@ -3,7 +3,7 @@ name: Deploy Function
 on:
   push:
     branches:
-      -  staging
+      - staging
   workflow_dispatch:
 
 jobs:
