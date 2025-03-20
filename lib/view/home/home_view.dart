@@ -113,7 +113,8 @@ class HomeViewState extends State<HomeView> {
                 },
                 children: [
                   ChallengeHomeView(isChallenger: _isChallenger),
-                  ReportHomeView(pageController: _pageController),
+                  /* ReportHomeView(pageController: _pageController),*/
+                  ReportView(),
                 ],
               ),
             ),

@@ -1,12 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
+import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/form/weight/weight_first_view.dart';
-import 'package:udaadaa/view/onboarding/first_view.dart';
+import 'package:udaadaa/view/detail/my_record_view.dart';
+import 'package:udaadaa/widgets/last_record.dart';
 import 'package:udaadaa/widgets/mission_card.dart';
 
 class ChallengerView extends StatelessWidget {
@@ -14,14 +16,16 @@ class ChallengerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        AppSpacing.verticalSizedBoxL,
-        Calendar(),
-        //DayBanner(),
-        StreakCard(),
-        MissionList(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          AppSpacing.verticalSizedBoxL,
+          Calendar(),
+          //DayBanner(),
+          StreakCard(),
+          MissionList(),
+        ],
+      ),
     );
   }
 }
@@ -174,12 +178,13 @@ class MissionList extends StatelessWidget {
           AppSpacing.verticalSizedBoxS,
           (selectedDayChallenge
               ? ListView.builder(
-                  itemCount: 3,
+                  itemCount: 2,
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
                         Analytics().logEvent("챌린지_미션선택",
                             parameters: {"미션": "미션 $index"});
+                        /*
                         if (index == 2) {
                           context
                               .read<BottomNavCubit>()
@@ -195,7 +200,7 @@ class MissionList extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => const WeightFirstView(),
                           ),
-                        );
+                        );*/
                       },
                       child: MissionCard(
                         index: index,
@@ -205,6 +210,70 @@ class MissionList extends StatelessWidget {
                   shrinkWrap: true,
                 )
               : Container()),
+          AppSpacing.verticalSizedBoxL,
+          LastRecordView(),
+        ],
+      ),
+    );
+  }
+}
+
+class LastRecordView extends StatefulWidget {
+  const LastRecordView({super.key});
+
+  @override
+  State<LastRecordView> createState() => _LastRecordViewState();
+}
+
+class _LastRecordViewState extends State<LastRecordView> {
+  late final PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final myFeedsLength =
+        context.select<FeedCubit, int>((cubit) => cubit.getMyFeeds.length);
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(
+            height: 150,
+            child: myFeedsLength != 0
+                ? PageView.builder(
+                    controller: _pageController,
+                    itemCount: min(3, myFeedsLength),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Analytics().logEvent(
+                            "홈_최근기록",
+                            parameters: {"최근기록_페이지": (index + 1).toString()},
+                          );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  MyRecordView(initialPage: index),
+                            ),
+                          );
+                        },
+                        child: LastRecord(page: index),
+                      );
+                    },
+                  )
+                : const LastRecord(page: 0),
+          ),
         ],
       ),
     );

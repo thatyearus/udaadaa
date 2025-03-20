@@ -69,7 +69,7 @@ class ChatBubble extends StatelessWidget {
                       margin: EdgeInsets.only(left: isMine ? 0 : 40 + 12),
                       child: Wrap(
                         spacing: AppSpacing.m,
-                        children: ['👍', '❤️', '✔️', '👍🏻'].map((emoji) {
+                        children: ['👍', '❤️', '✔️'].map((emoji) {
                           return GestureDetector(
                             onTap: () {
                               // 리액션 선택 처리
@@ -335,6 +335,8 @@ class ChatBubble extends StatelessWidget {
   }
 
   Widget bubble(BuildContext context, {bool isInDialog = false}) {
+    final readReceipt =
+        memberCount - message.customProperties?['message'].readReceipts.length;
     List<Widget> bubbleContents = [
       Column(
         crossAxisAlignment:
@@ -436,9 +438,7 @@ class ChatBubble extends StatelessWidget {
               isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             Text(
-              (memberCount -
-                      message.customProperties?['message'].readReceipts.length)
-                  .toString(),
+              (readReceipt > 0) ? readReceipt.toString() : '',
               style: AppTextStyles.labelSmall(
                   const TextStyle(color: AppColors.primary)),
             ),
