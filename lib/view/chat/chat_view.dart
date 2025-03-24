@@ -740,12 +740,16 @@ class ChatView extends StatelessWidget {
                       bool isLastInSequence = nextMessage == null ||
                           nextMessage.user.id != message.user.id ||
                           isBeforeDateSeparator;
+
+                      bool isLastInRoom = nextMessage == null; // ✅ 핵심
+
                       return ChatBubble(
                         message: message,
                         isMine: message.customProperties?['message'].isMine,
                         isFirstInSequence: isFirstInSequence,
                         isLastInSequence: isLastInSequence,
                         memberCount: roomInfo.members.length,
+                        isLastInRoom: isLastInRoom,
                       );
                     },
                   ),
