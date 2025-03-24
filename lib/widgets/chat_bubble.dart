@@ -19,6 +19,7 @@ class ChatBubble extends StatelessWidget {
     required this.isFirstInSequence,
     required this.isLastInSequence,
     required this.memberCount,
+    required this.isLastInRoom,
   });
 
   final ChatMessage message;
@@ -26,6 +27,7 @@ class ChatBubble extends StatelessWidget {
   final bool isFirstInSequence;
   final bool isLastInSequence;
   final int memberCount;
+  final bool isLastInRoom;
 
   void _showReactionOverlay(BuildContext context, bool isInDialog) {
     if (isInDialog) return;
@@ -486,7 +488,12 @@ class ChatBubble extends StatelessWidget {
     return Padding(
       padding: isInDialog
           ? const EdgeInsets.all(0)
-          : const EdgeInsets.symmetric(vertical: 4, horizontal: AppSpacing.xs),
+          : EdgeInsets.fromLTRB(
+              AppSpacing.xs,
+              4,
+              AppSpacing.xs,
+              isLastInRoom ? 16 : 4, // 👈 마지막 메시지면 아래 패딩을 크게
+            ),
       child: Column(
         crossAxisAlignment:
             isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
