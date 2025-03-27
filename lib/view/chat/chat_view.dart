@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
+import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart';
@@ -46,7 +47,27 @@ class ChatView extends StatelessWidget {
 
     late TutorialCoachMark tutorialCoachMark;
     tutorialCoachMark = TutorialCoachMark(
-      hideSkip: true,
+      hideSkip: false,
+      onSkip: () {
+        logger.d("스킵 누름 - chat_view");
+        Analytics().logEvent("튜토리얼_스킵", parameters: {
+          "view": "chat_view", // 현재 튜토리얼이 실행된 뷰
+        });
+        PreferencesService().setBool('isTutorialFinished', true);
+        return true; // 👈 튜토리얼 종료
+      },
+      alignSkip: Alignment.topLeft,
+      skipWidget: Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: const Text(
+          "SKIP",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       showSkipInLastTarget: false,
       targets: [
         TargetFocus(
@@ -55,15 +76,12 @@ class ChatView extends StatelessWidget {
           contents: [
             TargetContent(
               align: ContentAlign.top,
-              child: Container(
-                padding: AppSpacing.edgeInsetsS,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "인증을 하기 위해선 이 버튼을 눌러주세요",
-                  style: AppTextStyles.textTheme.bodyMedium,
+              child: Text(
+                "인증을 하기 위해선 이 버튼을 눌러주세요",
+                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
+                  color: Colors.white, // 흰색 글씨
+                  fontWeight: FontWeight.bold, // 글씨 굵게 (Bold)
+                  fontSize: 18, // 글씨 크기 증가
                 ),
               ),
             ),
@@ -75,15 +93,12 @@ class ChatView extends StatelessWidget {
           contents: [
             TargetContent(
               align: ContentAlign.top,
-              child: Container(
-                padding: AppSpacing.edgeInsetsS,
-                decoration: BoxDecoration(
+              child: Text(
+                "식단, 운동 및 체중을 인증할 수 있습니다.",
+                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "식단, 운동 및 체중을 인증할 수 있습니다.",
-                  style: AppTextStyles.textTheme.bodyMedium,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
               ),
             ),
@@ -95,35 +110,12 @@ class ChatView extends StatelessWidget {
           contents: [
             TargetContent(
               align: ContentAlign.bottom,
-              child: Container(
-                padding: AppSpacing.edgeInsetsS,
-                decoration: BoxDecoration(
+              child: Text(
+                "메뉴 버튼을 눌러 사진 및 참여자 목록을 확인할 수 있습니다.",
+                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "메뉴 버튼을 눌러 사진 및 참여자 목록을 확인할 수 있습니다.",
-                  style: AppTextStyles.textTheme.bodyMedium,
-                ),
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: "ranking_button",
-          keyTarget: onboardingCubit.rankingButtonKey,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              child: Container(
-                padding: AppSpacing.edgeInsetsS,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "아이콘을 눌러 랭킹을 확인할 수 있습니다.",
-                  style: AppTextStyles.textTheme.bodyMedium,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
               ),
             ),
@@ -135,15 +127,12 @@ class ChatView extends StatelessWidget {
           contents: [
             TargetContent(
               align: ContentAlign.top,
-              child: Container(
-                padding: AppSpacing.edgeInsetsS,
-                decoration: BoxDecoration(
+              child: Text(
+                "아이콘을 눌러 푸시 알림 설정을 변경할 수도 있습니다.",
+                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "채팅 알림 발송에 권한 동의가 필요합니다.\n아이콘을 눌러 푸시 알림 설정을 변경할 수도 있습니다.",
-                  style: AppTextStyles.textTheme.bodyMedium,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
               ),
             ),
@@ -169,10 +158,6 @@ class ChatView extends StatelessWidget {
           Future.delayed(const Duration(milliseconds: 1000), () {
             tutorialCoachMark.next();
           });
-        } else if (target.identify == "ranking_button") {
-          Future.delayed(const Duration(milliseconds: 1000), () {
-            tutorialCoachMark.next();
-          });
         } else if (target.identify == "push_button") {
           context.read<AuthCubit>().setFCMToken();
           Navigator.of(context).pop();
@@ -182,7 +167,10 @@ class ChatView extends StatelessWidget {
         logger.d("finish tutorial chat view");
         Navigator.of(context).pop();
 
-        context.read<TutorialCubit>().showTutorialRoom2();
+        context.read<BottomNavCubit>().selectTab(BottomNavState.profile);
+        context.read<TutorialCubit>().showTutorialProfile();
+
+        // context.read<TutorialCubit>().showTutorialRoom2();
         /* 
         Future.delayed(const Duration(milliseconds: 1000), () {
           if (!context.mounted) return;
