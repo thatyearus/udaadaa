@@ -66,28 +66,31 @@ class MainView extends StatelessWidget {
             child: BlocListener<ChatCubit, ChatState>(
               listener: (context, state) {
                 if (state is ChatPushNotification) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      action: SnackBarAction(
-                        label: '바로가기 >',
-                        textColor: Colors.yellow,
-                        onPressed: () {
-                          context
-                              .read<BottomNavCubit>()
-                              .selectTab(BottomNavState.chat);
-                          context.read<ChatCubit>().enterRoom(state.roomId);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ChatView(
-                                roomInfo: state.roomInfo,
+                  final currentTab = context.read<BottomNavCubit>().state;
+                  if (currentTab != BottomNavState.chat) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        action: SnackBarAction(
+                          label: '바로가기 >',
+                          textColor: Colors.yellow,
+                          onPressed: () {
+                            context
+                                .read<BottomNavCubit>()
+                                .selectTab(BottomNavState.chat);
+                            context.read<ChatCubit>().enterRoom(state.roomId);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ChatView(
+                                  roomInfo: state.roomInfo,
+                                ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
+                        content: Text(state.text),
                       ),
-                      content: Text(state.text),
-                    ),
-                  );
+                    );
+                  }
                 }
               },
               child: IndexedStack(

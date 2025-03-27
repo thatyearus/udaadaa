@@ -13,17 +13,10 @@ class ReportView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nickname = context.watch<AuthCubit>().getProfile?.nickname ?? "사용자";
     final selection = context.select<ProfileCubit, List<bool>>(
       (cubit) => cubit.getSelectedType,
     );
     return Scaffold(
-      appBar: AppBar(
-        title: Text("$nickname 님의 리포트",
-            style: AppTextStyles.textTheme.headlineMedium),
-        centerTitle: true,
-        surfaceTintColor: AppColors.white,
-      ),
       body: RefreshIndicator(
         onRefresh: () {
           return context.read<ProfileCubit>().getMyTodayReport();
@@ -35,6 +28,7 @@ class ReportView extends StatelessWidget {
             width: double.infinity,
             child: Column(
               children: [
+                AppSpacing.verticalSizedBoxL,
                 const Calendar(),
                 AppSpacing.verticalSizedBoxXs,
                 const DayBanner(),

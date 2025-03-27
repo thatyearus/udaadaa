@@ -30,7 +30,27 @@ class _PushSettingViewState extends State<PushSettingView> {
 
     late TutorialCoachMark tutorialCoachMark;
     tutorialCoachMark = TutorialCoachMark(
-      hideSkip: true,
+      hideSkip: false,
+      onSkip: () {
+        logger.d("스킵 누름 - push_setting_view");
+        Analytics().logEvent("튜토리얼_스킵", parameters: {
+          "view": "push_setting_view", // 현재 튜토리얼이 실행된 뷰
+        });
+        PreferencesService().setBool('isTutorialFinished', true);
+        return true; // 👈 튜토리얼 종료
+      },
+      alignSkip: Alignment.topLeft,
+      skipWidget: Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: const Text(
+          "SKIP",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       targets: [
         TargetFocus(
           identify: "mission_push",
@@ -38,15 +58,12 @@ class _PushSettingViewState extends State<PushSettingView> {
           contents: [
             TargetContent(
               align: ContentAlign.bottom,
-              child: Container(
-                padding: AppSpacing.edgeInsetsS,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "매일 인증을 까먹지 않게 미션 알림을 설정해보세요.",
-                  style: AppTextStyles.textTheme.bodyMedium,
+              child: Text(
+                "매일 인증을 까먹지 않게 미션 알림을 설정해보세요.",
+                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
+                  color: Colors.white, // 흰색 글씨
+                  fontWeight: FontWeight.bold, // 글씨 굵게 (Bold)
+                  fontSize: 18, // 글씨 크기 증가
                 ),
               ),
             ),
@@ -58,15 +75,12 @@ class _PushSettingViewState extends State<PushSettingView> {
           contents: [
             TargetContent(
               align: ContentAlign.bottom,
-              child: Container(
-                padding: AppSpacing.edgeInsetsS,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "시간을 추가하면 미션 알림을 받을 수 있어요.",
-                  style: AppTextStyles.textTheme.bodyMedium,
+              child: Text(
+                "시간을 추가하면 미션 알림을 받을 수 있어요.",
+                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
+                  color: Colors.white, // 흰색 글씨
+                  fontWeight: FontWeight.bold, // 글씨 굵게 (Bold)
+                  fontSize: 18, // 글씨 크기 증가
                 ),
               ),
             ),
@@ -80,15 +94,12 @@ class _PushSettingViewState extends State<PushSettingView> {
           contents: [
             TargetContent(
               align: ContentAlign.top,
-              child: Container(
-                padding: AppSpacing.edgeInsetsS,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "버튼을 눌러 설정을 완료해주세요.",
-                  style: AppTextStyles.textTheme.bodyMedium,
+              child: Text(
+                "버튼을 눌러 설정을 완료해주세요.",
+                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
+                  color: Colors.white, // 흰색 글씨
+                  fontWeight: FontWeight.bold, // 글씨 굵게 (Bold)
+                  fontSize: 18, // 글씨 크기 증가
                 ),
               ),
             ),

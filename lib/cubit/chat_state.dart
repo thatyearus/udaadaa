@@ -19,3 +19,21 @@ final class ChatPushNotification extends ChatState {
 }
 
 final class ChatPushLoaded extends ChatState {}
+
+// 새롭게 추가한 상태 (안정적 갱신을 위해)
+class UnreadMessagesUpdated extends ChatState {
+  final int totalUnreadCount;
+  final Map<String, int> unreadMessages;
+
+  UnreadMessagesUpdated(this.totalUnreadCount, this.unreadMessages);
+}
+
+// 방 선태긍로가자
+class JoinRoomLoading extends ChatState {}
+
+class JoinRoomSuccess extends ChatState {}
+
+class JoinRoomFailed extends ChatState {
+  final String reason;
+  JoinRoomFailed(this.reason);
+}

@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/models/report.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -28,6 +30,22 @@ class FeedCubit extends Cubit<FeedState> {
   int _myFeedPage = 0;
   List<int> _curHomeFeedPage = [0, 0, 0];
   List<Feed> allFeeds = [];
+  bool _fallbackChk = false;
+
+  final Feed fallbackFeed = Feed(
+    id: "f3bfa4e8-9d33-4b63-8bff-4f3a0a7e1eaa",
+    userId: "166c0505-768c-422e-a177-39f505f9f7c5",
+    createdAt: null,
+    review: "",
+    type: FeedType.exercise,
+    imagePath: "fallback_exercise.jpg", // ✅ fallback-images 버킷 내 경로
+    imageUrl:
+        "https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/fallback-images/fallback_exercise.jpg", // ✅ 퍼블릭 URL 적용
+    profile: Profile(
+      id: "166c0505-768c-422e-a177-39f505f9f7c5",
+      nickname: "",
+    ),
+  );
 
   FeedCategory _currentCategory = FeedCategory.all;
 
@@ -252,6 +270,15 @@ class FeedCubit extends Cubit<FeedState> {
 
   Future<void> _getExerciseFeeds({bool loadMore = false}) async {
     try {
+      if (!loadMore) {
+        _fallbackChk = false; // ✅ 카테고리 변경 시 fallbackChk 초기화
+      }
+
+      if (_fallbackChk) {
+        logger.w("🚨 Fallback이 실행되었으므로 더 이상 데이터를 가져오지 않음");
+        return;
+      }
+
       var data = [];
 
       if (!loadMore) {
@@ -264,13 +291,32 @@ class FeedCubit extends Cubit<FeedState> {
             .order('created_at', ascending: false)
             .limit(_limit);
       } else {
+        final currentFeedId = _feeds[_curFeedPage].id;
         data = await supabase
             .from('random_feed')
             .select('*, profiles(*)')
             .not('id', 'in', _blockedFeedIds.toList())
             .not('id', 'in', _reactionFeedIds.toList())
+            .not('id', 'eq', currentFeedId) // ✅ 현재 보고 있는 피드 제외
             .eq('type', FeedType.exercise.name)
             .limit(_limit);
+      }
+
+      // ✅ fallback 처리
+      if (data.isEmpty) {
+        logger.w("🚨 운동 피드 없음 → fallback 피드 추가");
+        _fallbackChk = true;
+
+        final List<Feed> newFeeds = [];
+
+        // ✅ fallbackFeed 추가
+        newFeeds.add(fallbackFeed);
+
+        // ✅ 기존 피드에 추가하는 방식 적용
+        _feeds = loadMore ? [..._feeds, ...newFeeds] : newFeeds;
+
+        emit(FeedLoaded());
+        return;
       }
 
       final imagePaths =
@@ -380,7 +426,7 @@ class FeedCubit extends Cubit<FeedState> {
           .select('*, profiles(*), reactions(*, profiles(*))')
           .eq('user_id', supabase.auth.currentUser!.id)
           .order('created_at', ascending: false);
-      logger.d(data);
+      // logger.d(data);
       final imagePaths =
           data.map((item) => item['image_path'] as String).toList();
       final signedUrls = await supabase.storage
@@ -407,6 +453,12 @@ class FeedCubit extends Cubit<FeedState> {
   }
 
   Future<void> addReaction(String feedId, ReactionType reaction) async {
+    // ✅ fallback 피드인지 확인
+    if (feedId == fallbackFeed.id) {
+      logger.w("⚠️ fallback 피드에는 리액션을 추가할 수 없습니다.");
+      return;
+    }
+
     try {
       Analytics().logEvent(
         "피드_리액션",
@@ -436,6 +488,14 @@ class FeedCubit extends Cubit<FeedState> {
       await _getFeeds(loadMore: true);
     } else {
       await _getExerciseFeeds(loadMore: true);
+    }
+  }
+
+  Future<void> refreshFeeds() async {
+    if (_currentCategory == FeedCategory.all) {
+      await _getFeeds();
+    } else {
+      await _getExerciseFeeds();
     }
   }
 

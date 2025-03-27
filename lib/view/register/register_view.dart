@@ -31,15 +31,12 @@ class _RegisterViewState extends State<RegisterView> {
           contents: [
             TargetContent(
               align: ContentAlign.top,
-              child: Container(
-                padding: AppSpacing.edgeInsetsS,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "챌린지에 참여해볼까요?",
-                  style: AppTextStyles.textTheme.bodyMedium,
+              child: Text(
+                "챌린지에 참여해볼까요?",
+                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
+                  color: Colors.white, // 흰색 글씨
+                  fontWeight: FontWeight.bold, // 글씨 굵기(Bold)
+                  fontSize: 18, // 글씨 크기 증가
                 ),
               ),
             ),
@@ -82,6 +79,13 @@ class _RegisterViewState extends State<RegisterView> {
         });
       });
     }
+  }
+
+  @override
+  void dispose() {
+    debugPrint('s');
+    PreferencesService().setBool('isTutorialFinished', true); // 튜토리얼 완료 상태 저장
+    super.dispose();
   }
 
   @override
