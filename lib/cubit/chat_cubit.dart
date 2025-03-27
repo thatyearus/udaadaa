@@ -328,7 +328,6 @@ class ChatCubit extends Cubit<ChatState> {
       unreadMessages[room.id] = unreadMessagesList.length;
       unreadMessageCount += unreadMessagesList.length;
     }
-    debugPrint("what is problem");
     emit(UnreadMessagesUpdated(unreadMessageCount, unreadMessages));
   }
 
