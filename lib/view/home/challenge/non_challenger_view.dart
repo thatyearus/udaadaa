@@ -48,7 +48,7 @@ class NonChallengerView extends StatelessWidget {
           child: Text('챌린지 참여하기', style: AppTextStyles.textTheme.displaySmall),
         ),
         AppSpacing.verticalSizedBoxM,
-        Text("참가자 81% 체중감량 성공", style: AppTextStyles.textTheme.titleSmall),
+        Text("참가자 81% 목표 달성", style: AppTextStyles.textTheme.titleSmall),
       ],
     );
   }

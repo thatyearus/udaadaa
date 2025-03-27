@@ -14,6 +14,7 @@ import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/firebase_options.dart';
+import 'package:udaadaa/service/notifications/notification_service.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -51,7 +52,7 @@ Future<void> main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     ),
     initializeDateFormatting(),
-    //NotificationService.initNotification(),
+    NotificationService.initNotification(),
   ]);
   Analytics().init();
 
