@@ -181,10 +181,13 @@ class ChatCubit extends Cubit<ChatState> {
               readReceipts[room.id]!.isBefore(response[0]['created_at'])) {
             readReceipts[room.id] = DateTime.parse(response[0]['created_at'])
                 .add(const Duration(hours: 9));
+            logger.d(
+                "✅ readReceipts 업데이트: ${room.id} → ${readReceipts[room.id]}");
           }
         }
       });
       await Future.wait(futures);
+      logger.d("🔹 fetchLatestReceipt 실행 완료");
       for (var room in chatList) {
         logger.d("fetchLatestReceipt: ${room.id} ${readReceipts[room.id]}");
       }
@@ -320,13 +323,12 @@ class ChatCubit extends Cubit<ChatState> {
               (readReceipts[room.id] == null ||
                   message.createdAt!.isAfter(readReceipts[room.id]!)))
           .toList();
-      logger.d("calculateUnreadMessages: $unreadMessagesList");
       logger.d("calculateUnreadMessages: ${unreadMessagesList.length}");
       logger.d("readReceipts: ${readReceipts[room.id]}");
       unreadMessages[room.id] = unreadMessagesList.length;
       unreadMessageCount += unreadMessagesList.length;
     }
-    emit(ChatMessageLoaded());
+    emit(UnreadMessagesUpdated(unreadMessageCount, unreadMessages));
   }
 
   void setMessagesListener() {
@@ -439,6 +441,32 @@ class ChatCubit extends Cubit<ChatState> {
               emit(ChatMessageLoaded());
             })
         .subscribe();
+  }
+
+  Future<void> joinRoomByRoomName(String roomName) async {
+    try {
+      emit(JoinRoomLoading()); // ✅ 로딩 시작
+
+      final trimmedName = roomName.trim();
+
+      final res = await supabase.functions
+          .invoke('get-room-id-by-name', body: {'room_name': trimmedName});
+
+      final data = res.data;
+
+      if (res.status == 200 && data != null && data['room_id'] != null) {
+        final roomId = data['room_id'] as String;
+        logger.d("✅ Edge Function 매칭된 room_id: $roomId");
+        await joinRoom(roomId);
+        emit(JoinRoomSuccess()); // ✅ 성공 시 상태
+      } else {
+        logger.e("⛔ 방 이름 매칭 실패: ${data?['error'] ?? 'Unknown'}");
+        emit(JoinRoomFailed("방을 찾을 수 없습니다.")); // ❌ 실패 시 상태
+      }
+    } catch (e, stack) {
+      logger.e("❌ joinRoomByRoomName error", error: e, stackTrace: stack);
+      emit(JoinRoomFailed("네트워크 오류가 발생했습니다.")); // ❌ 실패 시 상태
+    }
   }
 
   Future<void> joinRoom(String roomId) async {

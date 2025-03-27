@@ -45,40 +45,6 @@ class ExerciseReport extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("운동 시간", style: AppTextStyles.textTheme.displaySmall),
-            AppSpacing.horizontalSizedBoxS,
-            Container(
-              decoration: const BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(AppSpacing.s),
-                ),
-              ),
-              padding: AppSpacing.edgeInsetsXxs,
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    //backgroundColor: AppColors.white,
-                    radius: 12,
-                    child: Text(
-                      "🏆",
-                      style: AppTextStyles.bodyMedium(
-                        const TextStyle(
-                          fontFamily: 'tossface',
-                        ),
-                      ),
-                    ),
-                  ),
-                  //AppSpacing.horizontalSizedBoxXxs,
-                  Text(
-                    "챌린지",
-                    style: AppTextStyles.bodySmall(
-                      const TextStyle(color: AppColors.white),
-                    ),
-                  ),
-                  AppSpacing.horizontalSizedBoxXxs,
-                ],
-              ),
-            ),
           ],
         ),
         AppSpacing.verticalSizedBoxL,

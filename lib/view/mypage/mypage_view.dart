@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
+import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
@@ -24,7 +25,27 @@ class MyPageView extends StatelessWidget {
 
     late TutorialCoachMark tutorialCoachMark;
     tutorialCoachMark = TutorialCoachMark(
-      hideSkip: true,
+      hideSkip: false,
+      onSkip: () {
+        logger.d("스킵 누름 - mypage_view");
+        Analytics().logEvent("튜토리얼_스킵", parameters: {
+          "view": "mypage_view", // 현재 튜토리얼이 실행된 뷰
+        });
+        PreferencesService().setBool('isTutorialFinished', true);
+        return true; // 👈 튜토리얼 종료
+      },
+      alignSkip: Alignment.topLeft,
+      skipWidget: Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: const Text(
+          "SKIP",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       targets: [
         TargetFocus(
           identify: "setting_button",
@@ -32,15 +53,12 @@ class MyPageView extends StatelessWidget {
           contents: [
             TargetContent(
               align: ContentAlign.bottom,
-              child: Container(
-                padding: AppSpacing.edgeInsetsS,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "다양한 설정을 변경할 수 있어요.",
-                  style: AppTextStyles.textTheme.bodyMedium,
+              child: Text(
+                "다양한 설정을 변경할 수 있어요.",
+                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
+                  color: Colors.white, // 흰색 글씨
+                  fontWeight: FontWeight.bold, // 글씨 굵게 (Bold)
+                  fontSize: 18, // 글씨 크기 증가
                 ),
               ),
             ),
@@ -54,15 +72,12 @@ class MyPageView extends StatelessWidget {
           contents: [
             TargetContent(
               align: ContentAlign.bottom,
-              child: Container(
-                padding: AppSpacing.edgeInsetsS,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "푸시 알림을 설정하러 가볼까요?",
-                  style: AppTextStyles.textTheme.bodyMedium,
+              child: Text(
+                "푸시 알림을 설정하러 가볼까요?",
+                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
+                  color: Colors.white, // 흰색 글씨
+                  fontWeight: FontWeight.bold, // 글씨 굵게 (Bold)
+                  fontSize: 18, // 글씨 크기 증가
                 ),
               ),
             ),
@@ -83,6 +98,7 @@ class MyPageView extends StatelessWidget {
             });
           }
         } else if (target.identify == "push_setting_button") {
+          Navigator.of(context).pop();
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => const PushSettingView(),
@@ -92,6 +108,7 @@ class MyPageView extends StatelessWidget {
       },
       onFinish: () {
         logger.d("finish tutorial mypage view");
+        context.read<BottomNavCubit>().selectTab(BottomNavState.home);
         context.read<TutorialCubit>().showTutorialPush();
       },
     );
@@ -327,14 +344,14 @@ class MyPageView extends StatelessWidget {
                 value: 'kakaotalk',
                 child: Text('문의하기'),
               ),
-              const PopupMenuItem(
-                value: 'link_email',
-                child: Text('이메일 연동'),
-              ),
-              const PopupMenuItem(
-                value: 'account_restore',
-                child: Text("계정 복원"),
-              ),
+              // const PopupMenuItem(
+              //   value: 'link_email',
+              //   child: Text('이메일 연동'),
+              // ),
+              // const PopupMenuItem(
+              //   value: 'account_restore',
+              //   child: Text("계정 복원"),
+              // ),
             ];
           },
           onSelected: (value) {

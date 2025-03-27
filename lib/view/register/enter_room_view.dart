@@ -24,13 +24,28 @@ class _EnterRoomViewState extends State<EnterRoomView> {
     final onboardingCubit = context.read<TutorialCubit>();
 
     TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
-      hideSkip: true,
+      hideSkip: false,
+      onSkip: () {
+        logger.d("스킵 누름 - enter_room_view");
+        Analytics().logEvent("튜토리얼_스킵", parameters: {
+          "view": "enter_room_view", // 현재 튜토리얼이 실행된 뷰
+        });
+        PreferencesService().setBool('isTutorialFinished', true);
+        return true; // 👈 튜토리얼 종료
+      },
+      alignSkip: Alignment.topLeft,
+      skipWidget: Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: const Text(
+          "SKIP",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       targets: [
-        /*TargetFocus(
-          identify: "challenge_code",
-          keyTarget: onboardingCubit.challengeCodeKey,
-          contents: [TargetContent(child: Text("여기에 챌린지 코드를 입력하세요!"))],
-        ),*/
         TargetFocus(
           identify: "enter_room_code",
           keyTarget: onboardingCubit.enterRoomKey,
@@ -39,15 +54,12 @@ class _EnterRoomViewState extends State<EnterRoomView> {
           contents: [
             TargetContent(
               align: ContentAlign.bottom,
-              child: Container(
-                padding: AppSpacing.edgeInsetsS,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "챌린지 입장 코드를 입력하세요.",
-                  style: AppTextStyles.textTheme.bodyMedium,
+              child: Text(
+                "문자로 받으신 코드를 입력해주세요.",
+                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
+                  color: Colors.white, // 흰색 글씨
+                  fontWeight: FontWeight.bold, // 글씨 굵기 (Bold)
+                  fontSize: 18, // 글씨 크기 증가
                 ),
               ),
             ),
@@ -76,6 +88,7 @@ class _EnterRoomViewState extends State<EnterRoomView> {
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(milliseconds: 500), () {
         if (mounted &&
@@ -155,47 +168,52 @@ class _EnterRoomViewState extends State<EnterRoomView> {
             ),
             const Spacer(),
             // 다음 버튼
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _isButtonEnabled
-                    ? AppColors.primary
-                    : AppColors.grayscale[300],
-                minimumSize: const Size(double.infinity, 56),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            BlocBuilder<ChatCubit, ChatState>(builder: (context, state) {
+              if (state is JoinRoomLoading) {
+                _isButtonEnabled = false;
+              }
+              return ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _isButtonEnabled
+                      ? AppColors.primary
+                      : AppColors.grayscale[300],
+                  minimumSize: const Size(double.infinity, 56),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-              ),
-              onPressed: _isButtonEnabled
-                  ? () {
-                      context
-                          .read<ChatCubit>()
-                          .joinRoom(_codeController.text)
-                          .then((_) {
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("채팅방에 입장했습니다."),
-                          ),
-                        );
+                onPressed: _isButtonEnabled
+                    ? () {
                         context
-                            .read<BottomNavCubit>()
-                            .selectTab(BottomNavState.chat);
-                        Navigator.of(context).popUntil(
-                          (route) => route.isFirst,
-                        );
-                        context.read<TutorialCubit>().showTutorialRoom();
-                      }).catchError((e) {
-                        logger.e(e.toString());
-                      });
-                    }
-                  : null,
-              child: Text(
-                "다음",
-                style: AppTextStyles.textTheme.headlineMedium?.copyWith(
-                  color: AppColors.white,
+                            .read<ChatCubit>()
+                            .joinRoomByRoomName(_codeController.text)
+                            .then((_) {
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("채팅방에 입장했습니다."),
+                            ),
+                          );
+                          context
+                              .read<BottomNavCubit>()
+                              .selectTab(BottomNavState.chat);
+                          Navigator.of(context).popUntil(
+                            (route) => route.isFirst,
+                          );
+                          context.read<TutorialCubit>().showTutorialRoom();
+                        }).catchError((e) {
+                          logger.e(e.toString());
+                        });
+                      }
+                    : null,
+                child: Text(
+                  "다음",
+                  style: AppTextStyles.textTheme.headlineMedium?.copyWith(
+                    color: AppColors.white,
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
             AppSpacing.verticalSizedBoxXxl,
           ],
         ),
