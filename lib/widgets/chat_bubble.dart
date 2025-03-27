@@ -358,7 +358,7 @@ class ChatBubble extends StatelessWidget {
                       color: isMine
                           ? AppColors.primary[200]
                           : AppColors.neutral[100],
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(14),
                     ),
                     constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * 0.6,
@@ -408,7 +408,7 @@ class ChatBubble extends StatelessWidget {
                       color: isMine
                           ? AppColors.primary[200]
                           : AppColors.neutral[100],
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(14),
                     )
                   : null,
               constraints: BoxConstraints(
@@ -425,7 +425,7 @@ class ChatBubble extends StatelessWidget {
                     )
                   : (message.medias != null
                       ? ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(14),
                           child: CachedNetworkImage(
                               imageUrl: message.medias![0].url),
                         )
