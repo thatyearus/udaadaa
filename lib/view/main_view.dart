@@ -63,40 +63,9 @@ class MainView extends StatelessWidget {
                 );
               }
             },
-            child: BlocListener<ChatCubit, ChatState>(
-              listener: (context, state) {
-                if (state is ChatPushNotification) {
-                  final currentTab = context.read<BottomNavCubit>().state;
-                  if (currentTab != BottomNavState.chat) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        action: SnackBarAction(
-                          label: '바로가기 >',
-                          textColor: Colors.yellow,
-                          onPressed: () {
-                            context
-                                .read<BottomNavCubit>()
-                                .selectTab(BottomNavState.chat);
-                            context.read<ChatCubit>().enterRoom(state.roomId);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ChatView(
-                                  roomInfo: state.roomInfo,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        content: Text(state.text),
-                      ),
-                    );
-                  }
-                }
-              },
-              child: IndexedStack(
-                index: BottomNavState.values.indexOf(state),
-                children: children,
-              ),
+            child: IndexedStack(
+              index: BottomNavState.values.indexOf(state),
+              children: children,
             ),
           );
         }),
@@ -175,63 +144,6 @@ class MainView extends StatelessWidget {
           );
         }),
       ),
-      /*
-      floatingActionButton: BlocBuilder<BottomNavCubit, BottomNavState>(
-        builder: (context, state) {
-          if (state == BottomNavState.feed ||
-              state == BottomNavState.chat ||
-              state == BottomNavState.register) {
-            return Container();
-          }
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-            width: double.infinity,
-            child: FloatingActionButton.extended(
-              heroTag: 'addFood',
-              onPressed: () {
-                if (state == BottomNavState.home) {
-                  Analytics().logEvent("홈_공감받으러가기");
-                } else if (state == BottomNavState.profile) {
-                  Analytics().logEvent("마이페이지_공감받으러가기");
-                }
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const FirstView(),
-                  ),
-                );
-                context.read<BottomNavCubit>().selectTab(BottomNavState.home);
-              },
-              label: Text(
-                '식단 응원 받으러 가기',
-                style: AppTextStyles.textTheme.headlineLarge,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          );
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,*/
     );
   }
 }
-
-/*
-class _NavigatorPage extends StatelessWidget {
-  final Widget child;
-
-  const _NavigatorPage({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      onGenerateRoute: (settings) {
-        return MaterialPageRoute(
-          builder: (context) => child,
-        );
-      },
-    );
-  }
-}
-*/
