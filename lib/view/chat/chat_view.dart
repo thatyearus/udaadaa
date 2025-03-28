@@ -23,6 +23,7 @@ import 'package:udaadaa/view/chat/profile_view.dart';
 import 'package:udaadaa/view/chat/ranking_view.dart';
 import 'package:udaadaa/view/form/exercise/exercise_first_view.dart';
 import 'package:udaadaa/view/form/weight/weight_first_view.dart';
+import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/view/onboarding/first_view.dart';
 import 'package:udaadaa/widgets/chat_bubble.dart';
 
@@ -30,7 +31,7 @@ import 'package:udaadaa/widgets/chat_bubble.dart';
 ///
 /// Displays chat bubbles as a ListView and TextField to enter new chat.
 class ChatView extends StatelessWidget {
-  const ChatView({super.key, required this.roomInfo});
+  const ChatView({super.key, required this.roomInfo, this.fromPush = false});
 
   /*static Route<void> route(String roomId) {
     return MaterialPageRoute(
@@ -40,6 +41,7 @@ class ChatView extends StatelessWidget {
       ),
     );
   }*/
+  final bool fromPush;
   final Room roomInfo;
 
   void showTutorial(BuildContext context) {
@@ -522,6 +524,20 @@ class ChatView extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
+          leading: fromPush
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  onPressed: () {
+                    context.read<ChatCubit>().leaveRoom(roomInfo.id);
+                    context
+                        .read<BottomNavCubit>()
+                        .selectTab(BottomNavState.chat);
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (_) => const MainView()),
+                    );
+                  },
+                )
+              : null,
           title: Text(
             roomInfo.roomName,
             style: AppTextStyles.textTheme.headlineLarge,

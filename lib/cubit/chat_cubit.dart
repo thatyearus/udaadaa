@@ -37,6 +37,8 @@ class ChatCubit extends Cubit<ChatState> {
   List<MapEntry<Profile, double>> ranking = [];
   double weightAverage = 0.0;
   Map<String, bool> _pushOptions = {};
+  bool _initialized = false;
+  bool get isInitialized => _initialized;
 
   ChatCubit(this.formCubit, this.challengeCubit) : super(ChatInitial()) {
     Future.wait([
@@ -63,6 +65,7 @@ class ChatCubit extends Cubit<ChatState> {
           loadInitialMessages(),
         ]).then((_) {
           calculateUnreadMessages();
+          _initialized = true;
         }).catchError((e) {
           logger.e("loadInitialMessages error: $e");
         });
@@ -504,6 +507,11 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   Future<void> enterRoom(String roomId) async {
+    debugPrint("현재 채팅방 데이터:");
+    for (var room in getChatList) {
+      debugPrint("roomId: ${room.id}, roomName: ${room.roomName}");
+    }
+
     try {
       currentRoomId = roomId;
       final unreadRoomMessages = messages[roomId]!
@@ -512,8 +520,9 @@ class ChatCubit extends Cubit<ChatState> {
               (readReceipts[roomId] == null ||
                   message.createdAt!.isAfter(readReceipts[roomId]!)))
           .toList();
-      logger.d("readReceipts: ${readReceipts[roomId]}");
-      logger.d("enterRoom: $unreadRoomMessages");
+      debugPrint("읽지 않은 메시지 목록: $unreadRoomMessages");
+
+      // 읽지 않은 메시지를 upsert로 보내기 전에 출력하여 중복 체크
       final readReceiptsMap = unreadRoomMessages
           .map((message) => {
                 'room_id': roomId,
@@ -521,8 +530,28 @@ class ChatCubit extends Cubit<ChatState> {
                 'user_id': supabase.auth.currentUser!.id,
               })
           .toList();
-      if (readReceiptsMap.isEmpty) return;
-      await supabase.from('read_receipts').upsert(readReceiptsMap);
+
+      debugPrint("업서트 할 readReceiptsMap: $readReceiptsMap");
+
+      // 중복 체크
+      final seen = <String>{};
+      final uniqueReadReceiptsMap = <Map<String, dynamic>>[];
+
+      for (var receipt in readReceiptsMap) {
+        final key = '${receipt['room_id']}_${receipt['message_id']}';
+        if (!seen.contains(key)) {
+          seen.add(key);
+          uniqueReadReceiptsMap.add(receipt);
+        } else {
+          debugPrint("중복된 데이터 발견: $receipt");
+        }
+      }
+
+      // 중복된 데이터 없이 upsert 실행
+      if (uniqueReadReceiptsMap.isEmpty) return;
+
+      await supabase.from('read_receipts').upsert(uniqueReadReceiptsMap);
+
       readReceipts[roomId] = unreadMessages.isNotEmpty
           ? unreadRoomMessages.first.createdAt
           : DateTime.now();
@@ -538,6 +567,47 @@ class ChatCubit extends Cubit<ChatState> {
       logger.e("enterRoom error: $e");
     }
   }
+
+  // Future<void> enterRoom(String roomId) async {
+  //   debugPrint("현재 채팅방 데이터:");
+  //   for (var room in getChatList) {
+  //     debugPrint("roomId: ${room.id}, roomName: ${room.roomName}");
+  //   }
+
+  //   try {
+  //     currentRoomId = roomId;
+  //     final unreadRoomMessages = messages[roomId]!
+  //         .where((message) =>
+  //             message.createdAt != null &&
+  //             (readReceipts[roomId] == null ||
+  //                 message.createdAt!.isAfter(readReceipts[roomId]!)))
+  //         .toList();
+  //     logger.d("readReceipts: ${readReceipts[roomId]}");
+  //     logger.d("enterRoom: $unreadRoomMessages");
+  //     final readReceiptsMap = unreadRoomMessages
+  //         .map((message) => {
+  //               'room_id': roomId,
+  //               'message_id': message.id,
+  //               'user_id': supabase.auth.currentUser!.id,
+  //             })
+  //         .toList();
+  //     if (readReceiptsMap.isEmpty) return;
+  //     await supabase.from('read_receipts').upsert(readReceiptsMap);
+  //     readReceipts[roomId] = unreadMessages.isNotEmpty
+  //         ? unreadRoomMessages.first.createdAt
+  //         : DateTime.now();
+  //     unreadMessageCount -= unreadMessages[roomId] ?? 0;
+  //     unreadMessages = unreadMessages.map((key, value) {
+  //       if (key == roomId) {
+  //         return MapEntry(key, 0);
+  //       }
+  //       return MapEntry(key, value);
+  //     });
+  //     emit(ChatMessageLoaded());
+  //   } catch (e) {
+  //     logger.e("enterRoom error: $e");
+  //   }
+  // }
 
   void leaveRoom(String roomId) {
     logger.d("leaveRoom: $roomId");
