@@ -18,7 +18,6 @@ class EnterRoomView extends StatefulWidget {
 
 class _EnterRoomViewState extends State<EnterRoomView> {
   final TextEditingController _codeController = TextEditingController();
-  bool _isButtonEnabled = false;
 
   void showTutorial(BuildContext context) {
     final onboardingCubit = context.read<TutorialCubit>();
@@ -80,9 +79,7 @@ class _EnterRoomViewState extends State<EnterRoomView> {
   }
 
   void _onTextChanged(String value) {
-    setState(() {
-      _isButtonEnabled = value.isNotEmpty;
-    });
+    setState(() {});
   }
 
   @override
@@ -168,52 +165,76 @@ class _EnterRoomViewState extends State<EnterRoomView> {
             ),
             const Spacer(),
             // 다음 버튼
-            BlocBuilder<ChatCubit, ChatState>(builder: (context, state) {
-              if (state is JoinRoomLoading) {
-                _isButtonEnabled = false;
-              }
-              return ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _isButtonEnabled
-                      ? AppColors.primary
-                      : AppColors.grayscale[300],
-                  minimumSize: const Size(double.infinity, 56),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: _isButtonEnabled
-                    ? () {
-                        context
-                            .read<ChatCubit>()
-                            .joinRoomByRoomName(_codeController.text)
-                            .then((_) {
-                          if (!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("채팅방에 입장했습니다."),
+            BlocListener<ChatCubit, ChatState>(
+              listener: (context, state) {
+                if (state is JoinRoomSuccess) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("채팅방에 입장했습니다.")),
+                  );
+                  context.read<BottomNavCubit>().selectTab(BottomNavState.chat);
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  context.read<TutorialCubit>().showTutorialRoom();
+                }
+              },
+              child: BlocBuilder<ChatCubit, ChatState>(
+                builder: (context, state) {
+                  final isLoading = state is JoinRoomLoading;
+                  final isFailed = state is JoinRoomFailed;
+                  final errorMessage = isFailed ? state.reason : null;
+                  final isEnabled =
+                      !isLoading && _codeController.text.trim().isNotEmpty;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Text(
+                            errorMessage,
+                            style: AppTextStyles.bodyMedium(
+                              const TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.w600, // ✅ 굵게 추가
+                              ),
                             ),
-                          );
-                          context
-                              .read<BottomNavCubit>()
-                              .selectTab(BottomNavState.chat);
-                          Navigator.of(context).popUntil(
-                            (route) => route.isFirst,
-                          );
-                          context.read<TutorialCubit>().showTutorialRoom();
-                        }).catchError((e) {
-                          logger.e(e.toString());
-                        });
-                      }
-                    : null,
-                child: Text(
-                  "다음",
-                  style: AppTextStyles.textTheme.headlineMedium?.copyWith(
-                    color: AppColors.white,
-                  ),
-                ),
-              );
-            }),
+                          ),
+                        ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isEnabled
+                              ? AppColors.primary
+                              : AppColors.grayscale[300],
+                          minimumSize: const Size(double.infinity, 56),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: isEnabled
+                            ? () {
+                                context.read<ChatCubit>().joinRoomByRoomName(
+                                    _codeController.text.trim());
+                              }
+                            : null,
+                        child: isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              )
+                            : Text(
+                                "다음",
+                                style: AppTextStyles.textTheme.headlineMedium
+                                    ?.copyWith(
+                                  color: AppColors.white,
+                                ),
+                              ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+
             AppSpacing.verticalSizedBoxXxl,
           ],
         ),
