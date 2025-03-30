@@ -18,6 +18,14 @@ final class ChatPushNotification extends ChatState {
   ChatPushNotification(this.roomId, this.text, this.roomInfo);
 }
 
+class ChatPushOpenedFromBackground extends ChatState {
+  final String roomId;
+  final String text;
+  final Room roomInfo;
+
+  ChatPushOpenedFromBackground(this.roomId, this.text, this.roomInfo);
+}
+
 final class ChatPushLoaded extends ChatState {}
 
 // 새롭게 추가한 상태 (안정적 갱신을 위해)
