@@ -71,18 +71,24 @@ class FeedCubit extends Cubit<FeedState> {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      logger.d('onMessageOpenedApp: $message');
-      openFeedDetail(message);
+      if (message.data['feedId'] != null) {
+        logger.d('onMessageOpenedApp: $message');
+        emit(FeedPushNotification(
+            message.data['feedId'], message.notification!.body!));
+        openFeedDetail(message);
+      }
     });
+
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage? message) {
       logger.d('getInitialMessage: $message');
       openFeedDetail(message);
     });
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      logger.d('onMessage: $message');
       if (message.data['feedId'] != null) {
+        logger.d('onMessage: $message');
         emit(FeedPushNotification(
             message.data['feedId'], message.notification!.body!));
       }
