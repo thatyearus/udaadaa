@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -8,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/models/calorie.dart';
@@ -37,8 +39,64 @@ class ChatCubit extends Cubit<ChatState> {
   List<MapEntry<Profile, double>> ranking = [];
   double weightAverage = 0.0;
   Map<String, bool> _pushOptions = {};
+  final bool _initialized = false;
+  bool get isInitialized => _initialized;
 
-  ChatCubit(this.formCubit, this.challengeCubit) : super(ChatInitial()) {
+  final AuthCubit authCubit;
+  late final StreamSubscription authSubscription;
+
+  ChatCubit(this.authCubit, this.formCubit, this.challengeCubit)
+      : super(ChatInitial()) {
+    if (authCubit.state is Authenticated) {
+      _initialize();
+    }
+
+    authSubscription = authCubit.stream.listen((authState) {
+      if (authState is Authenticated) {
+        _initialize();
+      }
+    });
+  }
+
+  // ChatCubit(this.formCubit, this.challengeCubit) : super(ChatInitial()) {
+  //   Future.wait([
+  //     fetchBlockedUsers(),
+  //     fetchBlockedMessages(),
+  //   ]).then(
+  //     (value) {
+  //       Future.wait([
+  //         fetchPushOptions(),
+  //         loadChatList().then((_) async {
+  //           fetchLatestMessages();
+  //           await fetchLatestReceipt();
+  //           FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //             if (message.data['roomId'] != null) {
+  //               final roomId = message.data['roomId'];
+  //               final roomInfo =
+  //                   chatList.firstWhere((room) => room.id == roomId);
+  //               emit(ChatPushNotification(roomId, "새로운 메시지가 도착했습니다", roomInfo));
+  //             }
+  //           });
+  //         }).catchError((e) {
+  //           logger.e("loadChatList error: $e");
+  //         }),
+  //         loadInitialMessages(),
+  //       ]).then((_) {
+  //         calculateUnreadMessages();
+  //         _initialized = true;
+  //       }).catchError((e) {
+  //         logger.e("loadInitialMessages error: $e");
+  //       });
+  //       setMessagesListener();
+  //       setReactionListener();
+  //       setReadReceiptListener();
+  //     },
+  //   ).catchError((e) {
+  //     logger.e("fetchBlockedUsers error: $e");
+  //   });
+  // }
+
+  Future<void> _initialize() async {
     Future.wait([
       fetchBlockedUsers(),
       fetchBlockedMessages(),
@@ -49,14 +107,28 @@ class ChatCubit extends Cubit<ChatState> {
           loadChatList().then((_) async {
             fetchLatestMessages();
             await fetchLatestReceipt();
-            FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-              if (message.data['roomId'] != null) {
-                final roomId = message.data['roomId'];
-                final roomInfo =
-                    chatList.firstWhere((room) => room.id == roomId);
-                emit(ChatPushNotification(roomId, "새로운 메시지가 도착했습니다", roomInfo));
-              }
-            });
+            // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+            //   if (message.data['roomId'] != null) {
+            //     final roomId = message.data['roomId'];
+            //     final roomInfo =
+            //         chatList.firstWhere((room) => room.id == roomId);
+            //     emit(ChatPushNotification(roomId, "새로운 메시지가 도착했습니다", roomInfo));
+            //   }
+            // });
+            // FirebaseMessaging.onMessageOpenedApp
+            //     .listen((RemoteMessage message) {
+            //   if (message.data['roomId'] != null) {
+            //     final roomId = message.data['roomId'];
+            //     final roomInfo =
+            //         chatList.firstWhere((room) => room.id == roomId);
+
+            //     emit(ChatPushOpenedFromBackground(
+            //       roomId,
+            //       "알림을 클릭하여 들어왔습니다.",
+            //       roomInfo,
+            //     ));
+            //   }
+            // });
           }).catchError((e) {
             logger.e("loadChatList error: $e");
           }),
@@ -366,8 +438,19 @@ class ChatCubit extends Cubit<ChatState> {
                 );
               }
               chatList = updatedChatList;
-              chatList.sort((a, b) => b.lastMessage!.createdAt!
-                  .compareTo(a.lastMessage!.createdAt!));
+              // chatList.sort((a, b) => b.lastMessage!.createdAt!
+              //     .compareTo(a.lastMessage!.createdAt!));
+
+              // 6. 정렬 (null safety 적용)
+              chatList.sort((a, b) {
+                final aTime = a.lastMessage?.createdAt;
+                final bTime = b.lastMessage?.createdAt;
+
+                if (aTime == null && bTime == null) return 0;
+                if (bTime == null) return -1;
+                if (aTime == null) return 1;
+                return bTime.compareTo(aTime);
+              });
 
               if (!messages.containsKey(message.roomId)) {
                 messages[message.roomId] = [];
@@ -458,14 +541,13 @@ class ChatCubit extends Cubit<ChatState> {
         final roomId = data['room_id'] as String;
         logger.d("✅ Edge Function 매칭된 room_id: $roomId");
         await joinRoom(roomId);
-        emit(JoinRoomSuccess()); // ✅ 성공 시 상태
       } else {
         logger.e("⛔ 방 이름 매칭 실패: ${data?['error'] ?? 'Unknown'}");
         emit(JoinRoomFailed("방을 찾을 수 없습니다.")); // ❌ 실패 시 상태
       }
     } catch (e, stack) {
       logger.e("❌ joinRoomByRoomName error", error: e, stackTrace: stack);
-      emit(JoinRoomFailed("네트워크 오류가 발생했습니다.")); // ❌ 실패 시 상태
+      emit(JoinRoomFailed("방을 찾을 수 없습니다.")); // ❌ 실패 시 상태
     }
   }
 
@@ -497,13 +579,20 @@ class ChatCubit extends Cubit<ChatState> {
               .eq('user_id', supabase.auth.currentUser!.id);
         }
       }
+      emit(JoinRoomSuccess()); // ✅ 성공 시 상태
       emit(ChatListLoaded());
     } catch (e) {
+      emit(JoinRoomFailed("이미 해당 방에 참여중입니다.")); // ❌ 실패 시 상태
       logger.e("participateRoom error: $e");
     }
   }
 
   Future<void> enterRoom(String roomId) async {
+    debugPrint("현재 채팅방 데이터:");
+    for (var room in getChatList) {
+      debugPrint("roomId: ${room.id}, roomName: ${room.roomName}");
+    }
+
     try {
       currentRoomId = roomId;
       final unreadRoomMessages = messages[roomId]!
@@ -512,8 +601,9 @@ class ChatCubit extends Cubit<ChatState> {
               (readReceipts[roomId] == null ||
                   message.createdAt!.isAfter(readReceipts[roomId]!)))
           .toList();
-      logger.d("readReceipts: ${readReceipts[roomId]}");
-      logger.d("enterRoom: $unreadRoomMessages");
+      debugPrint("읽지 않은 메시지 목록: $unreadRoomMessages");
+
+      // 읽지 않은 메시지를 upsert로 보내기 전에 출력하여 중복 체크
       final readReceiptsMap = unreadRoomMessages
           .map((message) => {
                 'room_id': roomId,
@@ -521,8 +611,28 @@ class ChatCubit extends Cubit<ChatState> {
                 'user_id': supabase.auth.currentUser!.id,
               })
           .toList();
-      if (readReceiptsMap.isEmpty) return;
-      await supabase.from('read_receipts').upsert(readReceiptsMap);
+
+      debugPrint("업서트 할 readReceiptsMap: $readReceiptsMap");
+
+      // 중복 체크
+      final seen = <String>{};
+      final uniqueReadReceiptsMap = <Map<String, dynamic>>[];
+
+      for (var receipt in readReceiptsMap) {
+        final key = '${receipt['room_id']}_${receipt['message_id']}';
+        if (!seen.contains(key)) {
+          seen.add(key);
+          uniqueReadReceiptsMap.add(receipt);
+        } else {
+          debugPrint("중복된 데이터 발견: $receipt");
+        }
+      }
+
+      // 중복된 데이터 없이 upsert 실행
+      if (uniqueReadReceiptsMap.isEmpty) return;
+
+      await supabase.from('read_receipts').upsert(uniqueReadReceiptsMap);
+
       readReceipts[roomId] = unreadMessages.isNotEmpty
           ? unreadRoomMessages.first.createdAt
           : DateTime.now();
@@ -538,6 +648,47 @@ class ChatCubit extends Cubit<ChatState> {
       logger.e("enterRoom error: $e");
     }
   }
+
+  // Future<void> enterRoom(String roomId) async {
+  //   debugPrint("현재 채팅방 데이터:");
+  //   for (var room in getChatList) {
+  //     debugPrint("roomId: ${room.id}, roomName: ${room.roomName}");
+  //   }
+
+  //   try {
+  //     currentRoomId = roomId;
+  //     final unreadRoomMessages = messages[roomId]!
+  //         .where((message) =>
+  //             message.createdAt != null &&
+  //             (readReceipts[roomId] == null ||
+  //                 message.createdAt!.isAfter(readReceipts[roomId]!)))
+  //         .toList();
+  //     logger.d("readReceipts: ${readReceipts[roomId]}");
+  //     logger.d("enterRoom: $unreadRoomMessages");
+  //     final readReceiptsMap = unreadRoomMessages
+  //         .map((message) => {
+  //               'room_id': roomId,
+  //               'message_id': message.id,
+  //               'user_id': supabase.auth.currentUser!.id,
+  //             })
+  //         .toList();
+  //     if (readReceiptsMap.isEmpty) return;
+  //     await supabase.from('read_receipts').upsert(readReceiptsMap);
+  //     readReceipts[roomId] = unreadMessages.isNotEmpty
+  //         ? unreadRoomMessages.first.createdAt
+  //         : DateTime.now();
+  //     unreadMessageCount -= unreadMessages[roomId] ?? 0;
+  //     unreadMessages = unreadMessages.map((key, value) {
+  //       if (key == roomId) {
+  //         return MapEntry(key, 0);
+  //       }
+  //       return MapEntry(key, value);
+  //     });
+  //     emit(ChatMessageLoaded());
+  //   } catch (e) {
+  //     logger.e("enterRoom error: $e");
+  //   }
+  // }
 
   void leaveRoom(String roomId) {
     logger.d("leaveRoom: $roomId");

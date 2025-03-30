@@ -5,6 +5,8 @@ import 'package:badges/badges.dart' as badges;
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
+import 'package:udaadaa/models/notification_type.dart';
+import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/chat/chat_view.dart';
 import 'package:udaadaa/view/chat/room_view.dart';
@@ -15,8 +17,88 @@ import 'package:udaadaa/view/mypage/mypage_view.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/view/register/register_view.dart';
 
-class MainView extends StatelessWidget {
-  const MainView({super.key});
+class MainView extends StatefulWidget {
+  final NotificationType? notificationType;
+  final String? id;
+
+  const MainView({super.key, this.notificationType, this.id});
+
+  @override
+  State<MainView> createState() => _MainViewState();
+}
+
+class _MainViewState extends State<MainView> {
+  bool _notificationHandled = false;
+
+  // 메시지알람, 피드알람, 일반 분기처리
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_notificationHandled) return;
+    _notificationHandled = true;
+
+    if (widget.notificationType == NotificationType.message &&
+        widget.id != null) {
+      _waitAndEnterRoom(widget.id!);
+    }
+
+    if (widget.notificationType == NotificationType.feed && widget.id != null) {
+      context.read<BottomNavCubit>().selectTab(BottomNavState.feed);
+      // 필요시 Feed 열기 처리 추가
+    }
+  }
+
+  void _waitAndEnterRoom(String roomId) async {
+    const maxRetries = 10;
+    const delay = Duration(milliseconds: 300);
+
+    for (int attempt = 0; attempt < maxRetries; attempt++) {
+      final chatCubit = context.read<ChatCubit>(); // ✅ 최신 상태로 매번 가져오기
+      final room = chatCubit.getChatList
+          .where((r) => r.id == roomId)
+          .cast<Room?>()
+          .firstOrNull;
+
+      if (room != null) {
+        if (!mounted) return;
+
+        context.read<BottomNavCubit>().selectTab(BottomNavState.chat);
+
+        chatCubit.enterRoom(roomId);
+
+        Analytics().logEvent('채팅방_입장', parameters: {'room_id': room.id});
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              settings: const RouteSettings(name: 'ChatView'),
+              builder: (context) => ChatView(roomInfo: room),
+            ),
+          );
+        });
+        return;
+      }
+
+      await Future.delayed(delay);
+      if (!mounted) return;
+    }
+
+    if (!mounted) return;
+
+    debugPrint("❗roomId=$roomId 에 해당하는 채팅방을 끝내 못 찾음");
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('채팅방 정보를 불러오지 못했어요 🥲'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,67 +120,57 @@ class MainView extends StatelessWidget {
         child: BlocBuilder<BottomNavCubit, BottomNavState>(
             builder: (context, state) {
           return BlocListener<FeedCubit, FeedState>(
-            listener: (context, state) {
-              if (state is FeedDetail) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => MyRecordView(
-                      initialPage: state.index,
-                    ),
-                  ),
-                );
-              }
-              if (state is FeedPushNotification) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    action: SnackBarAction(
-                      label: '바로가기 >',
-                      textColor: Colors.yellow,
-                      onPressed: () {
-                        context.read<FeedCubit>().openFeed(state.feedId);
-                      },
-                    ),
-                    content: Text(state.text),
-                  ),
-                );
-              }
-            },
-            child: BlocListener<ChatCubit, ChatState>(
               listener: (context, state) {
-                if (state is ChatPushNotification) {
-                  final currentTab = context.read<BottomNavCubit>().state;
-                  if (currentTab != BottomNavState.chat) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        action: SnackBarAction(
-                          label: '바로가기 >',
-                          textColor: Colors.yellow,
-                          onPressed: () {
-                            context
-                                .read<BottomNavCubit>()
-                                .selectTab(BottomNavState.chat);
-                            context.read<ChatCubit>().enterRoom(state.roomId);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ChatView(
-                                  roomInfo: state.roomInfo,
-                                ),
-                              ),
-                            );
-                          },
+                if (state is FeedDetail) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => MyRecordView(
+                        initialPage: state.index,
+                      ),
+                    ),
+                  );
+                }
+                if (state is FeedPushNotification) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      action: SnackBarAction(
+                        label: '바로가기 >',
+                        textColor: Colors.yellow,
+                        onPressed: () {
+                          context.read<FeedCubit>().openFeed(state.feedId);
+                        },
+                      ),
+                      content: Text(state.text),
+                    ),
+                  );
+                }
+              },
+              child: BlocListener<ChatCubit, ChatState>(
+                listener: (context, state) {
+                  if (state is ChatPushOpenedFromBackground) {
+                    // final currentTab = context.read<BottomNavCubit>().state;
+
+                    // 직접 onPressed 로직 실행 (SnackBar 없이)
+                    context
+                        .read<BottomNavCubit>()
+                        .selectTab(BottomNavState.chat);
+                    context.read<ChatCubit>().enterRoom(state.roomId);
+
+                    // 채팅방으로 바로 이동
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ChatView(
+                          roomInfo: state.roomInfo,
                         ),
-                        content: Text(state.text),
                       ),
                     );
                   }
-                }
-              },
-              child: IndexedStack(
-                index: BottomNavState.values.indexOf(state),
-                children: children,
-              ),
-            ),
-          );
+                },
+                child: IndexedStack(
+                  index: BottomNavState.values.indexOf(state),
+                  children: children,
+                ),
+              ));
         }),
       ),
       bottomNavigationBar: Container(
@@ -175,63 +247,6 @@ class MainView extends StatelessWidget {
           );
         }),
       ),
-      /*
-      floatingActionButton: BlocBuilder<BottomNavCubit, BottomNavState>(
-        builder: (context, state) {
-          if (state == BottomNavState.feed ||
-              state == BottomNavState.chat ||
-              state == BottomNavState.register) {
-            return Container();
-          }
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-            width: double.infinity,
-            child: FloatingActionButton.extended(
-              heroTag: 'addFood',
-              onPressed: () {
-                if (state == BottomNavState.home) {
-                  Analytics().logEvent("홈_공감받으러가기");
-                } else if (state == BottomNavState.profile) {
-                  Analytics().logEvent("마이페이지_공감받으러가기");
-                }
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const FirstView(),
-                  ),
-                );
-                context.read<BottomNavCubit>().selectTab(BottomNavState.home);
-              },
-              label: Text(
-                '식단 응원 받으러 가기',
-                style: AppTextStyles.textTheme.headlineLarge,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          );
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,*/
     );
   }
 }
-
-/*
-class _NavigatorPage extends StatelessWidget {
-  final Widget child;
-
-  const _NavigatorPage({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      onGenerateRoute: (settings) {
-        return MaterialPageRoute(
-          builder: (context) => child,
-        );
-      },
-    );
-  }
-}
-*/

@@ -348,9 +348,22 @@ class AuthCubit extends Cubit<AuthState> {
         });
       } catch (error) {
         // UNIQUE 제약 조건 위반 시 새로운 닉네임을 생성하고 다시 시도
+        // 이게 핵심
+        final existing = await supabase
+            .from('profiles')
+            .select()
+            .eq('id', supabase.auth.currentUser!.id)
+            .maybeSingle();
+
+        if (existing != null) {
+          _profile = Profile.fromMap(map: existing);
+          emit(Authenticated(_profile!));
+          return;
+        }
         if (error is PostgrestException && error.code == '23505') {
           // 23505는 PostgreSQL에서 고유 제약 조건 위반에 대한 에러 코드입니다.
           logger.d("Nickname ${profile.nickname} already exists");
+          logger.d("id ${profile.id} already exists");
           profile = profile.copyWith(
             nickname: RandomNicknameGenerator.generateNickname(),
           );
