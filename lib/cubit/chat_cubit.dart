@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -8,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/models/calorie.dart';
@@ -37,7 +39,7 @@ class ChatCubit extends Cubit<ChatState> {
   List<MapEntry<Profile, double>> ranking = [];
   double weightAverage = 0.0;
   Map<String, bool> _pushOptions = {};
-  bool _initialized = false;
+  final bool _initialized = false;
   bool get isInitialized => _initialized;
 
   final AuthCubit authCubit;
@@ -93,33 +95,46 @@ class ChatCubit extends Cubit<ChatState> {
   //     logger.e("fetchBlockedUsers error: $e");
   //   });
   // }
+
   Future<void> _initialize() async {
-    try {
-      await Future.wait([
+    Future.wait([
       fetchBlockedUsers(),
       fetchBlockedMessages(),
-      ]);
-
-      await Future.wait([
+    ]).then(
+      (value) {
+        Future.wait([
           fetchPushOptions(),
           loadChatList().then((_) async {
             fetchLatestMessages();
             await fetchLatestReceipt();
-            FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-              if (message.data['roomId'] != null) {
-                final roomId = message.data['roomId'];
-                final roomInfo =
-                    chatList.firstWhere((room) => room.id == roomId);
-                emit(ChatPushNotification(roomId, "새로운 메시지가 도착했습니다", roomInfo));
-              }
-            });
+            // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+            //   if (message.data['roomId'] != null) {
+            //     final roomId = message.data['roomId'];
+            //     final roomInfo =
+            //         chatList.firstWhere((room) => room.id == roomId);
+            //     emit(ChatPushNotification(roomId, "새로운 메시지가 도착했습니다", roomInfo));
+            //   }
+            // });
+            // FirebaseMessaging.onMessageOpenedApp
+            //     .listen((RemoteMessage message) {
+            //   if (message.data['roomId'] != null) {
+            //     final roomId = message.data['roomId'];
+            //     final roomInfo =
+            //         chatList.firstWhere((room) => room.id == roomId);
+
+            //     emit(ChatPushOpenedFromBackground(
+            //       roomId,
+            //       "알림을 클릭하여 들어왔습니다.",
+            //       roomInfo,
+            //     ));
+            //   }
+            // });
           }).catchError((e) {
             logger.e("loadChatList error: $e");
           }),
           loadInitialMessages(),
         ]).then((_) {
           calculateUnreadMessages();
-          _initialized = true;
         }).catchError((e) {
           logger.e("loadInitialMessages error: $e");
         });
@@ -423,8 +438,19 @@ class ChatCubit extends Cubit<ChatState> {
                 );
               }
               chatList = updatedChatList;
-              chatList.sort((a, b) => b.lastMessage!.createdAt!
-                  .compareTo(a.lastMessage!.createdAt!));
+              // chatList.sort((a, b) => b.lastMessage!.createdAt!
+              //     .compareTo(a.lastMessage!.createdAt!));
+
+              // 6. 정렬 (null safety 적용)
+              chatList.sort((a, b) {
+                final aTime = a.lastMessage?.createdAt;
+                final bTime = b.lastMessage?.createdAt;
+
+                if (aTime == null && bTime == null) return 0;
+                if (bTime == null) return -1;
+                if (aTime == null) return 1;
+                return bTime.compareTo(aTime);
+              });
 
               if (!messages.containsKey(message.roomId)) {
                 messages[message.roomId] = [];
