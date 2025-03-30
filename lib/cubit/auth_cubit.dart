@@ -363,6 +363,7 @@ class AuthCubit extends Cubit<AuthState> {
         if (error is PostgrestException && error.code == '23505') {
           // 23505는 PostgreSQL에서 고유 제약 조건 위반에 대한 에러 코드입니다.
           logger.d("Nickname ${profile.nickname} already exists");
+          logger.d("id ${profile.id} already exists");
           profile = profile.copyWith(
             nickname: RandomNicknameGenerator.generateNickname(),
           );
