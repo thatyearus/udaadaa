@@ -40,13 +40,67 @@ class ChatCubit extends Cubit<ChatState> {
   bool _initialized = false;
   bool get isInitialized => _initialized;
 
-  ChatCubit(this.formCubit, this.challengeCubit) : super(ChatInitial()) {
-    Future.wait([
+  final AuthCubit authCubit;
+  late final StreamSubscription authSubscription;
+
+  ChatCubit(this.authCubit, this.formCubit, this.challengeCubit)
+      : super(ChatInitial()) {
+    if (authCubit.state is Authenticated) {
+      _initialize();
+    }
+
+    authSubscription = authCubit.stream.listen((authState) {
+      if (authState is Authenticated) {
+        _initialize();
+      }
+    });
+  }
+
+  // ChatCubit(this.formCubit, this.challengeCubit) : super(ChatInitial()) {
+  //   Future.wait([
+  //     fetchBlockedUsers(),
+  //     fetchBlockedMessages(),
+  //   ]).then(
+  //     (value) {
+  //       Future.wait([
+  //         fetchPushOptions(),
+  //         loadChatList().then((_) async {
+  //           fetchLatestMessages();
+  //           await fetchLatestReceipt();
+  //           FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //             if (message.data['roomId'] != null) {
+  //               final roomId = message.data['roomId'];
+  //               final roomInfo =
+  //                   chatList.firstWhere((room) => room.id == roomId);
+  //               emit(ChatPushNotification(roomId, "새로운 메시지가 도착했습니다", roomInfo));
+  //             }
+  //           });
+  //         }).catchError((e) {
+  //           logger.e("loadChatList error: $e");
+  //         }),
+  //         loadInitialMessages(),
+  //       ]).then((_) {
+  //         calculateUnreadMessages();
+  //         _initialized = true;
+  //       }).catchError((e) {
+  //         logger.e("loadInitialMessages error: $e");
+  //       });
+  //       setMessagesListener();
+  //       setReactionListener();
+  //       setReadReceiptListener();
+  //     },
+  //   ).catchError((e) {
+  //     logger.e("fetchBlockedUsers error: $e");
+  //   });
+  // }
+  Future<void> _initialize() async {
+    try {
+      await Future.wait([
       fetchBlockedUsers(),
       fetchBlockedMessages(),
-    ]).then(
-      (value) {
-        Future.wait([
+      ]);
+
+      await Future.wait([
           fetchPushOptions(),
           loadChatList().then((_) async {
             fetchLatestMessages();
@@ -461,14 +515,13 @@ class ChatCubit extends Cubit<ChatState> {
         final roomId = data['room_id'] as String;
         logger.d("✅ Edge Function 매칭된 room_id: $roomId");
         await joinRoom(roomId);
-        emit(JoinRoomSuccess()); // ✅ 성공 시 상태
       } else {
         logger.e("⛔ 방 이름 매칭 실패: ${data?['error'] ?? 'Unknown'}");
         emit(JoinRoomFailed("방을 찾을 수 없습니다.")); // ❌ 실패 시 상태
       }
     } catch (e, stack) {
       logger.e("❌ joinRoomByRoomName error", error: e, stackTrace: stack);
-      emit(JoinRoomFailed("네트워크 오류가 발생했습니다.")); // ❌ 실패 시 상태
+      emit(JoinRoomFailed("방을 찾을 수 없습니다.")); // ❌ 실패 시 상태
     }
   }
 
@@ -500,8 +553,10 @@ class ChatCubit extends Cubit<ChatState> {
               .eq('user_id', supabase.auth.currentUser!.id);
         }
       }
+      emit(JoinRoomSuccess()); // ✅ 성공 시 상태
       emit(ChatListLoaded());
     } catch (e) {
+      emit(JoinRoomFailed("이미 해당 방에 참여중입니다.")); // ❌ 실패 시 상태
       logger.e("participateRoom error: $e");
     }
   }
