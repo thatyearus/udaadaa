@@ -78,6 +78,8 @@ class CalorieReport extends StatelessWidget {
               barTouchData: BarTouchData(
                 enabled: true,
                 touchTooltipData: BarTouchTooltipData(
+                  fitInsideHorizontally: true, // ✅ 양옆 짤림 방지
+                  fitInsideVertically: true, // ✅ 위아래 짤림 방지
                   getTooltipColor: (group) => AppColors.primary[100]!,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     final allValue = group.barRods[3].toY.toInt();
