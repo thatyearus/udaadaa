@@ -171,7 +171,9 @@ class RoomView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatCubit, ChatState>(
       buildWhen: (previous, current) =>
-          current is ChatMessageLoaded || current is UnreadMessagesUpdated,
+          current is ChatMessageLoaded ||
+          current is UnreadMessagesUpdated ||
+          current is ChatMessagesRefreshedFromPush, // ✅ 추가
       builder: (context, state) {
         List<Room> rooms = context.read<ChatCubit>().getChatList;
         Map<String, int> unreadCount =
@@ -251,20 +253,48 @@ class RoomView extends StatelessWidget {
                         ),
                     ],
                   ),
-                  onTap: () {
+                  onTap: () async {
                     Analytics()
                         .logEvent('채팅방_입장', parameters: {'room_id': room.id});
                     Navigator.of(context).push(
-                      MaterialPageRoute(
-                        settings: RouteSettings(name: 'ChatView'),
-                        builder: (context) => BlocProvider.value(
+                      PageRouteBuilder(
+                        settings: const RouteSettings(name: 'ChatView'),
+                        // 총 애니메이션 시간 + 대기 시간
+                        transitionDuration: const Duration(milliseconds: 1000),
+                        pageBuilder: (_, __, ___) => BlocProvider.value(
                           value: context.read<TutorialCubit>(),
                           child: ChatView(
                             roomInfo: room,
                           ),
                         ),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          // 700ms 동안은 정지 상태, 그 뒤로 슬라이드
+                          final delayedAnimation =
+                              Tween<double>(begin: 0.0, end: 1.0).animate(
+                            CurvedAnimation(
+                              parent: animation,
+                              curve: Interval(
+                                0.5, // 시작 시점 (700ms)
+                                1.0, // 끝
+                                curve: Curves.easeInOut,
+                              ),
+                            ),
+                          );
+
+                          return SlideTransition(
+                            position: delayedAnimation.drive(
+                              Tween<Offset>(
+                                begin: const Offset(1.0, 0.0), // 오른쪽에서 등장
+                                end: Offset.zero,
+                              ),
+                            ),
+                            child: child,
+                          );
+                        },
                       ),
                     );
+
                     context.read<ChatCubit>().enterRoom(room.id);
                     Future.delayed(const Duration(milliseconds: 500), () {
                       if (context.mounted) {
