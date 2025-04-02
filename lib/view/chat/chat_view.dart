@@ -515,7 +515,9 @@ class ChatView extends StatelessWidget {
         (roomInfo.endDay == null && roomInfo.startDay == null);
     final enabled = personalChannel ||
         (roomInfo.endDay!.isAfter(DateTime.now()) &&
-            roomInfo.startDay!.isBefore(DateTime.now()));
+            roomInfo.startDay!
+                .subtract(Duration(days: 1))
+                .isBefore(DateTime.now()));
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
@@ -576,35 +578,36 @@ class ChatView extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.black.withValues(alpha: 0.25),
-                        blurRadius: 2,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(FluentIcons.megaphone_24_regular,
-                          color: AppColors.neutral[500]),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(AppSpacing.s),
-                          child: Text(
-                            personalChannel
-                                ? '궁금한 점이 있으시면 언제든지 이 채널로 문의해주세요.'
-                                : '우측 하단의 + 버튼을 눌러 인증을 진행해 주세요.',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.black.withValues(alpha: 0.25),
+                      blurRadius: 2,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Icon(FluentIcons.megaphone_24_regular,
+                        color: AppColors.neutral[500]),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(AppSpacing.s),
+                        child: Text(
+                          personalChannel
+                              ? '궁금한 점이 있으시면 언제든지 이 채널로 문의해주세요.'
+                              : '우측 하단의 + 버튼을 눌러 인증을 진행해 주세요.',
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
-                    ],
-                  )),
+                    ),
+                  ],
+                ),
+              ),
               Expanded(
                 child: DashChat(
                   currentUser:

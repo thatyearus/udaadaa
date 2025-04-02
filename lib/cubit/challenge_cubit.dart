@@ -318,7 +318,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           .count(CountOption.exact)
           .then((res) => res.count);
 
-      // 몸묵게 조회
+      // 몸무게 조회
       final weightCount = await supabase
           .from('weight')
           .select('id')
@@ -358,10 +358,10 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           .gte('end_day', _selectedDate)
           .lte('start_day', _selectedDate)
           .eq('user_id', supabase.auth.currentUser!.id);
-      if (ret.isEmpty) {
-        _selectedDayChallenge = false;
-        return;
-      }
+      // if (ret.isEmpty) {
+      //   _selectedDayChallenge = false;
+      //   return;
+      // }
       _selectedDayChallenge = true;
 
       DateTime dayStart = DateTime(

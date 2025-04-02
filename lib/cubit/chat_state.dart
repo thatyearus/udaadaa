@@ -11,11 +11,12 @@ final class ChatMessageLoaded extends ChatState {}
 
 final class BlockUserFinished extends ChatState {}
 
-final class ChatPushNotification extends ChatState {
-  final String roomId, text;
+final class ChatNotificationReceivedInForeground extends ChatState {
+  final String roomId, title, body;
   final Room roomInfo;
 
-  ChatPushNotification(this.roomId, this.text, this.roomInfo);
+  ChatNotificationReceivedInForeground(
+      this.roomId, this.title, this.body, this.roomInfo);
 }
 
 class ChatPushOpenedFromBackground extends ChatState {
@@ -27,6 +28,12 @@ class ChatPushOpenedFromBackground extends ChatState {
 }
 
 final class ChatPushLoaded extends ChatState {}
+
+final class ChatMessagesRefreshedFromPush extends ChatState {
+  final DateTime refreshedAt;
+
+  ChatMessagesRefreshedFromPush() : refreshedAt = DateTime.now();
+}
 
 // 새롭게 추가한 상태 (안정적 갱신을 위해)
 class UnreadMessagesUpdated extends ChatState {
@@ -45,3 +52,7 @@ class JoinRoomFailed extends ChatState {
   final String reason;
   JoinRoomFailed(this.reason);
 }
+
+class ChatImageSelected extends ChatState {} // ✅ 사진 선택됨
+
+class ChatImageCleared extends ChatState {} // ✅ 사진 취소됨
