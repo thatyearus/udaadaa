@@ -95,6 +95,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ChatCubit>(
           create: (context) => ChatCubit(
+            context.read<AuthCubit>(), // ✅ 추가
             context.read<FormCubit>(),
             context.read<ChallengeCubit>(),
           ),

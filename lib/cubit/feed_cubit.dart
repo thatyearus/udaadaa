@@ -71,18 +71,24 @@ class FeedCubit extends Cubit<FeedState> {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      logger.d('onMessageOpenedApp: $message');
-      openFeedDetail(message);
+      if (message.data['feedId'] != null) {
+        logger.d('onMessageOpenedApp: $message');
+        emit(FeedPushNotification(
+            message.data['feedId'], message.notification!.body!));
+        openFeedDetail(message);
+      }
     });
+
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage? message) {
       logger.d('getInitialMessage: $message');
       openFeedDetail(message);
     });
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      logger.d('onMessage: $message');
       if (message.data['feedId'] != null) {
+        logger.d('onMessage: $message');
         emit(FeedPushNotification(
             message.data['feedId'], message.notification!.body!));
       }
@@ -161,61 +167,92 @@ class FeedCubit extends Cubit<FeedState> {
           .select('*, profiles(*)')
           .not('id', 'in', _blockedFeedIds.toList())
           .limit(_limit);
-      final imagePaths =
-          data.map((item) => item['image_path'] as String).toList();
-      final signedUrls = await supabase.storage
-          .from('FeedImages')
-          .createSignedUrls(imagePaths, 3600 * 12);
 
       if (data.isEmpty) {
         logger.e("No data");
         throw "No data";
-      } else {
-        _homeFeeds = [[], [], []];
-        _curHomeFeedPage = [0, 0, 0];
-        for (var i = 0; i < data.length; i++) {
-          final item = data[i];
-          item['image_url'] = signedUrls[i].signedUrl;
-          _homeFeeds[i % _homeFeeds.length].add(Feed.fromMap(map: item));
-        }
-        logger.d(_homeFeeds);
-        emit(FeedLoaded());
       }
+
+      final imagePaths =
+          data.map((item) => item['image_path'] as String).toList();
+
+      // 📦 안정적인 signed URL 요청 (폴링 포함)
+      final signedUrls = await _getSignedUrlsWithRetry(imagePaths);
+
+      _homeFeeds = [[], [], []];
+      _curHomeFeedPage = [0, 0, 0];
+
+      for (var i = 0; i < data.length; i++) {
+        final item = data[i];
+        final signedUrl = signedUrls[i];
+
+        if (signedUrl == null) {
+          logger.w("🚫 해당 이미지 signedUrl 실패로 건너뜀: ${imagePaths[i]}");
+          continue;
+        }
+
+        item['image_url'] = signedUrl;
+        _homeFeeds[i % _homeFeeds.length].add(Feed.fromMap(map: item));
+      }
+
+      if (_homeFeeds.every((feeds) => feeds.isEmpty)) {
+        logger.e("✅ 데이터는 있었지만 signedUrl 실패로 추가된 피드 없음");
+        throw "All signed URLs failed";
+      }
+
+      logger.d(_homeFeeds);
+      emit(FeedLoaded());
     } catch (e) {
-      logger.e(e);
+      logger.e("❌ 홈 피드 로딩 실패: $e");
       emit(FeedError());
     }
   }
 
   Future<void> getMoreHomeFeeds(int index) async {
     logger.d("Get more home feeds index: $index");
+
     try {
       final data = await supabase
           .from('random_feed')
           .select('*, profiles(*)')
           .not('id', 'in', _blockedFeedIds.toList())
           .limit(_limit);
-      final imagePaths =
-          data.map((item) => item['image_path'] as String).toList();
-      final signedUrls = await supabase.storage
-          .from('FeedImages')
-          .createSignedUrls(imagePaths, 3600 * 12);
 
       if (data.isEmpty) {
         logger.e("No data");
         throw "No data";
-      } else {
-        List<Feed> newFeeds = [];
-        for (var i = 0; i < data.length; i++) {
-          final item = data[i];
-          item['image_url'] = signedUrls[i].signedUrl;
-          newFeeds.add(Feed.fromMap(map: item));
-        }
-        _homeFeeds[index] = [..._homeFeeds[index], ...newFeeds];
-        emit(FeedLoaded());
       }
+
+      final imagePaths =
+          data.map((item) => item['image_path'] as String).toList();
+
+      // 📦 안정적인 signed URL 요청 (폴링 포함)
+      final signedUrls = await _getSignedUrlsWithRetry(imagePaths);
+
+      List<Feed> newFeeds = [];
+
+      for (var i = 0; i < data.length; i++) {
+        final item = data[i];
+        final signedUrl = signedUrls[i];
+
+        if (signedUrl == null) {
+          logger.w("🚫 해당 이미지 signedUrl 실패로 건너뜀: ${imagePaths[i]}");
+          continue;
+        }
+
+        item['image_url'] = signedUrl;
+        newFeeds.add(Feed.fromMap(map: item));
+      }
+
+      if (newFeeds.isEmpty) {
+        logger.e("✅ 데이터는 있었지만 signedUrl 실패로 추가된 피드 없음");
+        throw "All signed URLs failed";
+      }
+
+      _homeFeeds[index] = [..._homeFeeds[index], ...newFeeds];
+      emit(FeedLoaded());
     } catch (e) {
-      logger.e(e);
+      logger.e("❌ 추가 홈 피드 로딩 실패: $e");
       emit(FeedError());
     }
   }
@@ -243,27 +280,41 @@ class FeedCubit extends Cubit<FeedState> {
             .limit(_limit);
       }
 
-      final imagePaths =
-          data.map((item) => item['image_path'] as String).toList();
-      final signedUrls = await supabase.storage
-          .from('FeedImages')
-          .createSignedUrls(imagePaths, 3600 * 12);
-
       if (data.isEmpty) {
         logger.e("No data");
         throw "No data";
-      } else {
-        final List<Feed> newFeeds = [];
-        for (var i = 0; i < data.length; i++) {
-          final item = data[i];
-          item['image_url'] = signedUrls[i].signedUrl;
-          newFeeds.add(Feed.fromMap(map: item));
-        }
-        _feeds = loadMore ? [..._feeds, ...newFeeds] : newFeeds;
-        emit(FeedLoaded());
       }
+
+      final imagePaths =
+          data.map((item) => item['image_path'] as String).toList();
+
+      // 📦 폴링 처리된 signed URL 요청
+      final signedUrls = await _getSignedUrlsWithRetry(imagePaths);
+
+      final List<Feed> newFeeds = [];
+
+      for (var i = 0; i < data.length; i++) {
+        final item = data[i];
+        final signedUrl = signedUrls[i];
+
+        if (signedUrl == null) {
+          logger.w("🚫 해당 이미지의 signedUrl 생성 실패: ${imagePaths[i]}");
+          continue; // 이 항목은 스킵
+        }
+
+        item['image_url'] = signedUrl;
+        newFeeds.add(Feed.fromMap(map: item));
+      }
+
+      if (newFeeds.isEmpty) {
+        logger.e("✅ 데이터는 있었지만 signedUrl 실패로 추가된 Feed 없음");
+        throw "All signed URLs failed";
+      }
+
+      _feeds = loadMore ? [..._feeds, ...newFeeds] : newFeeds;
+      emit(FeedLoaded());
     } catch (e) {
-      logger.e(e);
+      logger.e("❌ Feed 로딩 실패: $e");
       emit(FeedError());
     }
   }
@@ -426,12 +477,11 @@ class FeedCubit extends Cubit<FeedState> {
           .select('*, profiles(*), reactions(*, profiles(*))')
           .eq('user_id', supabase.auth.currentUser!.id)
           .order('created_at', ascending: false);
-      // logger.d(data);
+
       final imagePaths =
           data.map((item) => item['image_path'] as String).toList();
-      final signedUrls = await supabase.storage
-          .from('FeedImages')
-          .createSignedUrls(imagePaths, 3600 * 12);
+
+      final signedUrls = await _getSignedUrlsWithRetry(imagePaths);
 
       if (data.isEmpty) {
         logger.e("No data");
@@ -440,16 +490,34 @@ class FeedCubit extends Cubit<FeedState> {
         _myFeeds = [];
         for (var i = 0; i < data.length; i++) {
           final item = data[i];
-          item['image_url'] = signedUrls[i].signedUrl;
+          item['image_url'] = signedUrls[i]; // 실패했으면 null일 수도 있음
           _myFeeds.add(Feed.fromMap(map: item));
         }
         logger.d(_myFeeds);
       }
+
       emit(FeedLoaded());
     } catch (e) {
       logger.e(e);
       emit(FeedError());
     }
+  }
+
+  Future<List<String?>> _getSignedUrlsWithRetry(List<String> paths,
+      {int retry = 3}) async {
+    for (int i = 0; i < retry; i++) {
+      try {
+        final signedUrlObjects = await supabase.storage
+            .from('FeedImages')
+            .createSignedUrls(paths, 3600 * 12);
+
+        return signedUrlObjects.map((e) => e.signedUrl).toList();
+      } catch (e) {
+        logger.w("🔁 Signed URLs 생성 실패 (시도 ${i + 1}/$retry): $e");
+        await Future.delayed(Duration(milliseconds: 700));
+      }
+    }
+    return List.filled(paths.length, null);
   }
 
   Future<void> addReaction(String feedId, ReactionType reaction) async {

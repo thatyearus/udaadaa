@@ -4,6 +4,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/cubit/tutorial_cubit.dart';
+import 'package:udaadaa/service/notifications/notification_service.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -377,40 +378,6 @@ class _PushSettingViewState extends State<PushSettingView> {
                                       style:
                                           AppTextStyles.textTheme.titleSmall),
                                   AppSpacing.horizontalSizedBoxS,
-                                  Container(
-                                    decoration: const BoxDecoration(
-                                      color: AppColors.primary,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(AppSpacing.s),
-                                      ),
-                                    ),
-                                    padding: AppSpacing.edgeInsetsXxs,
-                                    child: Row(
-                                      children: [
-                                        CircleAvatar(
-                                          //backgroundColor: AppColors.white,
-                                          radius: 12,
-                                          child: Text(
-                                            "🏆",
-                                            style: AppTextStyles.bodyMedium(
-                                              const TextStyle(
-                                                fontFamily: 'tossface',
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        //AppSpacing.horizontalSizedBoxXxs,
-                                        Text(
-                                          "챌린지",
-                                          style: AppTextStyles.bodySmall(
-                                            const TextStyle(
-                                                color: AppColors.white),
-                                          ),
-                                        ),
-                                        AppSpacing.horizontalSizedBoxXxs,
-                                      ],
-                                    ),
-                                  ),
                                 ],
                               ),
                               AppSpacing.verticalSizedBoxXxs,
@@ -451,6 +418,44 @@ class _PushSettingViewState extends State<PushSettingView> {
                   ],
                 ),
               ),
+              Container(
+                margin: const EdgeInsets.only(top: AppSpacing.s),
+                padding: AppSpacing.edgeInsetsM,
+                decoration: BoxDecoration(
+                  color: AppColors.neutral[50],
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.bug_report, color: AppColors.primary),
+                        AppSpacing.horizontalSizedBoxS,
+                        Text(
+                          "알림 테스트",
+                          style: AppTextStyles.textTheme.titleSmall,
+                        ),
+                      ],
+                    ),
+                    AppSpacing.verticalSizedBoxXs,
+                    Text(
+                      "버튼을 눌러 로컬 알림이 잘 오는지 테스트해보세요.",
+                      style: AppTextStyles.textTheme.labelMedium,
+                    ),
+                    AppSpacing.verticalSizedBoxS,
+                    ElevatedButton(
+                      onPressed: () {
+                        NotificationService.showNotification(
+                          "🧪 테스트 알림",
+                          "지금 이 알림이 오면 로컬 알림 성공!",
+                        );
+                      },
+                      child: Text("알림 테스트 해보기"),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -466,85 +471,6 @@ class _PushSettingViewState extends State<PushSettingView> {
               "푸시설정_완료",
               parameters: {"버튼": "클릭"},
             );
-            /*
-            if (context.read<AuthCubit>().getIsChallenger == false &&
-                _isMissionPushOn) {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  actionsOverflowDirection: VerticalDirection.down,
-                  actions: [
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: AppSpacing.s),
-                              foregroundColor: Theme.of(context).primaryColor,
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: Theme.of(context).primaryColor),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              minimumSize: const Size(double.infinity, 0),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _isMissionPushOn = false;
-                              });
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('취소',
-                                style: AppTextStyles.textTheme.headlineSmall),
-                          ),
-                        ),
-                        AppSpacing.verticalSizedBoxS,
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: AppSpacing.s),
-                              foregroundColor: AppColors.white,
-                              backgroundColor: AppColors.primary,
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: Theme.of(context).primaryColor),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              minimumSize: const Size(double.infinity, 0),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const EighthView(),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              '챌린지 참여하기',
-                              style: AppTextStyles.textTheme.headlineSmall
-                                  ?.copyWith(
-                                color: AppColors.white, // 텍스트 색상 설정
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                  title: Text('미션 알림 기능',
-                      style: AppTextStyles.textTheme.headlineMedium),
-                  content: Text('미션 알림은 챌린지에 참여하면 설정할 수 있어요!',
-                      style: AppTextStyles.textTheme.bodyLarge),
-                ),
-              );
-              return;
-            }*/
             if (_isMissionPushOn) {
               context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
             } else {

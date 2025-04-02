@@ -159,37 +159,49 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   Future<void> scheduleNotifications(List<TimeOfDay> alarmTimes) async {
     PreferencesService().setAlarmTimes(alarmTimes);
     PreferencesService().setBool('isMissionPushOn', true);
-    await isEntered();
-    if (_challenge == null) {
-      return;
-    }
 
     final nickname = (authCubit.getCurProfile?.nickname.isNotEmpty ?? false)
         ? "${authCubit.getCurProfile!.nickname}님, "
         : "";
 
-    NotificationService.cacnelNotification().then((_) {
-      for (int i = 0; i < 7; i++) {
-        final DateTime date = _challenge!.startDay.add(Duration(days: i));
-        for (var j = 0; j < alarmTimes.length; j++) {
-          final time = alarmTimes[j];
-          NotificationService.scheduleNotification(
-            i * alarmTimes.length + j,
-            "오늘의 미션 인증 시간이에요 ⏰",
-            "$nickname지금 바로 인증하여 다이어트 성공을 향해 한 발짝 더 나아가요 🚀",
-            time.hour,
-            time.minute,
-            date,
-          );
-        }
+    logger.d("🔄 알림 초기화 중...");
+    NotificationService.cancelNotification().then((_) {
+      final now = DateTime.now();
+      logger.d("📆 현재 시각: $now");
+      logger.d("⏰ 설정된 알람 시간 개수: ${alarmTimes.length}");
+
+      for (int i = 0; i < alarmTimes.length; i++) {
+        final time = alarmTimes[i];
+
+        final firstDate = DateTime(
+          now.year,
+          now.month,
+          now.day,
+          time.hour,
+          time.minute,
+        );
+
+        logger.d(
+            "🛠️ 알림 예약 준비 - ID: $i, 시간: ${time.hour}:${time.minute}, 시작일: $firstDate");
+
+        NotificationService.scheduleNotification(
+          i,
+          "오늘의 미션 인증 시간이에요 ⏰",
+          "$nickname지금 바로 인증하여 다이어트 성공을 향해 한 발짝 더 나아가요 🚀",
+          time.hour,
+          time.minute,
+          firstDate,
+        );
       }
+
+      logger.d("✅ 알림 예약 처리 완료");
     });
   }
 
   Future<void> cancelNotifications() async {
     Future.wait([
       PreferencesService().setBool('isMissionPushOn', false),
-      NotificationService.cacnelNotification(),
+      NotificationService.cancelNotification(),
     ]);
   }
 
@@ -306,7 +318,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           .count(CountOption.exact)
           .then((res) => res.count);
 
-      // 몸묵게 조회
+      // 몸무게 조회
       final weightCount = await supabase
           .from('weight')
           .select('id')
@@ -346,10 +358,10 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           .gte('end_day', _selectedDate)
           .lte('start_day', _selectedDate)
           .eq('user_id', supabase.auth.currentUser!.id);
-      if (ret.isEmpty) {
-        _selectedDayChallenge = false;
-        return;
-      }
+      // if (ret.isEmpty) {
+      //   _selectedDayChallenge = false;
+      //   return;
+      // }
       _selectedDayChallenge = true;
 
       DateTime dayStart = DateTime(

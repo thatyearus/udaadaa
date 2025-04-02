@@ -176,15 +176,14 @@ class MissionList extends StatelessWidget {
                   : '${selectedDate.month}/${selectedDate.day}(${weekday[selectedDate.weekday - 1]})'),
               style: AppTextStyles.textTheme.headlineMedium),
           AppSpacing.verticalSizedBoxS,
-          (selectedDayChallenge
-              ? ListView.builder(
-                  itemCount: 2,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Analytics().logEvent("챌린지_미션선택",
-                            parameters: {"미션": "미션 $index"});
-                        /*
+          ListView.builder(
+            itemCount: 2,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  Analytics()
+                      .logEvent("챌린지_미션선택", parameters: {"미션": "미션 $index"});
+                  /*
                         if (index == 2) {
                           context
                               .read<BottomNavCubit>()
@@ -201,15 +200,14 @@ class MissionList extends StatelessWidget {
                             builder: (context) => const WeightFirstView(),
                           ),
                         );*/
-                      },
-                      child: MissionCard(
-                        index: index,
-                      ),
-                    );
-                  },
-                  shrinkWrap: true,
-                )
-              : Container()),
+                },
+                child: MissionCard(
+                  index: index,
+                ),
+              );
+            },
+            shrinkWrap: true,
+          ),
           AppSpacing.verticalSizedBoxL,
           LastRecordView(),
         ],
