@@ -54,19 +54,18 @@ class ExerciseReport extends StatelessWidget {
             BarChartData(
               barGroups: List.generate(weeklyReport.length, (index) {
                 final report = weeklyReport[index];
-                return chartData(
-                  index,
-                  report?.weight ?? 0.0,
-                );
+                return chartData(index, report?.exercise?.toDouble() ?? 0.0);
               }),
               barTouchData: BarTouchData(
                 enabled: true,
                 touchTooltipData: BarTouchTooltipData(
+                  fitInsideHorizontally: true, // ✅ 양옆 짤림 방지
+                  fitInsideVertically: true, // ✅ 위아래 짤림 방지
                   getTooltipColor: (group) => AppColors.primary[100]!,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     final allValue = rod.toY;
 
-                    final text = '$allValue kg';
+                    final text = '${allValue.toInt()}분'; // <- 여기서 소수점 제거!
 
                     return BarTooltipItem(
                       text,
