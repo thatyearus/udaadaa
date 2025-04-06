@@ -179,7 +179,7 @@ class RoomView extends StatelessWidget {
         Map<String, int> unreadCount =
             context.read<ChatCubit>().getUnreadMessages;
 
-        debugPrint("[DEBUG] 현재 unreadCount 상태: $unreadCount");
+        // debugPrint("[DEBUG] 현재 unreadCount 상태: $unreadCount");
 
         return Scaffold(
           appBar: AppBar(
@@ -261,12 +261,44 @@ class RoomView extends StatelessWidget {
                         settings: const RouteSettings(name: 'ChatView'),
                         // 총 애니메이션 시간 + 대기 시간
                         transitionDuration: const Duration(milliseconds: 1000),
-                        pageBuilder: (_, __, ___) => BlocProvider.value(
-                          value: context.read<TutorialCubit>(),
-                          child: ChatView(
-                            roomInfo: room,
-                          ),
-                        ),
+                        pageBuilder: (_, __, ___) {
+                          double startDragX = 0;
+                          bool isDragging = false;
+
+                          return PopScope(
+                            canPop: true,
+                            child: GestureDetector(
+                              onHorizontalDragStart: (details) {
+                                isDragging = true;
+                                startDragX = details.globalPosition.dx;
+                              },
+                              onHorizontalDragUpdate: (details) {
+                                if (!isDragging) return;
+
+                                // 왼쪽에서 시작된 드래그만 처리
+                                if (startDragX < 100) {
+                                  final delta =
+                                      details.globalPosition.dx - startDragX;
+                                  // 화면 너비의 30% 이상 드래그되면 pop
+                                  if (delta >
+                                      MediaQuery.of(context).size.width * 0.3) {
+                                    isDragging = false;
+                                    Navigator.of(context).pop();
+                                  }
+                                }
+                              },
+                              onHorizontalDragEnd: (details) {
+                                isDragging = false;
+                              },
+                              child: BlocProvider.value(
+                                value: context.read<TutorialCubit>(),
+                                child: ChatView(
+                                  roomInfo: room,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {
                           // 700ms 동안은 정지 상태, 그 뒤로 슬라이드
@@ -294,8 +326,7 @@ class RoomView extends StatelessWidget {
                         },
                       ),
                     );
-
-                    context.read<ChatCubit>().enterRoom(room.id);
+                    context.read<ChatCubit>().enterRoom1(room.id);
                     Future.delayed(const Duration(milliseconds: 500), () {
                       if (context.mounted) {
                         context.read<TutorialCubit>().showTutorialChat();
