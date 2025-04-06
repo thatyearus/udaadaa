@@ -1,10 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/models/notification_type.dart';
-import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/chat/chat_view.dart';
 
 import 'package:udaadaa/view/main_view.dart';
 
@@ -89,6 +85,17 @@ class SplashViewState extends State<SplashView> {
         MaterialPageRoute(builder: (context) => const MainView()),
       );
     });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(
+    //       builder: (context) => MainView(
+    //         notificationType: NotificationType.message,
+    //         id: 'a6cb8715-2366-4c12-ab4d-7550a6e3e178',
+    //       ),
+    //     ),
+    //   );
+    // });
+    return;
   }
 
   @override

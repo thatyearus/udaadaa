@@ -25,7 +25,7 @@ class FeedCubit extends Cubit<FeedState> {
   List<List<Feed>> _homeFeeds = [[], [], []];
   List<String> _blockedFeedIds = [];
   List<String> _reactionFeedIds = [];
-  final int _limit = 10;
+  final int _limit = 3;
   int _curFeedPage = 0;
   int _myFeedPage = 0;
   List<int> _curHomeFeedPage = [0, 0, 0];
@@ -476,12 +476,13 @@ class FeedCubit extends Cubit<FeedState> {
           .from('feed')
           .select('*, profiles(*), reactions(*, profiles(*))')
           .eq('user_id', supabase.auth.currentUser!.id)
-          .order('created_at', ascending: false);
+          .order('created_at', ascending: false)
+          .limit(12);
 
       final imagePaths =
           data.map((item) => item['image_path'] as String).toList();
 
-      final signedUrls = await _getSignedUrlsWithRetry(imagePaths);
+      final signedUrls = await _getSignedUrlsInBatches(imagePaths);
 
       if (data.isEmpty) {
         logger.e("No data");
@@ -503,18 +504,57 @@ class FeedCubit extends Cubit<FeedState> {
     }
   }
 
+  Future<List<String?>> _getSignedUrlsInBatches(List<String> paths,
+      {int batchSize = 6, int retry = 3}) async {
+    List<String?> allResults = [];
+
+    logger.d("🧵 총 ${paths.length}개의 이미지 Signed URL 생성 시작");
+
+    for (int i = 0; i < paths.length; i += batchSize) {
+      final batch = paths.skip(i).take(batchSize).toList();
+      // logger.d("📦 [${i ~/ batchSize + 1}번째 배치] ${batch.length}개 처리 시작");
+
+      final results = await Future.wait(batch.map((path) async {
+        for (int j = 0; j < retry; j++) {
+          try {
+            final url = await supabase.storage
+                .from('FeedImages')
+                .createSignedUrl(path, 3600 * 3)
+                .timeout(const Duration(milliseconds: 1000));
+
+            // logger.d("✅ Signed URL 생성 성공: $path");
+            return url;
+          } catch (e) {
+            logger.w("🔁 Signed URL 실패 (path: $path, 시도: ${j + 1}/$retry): $e");
+            await Future.delayed(const Duration(milliseconds: 200));
+          }
+        }
+
+        logger.e("❌ Signed URL 최종 실패: $path");
+        return null;
+      }));
+
+      allResults.addAll(results);
+    }
+
+    logger.d(
+        "🎉 Signed URL 생성 완료 (${allResults.whereType<String>().length}/${paths.length})");
+    return allResults;
+  }
+
   Future<List<String?>> _getSignedUrlsWithRetry(List<String> paths,
       {int retry = 3}) async {
     for (int i = 0; i < retry; i++) {
       try {
         final signedUrlObjects = await supabase.storage
             .from('FeedImages')
-            .createSignedUrls(paths, 3600 * 12);
+            .createSignedUrls(paths, 3600 * 3)
+            .timeout(const Duration(milliseconds: 1000)); // ⏱️ 타임아웃 설정
 
         return signedUrlObjects.map((e) => e.signedUrl).toList();
       } catch (e) {
         logger.w("🔁 Signed URLs 생성 실패 (시도 ${i + 1}/$retry): $e");
-        await Future.delayed(Duration(milliseconds: 700));
+        await Future.delayed(Duration(milliseconds: 200));
       }
     }
     return List.filled(paths.length, null);
