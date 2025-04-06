@@ -352,12 +352,12 @@ class ChallengeCubit extends Cubit<ChallengeState> {
 
   Future<void> getSelectedDayMission() async {
     try {
-      final ret = await supabase
-          .from('challenge')
-          .select('*')
-          .gte('end_day', _selectedDate)
-          .lte('start_day', _selectedDate)
-          .eq('user_id', supabase.auth.currentUser!.id);
+      // final ret = await supabase
+      //     .from('challenge')
+      //     .select('*')
+      //     .gte('end_day', _selectedDate)
+      //     .lte('start_day', _selectedDate)
+      //     .eq('user_id', supabase.auth.currentUser!.id);
       // if (ret.isEmpty) {
       //   _selectedDayChallenge = false;
       //   return;

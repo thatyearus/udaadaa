@@ -56,3 +56,5 @@ class JoinRoomFailed extends ChatState {
 class ChatImageSelected extends ChatState {} // ✅ 사진 선택됨
 
 class ChatImageCleared extends ChatState {} // ✅ 사진 취소됨
+
+class ChatPushStarted extends ChatState {}
