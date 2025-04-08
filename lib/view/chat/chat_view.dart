@@ -568,10 +568,16 @@ class _ChatViewState extends State<ChatView> {
     final personalChannel =
         (widget.roomInfo.endDay == null && widget.roomInfo.startDay == null);
     final enabled = personalChannel ||
-        (widget.roomInfo.endDay!.isAfter(DateTime.now()) &&
+        (widget.roomInfo.endDay!
+                .add(Duration(days: 1))
+                .isAfter(DateTime.now()) &&
             widget.roomInfo.startDay!
                 .subtract(Duration(days: 1))
                 .isBefore(DateTime.now()));
+
+    // 🐛 디버깅용 프린트
+    debugPrint('📅 endDay: ${widget.roomInfo.endDay!.add(Duration(days: 1))}');
+    debugPrint('📅 now: ${DateTime.now()}');
 
     return BlocListener<ChatCubit, ChatState>(
       listener: (context, state) {
