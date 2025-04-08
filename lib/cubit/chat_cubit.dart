@@ -128,7 +128,9 @@ class ChatCubit extends Cubit<ChatState> {
           .listen((RemoteMessage message) async {
         wasPushHandled = true;
 
-        emit(ChatPushStarted());
+        if (message.data['roomId'] != null) {
+          emit(ChatPushStarted());
+        }
 
         await Future.delayed(Duration(milliseconds: 500));
 
@@ -138,11 +140,13 @@ class ChatCubit extends Cubit<ChatState> {
           final roomId = message.data['roomId'];
           final roomInfo = chatList.firstWhere((room) => room.id == roomId);
 
-          emit(ChatPushOpenedFromBackground(
-            roomId,
-            "알림을 클릭하여 들어왔습니다.",
-            roomInfo,
-          ));
+          if (message.data['roomId'] != null) {
+            emit(ChatPushOpenedFromBackground(
+              roomId,
+              "알림을 클릭하여 들어왔습니다.",
+              roomInfo,
+            ));
+          }
         }
       });
 
@@ -150,7 +154,7 @@ class ChatCubit extends Cubit<ChatState> {
       _initialized = true;
       debugPrint("✅ 초기화 완료!");
 
-      await loadImageMessages();
+      loadImageMessages();
     } catch (e) {
       logger.e("초기화 실패: $e");
     }
@@ -213,7 +217,7 @@ class ChatCubit extends Cubit<ChatState> {
       // 1️⃣ 기존 모든 메시지 초기화
       messages.clear();
 
-      // await loadChatList();
+      await loadChatList();
       await fetchLatestMessages();
       await fetchLatestReceipt();
 
@@ -255,25 +259,19 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> makeImageUrlMessage(Message message, {emitLoaded = true}) async {
     if (message.imagePath != null) {
-      try {
-        final url = await _getSignedUrlWithRetry(message.imagePath!);
+      final baseUrl =
+          'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
+      final fullUrl = '$baseUrl${message.imagePath}';
 
-        if (url == null) {
-          logger.e("⛔ Signed URL을 생성하지 못했습니다.");
-          return;
+      messages[message.roomId] = List.from(messages[message.roomId]!.map((m) {
+        if (m.id == message.id) {
+          m = message.copyWith(imageUrl: fullUrl);
         }
-        messages[message.roomId] = List.from(messages[message.roomId]!.map((m) {
-          if (m.id == message.id) {
-            m = message.copyWith(imageUrl: url);
-          }
-          return m;
-        }));
+        return m;
+      }));
 
-        if (emitLoaded) {
-          emit(ChatMessageLoaded());
-        }
-      } catch (e) {
-        logger.e("⛔ makeImageUrl error: $e");
+      if (emitLoaded) {
+        emit(ChatMessageLoaded());
       }
     } else {
       logger.w("⚠️ [makeImageUrlMessage] imagePath가 null입니다. 재시도하겠습니다.");
@@ -281,22 +279,51 @@ class ChatCubit extends Cubit<ChatState> {
     cnt++;
   }
 
-  Future<String?> _getSignedUrlWithRetry(String path, {int retry = 4}) async {
-    for (int i = 0; i < retry; i++) {
-      try {
-        final url = await supabase.storage
-            .from('ImageMessages')
-            .createSignedUrl(path, 3600 * 3)
-            .timeout(const Duration(milliseconds: 800));
+  // private 방식
+  // Future<void> makeImageUrlMessage(Message message, {emitLoaded = true}) async {
+  //   if (message.imagePath != null) {
+  //     try {
+  //       final url = await _getSignedUrlWithRetry(message.imagePath!);
 
-        return url;
-      } catch (e) {
-        logger.w("🔁 createSignedUrl 실패 (시도 ${i + 1}/$retry): $e");
-        await Future.delayed(Duration(milliseconds: 300));
-      }
-    }
-    return null;
-  }
+  //       if (url == null) {
+  //         logger.e("⛔ Signed URL을 생성하지 못했습니다.");
+  //         return;
+  //       }
+  //       messages[message.roomId] = List.from(messages[message.roomId]!.map((m) {
+  //         if (m.id == message.id) {
+  //           m = message.copyWith(imageUrl: url);
+  //         }
+  //         return m;
+  //       }));
+
+  //       if (emitLoaded) {
+  //         emit(ChatMessageLoaded());
+  //       }
+  //     } catch (e) {
+  //       logger.e("⛔ makeImageUrl error: $e");
+  //     }
+  //   } else {
+  //     logger.w("⚠️ [makeImageUrlMessage] imagePath가 null입니다. 재시도하겠습니다.");
+  //   }
+  //   cnt++;
+  // }
+
+  // Future<String?> _getSignedUrlWithRetry(String path, {int retry = 4}) async {
+  //   for (int i = 0; i < retry; i++) {
+  //     try {
+  //       final url = await supabase.storage
+  //           .from('ImageMessages')
+  //           .createSignedUrl(path, 3600 * 3)
+  //           .timeout(const Duration(milliseconds: 700));
+
+  //       return url;
+  //     } catch (e) {
+  //       logger.w("🔁 createSignedUrl 실패 (시도 ${i + 1}/$retry): $e");
+  //       await Future.delayed(Duration(milliseconds: 300));
+  //     }
+  //   }
+  //   return null;
+  // }
 
   Future<void> fetchUnreadMessageIdsAfterLatestReceipt() async {
     unreadMessageCount = 0;
@@ -602,14 +629,16 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   Future<void> loadInitialMessages1({bool emitLoaded = true}) async {
-    if (chatList.isEmpty || _isLoadingMessages) {
-      logger.w("⚠️ chatList가 비어있거나 이미 로딩 중입니다!");
+    if (chatList.isEmpty) {
+      logger.w("⚠️ chatList가 비어있습니다");
       return;
     }
+    // if (_isLoadingMessages) {
+    //   logger.w("⚠️ 이미 로딩 중입니다!");
+    //   return;
+    // }
 
     try {
-      _isLoadingMessages = true;
-
       for (final room in chatList) {
         final roomId = room.id;
         final ret = await supabase
@@ -1069,16 +1098,12 @@ class ChatCubit extends Cubit<ChatState> {
         'room_id': roomId,
         'user_id': supabase.auth.currentUser!.id,
       });
-      debugPrint("1");
       await loadChatList(emitLoaded: false);
-      debugPrint("2");
       await Future.wait([
         fetchLatestMessages(emitLoaded: false),
         fetchLatestReceipt(),
       ]);
-      debugPrint("3");
       await loadInitialMessages1(emitLoaded: false);
-      debugPrint("4");
       final roomInfo = chatList.firstWhere((room) => room.id == roomId);
       await fetchRoomRanking(roomInfo, emitLoaded: false);
       if (roomInfo.startDay != null && roomInfo.endDay != null) {
@@ -1718,20 +1743,24 @@ class ChatCubit extends Cubit<ChatState> {
     try {
       _isLoadingMessages = true;
 
+      const baseUrl =
+          'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
+
       for (final room in chatList) {
         final roomId = room.id;
+
         final ret = await supabase
             .from('messages')
             .select(
                 "*, profiles!messages_user_id_fkey(*), chat_reactions(*), read_receipts(user_id)")
             .eq('room_id', roomId)
-            .not('image_path', 'is', null) // image_path가 null이 아닌 것만
+            .not('image_path', 'is', null)
             .not('user_id', 'in', blockedUsers)
             .not('id', 'in', blockedMessages)
             .order('created_at', ascending: false)
             .limit(32);
 
-        // ✅ 기존 이미지 메시지 초기화하고 새로 저장하기!
+        // ✅ imageMessages에만 저장 + public URL 붙이기
         imageMessages[roomId] = ret
             .map((row) => Message.fromMap(
                   map: row,
@@ -1744,64 +1773,14 @@ class ChatCubit extends Cubit<ChatState> {
                       .map((receiptRet) => receiptRet['user_id'] as String)
                       .toSet(),
                 ))
+            .map((message) => message.copyWith(
+                imageUrl: message.imagePath != null
+                    ? '$baseUrl${message.imagePath}'
+                    : null))
             .toList();
-
-        final roomMessages = imageMessages[roomId]!;
-        for (var i = 0; i < roomMessages.length; i += 32) {
-          final batch = roomMessages.skip(i).take(32).toList();
-
-          await Future.wait(
-            batch.map((message) async {
-              if (message.imagePath != null) {
-                try {
-                  String? url;
-                  for (int retry = 0; retry < 3; retry++) {
-                    url = await _getSignedUrlWithRetry(message.imagePath!);
-                    if (url != null) break;
-                    if (retry < 2) {
-                      logger.w("🔄 URL 생성 재시도 중... (${retry + 1}/3)");
-                      await Future.delayed(
-                          Duration(milliseconds: 300 * (retry + 1)));
-                    }
-                  }
-
-                  if (url != null) {
-                    imageMessages[roomId] =
-                        List.from(imageMessages[roomId]!.map((m) {
-                      if (m.id == message.id) {
-                        return m.copyWith(imageUrl: url);
-                      }
-                      return m;
-                    }));
-
-                    if (messages.containsKey(roomId)) {
-                      messages[roomId] = List.from(messages[roomId]!.map((m) {
-                        if (m.id == message.id) {
-                          return m.copyWith(imageUrl: url);
-                        }
-                        return m;
-                      }));
-                    }
-
-                    // logger.d("✅ 메시지 ID: ${message.id}의 이미지 URL 생성 성공");
-                  } else {
-                    logger.e("❌ 메시지 ID: ${message.id}의 이미지 URL 생성 실패");
-                  }
-                } catch (e) {
-                  logger.e("❌ 이미지 URL 생성 중 오류 발생: $e");
-                }
-              }
-            }),
-          );
-
-          await Future.delayed(const Duration(milliseconds: 100));
-        }
 
         logger.d("✅ 방 ID: $roomId의 이미지 메시지 처리 완료");
       }
-
-      // emit(ChatMessageLoaded());
-      logger.d("🎉 모든 이미지 메시지 로딩 완료!");
     } catch (e) {
       logger.e("❌ loadImageMessages error: $e");
     } finally {
@@ -1809,31 +1788,151 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  // Future<void> loadImageMessages() async {
+  //   if (chatList.isEmpty || _isLoadingMessages) {
+  //     logger.w("⚠️ chatList가 비어있거나 이미 로딩 중입니다!");
+  //     return;
+  //   }
+
+  //   try {
+  //     _isLoadingMessages = true;
+
+  //     for (final room in chatList) {
+  //       final roomId = room.id;
+  //       final ret = await supabase
+  //           .from('messages')
+  //           .select(
+  //               "*, profiles!messages_user_id_fkey(*), chat_reactions(*), read_receipts(user_id)")
+  //           .eq('room_id', roomId)
+  //           .not('image_path', 'is', null) // image_path가 null이 아닌 것만
+  //           .not('user_id', 'in', blockedUsers)
+  //           .not('id', 'in', blockedMessages)
+  //           .order('created_at', ascending: false)
+  //           .limit(32);
+
+  //       // ✅ 기존 이미지 메시지 초기화하고 새로 저장하기!
+  //       imageMessages[roomId] = ret
+  //           .map((row) => Message.fromMap(
+  //                 map: row,
+  //                 myUserId: supabase.auth.currentUser!.id,
+  //                 profile: Profile.fromMap(map: row['profiles']),
+  //                 reactions: (row['chat_reactions'] as List<dynamic>)
+  //                     .map((reactionRet) => Reaction.fromMap(map: reactionRet))
+  //                     .toList(),
+  //                 readReceipts: (row['read_receipts'] as List<dynamic>)
+  //                     .map((receiptRet) => receiptRet['user_id'] as String)
+  //                     .toSet(),
+  //               ))
+  //           .toList();
+
+  //       final roomMessages = imageMessages[roomId]!;
+  //       for (var i = 0; i < roomMessages.length; i += 32) {
+  //         final batch = roomMessages.skip(i).take(32).toList();
+
+  //         await Future.wait(
+  //           batch.map((message) async {
+  //             if (message.imagePath != null) {
+  //               try {
+  //                 String? url;
+  //                 for (int retry = 0; retry < 3; retry++) {
+  //                   url = await _getSignedUrlWithRetry(message.imagePath!);
+  //                   if (url != null) break;
+  //                   if (retry < 2) {
+  //                     logger.w("🔄 URL 생성 재시도 중... (${retry + 1}/3)");
+  //                     await Future.delayed(
+  //                         Duration(milliseconds: 300 * (retry + 1)));
+  //                   }
+  //                 }
+
+  //                 if (url != null) {
+  //                   imageMessages[roomId] =
+  //                       List.from(imageMessages[roomId]!.map((m) {
+  //                     if (m.id == message.id) {
+  //                       return m.copyWith(imageUrl: url);
+  //                     }
+  //                     return m;
+  //                   }));
+
+  //                   if (messages.containsKey(roomId)) {
+  //                     messages[roomId] = List.from(messages[roomId]!.map((m) {
+  //                       if (m.id == message.id) {
+  //                         return m.copyWith(imageUrl: url);
+  //                       }
+  //                       return m;
+  //                     }));
+  //                   }
+
+  //                   // logger.d("✅ 메시지 ID: ${message.id}의 이미지 URL 생성 성공");
+  //                 } else {
+  //                   logger.e("❌ 메시지 ID: ${message.id}의 이미지 URL 생성 실패");
+  //                 }
+  //               } catch (e) {
+  //                 logger.e("❌ 이미지 URL 생성 중 오류 발생: $e");
+  //               }
+  //             }
+  //           }),
+  //         );
+
+  //         await Future.delayed(const Duration(milliseconds: 100));
+  //       }
+
+  //       logger.d("✅ 방 ID: $roomId의 이미지 메시지 처리 완료");
+  //     }
+
+  //     // emit(ChatMessageLoaded());
+  //     logger.d("🎉 모든 이미지 메시지 로딩 완료!");
+  //   } catch (e) {
+  //     logger.e("❌ loadImageMessages error: $e");
+  //   } finally {
+  //     _isLoadingMessages = false;
+  //   }
+  // }
+
   Future<void> makeImageUrlImageMessage(Message message) async {
     if (message.imagePath != null) {
-      try {
-        final url = await _getSignedUrlWithRetry(message.imagePath!);
+      final baseUrl =
+          'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
+      final fullUrl = '$baseUrl${message.imagePath}';
 
-        if (url == null) {
-          logger.e("⛔ Signed URL을 생성하지 못했습니다.");
-          return;
+      imageMessages[message.roomId] =
+          List.from(imageMessages[message.roomId]!.map((m) {
+        if (m.id == message.id) {
+          m = message.copyWith(imageUrl: fullUrl);
         }
-        imageMessages[message.roomId] =
-            List.from(imageMessages[message.roomId]!.map((m) {
-          if (m.id == message.id) {
-            m = message.copyWith(imageUrl: url);
-          }
-          return m;
-        }));
+        return m;
+      }));
 
-        emit(ChatMessageLoaded());
-      } catch (e) {
-        logger.e("⛔ makeImageUrl error: $e");
-      }
+      emit(ChatMessageLoaded());
     } else {
       logger.w("⚠️ [makeImageUrlImageMessage] imagePath가 null입니다. 재시도하겠습니다.");
     }
   }
+
+  // Future<void> makeImageUrlImageMessage(Message message) async {
+  //   if (message.imagePath != null) {
+  //     try {
+  //       final url = await _getSignedUrlWithRetry(message.imagePath!);
+
+  //       if (url == null) {
+  //         logger.e("⛔ Signed URL을 생성하지 못했습니다.");
+  //         return;
+  //       }
+  //       imageMessages[message.roomId] =
+  //           List.from(imageMessages[message.roomId]!.map((m) {
+  //         if (m.id == message.id) {
+  //           m = message.copyWith(imageUrl: url);
+  //         }
+  //         return m;
+  //       }));
+
+  //       emit(ChatMessageLoaded());
+  //     } catch (e) {
+  //       logger.e("⛔ makeImageUrl error: $e");
+  //     }
+  //   } else {
+  //     logger.w("⚠️ [makeImageUrlImageMessage] imagePath가 null입니다. 재시도하겠습니다.");
+  //   }
+  // }
 
   Room getRoom(String roomId) =>
       chatList.firstWhere((element) => element.id == roomId);
