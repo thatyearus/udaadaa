@@ -186,11 +186,6 @@ class FeedCubit extends Cubit<FeedState> {
         final item = data[i];
         final signedUrl = signedUrls[i];
 
-        if (signedUrl == null) {
-          logger.w("🚫 해당 이미지 signedUrl 실패로 건너뜀: ${imagePaths[i]}");
-          continue;
-        }
-
         item['image_url'] = signedUrl;
         _homeFeeds[i % _homeFeeds.length].add(Feed.fromMap(map: item));
       }
@@ -234,11 +229,6 @@ class FeedCubit extends Cubit<FeedState> {
       for (var i = 0; i < data.length; i++) {
         final item = data[i];
         final signedUrl = signedUrls[i];
-
-        if (signedUrl == null) {
-          logger.w("🚫 해당 이미지 signedUrl 실패로 건너뜀: ${imagePaths[i]}");
-          continue;
-        }
 
         item['image_url'] = signedUrl;
         newFeeds.add(Feed.fromMap(map: item));
@@ -297,11 +287,6 @@ class FeedCubit extends Cubit<FeedState> {
         final item = data[i];
         final signedUrl = signedUrls[i];
 
-        if (signedUrl == null) {
-          logger.w("🚫 해당 이미지의 signedUrl 생성 실패: ${imagePaths[i]}");
-          continue; // 이 항목은 스킵
-        }
-
         item['image_url'] = signedUrl;
         newFeeds.add(Feed.fromMap(map: item));
       }
@@ -359,41 +344,106 @@ class FeedCubit extends Cubit<FeedState> {
         _fallbackChk = true;
 
         final List<Feed> newFeeds = [];
-
-        // ✅ fallbackFeed 추가
         newFeeds.add(fallbackFeed);
-
-        // ✅ 기존 피드에 추가하는 방식 적용
         _feeds = loadMore ? [..._feeds, ...newFeeds] : newFeeds;
 
         emit(FeedLoaded());
         return;
       }
 
-      final imagePaths =
-          data.map((item) => item['image_path'] as String).toList();
-      final signedUrls = await supabase.storage
-          .from('FeedImages')
-          .createSignedUrls(imagePaths, 3600 * 12);
+      const baseUrl =
+          'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/FeedImages/';
 
-      if (data.isEmpty) {
-        logger.e("No data");
-        throw "No data";
-      } else {
-        final List<Feed> newFeeds = [];
-        for (var i = 0; i < data.length; i++) {
-          final item = data[i];
-          item['image_url'] = signedUrls[i].signedUrl;
-          newFeeds.add(Feed.fromMap(map: item));
-        }
-        _feeds = loadMore ? [..._feeds, ...newFeeds] : newFeeds;
-        emit(FeedLoaded());
+      final List<Feed> newFeeds = [];
+      for (var item in data) {
+        final imagePath = item['image_path'] as String?;
+        item['image_url'] = imagePath != null ? '$baseUrl$imagePath' : null;
+        newFeeds.add(Feed.fromMap(map: item));
       }
+
+      _feeds = loadMore ? [..._feeds, ...newFeeds] : newFeeds;
+      emit(FeedLoaded());
     } catch (e) {
       logger.e(e);
       emit(FeedError());
     }
   }
+
+  // Future<void> _getExerciseFeeds({bool loadMore = false}) async {
+  //   try {
+  //     if (!loadMore) {
+  //       _fallbackChk = false; // ✅ 카테고리 변경 시 fallbackChk 초기화
+  //     }
+
+  //     if (_fallbackChk) {
+  //       logger.w("🚨 Fallback이 실행되었으므로 더 이상 데이터를 가져오지 않음");
+  //       return;
+  //     }
+
+  //     var data = [];
+
+  //     if (!loadMore) {
+  //       data = await supabase
+  //           .from('feed')
+  //           .select('*, profiles(*)')
+  //           .not('id', 'in', _blockedFeedIds.toList())
+  //           .not('id', 'in', _reactionFeedIds.toList())
+  //           .eq('type', FeedType.exercise.name)
+  //           .order('created_at', ascending: false)
+  //           .limit(_limit);
+  //     } else {
+  //       final currentFeedId = _feeds[_curFeedPage].id;
+  //       data = await supabase
+  //           .from('random_feed')
+  //           .select('*, profiles(*)')
+  //           .not('id', 'in', _blockedFeedIds.toList())
+  //           .not('id', 'in', _reactionFeedIds.toList())
+  //           .not('id', 'eq', currentFeedId) // ✅ 현재 보고 있는 피드 제외
+  //           .eq('type', FeedType.exercise.name)
+  //           .limit(_limit);
+  //     }
+
+  //     // ✅ fallback 처리
+  //     if (data.isEmpty) {
+  //       logger.w("🚨 운동 피드 없음 → fallback 피드 추가");
+  //       _fallbackChk = true;
+
+  //       final List<Feed> newFeeds = [];
+
+  //       // ✅ fallbackFeed 추가
+  //       newFeeds.add(fallbackFeed);
+
+  //       // ✅ 기존 피드에 추가하는 방식 적용
+  //       _feeds = loadMore ? [..._feeds, ...newFeeds] : newFeeds;
+
+  //       emit(FeedLoaded());
+  //       return;
+  //     }
+
+  //     final imagePaths =
+  //         data.map((item) => item['image_path'] as String).toList();
+  //     final signedUrls = await supabase.storage
+  //         .from('FeedImages')
+  //         .createSignedUrls(imagePaths, 3600 * 12);
+
+  //     if (data.isEmpty) {
+  //       logger.e("No data");
+  //       throw "No data";
+  //     } else {
+  //       final List<Feed> newFeeds = [];
+  //       for (var i = 0; i < data.length; i++) {
+  //         final item = data[i];
+  //         item['image_url'] = signedUrls[i].signedUrl;
+  //         newFeeds.add(Feed.fromMap(map: item));
+  //       }
+  //       _feeds = loadMore ? [..._feeds, ...newFeeds] : newFeeds;
+  //       emit(FeedLoaded());
+  //     }
+  //   } catch (e) {
+  //     logger.e(e);
+  //     emit(FeedError());
+  //   }
+  // }
 
 /*
   Future<void> _getChallengeFeeds({bool loadMore = false}) async {
@@ -477,12 +527,12 @@ class FeedCubit extends Cubit<FeedState> {
           .select('*, profiles(*), reactions(*, profiles(*))')
           .eq('user_id', supabase.auth.currentUser!.id)
           .order('created_at', ascending: false)
-          .limit(12);
+          .limit(30);
 
       final imagePaths =
           data.map((item) => item['image_path'] as String).toList();
 
-      final signedUrls = await _getSignedUrlsInBatches(imagePaths);
+      final signedUrls = await _getPublicUrls(imagePaths);
 
       if (data.isEmpty) {
         logger.e("No data");
@@ -504,61 +554,86 @@ class FeedCubit extends Cubit<FeedState> {
     }
   }
 
-  Future<List<String?>> _getSignedUrlsInBatches(List<String> paths,
-      {int batchSize = 6, int retry = 3}) async {
-    List<String?> allResults = [];
+  Future<List<String>> _getPublicUrls(List<String> paths) async {
+    const baseUrl =
+        'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/FeedImages/';
 
-    logger.d("🧵 총 ${paths.length}개의 이미지 Signed URL 생성 시작");
+    logger.d("🧵 총 ${paths.length}개의 퍼블릭 이미지 URL 생성 시작");
 
-    for (int i = 0; i < paths.length; i += batchSize) {
-      final batch = paths.skip(i).take(batchSize).toList();
-      // logger.d("📦 [${i ~/ batchSize + 1}번째 배치] ${batch.length}개 처리 시작");
+    final results = paths.map((path) => '$baseUrl$path').toList();
 
-      final results = await Future.wait(batch.map((path) async {
-        for (int j = 0; j < retry; j++) {
-          try {
-            final url = await supabase.storage
-                .from('FeedImages')
-                .createSignedUrl(path, 3600 * 3)
-                .timeout(const Duration(milliseconds: 1000));
+    logger.d("🎉 퍼블릭 URL 생성 완료 (${results.length}/${paths.length})");
 
-            // logger.d("✅ Signed URL 생성 성공: $path");
-            return url;
-          } catch (e) {
-            logger.w("🔁 Signed URL 실패 (path: $path, 시도: ${j + 1}/$retry): $e");
-            await Future.delayed(const Duration(milliseconds: 200));
-          }
-        }
-
-        logger.e("❌ Signed URL 최종 실패: $path");
-        return null;
-      }));
-
-      allResults.addAll(results);
-    }
-
-    logger.d(
-        "🎉 Signed URL 생성 완료 (${allResults.whereType<String>().length}/${paths.length})");
-    return allResults;
+    return results;
   }
 
-  Future<List<String?>> _getSignedUrlsWithRetry(List<String> paths,
-      {int retry = 3}) async {
-    for (int i = 0; i < retry; i++) {
-      try {
-        final signedUrlObjects = await supabase.storage
-            .from('FeedImages')
-            .createSignedUrls(paths, 3600 * 3)
-            .timeout(const Duration(milliseconds: 1000)); // ⏱️ 타임아웃 설정
+  // Future<List<String?>> _getSignedUrlsInBatches(List<String> paths,
+  //     {int batchSize = 6, int retry = 3}) async {
+  //   List<String?> allResults = [];
 
-        return signedUrlObjects.map((e) => e.signedUrl).toList();
-      } catch (e) {
-        logger.w("🔁 Signed URLs 생성 실패 (시도 ${i + 1}/$retry): $e");
-        await Future.delayed(Duration(milliseconds: 200));
-      }
-    }
-    return List.filled(paths.length, null);
+  //   logger.d("🧵 총 ${paths.length}개의 이미지 Signed URL 생성 시작");
+
+  //   for (int i = 0; i < paths.length; i += batchSize) {
+  //     final batch = paths.skip(i).take(batchSize).toList();
+  //     // logger.d("📦 [${i ~/ batchSize + 1}번째 배치] ${batch.length}개 처리 시작");
+
+  //     final results = await Future.wait(batch.map((path) async {
+  //       for (int j = 0; j < retry; j++) {
+  //         try {
+  //           final url = await supabase.storage
+  //               .from('FeedImages')
+  //               .createSignedUrl(path, 3600 * 3)
+  //               .timeout(const Duration(milliseconds: 1000));
+
+  //           // logger.d("✅ Signed URL 생성 성공: $path");
+  //           return url;
+  //         } catch (e) {
+  //           logger.w("🔁 Signed URL 실패 (path: $path, 시도: ${j + 1}/$retry): $e");
+  //           await Future.delayed(const Duration(milliseconds: 200));
+  //         }
+  //       }
+
+  //       logger.e("❌ Signed URL 최종 실패: $path");
+  //       return null;
+  //     }));
+
+  //     allResults.addAll(results);
+  //   }
+
+  //   logger.d(
+  //       "🎉 Signed URL 생성 완료 (${allResults.whereType<String>().length}/${paths.length})");
+  //   return allResults;
+  // }
+
+  Future<List<String>> _getSignedUrlsWithRetry(List<String> paths) async {
+    const baseUrl =
+        'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/FeedImages/';
+
+    logger.d("🧵 총 ${paths.length}개의 퍼블릭 이미지 URL 생성 시작");
+
+    final results = paths.map((path) => '$baseUrl$path').toList();
+
+    logger.d("🎉 퍼블릭 URL 생성 완료 (${results.length}/${paths.length})");
+    return results;
   }
+
+  // Future<List<String?>> _getSignedUrlsWithRetry(List<String> paths,
+  //     {int retry = 3}) async {
+  //   for (int i = 0; i < retry; i++) {
+  //     try {
+  //       final signedUrlObjects = await supabase.storage
+  //           .from('FeedImages')
+  //           .createSignedUrls(paths, 3600 * 3)
+  //           .timeout(const Duration(milliseconds: 1000)); // ⏱️ 타임아웃 설정
+
+  //       return signedUrlObjects.map((e) => e.signedUrl).toList();
+  //     } catch (e) {
+  //       logger.w("🔁 Signed URLs 생성 실패 (시도 ${i + 1}/$retry): $e");
+  //       await Future.delayed(Duration(milliseconds: 200));
+  //     }
+  //   }
+  //   return List.filled(paths.length, null);
+  // }
 
   Future<void> addReaction(String feedId, ReactionType reaction) async {
     // ✅ fallback 피드인지 확인
