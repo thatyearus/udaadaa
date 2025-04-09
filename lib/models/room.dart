@@ -29,12 +29,26 @@ class Room {
     };
   }
 
-  Room.fromMap(Map<String, dynamic> map, {required this.members})
-      : id = map['id'],
+  // Room.fromMap(Map<String, dynamic> map, {required this.members})
+  //     : id = map['id'],
+  //       roomName = map['room_name'],
+  //       createdAt = DateTime.parse(map['created_at']),
+  //       memberMap = {for (var member in members) member.id: member},
+  //       lastMessage = null,
+  //       startDay =
+  //           map['start_day'] != null ? DateTime.parse(map['start_day']) : null,
+  //       endDay = map['end_day'] != null ? DateTime.parse(map['end_day']) : null;
+
+  Room.fromMap(
+    Map<String, dynamic> map, {
+    required this.members,
+    this.lastMessage,
+  })  : id = map['id'],
         roomName = map['room_name'],
         createdAt = DateTime.parse(map['created_at']),
-        memberMap = {for (var member in members) member.id: member},
-        lastMessage = null,
+        memberMap = {
+          for (var member in members) member.id: member
+        }, // ✅ 선택적으로 할당
         startDay =
             map['start_day'] != null ? DateTime.parse(map['start_day']) : null,
         endDay = map['end_day'] != null ? DateTime.parse(map['end_day']) : null;
