@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image/image.dart' as img;
@@ -107,42 +109,254 @@ class ChatCubit extends Cubit<ChatState> {
   //     logger.e("fetchBlockedUsers error: $e");
   //   });
   // }
+
   Future<void> _initialize() async {
     try {
+      final Dio newDio = Dio(
+        BaseOptions(
+          baseUrl: 'https://ccpcclfqofyvksajnrpg.supabase.co',
+          connectTimeout: const Duration(milliseconds: 5000),
+          receiveTimeout: const Duration(milliseconds: 9000),
+        ),
+      );
+
+      final response = await newDio.post(
+        '/functions/v1/post-initial-chat-data',
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':
+                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjcGNjbGZxb2Z5dmtzYWpucnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUyNzk1ODcsImV4cCI6MjA0MDg1NTU4N30.0wEPsxwBle1E66m4pZ1BW5ZdN4tL88eYL3s2wbnE30k',
+          },
+        ),
+        data: jsonEncode({'userId': supabase.auth.currentUser!.id}),
+      );
+
+      logger.d("Response status: ${response.statusCode}");
+
+      // 전체 JSON 데이터 (Map 형태)
+      final data = response.data;
+
+      // 최상위 필드 파싱
+      blockedUsers = List<String>.from(data['blocked_user_ids'] ?? []);
+      blockedMessages = List<String>.from(data['blocked_message_ids'] ?? []);
+      _pushOptions = Map<String, bool>.from(data['push_options'] ?? {});
+      final chatlistRet =
+          List<Map<String, dynamic>>.from(data['chat_list'] ?? []);
+      chatList = chatlistRet.map(
+        (e) {
+          Room room = Room.fromMap(
+            e,
+            members: (e['profiles'] as List<dynamic>)
+                .map((profileRet) => Profile.fromMap(map: profileRet))
+                .toList(),
+            lastMessage: e['last_message'] != null
+                ? Message.fromMap(
+                    map: e['last_message'],
+                    myUserId: supabase.auth.currentUser!.id,
+                    profile: Profile.fromMap(map: e['profiles'][0]),
+                    reactions: [],
+                    readReceipts: {},
+                  )
+                : null,
+          );
+
+          if (e['last_message'] != null) {
+            debugPrint(e['last_message'].toString());
+          } else {
+            debugPrint("last_message is null");
+          }
+
+          room.members.sort(
+            ((a, b) => a.id == supabase.auth.currentUser!.id
+                ? -1
+                : b.id == supabase.auth.currentUser!.id
+                    ? 1
+                    : blockedUsers.contains(a.id)
+                        ? 1
+                        : blockedUsers.contains(b.id)
+                            ? -1
+                            : 0),
+          );
+          return room;
+        },
+      ).toList();
+
+      chatList.sort((a, b) {
+        if (a.lastMessage == null) return 1;
+        if (b.lastMessage == null) return -1;
+        return b.lastMessage!.createdAt!.compareTo(a.lastMessage!.createdAt!);
+      });
+
+      readReceipts = Map<String, DateTime?>.from(
+        (data['latest_read_receipts'] ?? {}).map((key, value) {
+          DateTime? adjustedDateTime = value != null
+              ? DateTime.parse(value).add(const Duration(hours: 9))
+              : null;
+          return MapEntry(key, adjustedDateTime);
+        }),
+      );
+
+      loadInitialMessages2(jsonData: data['initial_messages']);
+
+      // Process unread message IDs from the data
+      try {
+        final unreadMessageIdsMap =
+            data['unread_message_ids_by_room'] as Map<String, dynamic>?;
+
+        if (unreadMessageIdsMap != null) {
+          logger.d("📥 Processing unread message IDs from initial data");
+          unreadMessageCount = 0;
+
+          // Reset the unread message counts
+          unreadMessageIdsByRoom.clear();
+          unreadMessages.clear();
+
+          // Process each room's unread messages
+          unreadMessageIdsMap.forEach((roomId, messageIds) {
+            try {
+              final List<String> ids = (messageIds as List)
+                  .map<String>((id) => id.toString())
+                  .toList();
+
+              // Store the unread message IDs for this room
+              unreadMessageIdsByRoom[roomId] = ids;
+
+              // Update the count for this room
+              unreadMessages[roomId] = ids.length;
+
+              // Add to total count
+              unreadMessageCount += ids.length;
+
+              logger.d("📥 [Room: $roomId] → ${ids.length}개의 unread 메시지 ID");
+
+              // Log individual message IDs for detailed debugging
+              for (var id in ids) {
+                logger.d("📥 [Room: $roomId] unread message ID: $id");
+              }
+            } catch (e) {
+              logger
+                  .e("⛔ Error processing unread messages for room $roomId: $e");
+            }
+          });
+
+          logger.d(
+              "📥 Total unread messages across all rooms: $unreadMessageCount");
+        } else {
+          logger.w("⚠️ No unread message IDs found in initial data");
+        }
+      } catch (e) {
+        logger.e("⛔ Error processing unread message IDs: $e");
+      }
+
+      try {
+        final imageMessagesMap =
+            data['image_messages_by_room'] as Map<String, dynamic>?;
+        if (imageMessagesMap != null) {
+          logger.d("🖼️ Processing image messages from initial data");
+          imageMessages.clear();
+
+          const baseUrl =
+              'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
+
+          // Process each room's image messages
+          imageMessagesMap.forEach((roomId, messages) {
+            try {
+              final List<dynamic> messagesList = messages as List<dynamic>;
+
+              // Convert raw data to Message objects with proper image URLs
+              imageMessages[roomId] = messagesList
+                  .map((row) => Message.fromMap(
+                        map: row,
+                        myUserId: supabase.auth.currentUser!.id,
+                        profile: Profile.fromMap(map: row['profiles']),
+                        reactions: (row['chat_reactions'] as List<dynamic>)
+                            .map((reactionRet) =>
+                                Reaction.fromMap(map: reactionRet))
+                            .toList(),
+                        readReceipts: (row['read_receipts'] as List<dynamic>)
+                            .map(
+                                (receiptRet) => receiptRet['user_id'] as String)
+                            .toSet(),
+                      ))
+                  .map((message) => message.copyWith(
+                      imageUrl: message.imagePath != null
+                          ? '$baseUrl${message.imagePath}'
+                          : null))
+                  .toList();
+
+              logger.d(
+                  "🖼️ [Room: $roomId] → ${imageMessages[roomId]?.length ?? 0}개의 이미지 메시지 로드됨");
+            } catch (e) {
+              logger
+                  .e("⛔ Error processing image messages for room $roomId: $e");
+              // Initialize with empty list on error
+              imageMessages[roomId] = [];
+            }
+          });
+
+          logger.d(
+              "🖼️ Finished processing image messages for ${imageMessages.length} rooms");
+        } else {
+          logger.w("⚠️ No image messages found in initial data");
+        }
+      } catch (e) {
+        logger.e("⛔ Error processing image messages: $e");
+        // Initialize empty map on error
+        imageMessages.clear();
+      }
+
+      debugPrint(
+          "📜 Latest Read Receipts: \n${readReceipts.entries.map((entry) => 'Room ID: ${entry.key}, Last Read: ${entry.value}').join('\n')}");
+
+      // 디버깅 출력
+      debugPrint("🔒 Blocked User IDs: $blockedUsers");
+      debugPrint("🧱 Blocked Message IDs: $blockedMessages");
+      debugPrint("📬 Push Options: $_pushOptions");
+      debugPrint("💬 Chat List Count: ${chatList.length}");
+      debugPrint("💬 Image Messages Count: ${imageMessages.length}");
+    } catch (e) {
+      logger.e("Error posting initial chat data: $e");
+    }
+
+    try {
       await Future.wait([
-        fetchBlockedUsers(),
-        fetchBlockedMessages(),
+        // fetchBlockedUsers(),
+        // fetchBlockedMessages(),
       ]);
 
-      await fetchPushOptions();
-      await loadChatList();
-      await fetchLatestMessages();
-      await fetchLatestReceipt();
+      // await fetchPushOptions();
+      // await loadChatList();
+      // await fetchLatestMessages();
+      // await fetchLatestReceipt();
 
       await Future.wait([
-        loadInitialMessages1(),
-        fetchUnreadMessageIdsAfterLatestReceipt(),
+        // loadInitialMessages1(),
+        // fetchUnreadMessageIdsAfterLatestReceipt(),
       ]);
 
       FirebaseMessaging.onMessageOpenedApp
           .listen((RemoteMessage message) async {
         wasPushHandled = true;
 
-        emit(ChatPushStarted());
+        if (message.data['roomId'] != null) {
+          emit(ChatPushStarted());
+        }
 
-        await Future.delayed(Duration(milliseconds: 500));
-
+        await Future.delayed(Duration(milliseconds: 300));
         await refreshAllMessagesForPush();
 
         if (message.data['roomId'] != null) {
           final roomId = message.data['roomId'];
           final roomInfo = chatList.firstWhere((room) => room.id == roomId);
 
-          emit(ChatPushOpenedFromBackground(
-            roomId,
-            "알림을 클릭하여 들어왔습니다.",
-            roomInfo,
-          ));
+          if (message.data['roomId'] != null) {
+            emit(ChatPushOpenedFromBackground(
+              roomId,
+              "알림을 클릭하여 들어왔습니다.",
+              roomInfo,
+            ));
+          }
         }
       });
 
@@ -150,70 +364,71 @@ class ChatCubit extends Cubit<ChatState> {
       _initialized = true;
       debugPrint("✅ 초기화 완료!");
 
-      await loadImageMessages();
+      // loadImageMessages();
     } catch (e) {
       logger.e("초기화 실패: $e");
     }
   }
 
   // Future<void> _initialize() async {
-  //   Future.wait([
-  //     fetchBlockedUsers(),
-  //     fetchBlockedMessages(),
-  //   ]).then(
-  //     (value) {
-  //       Future.wait([
-  //         fetchPushOptions(),
-  //         loadChatList().then((_) async {
-  //           fetchLatestMessages();
-  //           await fetchLatestReceipt();
-  //           FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //             if (message.data['roomId'] != null) {
-  //               final roomId = message.data['roomId'];
-  //               final roomInfo =
-  //                   chatList.firstWhere((room) => room.id == roomId);
-  //               emit(ChatNotificationReceivedInForeground(
-  //                 roomId,
-  //                 message.notification?.title ?? '채팅방 알림', // title
-  //                 message.notification?.body ?? '새로운 메시지가 도착했습니다', // body
-  //                 roomInfo,
-  //               ));
-  //             }
-  //           });
-  //           FirebaseMessaging.onMessageOpenedApp
-  //               .listen((RemoteMessage message) {
-  //             initializeAndEnterFromPush(message);
-  //           });
-  //         }).catchError((e) {
-  //           logger.e("loadChatList error: $e");
-  //         }),
-  //         // loadInitialMessages(),
-  //         loadInitialMessages1(),
-  //       ]).then((_) {
-  //         // calculateUnreadMessages();
-  //         fetchUnreadMessageIdsAfterLatestReceipt();
-  //       }).catchError((e) {
-  //         logger.e("loadInitialMessages error: $e");
-  //       });
-  //       setChatEventsListener();
-  //       // setMessagesListener();
-  //       // setReactionListener();
-  //       // setReadReceiptListener();
-  //     },
-  //   ).catchError((e) {
-  //     logger.e("fetchBlockedUsers error: $e");
-  //   });
-  //   _initialized = true;
-  // }
+  //   try {
+  //     await Future.wait([
+  //       fetchBlockedUsers(),
+  //       fetchBlockedMessages(),
+  //     ]);
 
-  // Future<void> initializeAndEnterFromPush(RemoteMessage message) async {}
+  //     await fetchPushOptions();
+  //     await loadChatList();
+  //     await fetchLatestMessages();
+  //     await fetchLatestReceipt();
+
+  //     await Future.wait([
+  //       loadInitialMessages1(),
+  //       fetchUnreadMessageIdsAfterLatestReceipt(),
+  //     ]);
+
+  //     FirebaseMessaging.onMessageOpenedApp
+  //         .listen((RemoteMessage message) async {
+  //       wasPushHandled = true;
+
+  //       if (message.data['roomId'] != null) {
+  //         emit(ChatPushStarted());
+  //       }
+
+  //       await Future.delayed(Duration(milliseconds: 500));
+
+  //       await refreshAllMessagesForPush();
+
+  //       if (message.data['roomId'] != null) {
+  //         final roomId = message.data['roomId'];
+  //         final roomInfo = chatList.firstWhere((room) => room.id == roomId);
+
+  //         if (message.data['roomId'] != null) {
+  //           emit(ChatPushOpenedFromBackground(
+  //             roomId,
+  //             "알림을 클릭하여 들어왔습니다.",
+  //             roomInfo,
+  //           ));
+  //         }
+  //       }
+  //     });
+
+  //     setChatEventsListener();
+  //     _initialized = true;
+  //     debugPrint("✅ 초기화 완료!");
+
+  //     loadImageMessages();
+  //   } catch (e) {
+  //     logger.e("초기화 실패: $e");
+  //   }
+  // }
 
   Future<void> refreshAllMessagesForPush() async {
     try {
       // 1️⃣ 기존 모든 메시지 초기화
       messages.clear();
 
-      // await loadChatList();
+      await loadChatList();
       await fetchLatestMessages();
       await fetchLatestReceipt();
 
@@ -255,25 +470,19 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> makeImageUrlMessage(Message message, {emitLoaded = true}) async {
     if (message.imagePath != null) {
-      try {
-        final url = await _getSignedUrlWithRetry(message.imagePath!);
+      final baseUrl =
+          'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
+      final fullUrl = '$baseUrl${message.imagePath}';
 
-        if (url == null) {
-          logger.e("⛔ Signed URL을 생성하지 못했습니다.");
-          return;
+      messages[message.roomId] = List.from(messages[message.roomId]!.map((m) {
+        if (m.id == message.id) {
+          m = message.copyWith(imageUrl: fullUrl);
         }
-        messages[message.roomId] = List.from(messages[message.roomId]!.map((m) {
-          if (m.id == message.id) {
-            m = message.copyWith(imageUrl: url);
-          }
-          return m;
-        }));
+        return m;
+      }));
 
-        if (emitLoaded) {
-          emit(ChatMessageLoaded());
-        }
-      } catch (e) {
-        logger.e("⛔ makeImageUrl error: $e");
+      if (emitLoaded) {
+        emit(ChatMessageLoaded());
       }
     } else {
       logger.w("⚠️ [makeImageUrlMessage] imagePath가 null입니다. 재시도하겠습니다.");
@@ -281,22 +490,51 @@ class ChatCubit extends Cubit<ChatState> {
     cnt++;
   }
 
-  Future<String?> _getSignedUrlWithRetry(String path, {int retry = 4}) async {
-    for (int i = 0; i < retry; i++) {
-      try {
-        final url = await supabase.storage
-            .from('ImageMessages')
-            .createSignedUrl(path, 3600 * 3)
-            .timeout(const Duration(milliseconds: 800));
+  // private 방식
+  // Future<void> makeImageUrlMessage(Message message, {emitLoaded = true}) async {
+  //   if (message.imagePath != null) {
+  //     try {
+  //       final url = await _getSignedUrlWithRetry(message.imagePath!);
 
-        return url;
-      } catch (e) {
-        logger.w("🔁 createSignedUrl 실패 (시도 ${i + 1}/$retry): $e");
-        await Future.delayed(Duration(milliseconds: 300));
-      }
-    }
-    return null;
-  }
+  //       if (url == null) {
+  //         logger.e("⛔ Signed URL을 생성하지 못했습니다.");
+  //         return;
+  //       }
+  //       messages[message.roomId] = List.from(messages[message.roomId]!.map((m) {
+  //         if (m.id == message.id) {
+  //           m = message.copyWith(imageUrl: url);
+  //         }
+  //         return m;
+  //       }));
+
+  //       if (emitLoaded) {
+  //         emit(ChatMessageLoaded());
+  //       }
+  //     } catch (e) {
+  //       logger.e("⛔ makeImageUrl error: $e");
+  //     }
+  //   } else {
+  //     logger.w("⚠️ [makeImageUrlMessage] imagePath가 null입니다. 재시도하겠습니다.");
+  //   }
+  //   cnt++;
+  // }
+
+  // Future<String?> _getSignedUrlWithRetry(String path, {int retry = 4}) async {
+  //   for (int i = 0; i < retry; i++) {
+  //     try {
+  //       final url = await supabase.storage
+  //           .from('ImageMessages')
+  //           .createSignedUrl(path, 3600 * 3)
+  //           .timeout(const Duration(milliseconds: 700));
+
+  //       return url;
+  //     } catch (e) {
+  //       logger.w("🔁 createSignedUrl 실패 (시도 ${i + 1}/$retry): $e");
+  //       await Future.delayed(Duration(milliseconds: 300));
+  //     }
+  //   }
+  //   return null;
+  // }
 
   Future<void> fetchUnreadMessageIdsAfterLatestReceipt() async {
     unreadMessageCount = 0;
@@ -468,6 +706,8 @@ class ChatCubit extends Cubit<ChatState> {
     } catch (e) {
       logger.e('Error fetching latest read receipts: $e');
     }
+    debugPrint(
+        "📜 Latest Read Receipts: \n${readReceipts.entries.map((entry) => 'Room ID: ${entry.key}, Last Read: ${entry.value}').join('\n')}");
   }
 
   Future<void> fetchBlockedUsers() async {
@@ -601,15 +841,81 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-  Future<void> loadInitialMessages1({bool emitLoaded = true}) async {
-    if (chatList.isEmpty || _isLoadingMessages) {
-      logger.w("⚠️ chatList가 비어있거나 이미 로딩 중입니다!");
+  Future<void> loadInitialMessages2(
+      {bool emitLoaded = true, Map<String, dynamic>? jsonData}) async {
+    if (chatList.isEmpty) {
+      logger.w("⚠️ chatList가 비어있습니다");
+      return;
+    }
+
+    if (jsonData == null) {
+      logger.w("⚠️ jsonData가 null입니다");
       return;
     }
 
     try {
-      _isLoadingMessages = true;
+      // jsonData의 각 키(roomId)에 대해 처리
+      for (final roomId in jsonData.keys) {
+        logger.d("🔄 처리 중인 roomId: $roomId");
 
+        try {
+          final messagesData = jsonData[roomId] as List<dynamic>;
+
+          // 기존 메시지 초기화하고 새로 저장하기!
+          messages[roomId] = messagesData
+              .map((row) => Message.fromMap(
+                    map: row,
+                    myUserId: supabase.auth.currentUser!.id,
+                    profile: Profile.fromMap(map: row['profiles']),
+                    reactions: (row['chat_reactions'] as List<dynamic>)
+                        .map(
+                            (reactionRet) => Reaction.fromMap(map: reactionRet))
+                        .toList(),
+                    readReceipts: (row['read_receipts'] as List<dynamic>)
+                        .map((receiptRet) => receiptRet['user_id'] as String)
+                        .toSet(),
+                  ))
+              .toList();
+
+          // 이미지 메시지 처리
+          for (var message in messages[roomId]!) {
+            if (message.imagePath != null) {
+              if (emitLoaded) {
+                await makeImageUrlMessage(message);
+              } else {
+                await makeImageUrlMessage(message, emitLoaded: false);
+              }
+            }
+          }
+
+          logger.d(
+              "✅ roomId: $roomId에 대한 메시지 ${messages[roomId]?.length ?? 0}개 로드 완료");
+        } catch (innerError) {
+          logger.e("❌ roomId: $roomId 처리 중 오류 발생: $innerError");
+        }
+      }
+
+      if (emitLoaded) {
+        emit(ChatMessageLoaded());
+      }
+    } catch (e) {
+      logger.e("loadInitialMessages2 error: $e");
+    } finally {
+      _isLoadingMessages = false;
+    }
+  }
+
+  Future<void> loadInitialMessages1({bool emitLoaded = true}) async {
+    if (chatList.isEmpty) {
+      logger.w("⚠️ chatList가 비어있습니다");
+      return;
+    }
+    // if (_isLoadingMessages) {
+    //   logger.w("⚠️ 이미 로딩 중입니다!");
+    //   return;
+    // }
+
+    try {
       for (final room in chatList) {
         final roomId = room.id;
         final ret = await supabase
@@ -870,14 +1176,14 @@ class ChatCubit extends Cubit<ChatState> {
           }
 
           //이미지 메시지 추가
-          if (!imageMessages.containsKey(message.roomId)) {
-            imageMessages[message.roomId] = [];
-          }
-          imageMessages[message.roomId] = [
-            message,
-            ...imageMessages[message.roomId]!
-          ];
           if (message.imagePath != null) {
+            if (!imageMessages.containsKey(message.roomId)) {
+              imageMessages[message.roomId] = [];
+            }
+            imageMessages[message.roomId] = [
+              message,
+              ...imageMessages[message.roomId]!
+            ];
             await makeImageUrlImageMessage(message);
           }
 
@@ -1069,16 +1375,12 @@ class ChatCubit extends Cubit<ChatState> {
         'room_id': roomId,
         'user_id': supabase.auth.currentUser!.id,
       });
-      debugPrint("1");
       await loadChatList(emitLoaded: false);
-      debugPrint("2");
       await Future.wait([
         fetchLatestMessages(emitLoaded: false),
         fetchLatestReceipt(),
       ]);
-      debugPrint("3");
       await loadInitialMessages1(emitLoaded: false);
-      debugPrint("4");
       final roomInfo = chatList.firstWhere((room) => room.id == roomId);
       await fetchRoomRanking(roomInfo, emitLoaded: false);
       if (roomInfo.startDay != null && roomInfo.endDay != null) {
@@ -1718,20 +2020,24 @@ class ChatCubit extends Cubit<ChatState> {
     try {
       _isLoadingMessages = true;
 
+      const baseUrl =
+          'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
+
       for (final room in chatList) {
         final roomId = room.id;
+
         final ret = await supabase
             .from('messages')
             .select(
                 "*, profiles!messages_user_id_fkey(*), chat_reactions(*), read_receipts(user_id)")
             .eq('room_id', roomId)
-            .not('image_path', 'is', null) // image_path가 null이 아닌 것만
+            .not('image_path', 'is', null)
             .not('user_id', 'in', blockedUsers)
             .not('id', 'in', blockedMessages)
             .order('created_at', ascending: false)
             .limit(32);
 
-        // ✅ 기존 이미지 메시지 초기화하고 새로 저장하기!
+        // ✅ imageMessages에만 저장 + public URL 붙이기
         imageMessages[roomId] = ret
             .map((row) => Message.fromMap(
                   map: row,
@@ -1744,64 +2050,14 @@ class ChatCubit extends Cubit<ChatState> {
                       .map((receiptRet) => receiptRet['user_id'] as String)
                       .toSet(),
                 ))
+            .map((message) => message.copyWith(
+                imageUrl: message.imagePath != null
+                    ? '$baseUrl${message.imagePath}'
+                    : null))
             .toList();
-
-        final roomMessages = imageMessages[roomId]!;
-        for (var i = 0; i < roomMessages.length; i += 32) {
-          final batch = roomMessages.skip(i).take(32).toList();
-
-          await Future.wait(
-            batch.map((message) async {
-              if (message.imagePath != null) {
-                try {
-                  String? url;
-                  for (int retry = 0; retry < 3; retry++) {
-                    url = await _getSignedUrlWithRetry(message.imagePath!);
-                    if (url != null) break;
-                    if (retry < 2) {
-                      logger.w("🔄 URL 생성 재시도 중... (${retry + 1}/3)");
-                      await Future.delayed(
-                          Duration(milliseconds: 300 * (retry + 1)));
-                    }
-                  }
-
-                  if (url != null) {
-                    imageMessages[roomId] =
-                        List.from(imageMessages[roomId]!.map((m) {
-                      if (m.id == message.id) {
-                        return m.copyWith(imageUrl: url);
-                      }
-                      return m;
-                    }));
-
-                    if (messages.containsKey(roomId)) {
-                      messages[roomId] = List.from(messages[roomId]!.map((m) {
-                        if (m.id == message.id) {
-                          return m.copyWith(imageUrl: url);
-                        }
-                        return m;
-                      }));
-                    }
-
-                    // logger.d("✅ 메시지 ID: ${message.id}의 이미지 URL 생성 성공");
-                  } else {
-                    logger.e("❌ 메시지 ID: ${message.id}의 이미지 URL 생성 실패");
-                  }
-                } catch (e) {
-                  logger.e("❌ 이미지 URL 생성 중 오류 발생: $e");
-                }
-              }
-            }),
-          );
-
-          await Future.delayed(const Duration(milliseconds: 100));
-        }
 
         logger.d("✅ 방 ID: $roomId의 이미지 메시지 처리 완료");
       }
-
-      // emit(ChatMessageLoaded());
-      logger.d("🎉 모든 이미지 메시지 로딩 완료!");
     } catch (e) {
       logger.e("❌ loadImageMessages error: $e");
     } finally {
@@ -1809,31 +2065,151 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  // Future<void> loadImageMessages() async {
+  //   if (chatList.isEmpty || _isLoadingMessages) {
+  //     logger.w("⚠️ chatList가 비어있거나 이미 로딩 중입니다!");
+  //     return;
+  //   }
+
+  //   try {
+  //     _isLoadingMessages = true;
+
+  //     for (final room in chatList) {
+  //       final roomId = room.id;
+  //       final ret = await supabase
+  //           .from('messages')
+  //           .select(
+  //               "*, profiles!messages_user_id_fkey(*), chat_reactions(*), read_receipts(user_id)")
+  //           .eq('room_id', roomId)
+  //           .not('image_path', 'is', null) // image_path가 null이 아닌 것만
+  //           .not('user_id', 'in', blockedUsers)
+  //           .not('id', 'in', blockedMessages)
+  //           .order('created_at', ascending: false)
+  //           .limit(32);
+
+  //       // ✅ 기존 이미지 메시지 초기화하고 새로 저장하기!
+  //       imageMessages[roomId] = ret
+  //           .map((row) => Message.fromMap(
+  //                 map: row,
+  //                 myUserId: supabase.auth.currentUser!.id,
+  //                 profile: Profile.fromMap(map: row['profiles']),
+  //                 reactions: (row['chat_reactions'] as List<dynamic>)
+  //                     .map((reactionRet) => Reaction.fromMap(map: reactionRet))
+  //                     .toList(),
+  //                 readReceipts: (row['read_receipts'] as List<dynamic>)
+  //                     .map((receiptRet) => receiptRet['user_id'] as String)
+  //                     .toSet(),
+  //               ))
+  //           .toList();
+
+  //       final roomMessages = imageMessages[roomId]!;
+  //       for (var i = 0; i < roomMessages.length; i += 32) {
+  //         final batch = roomMessages.skip(i).take(32).toList();
+
+  //         await Future.wait(
+  //           batch.map((message) async {
+  //             if (message.imagePath != null) {
+  //               try {
+  //                 String? url;
+  //                 for (int retry = 0; retry < 3; retry++) {
+  //                   url = await _getSignedUrlWithRetry(message.imagePath!);
+  //                   if (url != null) break;
+  //                   if (retry < 2) {
+  //                     logger.w("🔄 URL 생성 재시도 중... (${retry + 1}/3)");
+  //                     await Future.delayed(
+  //                         Duration(milliseconds: 300 * (retry + 1)));
+  //                   }
+  //                 }
+
+  //                 if (url != null) {
+  //                   imageMessages[roomId] =
+  //                       List.from(imageMessages[roomId]!.map((m) {
+  //                     if (m.id == message.id) {
+  //                       return m.copyWith(imageUrl: url);
+  //                     }
+  //                     return m;
+  //                   }));
+
+  //                   if (messages.containsKey(roomId)) {
+  //                     messages[roomId] = List.from(messages[roomId]!.map((m) {
+  //                       if (m.id == message.id) {
+  //                         return m.copyWith(imageUrl: url);
+  //                       }
+  //                       return m;
+  //                     }));
+  //                   }
+
+  //                   // logger.d("✅ 메시지 ID: ${message.id}의 이미지 URL 생성 성공");
+  //                 } else {
+  //                   logger.e("❌ 메시지 ID: ${message.id}의 이미지 URL 생성 실패");
+  //                 }
+  //               } catch (e) {
+  //                 logger.e("❌ 이미지 URL 생성 중 오류 발생: $e");
+  //               }
+  //             }
+  //           }),
+  //         );
+
+  //         await Future.delayed(const Duration(milliseconds: 100));
+  //       }
+
+  //       logger.d("✅ 방 ID: $roomId의 이미지 메시지 처리 완료");
+  //     }
+
+  //     // emit(ChatMessageLoaded());
+  //     logger.d("🎉 모든 이미지 메시지 로딩 완료!");
+  //   } catch (e) {
+  //     logger.e("❌ loadImageMessages error: $e");
+  //   } finally {
+  //     _isLoadingMessages = false;
+  //   }
+  // }
+
   Future<void> makeImageUrlImageMessage(Message message) async {
     if (message.imagePath != null) {
-      try {
-        final url = await _getSignedUrlWithRetry(message.imagePath!);
+      final baseUrl =
+          'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
+      final fullUrl = '$baseUrl${message.imagePath}';
 
-        if (url == null) {
-          logger.e("⛔ Signed URL을 생성하지 못했습니다.");
-          return;
+      imageMessages[message.roomId] =
+          List.from(imageMessages[message.roomId]!.map((m) {
+        if (m.id == message.id) {
+          m = message.copyWith(imageUrl: fullUrl);
         }
-        imageMessages[message.roomId] =
-            List.from(imageMessages[message.roomId]!.map((m) {
-          if (m.id == message.id) {
-            m = message.copyWith(imageUrl: url);
-          }
-          return m;
-        }));
+        return m;
+      }));
 
-        emit(ChatMessageLoaded());
-      } catch (e) {
-        logger.e("⛔ makeImageUrl error: $e");
-      }
+      emit(ChatMessageLoaded());
     } else {
       logger.w("⚠️ [makeImageUrlImageMessage] imagePath가 null입니다. 재시도하겠습니다.");
     }
   }
+
+  // Future<void> makeImageUrlImageMessage(Message message) async {
+  //   if (message.imagePath != null) {
+  //     try {
+  //       final url = await _getSignedUrlWithRetry(message.imagePath!);
+
+  //       if (url == null) {
+  //         logger.e("⛔ Signed URL을 생성하지 못했습니다.");
+  //         return;
+  //       }
+  //       imageMessages[message.roomId] =
+  //           List.from(imageMessages[message.roomId]!.map((m) {
+  //         if (m.id == message.id) {
+  //           m = message.copyWith(imageUrl: url);
+  //         }
+  //         return m;
+  //       }));
+
+  //       emit(ChatMessageLoaded());
+  //     } catch (e) {
+  //       logger.e("⛔ makeImageUrl error: $e");
+  //     }
+  //   } else {
+  //     logger.w("⚠️ [makeImageUrlImageMessage] imagePath가 null입니다. 재시도하겠습니다.");
+  //   }
+  // }
 
   Room getRoom(String roomId) =>
       chatList.firstWhere((element) => element.id == roomId);
