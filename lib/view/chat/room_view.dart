@@ -327,7 +327,7 @@ class RoomView extends StatelessWidget {
                       ),
                     );
                     context.read<ChatCubit>().enterRoom1(room.id);
-                    Future.delayed(const Duration(milliseconds: 500), () {
+                    Future.delayed(const Duration(milliseconds: 700), () {
                       if (context.mounted) {
                         context.read<TutorialCubit>().showTutorialChat();
                       }
