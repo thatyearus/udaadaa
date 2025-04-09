@@ -21,7 +21,27 @@ class _RegisterViewState extends State<RegisterView> {
     final onboardingCubit = context.read<TutorialCubit>();
 
     TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
-      hideSkip: true,
+      hideSkip: false,
+      onSkip: () {
+        logger.d("스킵 누름 - register_view");
+        Analytics().logEvent("튜토리얼_스킵", parameters: {
+          "view": "register_view", // 현재 튜토리얼이 실행된 뷰
+        });
+        PreferencesService().setBool('isTutorialFinished', true);
+        return true;
+      },
+      alignSkip: Alignment.topLeft,
+      skipWidget: Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: const Text(
+          "SKIP",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       targets: [
         TargetFocus(
           identify: "verify_button",
@@ -83,7 +103,6 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   void dispose() {
-    debugPrint('s');
     PreferencesService().setBool('isTutorialFinished', true); // 튜토리얼 완료 상태 저장
     super.dispose();
   }

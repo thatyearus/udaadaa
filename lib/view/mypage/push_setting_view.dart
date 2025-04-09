@@ -4,7 +4,6 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/cubit/tutorial_cubit.dart';
-import 'package:udaadaa/service/notifications/notification_service.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -415,44 +414,6 @@ class _PushSettingViewState extends State<PushSettingView> {
                     (_isMissionPushOn
                         ? alarmTimeSetting(context)
                         : Container()),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: AppSpacing.s),
-                padding: AppSpacing.edgeInsetsM,
-                decoration: BoxDecoration(
-                  color: AppColors.neutral[50],
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.bug_report, color: AppColors.primary),
-                        AppSpacing.horizontalSizedBoxS,
-                        Text(
-                          "알림 테스트",
-                          style: AppTextStyles.textTheme.titleSmall,
-                        ),
-                      ],
-                    ),
-                    AppSpacing.verticalSizedBoxXs,
-                    Text(
-                      "버튼을 눌러 로컬 알림이 잘 오는지 테스트해보세요.",
-                      style: AppTextStyles.textTheme.labelMedium,
-                    ),
-                    AppSpacing.verticalSizedBoxS,
-                    ElevatedButton(
-                      onPressed: () {
-                        NotificationService.showNotification(
-                          "🧪 테스트 알림",
-                          "지금 이 알림이 오면 로컬 알림 성공!",
-                        );
-                      },
-                      child: Text("알림 테스트 해보기"),
-                    ),
                   ],
                 ),
               ),
