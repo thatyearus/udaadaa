@@ -174,7 +174,11 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                   );
                   context.read<BottomNavCubit>().selectTab(BottomNavState.chat);
                   Navigator.of(context).popUntil((route) => route.isFirst);
+                  Future.delayed(const Duration(milliseconds: 300), () {
+                    if (context.mounted) {
                   context.read<TutorialCubit>().showTutorialRoom();
+                }
+                  });
                 }
               },
               child: BlocBuilder<ChatCubit, ChatState>(
