@@ -136,6 +136,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           ),
         );
         getTodayMission();
+        getCurrentChallengeCompletedDays();
         return true;
       }
     } catch (e) {
