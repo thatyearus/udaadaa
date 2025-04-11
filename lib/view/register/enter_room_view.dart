@@ -142,6 +142,7 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                 ),
                 TextButton(
                   onPressed: () async {
+                    Analytics().logEvent('입장코드페이지_랜딩페이지이동');
                     const url =
                         'https://slashpage.com/dietchallenge'; // 랜딩페이지 링크 갱신되면 변경 필요.
                     if (await canLaunchUrl(Uri.parse(url))) {
@@ -173,7 +174,11 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                   );
                   context.read<BottomNavCubit>().selectTab(BottomNavState.chat);
                   Navigator.of(context).popUntil((route) => route.isFirst);
-                  context.read<TutorialCubit>().showTutorialRoom();
+                  Future.delayed(const Duration(milliseconds: 300), () {
+                    if (context.mounted) {
+                      context.read<TutorialCubit>().showTutorialRoom();
+                    }
+                  });
                 }
               },
               child: BlocBuilder<ChatCubit, ChatState>(
@@ -212,6 +217,7 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                         ),
                         onPressed: isEnabled
                             ? () {
+                                Analytics().logEvent('입장코드뷰_다음');
                                 context.read<ChatCubit>().joinRoomByRoomName(
                                     _codeController.text.trim());
                               }
