@@ -145,7 +145,12 @@ class SelectButton extends StatelessWidget {
           children: [
             Expanded(
               child: OutlinedButton(
-                onPressed: () => onSelect(0),
+                onPressed: () {
+                  Analytics().logEvent(
+                    "홈_챌린지탭",
+                  );
+                  onSelect(0);
+                },
                 style: OutlinedButton.styleFrom(
                   overlayColor: AppColors.neutral[500],
                   shape: const RoundedRectangleBorder(
