@@ -37,6 +37,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     final authState = authCubit.state;
     if (authState is Authenticated) {
       isEntered();
+
       // 연속 참여 일 계산
     }
 
@@ -48,7 +49,6 @@ class ChallengeCubit extends Cubit<ChallengeState> {
         emit(ChallengeInitial());
       }
     });
-
     selectDay(DateTime.now());
   }
 
@@ -276,16 +276,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           .lte('created_at', dayEnd.toIso8601String())
           .count(CountOption.exact)
           .then((res) => res.count);
-/*
-      final reactionCount = await supabase
-          .from('reactions')
-          .select('id')
-          .eq('user_id', supabase.auth.currentUser!.id)
-          .gte('created_at', dayStart.toIso8601String())
-          .lte('created_at', dayEnd.toIso8601String())
-          .count(CountOption.exact)
-          .then((res) => res.count);
-*/
+
       if (feedCount >= 2 && weightCount >= 1) {
         completedDays++;
       }
