@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 
+import '../utils/analytics/analytics.dart';
+
 class CategoryButtonsContainer extends StatefulWidget {
   final ValueChanged<FeedCategory> onCategorySelected;
 
@@ -20,6 +22,12 @@ class _CategoryButtonsContainerState extends State<CategoryButtonsContainer> {
     /*setState(() {
       _selectedCategory = category;
     });*/
+    Analytics().logEvent(
+      "피드_카테고리_선택",
+      parameters: {
+        "category": category.name,
+      },
+    );
     widget.onCategorySelected(category); // 선택된 카테고리 콜백 호출
   }
 

@@ -536,7 +536,8 @@ class ChatCubit extends Cubit<ChatState> {
   //   return null;
   // }
 
-  Future<void> fetchUnreadMessageIdsAfterLatestReceipt() async {
+  Future<void> fetchUnreadMessageIdsAfterLatestReceipt(
+      {bool emitLoaded = true}) async {
     unreadMessageCount = 0;
     final userId = supabase.auth.currentUser!.id;
 
@@ -581,7 +582,9 @@ class ChatCubit extends Cubit<ChatState> {
     } catch (e) {
       logger.e("fetchUnreadMessageIdsAfterLatestReceipt error: $e");
     }
-    emit(ChatMessageLoaded());
+    if (emitLoaded) {
+      emit(ChatMessageLoaded());
+    }
   }
 
   Future<void> fetchPushOptions() async {
@@ -1344,6 +1347,7 @@ class ChatCubit extends Cubit<ChatState> {
         final roomId = data['room_id'] as String;
         logger.d("✅ Edge Function 매칭된 room_id: $roomId");
         await joinRoom(roomId);
+        await fetchUnreadMessageIdsAfterLatestReceipt(emitLoaded: true);
       } else {
         logger.e("⛔ 방 이름 매칭 실패: ${data?['error'] ?? 'Unknown'}");
         emit(JoinRoomFailed("방을 찾을 수 없습니다.")); // ❌ 실패 시 상태
@@ -1380,7 +1384,10 @@ class ChatCubit extends Cubit<ChatState> {
         fetchLatestMessages(emitLoaded: false),
         fetchLatestReceipt(),
       ]);
-      await loadInitialMessages1(emitLoaded: false);
+      await Future.wait([
+        loadInitialMessages1(emitLoaded: false),
+        loadImageMessages(),
+      ]);
       final roomInfo = chatList.firstWhere((room) => room.id == roomId);
       await fetchRoomRanking(roomInfo, emitLoaded: false);
       if (roomInfo.startDay != null && roomInfo.endDay != null) {
@@ -2012,14 +2019,12 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   Future<void> loadImageMessages() async {
-    if (chatList.isEmpty || _isLoadingMessages) {
+    if (chatList.isEmpty) {
       logger.w("⚠️ chatList가 비어있거나 이미 로딩 중입니다!");
       return;
     }
 
     try {
-      _isLoadingMessages = true;
-
       const baseUrl =
           'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
 
