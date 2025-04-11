@@ -235,71 +235,71 @@ class ChallengeHomeView extends StatelessWidget {
   }
 }
 
-class ReportHomeView extends StatelessWidget {
-  final PageController _pageController;
-  const ReportHomeView({super.key, required PageController pageController})
-      : _pageController = pageController;
+// class ReportHomeView extends StatelessWidget {
+//   final PageController _pageController;
+//   const ReportHomeView({super.key, required PageController pageController})
+//       : _pageController = pageController;
 
-  @override
-  Widget build(BuildContext context) {
-    final myFeedsLength =
-        context.select<FeedCubit, int>((cubit) => cubit.getMyFeeds.length);
-    return RefreshIndicator(
-      onRefresh: () {
-        return Future.wait([
-          context.read<FeedCubit>().fetchMyFeeds(),
-          //context.read<FeedCubit>().fetchHomeFeeds(),
-          context.read<ProfileCubit>().getMyTodayReport(),
-        ]);
-      },
-      child: SingleChildScrollView(
-        padding: AppSpacing.edgeInsetsL,
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 250,
-              child: myFeedsLength != 0
-                  ? PageView.builder(
-                      controller: _pageController,
-                      itemCount: min(3, myFeedsLength),
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Analytics().logEvent(
-                              "홈_최근기록",
-                              parameters: {"최근기록_페이지": (index + 1).toString()},
-                            );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    MyRecordView(initialPage: index),
-                              ),
-                            );
-                          },
-                          child: LastRecord(page: index),
-                        );
-                      },
-                    )
-                  : const LastRecord(page: 0),
-            ),
-            AppSpacing.verticalSizedBoxL,
-            GestureDetector(
-              child: const ReportSummary(),
-              onTap: () {
-                Analytics().logEvent(
-                  "홈_리포트",
-                );
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ReportView()),
-                );
-              },
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final myFeedsLength =
+//         context.select<FeedCubit, int>((cubit) => cubit.getMyFeeds.length);
+//     return RefreshIndicator(
+//       onRefresh: () {
+//         return Future.wait([
+//           context.read<FeedCubit>().fetchMyFeeds(),
+//           //context.read<FeedCubit>().fetchHomeFeeds(),
+//           context.read<ProfileCubit>().getMyTodayReport(),
+//         ]);
+//       },
+//       child: SingleChildScrollView(
+//         padding: AppSpacing.edgeInsetsL,
+//         physics: const AlwaysScrollableScrollPhysics(),
+//         child: Column(
+//           children: [
+//             SizedBox(
+//               height: 250,
+//               child: myFeedsLength != 0
+//                   ? PageView.builder(
+//                       controller: _pageController,
+//                       itemCount: min(3, myFeedsLength),
+//                       itemBuilder: (context, index) {
+//                         return GestureDetector(
+//                           onTap: () {
+//                             Analytics().logEvent(
+//                               "홈_최근기록",
+//                               parameters: {"최근기록_페이지": (index + 1).toString()},
+//                             );
+//                             Navigator.push(
+//                               context,
+//                               MaterialPageRoute(
+//                                 builder: (context) =>
+//                                     MyRecordView(initialPage: index),
+//                               ),
+//                             );
+//                           },
+//                           child: LastRecord(page: index),
+//                         );
+//                       },
+//                     )
+//                   : const LastRecord(page: 0),
+//             ),
+//             AppSpacing.verticalSizedBoxL,
+//             GestureDetector(
+//               child: const ReportSummary(),
+//               onTap: () {
+//                 Analytics().logEvent(
+//                   "홈_리포트",
+//                 );
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(builder: (context) => const ReportView()),
+//                 );
+//               },
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
