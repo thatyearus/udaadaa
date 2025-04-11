@@ -176,8 +176,8 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                   Navigator.of(context).popUntil((route) => route.isFirst);
                   Future.delayed(const Duration(milliseconds: 300), () {
                     if (context.mounted) {
-                  context.read<TutorialCubit>().showTutorialRoom();
-                }
+                      context.read<TutorialCubit>().showTutorialRoom();
+                    }
                   });
                 }
               },
@@ -217,6 +217,7 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                         ),
                         onPressed: isEnabled
                             ? () {
+                                Analytics().logEvent('입장코드뷰_다음');
                                 context.read<ChatCubit>().joinRoomByRoomName(
                                     _codeController.text.trim());
                               }
