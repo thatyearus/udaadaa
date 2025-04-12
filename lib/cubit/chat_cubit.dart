@@ -1820,6 +1820,7 @@ class ChatCubit extends Cubit<ChatState> {
         readReceipts: {},
       );
       await supabase.from('messages').upsert(message.toMap());
+      _selectedImage = null;
     } catch (e) {
       logger.e("sendImageMessage error: $e");
     }
