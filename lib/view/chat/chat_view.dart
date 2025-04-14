@@ -575,10 +575,6 @@ class _ChatViewState extends State<ChatView> {
                 .subtract(Duration(days: 1))
                 .isBefore(DateTime.now()));
 
-    // 🐛 디버깅용 프린트
-    debugPrint('📅 endDay: ${widget.roomInfo.endDay!.add(Duration(days: 1))}');
-    debugPrint('📅 now: ${DateTime.now()}');
-
     return BlocListener<ChatCubit, ChatState>(
       listener: (context, state) {
         if (state is ChatMessageLoaded) {
