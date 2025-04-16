@@ -2,6 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
@@ -45,9 +46,28 @@ class _MainViewState extends State<MainView> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     // ✅ 백 → 포그라운드 전환 시 처리
     if (state == AppLifecycleState.resumed) {
+      await Supabase.instance.client.auth.refreshSession();
+      // ✅ 0.5초간 입력 막기 위한 터치 방지용 투명 오버레이
+      final overlay = OverlayEntry(
+        builder: (_) => AbsorbPointer(
+          absorbing: true,
+          child: Container(
+            color: Colors.transparent, // 터치는 막지만 UI는 그대로 보여줌
+          ),
+        ),
+      );
+
+      if (!mounted) return;
+      Overlay.of(context, rootOverlay: true).insert(overlay);
+
+      Future.delayed(const Duration(milliseconds: 500), () {
+        overlay.remove(); // 0.5초 후 입력 허용
+      });
+
+      if (!mounted) return;
       final chatCubit = context.read<ChatCubit>();
 
       if (!chatCubit.wasPushHandled) {
