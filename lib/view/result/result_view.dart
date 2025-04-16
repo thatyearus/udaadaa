@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/widgets/result_card.dart';
 
@@ -105,13 +106,23 @@ class ChallengeResultView extends StatelessWidget {
                     context,
                     icon: Icons.save_alt_rounded,
                     label: '저장하기',
-                    onPressed: () => _saveImage(context),
+                    onPressed: () {
+                      _saveImage(context);
+                      Analytics().logEvent(
+                        "챌린지결과_저장하기",
+                      );
+                    },
                   ),
                   _buildActionButton(
                     context,
                     icon: Icons.share_rounded,
                     label: '공유하기',
-                    onPressed: () => _shareImage(),
+                    onPressed: () {
+                      _shareImage();
+                      Analytics().logEvent(
+                        "챌린지결과_공유하기",
+                      );
+                    },
                   ),
                 ],
               ),

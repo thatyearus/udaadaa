@@ -75,16 +75,21 @@ class HomeViewState extends State<HomeView> {
         .select<ChallengeCubit, bool>((cubit) => cubit.challenge != null);
     return Scaffold(
       body: BlocListener<ChallengeCubit, ChallengeState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is ChallengeEnd) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ChallengeResultView(
-                  isSuccess: true,
-                  endDay: DateTime.now(),
+            final s = DateTime.now().subtract(const Duration(days: 13));
+            final e = DateTime.now();
+            await context.read<ChallengeCubit>().fetchStartAndEndWeights(s, e);
+            if (context.mounted) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ChallengeResultView(
+                    isSuccess: true,
+                    endDay: DateTime.now(),
+                  ),
                 ),
-              ),
-            );
+              );
+            }
           } else if (state is ChallengeSuccess) {
             if (!_isChallenger) return;
             setState(() {

@@ -20,6 +20,10 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   int _consecutiveDays = 0;
   int _completeDays = 0;
   DateTime? _finalStartDate;
+
+  double? _startWeight;
+  double? _endWeight;
+
   final Map<String, int> _selectedMissionComplete = {
     "feed": 0,
     "reaction": 0,
@@ -465,7 +469,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
       }
       emit(ChallengeSuccess());
       if (_challenge != null && _challenge!.isSuccess == false) {
-        if (_consecutiveDays < 6) return;
+        // if (_consecutiveDays < 6) return;
         final endDay = _challenge!.endDay;
         if (now.year == endDay.year &&
             now.month == endDay.month &&
@@ -506,6 +510,38 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     }
   }
 
+  Future<void> fetchStartAndEndWeights(
+      DateTime startDate, DateTime endDate) async {
+    try {
+      if (authCubit.state is! Authenticated) {
+        return;
+      }
+
+      final startReport = await supabase
+          .from('report')
+          .select('weight')
+          .eq('date', startDate.toIso8601String())
+          .maybeSingle();
+
+      final endReport = await supabase
+          .from('report')
+          .select('weight')
+          .eq('date', endDate.toIso8601String())
+          .maybeSingle();
+
+      final startWeight = startReport?['weight'];
+      final endWeight = endReport?['weight'];
+
+      if (startWeight == null || endWeight == null) {
+        return;
+      }
+      _startWeight = startWeight.toDouble();
+      _endWeight = endWeight.toDouble();
+    } catch (e) {
+      logger.e('Error fetching start/end weights: $e');
+    }
+  }
+
   Challenge? get challenge => _challenge;
   DateTime get getSelectedDate => _selectedDate;
   DateTime get getFocusDate => _focusDate;
@@ -514,4 +550,6 @@ class ChallengeCubit extends Cubit<ChallengeState> {
   bool get getSelectedDayChallenge => _selectedDayChallenge;
   bool get getTodayChallengeComplete => _todayChallengeComplete;
   int get getCompleteDays => _completeDays;
+  double? get getStartWeight => _startWeight;
+  double? get getEndWeight => _endWeight;
 }
