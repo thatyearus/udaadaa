@@ -12,6 +12,7 @@ import 'package:udaadaa/view/chat/image_detail_view.dart';
 import 'package:udaadaa/view/chat/profile_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:flutter/services.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
@@ -203,7 +204,17 @@ class ChatBubble extends StatelessWidget {
                           TextButton(
                             onPressed: () {
                               // 복사하기 로직
-                              Navigator.pop(context);
+                              try {
+                                final messageText = message.text;
+                                if (messageText.isNotEmpty) {
+                                  Clipboard.setData(
+                                      ClipboardData(text: messageText));
+                                }
+                              } catch (e) {
+                                debugPrint('Error copying message: $e');
+                              } finally {
+                                Navigator.pop(context);
+                              }
                             },
                             child: Text(
                               '복사하기',
