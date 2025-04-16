@@ -143,6 +143,9 @@ class _PushSettingViewState extends State<PushSettingView> {
       },
       onFinish: () {
         logger.d("finish tutorial push setting view");
+        Analytics().logEvent(
+          "튜토리얼_완료",
+        );
         PreferencesService().setBool('isTutorialFinished', true);
       },
     );
