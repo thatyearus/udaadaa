@@ -145,7 +145,7 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                     Analytics().logEvent('랜딩페이지이동', parameters: {
                       "view": "enter_room_view",
                     });
-                    const url = 'dietchallenge.udadaa24.workers.dev';
+                    const url = 'https://dietchallenge.udadaa24.workers.dev/';
                     if (await canLaunchUrl(Uri.parse(url))) {
                       await launchUrl(
                         Uri.parse(url),
