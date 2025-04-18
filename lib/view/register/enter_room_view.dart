@@ -142,9 +142,10 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    Analytics().logEvent('입장코드페이지_랜딩페이지이동');
-                    const url =
-                        'https://slashpage.com/dietchallenge'; // 랜딩페이지 링크 갱신되면 변경 필요.
+                    Analytics().logEvent('랜딩페이지이동', parameters: {
+                      "view": "enter_room_view",
+                    });
+                    const url = 'https://dietchallenge.udadaa24.workers.dev/';
                     if (await canLaunchUrl(Uri.parse(url))) {
                       await launchUrl(
                         Uri.parse(url),
