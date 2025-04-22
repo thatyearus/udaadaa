@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:udaadaa/cubit/tutorial_cubit.dart';
+
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -17,88 +16,9 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  void showTutorial(BuildContext context) {
-    final onboardingCubit = context.read<TutorialCubit>();
-
-    TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
-      hideSkip: false,
-      onSkip: () {
-        logger.d("스킵 누름 - register_view");
-        Analytics().logEvent("튜토리얼_스킵", parameters: {
-          "view": "register_view", // 현재 튜토리얼이 실행된 뷰
-        });
-        PreferencesService().setBool('isTutorialFinished', true);
-        return true;
-      },
-      alignSkip: Alignment.topLeft,
-      skipWidget: Padding(
-        padding: const EdgeInsets.only(left: 16),
-        child: const Text(
-          "SKIP",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      targets: [
-        TargetFocus(
-          identify: "verify_button",
-          keyTarget: onboardingCubit.verifyButtonKey,
-          shape: ShapeLightFocus.RRect,
-          radius: 8,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              child: Text(
-                "챌린지에 참여해볼까요?",
-                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white, // 흰색 글씨
-                  fontWeight: FontWeight.bold, // 글씨 굵기(Bold)
-                  fontSize: 18, // 글씨 크기 증가
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-      onClickTarget: (target) {
-        Analytics().logEvent('튜토리얼_챌린지참여',
-            parameters: {'target': target.identify.toString()});
-        logger.d("onClickTarget: ${target.identify}");
-        if (target.identify == "verify_button") {
-          final provider = supabase.auth.currentUser?.appMetadata['provider'];
-          final nextView = (provider == 'apple' || provider == 'kakao')
-              ? const EnterRoomView()
-              : const LoginView();
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => nextView,
-            ),
-          );
-        }
-      },
-      onFinish: () {
-        logger.d("finish tutorial");
-      },
-    );
-
-    tutorialCoachMark.show(context: context);
-  }
-
   @override
   void initState() {
     super.initState();
-    if (PreferencesService().getBool('isTutorialFinished') != true) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        logger.d("Show tutorial");
-        Future.delayed(const Duration(milliseconds: 1000), () {
-          if (!mounted) return;
-          showTutorial(context);
-        });
-      });
-    }
   }
 
   @override
@@ -144,7 +64,6 @@ class _RegisterViewState extends State<RegisterView> {
               const SizedBox(height: 24),
 
               ElevatedButton(
-                key: context.read<TutorialCubit>().verifyButtonKey,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   minimumSize: const Size(double.infinity, 56),
