@@ -39,9 +39,34 @@ class AuthCubit extends Cubit<AuthState> {
     } else {
       _anonymousLogin();
     }
-    supabase.auth.onAuthStateChange.listen((data) {
+    supabase.auth.onAuthStateChange.listen((data) async {
       if (data.event == AuthChangeEvent.signedIn) {
-        makeProfile();
+        try {
+          final provider = data.session?.user.appMetadata['provider'];
+          if (provider == 'kakao' || provider == 'apple') {
+            try {
+              final existing = await supabase
+                  .from('profiles')
+                  .select()
+                  .eq('id', supabase.auth.currentUser!.id)
+                  .maybeSingle();
+
+              if (existing != null) {
+                _profile = Profile.fromMap(map: existing);
+                emit(Authenticated(_profile!));
+              } else {
+                makeProfile();
+              }
+            } catch (e) {
+              emit(AuthError());
+              logger.e('Error getting profile: ${e.toString()}');
+            }
+          } else {
+            makeProfile();
+          }
+        } catch (e) {
+          logger.e('Error logging sign-in details: ${e.toString()}');
+        }
       } else if (data.event == AuthChangeEvent.signedOut) {
         emit(AuthInitial());
       }
