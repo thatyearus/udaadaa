@@ -66,7 +66,7 @@ class RankingView extends StatelessWidget {
               child: RankingChart(),
             ),
             Text(
-              "평균 몸무게 변화: ${average > 0 ? "+" : ""}${average.toStringAsPrecision(3)} kg",
+              "평균 몸무게 변화: ${average > 0 ? "+" : ""}${average.toStringAsFixed(2)} kg",
               style: AppTextStyles.textTheme.headlineMedium,
             ),
           ],
