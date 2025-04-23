@@ -32,6 +32,8 @@ class FeedCubit extends Cubit<FeedState> {
   List<Feed> allFeeds = [];
   bool _fallbackChk = false;
 
+  final String baseUrl = '$supabaseUrl/storage/v1/object/public/FeedImages/';
+
   final Feed fallbackFeed = Feed(
     id: "f3bfa4e8-9d33-4b63-8bff-4f3a0a7e1eaa",
     userId: "166c0505-768c-422e-a177-39f505f9f7c5",
@@ -351,8 +353,8 @@ class FeedCubit extends Cubit<FeedState> {
         return;
       }
 
-      const baseUrl =
-          'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/FeedImages/';
+      // const baseUrl =
+      //     'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/FeedImages/';
 
       final List<Feed> newFeeds = [];
       for (var item in data) {
@@ -555,8 +557,8 @@ class FeedCubit extends Cubit<FeedState> {
   }
 
   Future<List<String>> _getPublicUrls(List<String> paths) async {
-    const baseUrl =
-        'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/FeedImages/';
+    // const baseUrl =
+    //     'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/FeedImages/';
 
     logger.d("🧵 총 ${paths.length}개의 퍼블릭 이미지 URL 생성 시작");
 
@@ -606,8 +608,8 @@ class FeedCubit extends Cubit<FeedState> {
   // }
 
   Future<List<String>> _getSignedUrlsWithRetry(List<String> paths) async {
-    const baseUrl =
-        'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/FeedImages/';
+    // const baseUrl =
+    //     'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/FeedImages/';
 
     logger.d("🧵 총 ${paths.length}개의 퍼블릭 이미지 URL 생성 시작");
 

@@ -58,6 +58,8 @@ class ChatCubit extends Cubit<ChatState> {
   bool _isLoadingMessages = false;
   final Map<String, bool> _loadingMoreMessages = {};
 
+  final String baseUrl = '$supabaseUrl/storage/v1/object/public/ImageMessages/';
+
   ChatCubit(this.authCubit, this.formCubit, this.challengeCubit)
       : super(ChatInitial()) {
     debugPrint("🔄 ChatCubit 생성자 호출됨");
@@ -114,14 +116,14 @@ class ChatCubit extends Cubit<ChatState> {
     try {
       final Dio newDio = Dio(
         BaseOptions(
-          baseUrl: 'https://ccpcclfqofyvksajnrpg.supabase.co',
+          baseUrl: supabaseUrl,
           connectTimeout: const Duration(milliseconds: 5000),
           receiveTimeout: const Duration(milliseconds: 9000),
         ),
       );
 
       final response = await newDio.post(
-        '/functions/v1/post-initial-chat-data',
+        initialChatEndPoint,
         options: Options(
           headers: {
             'Content-Type': 'application/json',
@@ -256,8 +258,8 @@ class ChatCubit extends Cubit<ChatState> {
           logger.d("🖼️ Processing image messages from initial data");
           imageMessages.clear();
 
-          const baseUrl =
-              'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
+          // const baseUrl =
+          //     'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
 
           // Process each room's image messages
           imageMessagesMap.forEach((roomId, messages) {
@@ -470,8 +472,8 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> makeImageUrlMessage(Message message, {emitLoaded = true}) async {
     if (message.imagePath != null) {
-      final baseUrl =
-          'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
+      // final baseUrl =
+      //     'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
       final fullUrl = '$baseUrl${message.imagePath}';
 
       messages[message.roomId] = List.from(messages[message.roomId]!.map((m) {
@@ -2026,8 +2028,8 @@ class ChatCubit extends Cubit<ChatState> {
     }
 
     try {
-      const baseUrl =
-          'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
+      // const baseUrl =
+      //     'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
 
       for (final room in chatList) {
         final roomId = room.id;
@@ -2173,8 +2175,8 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> makeImageUrlImageMessage(Message message) async {
     if (message.imagePath != null) {
-      final baseUrl =
-          'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
+      // final baseUrl =
+      //     'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/ImageMessages/';
       final fullUrl = '$baseUrl${message.imagePath}';
 
       imageMessages[message.roomId] =
