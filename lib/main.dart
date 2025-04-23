@@ -12,7 +12,6 @@ import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
-import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/firebase_options.dart';
 import 'package:udaadaa/service/notifications/notification_service.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -99,9 +98,6 @@ class MyApp extends StatelessWidget {
             context.read<FormCubit>(),
             context.read<ChallengeCubit>(),
           ),
-        ),
-        BlocProvider<TutorialCubit>(
-          create: (context) => TutorialCubit(),
         ),
       ],
       child: MaterialApp(

@@ -139,8 +139,12 @@ class LastRecord extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           AppSpacing.verticalSizedBoxXs,
-                          Text("칼로리 : ${myFeedRecord[page].calorie ?? 0} kcal",
-                              style: AppTextStyles.textTheme.titleSmall),
+                          Text(
+                            myFeedRecord[page].type == FeedType.exercise
+                                ? "운동시간 : ${myFeedRecord[page].calorie ?? 0}분"
+                                : "칼로리 : ${myFeedRecord[page].calorie ?? 0}kcal",
+                            style: AppTextStyles.textTheme.titleSmall,
+                          ),
                         ],
                       ),
                     ),
