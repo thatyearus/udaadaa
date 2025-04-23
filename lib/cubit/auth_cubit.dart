@@ -91,7 +91,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       bool insertSuccess = false;
       int retryCount = 0;
-      const maxRetries = 5; // 원하는 만큼 재시도 횟수를 설정
+      const maxRetries = 3; // 원하는 만큼 재시도 횟수를 설정
 
       while (!insertSuccess && retryCount < maxRetries) {
         try {
@@ -109,10 +109,26 @@ class AuthCubit extends Cubit<AuthState> {
             _updateFCMToken(token, profile);
           });
         } catch (error) {
+          logger.d("error: $error");
           // UNIQUE 제약 조건 위반 시 새로운 닉네임을 생성하고 다시 시도
           if (error is PostgrestException && error.code == '23505') {
+            //먼저 있나 확인
+            final existing = await supabase
+                .from('profiles')
+                .select()
+                .eq('id', response.user!.id)
+                .maybeSingle();
+
+            if (existing != null) {
+              Profile profile = Profile.fromMap(map: existing);
+              _profile = profile;
+              emit(Authenticated(profile));
+              logger.d("중복 찾았음 그걸로 들어감");
+              return;
+            }
             // 23505는 PostgreSQL에서 고유 제약 조건 위반에 대한 에러 코드입니다.
             logger.d("Nickname ${profile.nickname} already exists");
+            logger.d("id ${profile.id} already exists");
             profile = profile.copyWith(
               nickname: RandomNicknameGenerator.generateNickname(),
             );
