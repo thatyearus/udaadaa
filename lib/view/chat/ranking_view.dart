@@ -145,7 +145,18 @@ class RankingChart extends StatelessWidget {
               sideTitles: SideTitles(
                 showTitles: true,
                 maxIncluded: false,
-                reservedSize: 26,
+                reservedSize: 40,
+                getTitlesWidget: (value, meta) {
+                  if (value % 0.5 != 0) return const SizedBox();
+                  // Wrap with RotatedBox and set quarterTurns to -1
+                  return RotatedBox(
+                    quarterTurns: -1,
+                    child: SizedBox(
+                      width: 40,
+                      child: Text(value.toStringAsFixed(1)),
+                    ),
+                  );
+                },
               ),
             ),
             rightTitles: AxisTitles(
