@@ -152,6 +152,20 @@ class RankingChart extends StatelessWidget {
               sideTitles: SideTitles(showTitles: false),
             ),
           ),
+          barTouchData: BarTouchData(
+            enabled: true,
+            touchTooltipData: BarTouchTooltipData(
+              fitInsideHorizontally: true,
+              fitInsideVertically: true,
+              getTooltipColor: (group) => AppColors.primary[100]!,
+              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                return BarTooltipItem(
+                  rod.toY.toStringAsFixed(2),
+                  AppTextStyles.textTheme.bodySmall!,
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
