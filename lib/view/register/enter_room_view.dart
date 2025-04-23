@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
-import 'package:udaadaa/cubit/tutorial_cubit.dart';
-import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -19,65 +16,6 @@ class EnterRoomView extends StatefulWidget {
 class _EnterRoomViewState extends State<EnterRoomView> {
   final TextEditingController _codeController = TextEditingController();
 
-  void showTutorial(BuildContext context) {
-    final onboardingCubit = context.read<TutorialCubit>();
-
-    TutorialCoachMark tutorialCoachMark = TutorialCoachMark(
-      hideSkip: false,
-      onSkip: () {
-        logger.d("스킵 누름 - enter_room_view");
-        Analytics().logEvent("튜토리얼_스킵", parameters: {
-          "view": "enter_room_view", // 현재 튜토리얼이 실행된 뷰
-        });
-        PreferencesService().setBool('isTutorialFinished', true);
-        return true; // 👈 튜토리얼 종료
-      },
-      alignSkip: Alignment.topLeft,
-      skipWidget: Padding(
-        padding: const EdgeInsets.only(left: 16),
-        child: const Text(
-          "SKIP",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      targets: [
-        TargetFocus(
-          identify: "enter_room_code",
-          keyTarget: onboardingCubit.enterRoomKey,
-          shape: ShapeLightFocus.RRect,
-          radius: 8,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              child: Text(
-                "문자로 받으신 코드를 입력해주세요.",
-                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white, // 흰색 글씨
-                  fontWeight: FontWeight.bold, // 글씨 굵기 (Bold)
-                  fontSize: 18, // 글씨 크기 증가
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-      onClickTarget: (target) {
-        Analytics().logEvent('튜토리얼_입장코드',
-            parameters: {'target': target.identify.toString()});
-        logger.d("onClickTarget: ${target.identify}");
-      },
-      onFinish: () {
-        logger.d("finish tutorial enter room view");
-      },
-    );
-
-    tutorialCoachMark.show(context: context);
-  }
-
   void _onTextChanged(String value) {
     setState(() {});
   }
@@ -85,15 +23,6 @@ class _EnterRoomViewState extends State<EnterRoomView> {
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted &&
-            PreferencesService().getBool('isTutorialFinished') != true) {
-          showTutorial(context);
-        }
-      });
-    });
   }
 
   @override
@@ -118,7 +47,6 @@ class _EnterRoomViewState extends State<EnterRoomView> {
             ),
             AppSpacing.verticalSizedBoxM,
             TextField(
-              key: context.read<TutorialCubit>().enterRoomKey,
               controller: _codeController,
               onChanged: _onTextChanged,
               decoration: InputDecoration(
@@ -175,11 +103,6 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                   );
                   context.read<BottomNavCubit>().selectTab(BottomNavState.chat);
                   Navigator.of(context).popUntil((route) => route.isFirst);
-                  Future.delayed(const Duration(milliseconds: 300), () {
-                    if (context.mounted) {
-                      context.read<TutorialCubit>().showTutorialRoom();
-                    }
-                  });
                 }
               },
               child: BlocBuilder<ChatCubit, ChatState>(

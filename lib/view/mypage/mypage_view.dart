@@ -5,116 +5,19 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
-import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/mypage/push_setting_view.dart';
-import 'package:udaadaa/view/result/result_list_view.dart';
 import 'package:udaadaa/widgets/my_profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils/analytics/analytics.dart';
+import 'package:udaadaa/view/mypage/refund_view.dart';
 
 class MyPageView extends StatelessWidget {
   const MyPageView({super.key});
-
-  void showTutorial(BuildContext context) {
-    final onboardingCubit = context.read<TutorialCubit>();
-
-    late TutorialCoachMark tutorialCoachMark;
-    tutorialCoachMark = TutorialCoachMark(
-      hideSkip: false,
-      onSkip: () {
-        logger.d("스킵 누름 - mypage_view");
-        Analytics().logEvent("튜토리얼_스킵", parameters: {
-          "view": "mypage_view", // 현재 튜토리얼이 실행된 뷰
-        });
-        PreferencesService().setBool('isTutorialFinished', true);
-        return true; // 👈 튜토리얼 종료
-      },
-      alignSkip: Alignment.topLeft,
-      skipWidget: Padding(
-        padding: const EdgeInsets.only(left: 16),
-        child: const Text(
-          "SKIP",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      targets: [
-        TargetFocus(
-          identify: "setting_button",
-          keyTarget: onboardingCubit.settingButtonKey,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              child: Text(
-                "다양한 설정을 변경할 수 있어요.",
-                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white, // 흰색 글씨
-                  fontWeight: FontWeight.bold, // 글씨 굵게 (Bold)
-                  fontSize: 18, // 글씨 크기 증가
-                ),
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: "push_setting_button",
-          keyTarget: onboardingCubit.pushSettingButtonKey,
-          shape: ShapeLightFocus.RRect,
-          radius: 8,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              child: Text(
-                "푸시 알림을 설정하러 가볼까요?",
-                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white, // 흰색 글씨
-                  fontWeight: FontWeight.bold, // 글씨 굵게 (Bold)
-                  fontSize: 18, // 글씨 크기 증가
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-      onClickTarget: (target) {
-        Analytics().logEvent('튜토리얼_마이페이지',
-            parameters: {'target': target.identify.toString()});
-        logger.d("onClickTarget: ${target.identify}");
-        if (target.identify == "setting_button") {
-          final dynamic popupMenu =
-              context.read<TutorialCubit>().settingButtonKey.currentState;
-          if (popupMenu != null) {
-            popupMenu.showButtonMenu();
-            Future.delayed(const Duration(milliseconds: 500), () {
-              tutorialCoachMark.next();
-            });
-          }
-        } else if (target.identify == "push_setting_button") {
-          Navigator.of(context).pop();
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const PushSettingView(),
-            ),
-          );
-        }
-      },
-      onFinish: () {
-        logger.d("finish tutorial mypage view");
-        context.read<BottomNavCubit>().selectTab(BottomNavState.home);
-        context.read<TutorialCubit>().showTutorialPush();
-      },
-    );
-
-    tutorialCoachMark.show(context: context);
-  }
 
   Future<void> _launchURL() async {
     const url = 'https://open.kakao.com/o/sxSYCkWg';
@@ -314,21 +217,7 @@ class MyPageView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(actions: [
-        // IconButton(
-        //     onPressed: () {
-        //       Analytics().logEvent(
-        //         "마이페이지_챌린지기록",
-        //         parameters: {"클릭": "챌린지기록"},
-        //       );
-        //       Navigator.of(context).push(
-        //         MaterialPageRoute(
-        //           builder: (context) => const ResultListView(),
-        //         ),
-        //       );
-        //     },
-        //     icon: const Icon(Icons.inbox_rounded)),
         PopupMenuButton(
-          key: context.read<TutorialCubit>().settingButtonKey,
           itemBuilder: (context) {
             return [
               const PopupMenuItem(
@@ -336,13 +225,16 @@ class MyPageView extends StatelessWidget {
                 child: Text('닉네임 변경'),
               ),
               PopupMenuItem(
-                key: context.read<TutorialCubit>().pushSettingButtonKey,
                 value: 'push_setting',
                 child: Text('알림 설정'),
               ),
               const PopupMenuItem(
                 value: 'kakaotalk',
                 child: Text('문의하기'),
+              ),
+              const PopupMenuItem(
+                value: 'refund_policy',
+                child: Text('환급규정'),
               ),
               // const PopupMenuItem(
               //   value: 'link_email',
@@ -430,128 +322,100 @@ class MyPageView extends StatelessWidget {
                 );
                 _launchURL();
                 break;
-              // case 'link_email':
-              //   Analytics().logEvent(
-              //     "마이페이지_이메일연동",
-              //     parameters: {"클릭": "이메일연동"},
-              //   );
-              //   if (supabase.auth.currentUser?.email != null &&
-              //       supabase.auth.currentUser?.email != "") {
-              //     ScaffoldMessenger.of(context).showSnackBar(
-              //       const SnackBar(
-              //         content: Text("이미 이메일이 연동되어 있습니다."),
-              //       ),
-              //     );
-              //     return;
-              //   }
-              //   showLinkEmailDialog(context, 'link_email');
-              //   break;
-              // case 'account_restore':
-              //   Analytics().logEvent(
-              //     "마이페이지_계정복원",
-              //     parameters: {"클릭": "계정복원"},
-              //   );
-              //   showLinkEmailDialog(context, 'account_restore');
-              //   break;
+              case 'refund_policy':
+                Analytics().logEvent(
+                  "마이페이지_환급규정",
+                  parameters: {"클릭": "환급규정"},
+                );
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const RefundView(),
+                  ),
+                );
+                break;
             }
           },
           icon: const Icon(Icons.settings_rounded),
         ),
       ]),
-      body: BlocListener<TutorialCubit, TutorialState>(
-        listener: (context, state) {
-          if (state is TutorialProfile) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Future.delayed(const Duration(milliseconds: 1000), () {
-                if (context.mounted &&
-                    PreferencesService().getBool('isTutorialFinished') !=
-                        true) {
-                  showTutorial(context);
-                }
-              });
-            });
-          }
-        },
-        child: RefreshIndicator(
-          onRefresh: () => context.read<FeedCubit>().fetchMyFeeds(),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const MyProfile(),
-                AppSpacing.verticalSizedBoxL,
-                GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 4.0,
-                      mainAxisSpacing: 4.0,
-                      childAspectRatio: 1.0,
-                    ),
-                    itemCount: myFeeds.length,
-                    itemBuilder: (context, index) {
-                      return GridTile(
-                        child: GestureDetector(
-                          onTap: () {
-                            Analytics().logEvent(
-                              "마이페이지_피드",
-                              parameters: {"피드선택": index},
-                            );
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    MyRecordView(initialPage: index),
+      body: RefreshIndicator(
+        onRefresh: () => context.read<FeedCubit>().fetchMyFeeds(),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const MyProfile(),
+              AppSpacing.verticalSizedBoxL,
+              GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 4.0,
+                    mainAxisSpacing: 4.0,
+                    childAspectRatio: 1.0,
+                  ),
+                  itemCount: myFeeds.length,
+                  itemBuilder: (context, index) {
+                    return GridTile(
+                      child: GestureDetector(
+                        onTap: () {
+                          Analytics().logEvent(
+                            "마이페이지_피드",
+                            parameters: {"피드선택": index},
+                          );
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  MyRecordView(initialPage: index),
+                            ),
+                          );
+                        },
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: CachedNetworkImage(
+                                width: double.infinity,
+                                height: double.infinity,
+                                imageUrl: myFeeds[index].imageUrl!,
+                                fit: BoxFit.cover,
                               ),
-                            );
-                          },
-                          child: Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: CachedNetworkImage(
+                            ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Container(
+                                  alignment: Alignment.center,
                                   width: double.infinity,
                                   height: double.infinity,
-                                  imageUrl: myFeeds[index].imageUrl!,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Container(
-                                    alignment: Alignment.center,
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    color: AppColors.neutral[500]
-                                        ?.withValues(alpha: 0.5),
-                                    child: Text(
-                                      (myFeeds[index].calorie != null
-                                          ? "${myFeeds[index].calorie} ${myFeeds[index].type == FeedType.exercise ? "분" : "kcal"}"
-                                          : ""),
-                                      style: AppTextStyles.headlineSmall(
-                                        TextStyle(
-                                            color: AppColors.neutral[200],
-                                            shadows: [
-                                              Shadow(
-                                                color: AppColors.neutral[500]!,
-                                                offset: const Offset(0, 1),
-                                                blurRadius: 0,
-                                              )
-                                            ]),
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    )),
-                              ),
-                            ],
-                          ),
+                                  color: AppColors.neutral[500]
+                                      ?.withValues(alpha: 0.5),
+                                  child: Text(
+                                    (myFeeds[index].calorie != null
+                                        ? "${myFeeds[index].calorie} ${myFeeds[index].type == FeedType.exercise ? "분" : "kcal"}"
+                                        : ""),
+                                    style: AppTextStyles.headlineSmall(
+                                      TextStyle(
+                                          color: AppColors.neutral[200],
+                                          shadows: [
+                                            Shadow(
+                                              color: AppColors.neutral[500]!,
+                                              offset: const Offset(0, 1),
+                                              blurRadius: 0,
+                                            )
+                                          ]),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )),
+                            ),
+                          ],
                         ),
-                      );
-                    }),
-              ],
-            ),
+                      ),
+                    );
+                  }),
+            ],
           ),
         ),
       ),

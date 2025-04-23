@@ -14,6 +14,7 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   Profile? _profile;
   bool _isChallenger = false;
+  bool _isAuthenticating = false;
 
   AuthCubit() : super(AuthInitial()) {
     final currentUser = supabase.auth.currentUser;
@@ -38,9 +39,34 @@ class AuthCubit extends Cubit<AuthState> {
     } else {
       _anonymousLogin();
     }
-    supabase.auth.onAuthStateChange.listen((data) {
+    supabase.auth.onAuthStateChange.listen((data) async {
       if (data.event == AuthChangeEvent.signedIn) {
-        makeProfile();
+        try {
+          final provider = data.session?.user.appMetadata['provider'];
+          if (provider == 'kakao' || provider == 'apple') {
+            try {
+              final existing = await supabase
+                  .from('profiles')
+                  .select()
+                  .eq('id', supabase.auth.currentUser!.id)
+                  .maybeSingle();
+
+              if (existing != null) {
+                _profile = Profile.fromMap(map: existing);
+                emit(Authenticated(_profile!));
+              } else {
+                makeProfile();
+              }
+            } catch (e) {
+              emit(AuthError());
+              logger.e('Error getting profile: ${e.toString()}');
+            }
+          } else {
+            makeProfile();
+          }
+        } catch (e) {
+          logger.e('Error logging sign-in details: ${e.toString()}');
+        }
       } else if (data.event == AuthChangeEvent.signedOut) {
         emit(AuthInitial());
       }
@@ -65,7 +91,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       bool insertSuccess = false;
       int retryCount = 0;
-      const maxRetries = 5; // 원하는 만큼 재시도 횟수를 설정
+      const maxRetries = 3; // 원하는 만큼 재시도 횟수를 설정
 
       while (!insertSuccess && retryCount < maxRetries) {
         try {
@@ -83,10 +109,26 @@ class AuthCubit extends Cubit<AuthState> {
             _updateFCMToken(token, profile);
           });
         } catch (error) {
+          logger.d("error: $error");
           // UNIQUE 제약 조건 위반 시 새로운 닉네임을 생성하고 다시 시도
           if (error is PostgrestException && error.code == '23505') {
+            //먼저 있나 확인
+            final existing = await supabase
+                .from('profiles')
+                .select()
+                .eq('id', response.user!.id)
+                .maybeSingle();
+
+            if (existing != null) {
+              Profile profile = Profile.fromMap(map: existing);
+              _profile = profile;
+              emit(Authenticated(profile));
+              logger.d("중복 찾았음 그걸로 들어감");
+              return;
+            }
             // 23505는 PostgreSQL에서 고유 제약 조건 위반에 대한 에러 코드입니다.
             logger.d("Nickname ${profile.nickname} already exists");
+            logger.d("id ${profile.id} already exists");
             profile = profile.copyWith(
               nickname: RandomNicknameGenerator.generateNickname(),
             );
@@ -219,58 +261,59 @@ class AuthCubit extends Cubit<AuthState> {
     _isChallenger = newValue;
   }
 
-  Future<int> linkEmail(String email, String password) async {
-    try {
-      await supabase.auth
-          .updateUser(UserAttributes(email: email, password: password));
-      return 1;
-    } catch (e) {
-      logger.e(e.toString());
-      if (e is AuthException) {
-        if (e.code == 'weak_password' && e.statusCode == '422') {
-          return 4;
-        } else if (e.code == 'email_exists' && e.statusCode == '422') {
-          return 5;
-        } else if (e.code == 'validation_failed' && e.statusCode == '400') {
-          return 6;
-        }
-        return 0;
-      }
-      return 0;
-    }
-  }
+  // Future<int> linkEmail(String email, String password) async {
+  //   try {
+  //     await supabase.auth
+  //         .updateUser(UserAttributes(email: email, password: password));
+  //     return 1;
+  //   } catch (e) {
+  //     logger.e(e.toString());
+  //     if (e is AuthException) {
+  //       if (e.code == 'weak_password' && e.statusCode == '422') {
+  //         return 4;
+  //       } else if (e.code == 'email_exists' && e.statusCode == '422') {
+  //         return 5;
+  //       } else if (e.code == 'validation_failed' && e.statusCode == '400') {
+  //         return 6;
+  //       }
+  //       return 0;
+  //     }
+  //     return 0;
+  //   }
+  // }
 
-  Future<int> signInWithEmail(String email, String password) async {
-    try {
-      await supabase.auth.signInWithPassword(email: email, password: password);
-      final currentUser = supabase.auth.currentUser;
-      logger.d("currentUser: $currentUser");
-      if (_profile != null || _profile!.id != currentUser!.id) {
-        final res = await supabase
-            .from('profiles')
-            .select()
-            .eq('id', currentUser!.id)
-            .single();
-        Profile profile = Profile.fromMap(map: res);
-        _profile = profile;
-      }
-      emit(Authenticated(_profile!));
-      return 3;
-    } catch (e) {
-      logger.e(e.toString());
-      if (e is AuthException) {
-        if (e.code == 'validation_failed' && e.statusCode == '400') {
-          return 7;
-        } else if (e.code == 'invalid_credentials' && e.statusCode == '400') {
-          return 8;
-        }
-        return 2;
-      }
-      return 2;
-    }
-  }
+  // Future<int> signInWithEmail(String email, String password) async {
+  //   try {
+  //     await supabase.auth.signInWithPassword(email: email, password: password);
+  //     final currentUser = supabase.auth.currentUser;
+  //     logger.d("currentUser: $currentUser");
+  //     if (_profile != null || _profile!.id != currentUser!.id) {
+  //       final res = await supabase
+  //           .from('profiles')
+  //           .select()
+  //           .eq('id', currentUser!.id)
+  //           .single();
+  //       Profile profile = Profile.fromMap(map: res);
+  //       _profile = profile;
+  //     }
+  //     emit(Authenticated(_profile!));
+  //     return 3;
+  //   } catch (e) {
+  //     logger.e(e.toString());
+  //     if (e is AuthException) {
+  //       if (e.code == 'validation_failed' && e.statusCode == '400') {
+  //         return 7;
+  //       } else if (e.code == 'invalid_credentials' && e.statusCode == '400') {
+  //         return 8;
+  //       }
+  //       return 2;
+  //     }
+  //     return 2;
+  //   }
+  // }
 
   Future<AuthResponse> signInWithApple() async {
+    _isAuthenticating = true;
     final rawNonce = supabase.auth.generateRawNonce();
     final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
 
@@ -294,16 +337,17 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  Future<bool> signInWithAppleAndroid() async {
-    return supabase.auth.signInWithOAuth(
-      OAuthProvider.apple,
-      redirectTo: redirectUrl,
-      authScreenLaunchMode:
-          kIsWeb ? LaunchMode.platformDefault : LaunchMode.externalApplication,
-    );
-  }
+  // Future<bool> signInWithAppleAndroid() async {
+  //   return supabase.auth.signInWithOAuth(
+  //     OAuthProvider.apple,
+  //     redirectTo: redirectUrl,
+  //     authScreenLaunchMode:
+  //         kIsWeb ? LaunchMode.platformDefault : LaunchMode.externalApplication,
+  //   );
+  // }
 
   Future<void> signInWithKakao() async {
+    _isAuthenticating = true;
     try {
       await supabase.auth.signInWithOAuth(
         OAuthProvider.kakao,
@@ -406,4 +450,10 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   bool get getIsChallenger => _isChallenger;
+
+  set setIsAuthenticating(bool value) {
+    _isAuthenticating = value;
+  }
+
+  bool get getIsAuthenticating => _isAuthenticating;
 }

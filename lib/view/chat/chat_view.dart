@@ -5,16 +5,12 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
-import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/form_cubit.dart';
-import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/models/message.dart';
 import 'package:udaadaa/models/room.dart';
-import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/chat/image_detail_view.dart';
@@ -75,146 +71,6 @@ class _ChatViewState extends State<ChatView> {
   Future<void> loadMoreWrapper() async {
     await context.read<ChatCubit>().loadMoreMessages();
     isLoadingMore = false;
-  }
-
-  void showTutorial(BuildContext context) {
-    final onboardingCubit = context.read<TutorialCubit>();
-
-    late TutorialCoachMark tutorialCoachMark;
-    tutorialCoachMark = TutorialCoachMark(
-      hideSkip: false,
-      onSkip: () {
-        logger.d("스킵 누름 - chat_view");
-        Analytics().logEvent("튜토리얼_스킵", parameters: {
-          "view": "chat_view", // 현재 튜토리얼이 실행된 뷰
-        });
-        PreferencesService().setBool('isTutorialFinished', true);
-        return true; // 👈 튜토리얼 종료
-      },
-      alignSkip: Alignment.topLeft,
-      skipWidget: Padding(
-        padding: const EdgeInsets.only(left: 16),
-        child: const Text(
-          "SKIP",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      showSkipInLastTarget: false,
-      targets: [
-        TargetFocus(
-          identify: "plus_button",
-          keyTarget: onboardingCubit.chatButtonKey,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              child: Text(
-                "인증을 하기 위해선 이 버튼을 눌러주세요",
-                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white, // 흰색 글씨
-                  fontWeight: FontWeight.bold, // 글씨 굵게 (Bold)
-                  fontSize: 18, // 글씨 크기 증가
-                ),
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: "plus_detail_button",
-          keyTarget: onboardingCubit.chatButtonDetailKey,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              child: Text(
-                "식단, 운동 및 체중을 인증할 수 있습니다.",
-                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: "menu_detail_button",
-          keyTarget: onboardingCubit.chatMenuButtonKey,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              child: Text(
-                "메뉴 버튼을 눌러 사진 및 참여자 목록을 확인할 수 있습니다.",
-                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: "push_button",
-          keyTarget: onboardingCubit.pushButtonKey,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              child: Text(
-                "아이콘을 눌러 푸시 알림 설정을 변경할 수도 있습니다.",
-                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-      onClickTarget: (target) {
-        Analytics().logEvent('튜토리얼_채팅',
-            parameters: {'target': target.identify.toString()});
-        logger.d("onClickTarget: ${target.identify}");
-        if (target.identify == "plus_button") {
-          _showBottomSheet(context);
-          Future.delayed(const Duration(milliseconds: 1000), () {
-            tutorialCoachMark.next();
-          });
-        } else if (target.identify == "plus_detail_button") {
-          Navigator.of(context).pop();
-          Future.delayed(const Duration(milliseconds: 1000), () {
-            tutorialCoachMark.next();
-          });
-        } else if (target.identify == "menu_detail_button") {
-          Scaffold.of(context).openEndDrawer();
-          Future.delayed(const Duration(milliseconds: 1000), () {
-            tutorialCoachMark.next();
-          });
-        } else if (target.identify == "push_button") {
-          context.read<AuthCubit>().setFCMToken();
-          Navigator.of(context).pop();
-        }
-      },
-      onFinish: () {
-        logger.d("finish tutorial chat view");
-        Navigator.of(context).pop();
-
-        context.read<BottomNavCubit>().selectTab(BottomNavState.profile);
-        context.read<TutorialCubit>().showTutorialProfile();
-
-        // context.read<TutorialCubit>().showTutorialRoom2();
-        /* 
-        Future.delayed(const Duration(milliseconds: 1000), () {
-          if (!context.mounted) return;
-          context.read<TutorialCubit>().showTutorialRoom2();
-        });*/
-      },
-    );
-
-    tutorialCoachMark.show(context: context);
   }
 
   Drawer showDrawer(BuildContext context) {
@@ -406,7 +262,6 @@ class _ChatViewState extends State<ChatView> {
           ListTile(
             leading: (widget.roomInfo.endDay != null)
                 ? IconButton(
-                    key: context.read<TutorialCubit>().rankingButtonKey,
                     icon: Icon(Icons.leaderboard_rounded,
                         color: AppColors.neutral[500]),
                     onPressed: () {
@@ -436,7 +291,6 @@ class _ChatViewState extends State<ChatView> {
                   )
                 : null,
             trailing: IconButton(
-              key: context.read<TutorialCubit>().pushButtonKey,
               icon: /*Icon(_pushTriggerOption == GroupChannelPushTriggerOption.off
                   ? Icons.notifications_off
                   : Icons.notifications_active),*/
@@ -494,9 +348,6 @@ class _ChatViewState extends State<ChatView> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        key: (index == 0
-                            ? context.read<TutorialCubit>().chatButtonDetailKey
-                            : null),
                         icon: Stack(
                           children: [
                             Container(
@@ -604,7 +455,6 @@ class _ChatViewState extends State<ChatView> {
             actions: [
               Builder(
                 builder: (context) => IconButton(
-                  key: context.read<TutorialCubit>().chatMenuButtonKey,
                   icon: Icon(Icons.menu_rounded, color: AppColors.neutral[800]),
                   onPressed: () {
                     Analytics().logEvent('채팅_메뉴버튼클릭');
@@ -615,235 +465,213 @@ class _ChatViewState extends State<ChatView> {
             ],
           ),
           endDrawer: showDrawer(context),
-          body: BlocListener<TutorialCubit, TutorialState>(
-            listener: (context, state) {
-              if (state is TutorialChat) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Future.delayed(const Duration(milliseconds: 1000), () {
-                    if (context.mounted &&
-                        PreferencesService().getBool('isTutorialFinished') !=
-                            true) {
-                      showTutorial(context);
-                    }
-                  });
-                });
-              }
-            },
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.black.withValues(alpha: 0.25),
-                        blurRadius: 2,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(FluentIcons.megaphone_24_regular,
-                          color: AppColors.neutral[500]),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(AppSpacing.s),
-                          child: Text(
-                            personalChannel
-                                ? '궁금한 점이 있으시면 언제든지 이 채널로 문의해주세요.'
-                                : '우측 하단의 + 버튼을 눌러 인증을 진행해 주세요.',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (scrollNotification) {
-                      if (scrollNotification is ScrollUpdateNotification &&
-                          scrollNotification.scrollDelta != null &&
-                          scrollNotification.scrollDelta! > 0 &&
-                          scrollNotification.metrics.pixels >=
-                              scrollNotification.metrics.maxScrollExtent -
-                                  100) {
-                        if (!isLoadingMore) {
-                          debugPrint('📦 거의 맨 아래입니다! 이전 메시지 불러오기');
-                          isLoadingMore = true;
-                          loadMoreWrapper();
-                        }
-                      }
-                      return false;
-                    },
-                    child: DashChat(
-                      currentUser: asDashChatUser(
-                          supabase.auth.currentUser!.id, userName),
-                      inputOptions: InputOptions(
-                          inputDisabled: !enabled,
-                          sendOnEnter: false,
-                          textInputAction: TextInputAction.newline,
-                          inputMaxLines: 2,
-                          inputToolbarMargin: EdgeInsets.zero,
-                          inputToolbarPadding: const EdgeInsets.all(2),
-                          inputToolbarStyle:
-                              BoxDecoration(color: AppColors.white, boxShadow: [
-                            BoxShadow(
-                              color: AppColors.black.withValues(alpha: 0.1),
-                              blurRadius: 4,
-                              offset: const Offset(0, -4),
-                            ),
-                          ]),
-                          inputTextStyle:
-                              Theme.of(context).textTheme.bodyMedium,
-                          inputDecoration: InputDecoration(
-                            isDense: true,
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(AppSpacing.m),
-                              borderSide: BorderSide.none,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(AppSpacing.m),
-                              borderSide: BorderSide.none,
-                            ),
-                            hintText: '메시지를 입력하세요',
-                            hintStyle: AppTextStyles.bodyMedium(
-                              TextStyle(color: AppColors.neutral[500]),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.s,
-                              vertical: AppSpacing.xs,
-                            ),
-                            filled: true,
-                            fillColor: AppColors.neutral[50],
-                          ),
-                          leading: [
-                            enabled
-                                ? IconButton(
-                                    icon: Icon(Icons.photo_outlined,
-                                        color: AppColors.neutral[500]),
-                                    onPressed: () {
-                                      FocusScope.of(context).unfocus();
-                                      Future.delayed(
-                                          const Duration(milliseconds: 100),
-                                          () {
-                                        if (!context.mounted) return;
-                                        Analytics().logEvent('채팅_사진전송');
-                                        context
-                                            .read<ChatCubit>()
-                                            .sendImageMessage(
-                                                widget.roomInfo.id);
-                                      });
-                                    },
-                                  )
-                                : Container(
-                                    padding: const EdgeInsets.all(2),
-                                  ),
-                          ],
-                          trailing: [
-                            (!personalChannel && enabled)
-                                ? IconButton(
-                                    key: context
-                                        .read<TutorialCubit>()
-                                        .chatButtonKey,
-                                    icon: Stack(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(2),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                                AppSpacing.xs),
-                                            border: Border.all(
-                                                color: AppColors.neutral[500]!,
-                                                width: 1),
-                                          ),
-                                          child: Icon(Icons.add,
-                                              color: AppColors.neutral[500],
-                                              size: 20),
-                                        ),
-                                      ],
-                                    ),
-                                    onPressed: () {
-                                      Analytics().logEvent('채팅_인증하기_버튼클릭');
-                                      _showBottomSheet(context);
-                                    },
-                                  )
-                                : Container(
-                                    padding: const EdgeInsets.all(2),
-                                  ),
-                          ]),
-                      messageListOptions: MessageListOptions(
-                        dateSeparatorBuilder: (date) => Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.only(
-                            top: AppSpacing.m,
-                            bottom: AppSpacing.xxs,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.neutral[800]?.withAlpha(100),
-                              borderRadius: BorderRadius.circular(17),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.s,
-                              vertical: 6,
-                            ),
-                            child: Text(
-                              '${date.year}년 ${date.month}월 ${date.day}일',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    color: Colors.white,
-                                  ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      messageOptions: MessageOptions(
-                        showCurrentUserAvatar: false,
-                        showOtherUsersAvatar: true,
-                        messageRowBuilder: (ChatMessage message,
-                            ChatMessage? previousMessage,
-                            ChatMessage? nextMessage,
-                            bool isAfterDateSeparator,
-                            bool isBeforeDateSeparator) {
-                          bool isFirstInSequence = previousMessage == null ||
-                              previousMessage.user.id != message.user.id ||
-                              isAfterDateSeparator;
-                          bool isLastInSequence = nextMessage == null ||
-                              nextMessage.user.id != message.user.id ||
-                              isBeforeDateSeparator;
-
-                          bool isLastInRoom = nextMessage == null;
-
-                          return ChatBubble(
-                            message: message,
-                            isMine: message.customProperties?['message'].isMine,
-                            isFirstInSequence: isFirstInSequence,
-                            isLastInSequence: isLastInSequence,
-                            memberCount: widget.roomInfo.members.length,
-                            isLastInRoom: isLastInRoom,
-                          );
-                        },
-                      ),
-                      onSend: (ChatMessage message) {
-                        Analytics().logEvent('채팅_메시지전송', parameters: {
-                          'room_id': widget.roomInfo.id,
-                          'message': message.text,
-                        });
-                        context.read<ChatCubit>().sendMessage(
-                            message.text, "textMessage", widget.roomInfo.id);
-                      },
-                      messages: asDashChatMessages(_currentMessages),
+          body: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.black.withValues(alpha: 0.25),
+                      blurRadius: 2,
+                      offset: const Offset(0, 1),
                     ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Icon(FluentIcons.megaphone_24_regular,
+                        color: AppColors.neutral[500]),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(AppSpacing.s),
+                        child: Text(
+                          personalChannel
+                              ? '궁금한 점이 있으시면 언제든지 이 채널로 문의해주세요.'
+                              : '우측 하단의 + 버튼을 눌러 인증을 진행해 주세요.',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (scrollNotification) {
+                    if (scrollNotification is ScrollUpdateNotification &&
+                        scrollNotification.scrollDelta != null &&
+                        scrollNotification.scrollDelta! > 0 &&
+                        scrollNotification.metrics.pixels >=
+                            scrollNotification.metrics.maxScrollExtent - 100) {
+                      if (!isLoadingMore) {
+                        debugPrint('📦 거의 맨 아래입니다! 이전 메시지 불러오기');
+                        isLoadingMore = true;
+                        loadMoreWrapper();
+                      }
+                    }
+                    return false;
+                  },
+                  child: DashChat(
+                    currentUser:
+                        asDashChatUser(supabase.auth.currentUser!.id, userName),
+                    inputOptions: InputOptions(
+                        inputDisabled: !enabled,
+                        sendOnEnter: false,
+                        textInputAction: TextInputAction.newline,
+                        inputMaxLines: 2,
+                        inputToolbarMargin: EdgeInsets.zero,
+                        inputToolbarPadding: const EdgeInsets.all(2),
+                        inputToolbarStyle:
+                            BoxDecoration(color: AppColors.white, boxShadow: [
+                          BoxShadow(
+                            color: AppColors.black.withValues(alpha: 0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, -4),
+                          ),
+                        ]),
+                        inputTextStyle: Theme.of(context).textTheme.bodyMedium,
+                        inputDecoration: InputDecoration(
+                          isDense: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(AppSpacing.m),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(AppSpacing.m),
+                            borderSide: BorderSide.none,
+                          ),
+                          hintText: '메시지를 입력하세요',
+                          hintStyle: AppTextStyles.bodyMedium(
+                            TextStyle(color: AppColors.neutral[500]),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.s,
+                            vertical: AppSpacing.xs,
+                          ),
+                          filled: true,
+                          fillColor: AppColors.neutral[50],
+                        ),
+                        leading: [
+                          enabled
+                              ? IconButton(
+                                  icon: Icon(Icons.photo_outlined,
+                                      color: AppColors.neutral[500]),
+                                  onPressed: () {
+                                    FocusScope.of(context).unfocus();
+                                    Future.delayed(
+                                        const Duration(milliseconds: 100), () {
+                                      if (!context.mounted) return;
+                                      Analytics().logEvent('채팅_사진전송');
+                                      context
+                                          .read<ChatCubit>()
+                                          .sendImageMessage(widget.roomInfo.id);
+                                    });
+                                  },
+                                )
+                              : Container(
+                                  padding: const EdgeInsets.all(2),
+                                ),
+                        ],
+                        trailing: [
+                          (!personalChannel && enabled)
+                              ? IconButton(
+                                  icon: Stack(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(2),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              AppSpacing.xs),
+                                          border: Border.all(
+                                              color: AppColors.neutral[500]!,
+                                              width: 1),
+                                        ),
+                                        child: Icon(Icons.add,
+                                            color: AppColors.neutral[500],
+                                            size: 20),
+                                      ),
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    Analytics().logEvent('채팅_인증하기_버튼클릭');
+                                    _showBottomSheet(context);
+                                  },
+                                )
+                              : Container(
+                                  padding: const EdgeInsets.all(2),
+                                ),
+                        ]),
+                    messageListOptions: MessageListOptions(
+                      dateSeparatorBuilder: (date) => Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.only(
+                          top: AppSpacing.m,
+                          bottom: AppSpacing.xxs,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.neutral[800]?.withAlpha(100),
+                            borderRadius: BorderRadius.circular(17),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.s,
+                            vertical: 6,
+                          ),
+                          child: Text(
+                            '${date.year}년 ${date.month}월 ${date.day}일',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: Colors.white,
+                                ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    messageOptions: MessageOptions(
+                      showCurrentUserAvatar: false,
+                      showOtherUsersAvatar: true,
+                      messageRowBuilder: (ChatMessage message,
+                          ChatMessage? previousMessage,
+                          ChatMessage? nextMessage,
+                          bool isAfterDateSeparator,
+                          bool isBeforeDateSeparator) {
+                        bool isFirstInSequence = previousMessage == null ||
+                            previousMessage.user.id != message.user.id ||
+                            isAfterDateSeparator;
+                        bool isLastInSequence = nextMessage == null ||
+                            nextMessage.user.id != message.user.id ||
+                            isBeforeDateSeparator;
+
+                        bool isLastInRoom = nextMessage == null;
+
+                        return ChatBubble(
+                          message: message,
+                          isMine: message.customProperties?['message'].isMine,
+                          isFirstInSequence: isFirstInSequence,
+                          isLastInSequence: isLastInSequence,
+                          memberCount: widget.roomInfo.members.length,
+                          isLastInRoom: isLastInRoom,
+                        );
+                      },
+                    ),
+                    onSend: (ChatMessage message) {
+                      Analytics().logEvent('채팅_메시지전송', parameters: {
+                        'room_id': widget.roomInfo.id,
+                        'message': message.text,
+                      });
+                      context.read<ChatCubit>().sendMessage(
+                          message.text, "textMessage", widget.roomInfo.id);
+                    },
+                    messages: asDashChatMessages(_currentMessages),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
-import 'package:udaadaa/cubit/tutorial_cubit.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -23,134 +21,6 @@ class _PushSettingViewState extends State<PushSettingView> {
   void initState() {
     super.initState();
     _loadNotificationPreference();
-  }
-
-  void showTutorial(BuildContext context) {
-    final onboardingCubit = context.read<TutorialCubit>();
-
-    late TutorialCoachMark tutorialCoachMark;
-    tutorialCoachMark = TutorialCoachMark(
-      hideSkip: false,
-      onSkip: () {
-        logger.d("스킵 누름 - push_setting_view");
-        Analytics().logEvent("튜토리얼_스킵", parameters: {
-          "view": "push_setting_view", // 현재 튜토리얼이 실행된 뷰
-        });
-        PreferencesService().setBool('isTutorialFinished', true);
-        return true; // 👈 튜토리얼 종료
-      },
-      alignSkip: Alignment.topLeft,
-      skipWidget: Padding(
-        padding: const EdgeInsets.only(left: 16),
-        child: const Text(
-          "SKIP",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      targets: [
-        TargetFocus(
-          identify: "mission_push",
-          keyTarget: onboardingCubit.missionPushSettingButtonKey,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              child: Text(
-                "매일 인증을 까먹지 않게 미션 알림을 설정해보세요.",
-                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white, // 흰색 글씨
-                  fontWeight: FontWeight.bold, // 글씨 굵게 (Bold)
-                  fontSize: 18, // 글씨 크기 증가
-                ),
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: "add_mission_push",
-          keyTarget: onboardingCubit.addMissionPushButtonKey,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              child: Text(
-                "시간을 추가하면 미션 알림을 받을 수 있어요.",
-                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white, // 흰색 글씨
-                  fontWeight: FontWeight.bold, // 글씨 굵게 (Bold)
-                  fontSize: 18, // 글씨 크기 증가
-                ),
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: "setting_finish",
-          keyTarget: onboardingCubit.pushSettingFinishButtonKey,
-          shape: ShapeLightFocus.RRect,
-          radius: 8,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              child: Text(
-                "버튼을 눌러 설정을 완료해주세요.",
-                style: AppTextStyles.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white, // 흰색 글씨
-                  fontWeight: FontWeight.bold, // 글씨 굵게 (Bold)
-                  fontSize: 18, // 글씨 크기 증가
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-      onClickTarget: (target) {
-        Analytics().logEvent('튜토리얼_푸시설정',
-            parameters: {'target': target.identify.toString()});
-        logger.d("onClickTarget: ${target.identify}");
-        if (target.identify == "mission_push") {
-          setState(() {
-            _isMissionPushOn = true;
-          });
-          Future.delayed(const Duration(milliseconds: 500), () {
-            if (context.mounted) {
-              tutorialCoachMark.next();
-            }
-          });
-        } else if (target.identify == "add_mission_push") {
-          Future.delayed(const Duration(milliseconds: 500), () {
-            if (context.mounted) {
-              tutorialCoachMark.next();
-            }
-          });
-        } else if (target.identify == "setting_finish") {
-          if (_isMissionPushOn) {
-            context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
-          } else {
-            context.read<ChallengeCubit>().cancelNotifications();
-          }
-          if (_isReactionPushOn != context.read<AuthCubit>().getPushOption) {
-            context.read<AuthCubit>().togglePush();
-          }
-          Future.delayed(const Duration(milliseconds: 500), () {
-            if (context.mounted) {
-              Navigator.of(context).pop();
-            }
-          });
-        }
-      },
-      onFinish: () {
-        logger.d("finish tutorial push setting view");
-        Analytics().logEvent(
-          "튜토리얼_완료",
-        );
-        PreferencesService().setBool('isTutorialFinished', true);
-      },
-    );
-
-    tutorialCoachMark.show(context: context);
   }
 
   void _loadNotificationPreference() {
@@ -238,7 +108,6 @@ class _PushSettingViewState extends State<PushSettingView> {
                 ],
               ),
               IconButton(
-                key: context.read<TutorialCubit>().addMissionPushButtonKey,
                 onPressed: _addAlarmTime,
                 icon: const Icon(Icons.add_rounded, color: AppColors.primary),
                 alignment: Alignment.center,
@@ -301,131 +170,109 @@ class _PushSettingViewState extends State<PushSettingView> {
         title: Text('알림 설정', style: AppTextStyles.textTheme.headlineLarge),
         centerTitle: false,
       ),
-      body: BlocListener<TutorialCubit, TutorialState>(
-        listener: (context, state) {
-          if (state is TutorialPush) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Future.delayed(const Duration(milliseconds: 1000), () {
-                if (context.mounted &&
-                    PreferencesService().getBool('isTutorialFinished') !=
-                        true) {
-                  showTutorial(context);
-                }
-              });
-            });
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.l),
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.neutral[50],
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                padding: AppSpacing.edgeInsetsM,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('응원 알림',
-                              style: AppTextStyles.textTheme.titleSmall),
-                          AppSpacing.verticalSizedBoxXxs,
-                          Text("다른 우다다 사용자가 응원을 남기면 활동 알림을 받아요.",
-                              style: AppTextStyles.textTheme.labelMedium),
-                        ],
-                      ),
-                    ),
-                    AppSpacing.horizontalSizedBoxS,
-                    Switch(
-                      value: _isReactionPushOn,
-                      onChanged: (bool newValue) {
-                        setState(() {
-                          _isReactionPushOn = newValue;
-                        });
-                        Analytics().logEvent(
-                          "푸시알림_토글",
-                          parameters: {"변경값": newValue.toString(), "설정": "리액션"},
-                        );
-                      },
-                      activeTrackColor: AppColors.primary,
-                      activeColor: AppColors.white,
-                      inactiveThumbColor: AppColors.neutral[0],
-                      inactiveTrackColor: AppColors.neutral[200],
-                    ),
-                  ],
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(AppSpacing.l),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.neutral[50],
+                borderRadius: BorderRadius.circular(16),
               ),
-              AppSpacing.verticalSizedBoxS,
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.neutral[50],
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                padding: AppSpacing.edgeInsetsM,
-                child: Column(
-                  children: [
-                    Row(
+              padding: AppSpacing.edgeInsetsM,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text('미션 알림',
-                                      style:
-                                          AppTextStyles.textTheme.titleSmall),
-                                  AppSpacing.horizontalSizedBoxS,
-                                ],
-                              ),
-                              AppSpacing.verticalSizedBoxXxs,
-                              Text("오늘의 미션 인증을 까먹지 않게 알려드려요.",
-                                  style: AppTextStyles.textTheme.labelMedium),
-                            ],
-                          ),
-                        ),
-                        AppSpacing.horizontalSizedBoxS,
-                        Switch(
-                          key: context
-                              .read<TutorialCubit>()
-                              .missionPushSettingButtonKey,
-                          value: _isMissionPushOn,
-                          onChanged: (bool newValue) {
-                            setState(() {
-                              _isMissionPushOn = newValue;
-                            });
-                            Analytics().logEvent(
-                              "푸시알션_토글",
-                              parameters: {
-                                "변경값": newValue.toString(),
-                                "설정": "미션"
-                              },
-                            );
-                          },
-                          activeTrackColor: AppColors.primary,
-                          activeColor: AppColors.white,
-                          inactiveThumbColor: AppColors.neutral[0],
-                          inactiveTrackColor: AppColors.neutral[200],
-                        ),
+                        Text('응원 알림',
+                            style: AppTextStyles.textTheme.titleSmall),
+                        AppSpacing.verticalSizedBoxXxs,
+                        Text("다른 우다다 사용자가 응원을 남기면 활동 알림을 받아요.",
+                            style: AppTextStyles.textTheme.labelMedium),
                       ],
                     ),
-                    AppSpacing.verticalSizedBoxXxs,
-                    (_isMissionPushOn
-                        ? alarmTimeSetting(context)
-                        : Container()),
-                  ],
-                ),
+                  ),
+                  AppSpacing.horizontalSizedBoxS,
+                  Switch(
+                    value: _isReactionPushOn,
+                    onChanged: (bool newValue) {
+                      setState(() {
+                        _isReactionPushOn = newValue;
+                      });
+                      Analytics().logEvent(
+                        "푸시알림_토글",
+                        parameters: {"변경값": newValue.toString(), "설정": "리액션"},
+                      );
+                    },
+                    activeTrackColor: AppColors.primary,
+                    activeColor: AppColors.white,
+                    inactiveThumbColor: AppColors.neutral[0],
+                    inactiveTrackColor: AppColors.neutral[200],
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            AppSpacing.verticalSizedBoxS,
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.neutral[50],
+                borderRadius: BorderRadius.circular(16),
+              ),
+              padding: AppSpacing.edgeInsetsM,
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text('미션 알림',
+                                    style: AppTextStyles.textTheme.titleSmall),
+                                AppSpacing.horizontalSizedBoxS,
+                              ],
+                            ),
+                            AppSpacing.verticalSizedBoxXxs,
+                            Text("오늘의 미션 인증을 까먹지 않게 알려드려요.",
+                                style: AppTextStyles.textTheme.labelMedium),
+                          ],
+                        ),
+                      ),
+                      AppSpacing.horizontalSizedBoxS,
+                      Switch(
+                        value: _isMissionPushOn,
+                        onChanged: (bool newValue) {
+                          setState(() {
+                            _isMissionPushOn = newValue;
+                          });
+                          Analytics().logEvent(
+                            "푸시알션_토글",
+                            parameters: {
+                              "변경값": newValue.toString(),
+                              "설정": "미션"
+                            },
+                          );
+                        },
+                        activeTrackColor: AppColors.primary,
+                        activeColor: AppColors.white,
+                        inactiveThumbColor: AppColors.neutral[0],
+                        inactiveTrackColor: AppColors.neutral[200],
+                      ),
+                    ],
+                  ),
+                  AppSpacing.verticalSizedBoxXxs,
+                  (_isMissionPushOn ? alarmTimeSetting(context) : Container()),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: Container(
-        key: context.read<TutorialCubit>().pushSettingFinishButtonKey,
         margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         width: double.infinity,
         child: FloatingActionButton.extended(

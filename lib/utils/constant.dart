@@ -27,6 +27,7 @@ final String amplitudeToken = dotenv.env['AMPLITUDE_TOKEN']!;
 final String mixpanelToken = dotenv.env['MIXPANEL_TOKEN']!;
 final String schemeName = dotenv.env['SCHEME_NAME']!;
 final String hostName = dotenv.env['HOST_NAME']!;
+final String initialChatEndPoint = dotenv.env['INITIAL_CHAT_END_POINT']!;
 
 final supabase = Supabase.instance.client;
 final dioClient = DioClient();
