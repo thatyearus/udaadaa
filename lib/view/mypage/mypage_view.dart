@@ -14,6 +14,7 @@ import 'package:udaadaa/widgets/my_profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils/analytics/analytics.dart';
+import 'package:udaadaa/view/mypage/refund_view.dart';
 
 class MyPageView extends StatelessWidget {
   const MyPageView({super.key});
@@ -216,19 +217,6 @@ class MyPageView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(actions: [
-        // IconButton(
-        //     onPressed: () {
-        //       Analytics().logEvent(
-        //         "마이페이지_챌린지기록",
-        //         parameters: {"클릭": "챌린지기록"},
-        //       );
-        //       Navigator.of(context).push(
-        //         MaterialPageRoute(
-        //           builder: (context) => const ResultListView(),
-        //         ),
-        //       );
-        //     },
-        //     icon: const Icon(Icons.inbox_rounded)),
         PopupMenuButton(
           itemBuilder: (context) {
             return [
@@ -243,6 +231,10 @@ class MyPageView extends StatelessWidget {
               const PopupMenuItem(
                 value: 'kakaotalk',
                 child: Text('문의하기'),
+              ),
+              const PopupMenuItem(
+                value: 'refund_policy',
+                child: Text('환급규정'),
               ),
               // const PopupMenuItem(
               //   value: 'link_email',
@@ -330,29 +322,17 @@ class MyPageView extends StatelessWidget {
                 );
                 _launchURL();
                 break;
-              // case 'link_email':
-              //   Analytics().logEvent(
-              //     "마이페이지_이메일연동",
-              //     parameters: {"클릭": "이메일연동"},
-              //   );
-              //   if (supabase.auth.currentUser?.email != null &&
-              //       supabase.auth.currentUser?.email != "") {
-              //     ScaffoldMessenger.of(context).showSnackBar(
-              //       const SnackBar(
-              //         content: Text("이미 이메일이 연동되어 있습니다."),
-              //       ),
-              //     );
-              //     return;
-              //   }
-              //   showLinkEmailDialog(context, 'link_email');
-              //   break;
-              // case 'account_restore':
-              //   Analytics().logEvent(
-              //     "마이페이지_계정복원",
-              //     parameters: {"클릭": "계정복원"},
-              //   );
-              //   showLinkEmailDialog(context, 'account_restore');
-              //   break;
+              case 'refund_policy':
+                Analytics().logEvent(
+                  "마이페이지_환급규정",
+                  parameters: {"클릭": "환급규정"},
+                );
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const RefundView(),
+                  ),
+                );
+                break;
             }
           },
           icon: const Icon(Icons.settings_rounded),

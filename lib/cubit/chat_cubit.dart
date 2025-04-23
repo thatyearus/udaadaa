@@ -749,11 +749,22 @@ class ChatCubit extends Cubit<ChatState> {
             .from('weight')
             .select('weight')
             .eq('user_id', member.id)
-            .lte('created_at', roomInfo.endDay!.toIso8601String())
-            .gte('created_at', roomInfo.startDay!.toIso8601String());
+            .lte(
+                'created_at',
+                roomInfo.endDay!
+                    .subtract(const Duration(hours: 9))
+                    .toIso8601String())
+            .gte(
+                'created_at',
+                roomInfo.startDay!
+                    .subtract(const Duration(hours: 9))
+                    .toIso8601String())
+            .order('created_at', ascending: true);
+
         if (response.isNotEmpty) {
           final weight = (response[response.length - 1]['weight'] as num) -
               (response[0]['weight'] as num);
+
           return MapEntry(member, weight.toDouble());
           //ranking.add(MapEntry(member, weight.toDouble()));
         } else {

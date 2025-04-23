@@ -74,7 +74,7 @@ class LoginView extends StatelessWidget {
                             uri.scheme == schemeName &&
                             uri.host == hostName) {
                           if (!context.mounted) return;
-                          Navigator.of(context).push(
+                          Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) => const EnterRoomView(),
                             ),

@@ -270,6 +270,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           .eq('user_id', supabase.auth.currentUser!.id)
           .gte('created_at', dayStart.toIso8601String())
           .lte('created_at', dayEnd.toIso8601String())
+          .neq('type', 'exercise')
           .count(CountOption.exact)
           .then((res) => res.count);
 
@@ -311,6 +312,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           .eq('user_id', userId)
           .gte('created_at', dayStart.toIso8601String())
           .lte('created_at', dayEnd.toIso8601String())
+          .neq('type', 'exercise')
           .count(CountOption.exact)
           .then((res) => res.count);
 
@@ -373,6 +375,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           .eq('user_id', supabase.auth.currentUser!.id)
           .gte('created_at', dayStart.toIso8601String())
           .lte('created_at', dayEnd.toIso8601String())
+          .neq('type', 'exercise')
           .count(CountOption.exact)
           .then((res) => res.count);
       _selectedMissionComplete['feed'] = feedCount;
@@ -420,11 +423,12 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           .eq('user_id', supabase.auth.currentUser!.id)
           .gte('created_at', dayStart.toIso8601String())
           .lte('created_at', dayEnd.toIso8601String())
+          .neq('type', 'exercise')
           .count(CountOption.exact)
           .then((res) => res.count);
       _todayMissionComplete['feed'] = feedCount;
 
-      // 몸묵게 조회
+      // 몸무게 조회
       final weightCount = await supabase
           .from('weight')
           .select('id')
