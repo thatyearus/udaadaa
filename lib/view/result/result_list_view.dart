@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -52,6 +53,8 @@ class ResultListView extends StatelessWidget {
                         parameters: {
                           "클릭": "챌린지 상세보기",
                           "챌린지번호": state.challenges[index].id ?? "",
+                          "챌린지상태":
+                              context.read<AuthCubit>().getChallengeStatus(),
                         },
                       );
                       Navigator.of(context).push(

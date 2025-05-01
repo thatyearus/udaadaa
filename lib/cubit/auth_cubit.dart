@@ -14,6 +14,7 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   Profile? _profile;
   bool _isChallenger = false;
+  bool _wasChallenger = false;
   bool _isAuthenticating = false;
 
   AuthCubit() : super(AuthInitial()) {
@@ -261,6 +262,10 @@ class AuthCubit extends Cubit<AuthState> {
     _isChallenger = newValue;
   }
 
+  void setWasChallenger(bool newValue) {
+    _wasChallenger = newValue;
+  }
+
   // Future<int> linkEmail(String email, String password) async {
   //   try {
   //     await supabase.auth
@@ -434,6 +439,23 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthInitial());
   }
 
+  String getChallengeStatus() {
+    try {
+      // Check challenge status and return appropriate string
+      if (_isChallenger) {
+        return 'isChallenger';
+      } else if (!_isChallenger && _wasChallenger) {
+        return 'wasChallenger';
+      } else {
+        return 'noChallenger';
+      }
+    } catch (e) {
+      // Log error for debugging purposes
+      logger.e('Error determining challenge status: ${e.toString()}');
+      return 'noChallenger'; // Default fallback value
+    }
+  }
+
   Profile? get getProfile {
     if (state is Authenticated) {
       return (state as Authenticated).user;
@@ -450,6 +472,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   bool get getIsChallenger => _isChallenger;
+  bool get wasChallenger => _wasChallenger;
 
   set setIsAuthenticating(bool value) {
     _isAuthenticating = value;

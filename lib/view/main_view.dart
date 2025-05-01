@@ -336,7 +336,10 @@ class _MainViewState extends State<MainView> with WidgetsBindingObserver {
             onTap: (index) {
               Analytics().logEvent(
                 "네비게이션바",
-                parameters: {"클릭": labels[index]},
+                parameters: {
+                  "클릭": labels[index],
+                  "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+                },
               );
               context
                   .read<BottomNavCubit>()

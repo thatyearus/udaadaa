@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
@@ -256,7 +257,12 @@ class _LastRecordViewState extends State<LastRecordView> {
                         onTap: () {
                           Analytics().logEvent(
                             "홈_최근기록",
-                            parameters: {"최근기록_페이지": (index + 1).toString()},
+                            parameters: {
+                              "최근기록_페이지": (index + 1).toString(),
+                              "챌린지상태": context
+                                  .read<AuthCubit>()
+                                  .getChallengeStatus(),
+                            },
                           );
                           Navigator.push(
                             context,

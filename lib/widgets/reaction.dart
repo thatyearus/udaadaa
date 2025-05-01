@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/reaction.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -161,7 +162,9 @@ class ReactionButtonState extends State<ReactionButton>
                       widget.onReactionPressed();
                     });
                   } else {
-                    Analytics().logEvent("마이페이지_공감한사용자");
+                    Analytics().logEvent("마이페이지_공감한사용자", parameters: {
+                      "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+                    });
                     showModalBottomSheet(
                         context: context,
                         builder: (context) {
