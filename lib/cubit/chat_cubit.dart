@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
@@ -345,7 +344,8 @@ class ChatCubit extends Cubit<ChatState> {
           emit(ChatPushStarted());
         }
 
-        await Future.delayed(Duration(milliseconds: 300));
+        await Future.delayed(Duration(milliseconds: 600));
+
         await refreshAllMessagesForPush();
 
         if (message.data['roomId'] != null) {
