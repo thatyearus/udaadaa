@@ -257,10 +257,10 @@ class _MainViewState extends State<MainView> with WidgetsBindingObserver {
                         ),
                       ),
                     );
+                    chatCubit.enterRoom1(state.roomId);
                   } else {
                     debugPrint("✅ 이미 채팅방에 들어가 있음, enterRoom 생략");
                   }
-                  chatCubit.enterRoom1(state.roomId); // 👉 여기 조건문 안에 있으니까 안전
                 }
               },
               child: IndexedStack(
