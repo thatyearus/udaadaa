@@ -46,7 +46,7 @@ class NotificationService {
     logger.d("✅ Notification Service Initialized (only init, no permission)");
   }
 
-  static Future<void> _ensurePermissions() async {
+  static Future<void> ensurePermissions() async {
     final iosPlugin =
         flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin>();
@@ -65,7 +65,7 @@ class NotificationService {
     await androidPlugin?.requestNotificationsPermission();
     await androidPlugin?.requestExactAlarmsPermission();
 
-    logger.d("🔐 권한 요청 완료 (_ensurePermissions 실행됨)");
+    logger.d("🔐 권한 요청 완료 (ensurePermissions 실행됨)");
   }
 
   static Future<void> showNotification(String title, String body,
@@ -114,7 +114,7 @@ class NotificationService {
     String? payload,
   }) async {
     // 🔐 알림 예약 전에 권한 먼저 확인 및 요청
-    await _ensurePermissions();
+    await ensurePermissions();
 
     final now = tz.TZDateTime.now(tz.local);
     logger.d("🕒 현재 시각 (tz): $now");
