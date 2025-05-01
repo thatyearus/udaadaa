@@ -192,7 +192,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
         NotificationService.scheduleNotification(
           i,
           "오늘의 미션 인증 시간이에요 ⏰",
-          "$nickname지금 바로 인증하여 다이어트 성공을 향해 한 발짝 더 나아가요 🚀",
+          "지금 바로 인증하여 다이어트 성공을 향해 한 발짝 더 나아가요 🚀",
           time.hour,
           time.minute,
           firstDate,
