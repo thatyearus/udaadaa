@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
+import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -97,6 +99,10 @@ class _EnterRoomViewState extends State<EnterRoomView> {
             // 다음 버튼
             BlocListener<ChatCubit, ChatState>(
               listener: (context, state) {
+                Profile? profile = context.read<AuthCubit>().getCurProfile;
+                if (profile != null && profile.fcmToken == null) {
+                  context.read<AuthCubit>().setFCMToken();
+                }
                 if (state is JoinRoomSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("채팅방에 입장했습니다.")),
