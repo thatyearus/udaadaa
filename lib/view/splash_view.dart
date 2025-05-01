@@ -1,8 +1,12 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/models/notification_type.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 
 import 'package:udaadaa/view/main_view.dart';
+import 'package:udaadaa/view/newonboarding/initial_view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -17,6 +21,7 @@ class SplashViewState extends State<SplashView> {
   void initState() {
     super.initState();
     _checkInitialMessage();
+    context.read<AuthCubit>();
     // _checkOnboardingStatus();
   }
 
@@ -61,40 +66,17 @@ class SplashViewState extends State<SplashView> {
   }
 
   void checkOnboardingStatus() {
-    /*bool isOnboardingComplete =
+    bool isOnboardingComplete =
         PreferencesService().getBool('isOnboardingComplete') ?? false;
-    bool isMealCompleted =
-        PreferencesService().getBool('isMealCompleted') ?? false;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (isOnboardingComplete) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const MainView()),
-        );
-      } else if (isMealCompleted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const EighthView()),
-        );
-      } else {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const InitialView()),
-        );
-      }
-    });*/
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const MainView()),
+        MaterialPageRoute(
+          builder: (context) =>
+              isOnboardingComplete ? const MainView() : const InitialView(),
+        ),
       );
     });
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   Navigator.of(context).pushReplacement(
-    //     MaterialPageRoute(
-    //       builder: (context) => MainView(
-    //         notificationType: NotificationType.message,
-    //         id: 'a6cb8715-2366-4c12-ab4d-7550a6e3e178',
-    //       ),
-    //     ),
-    //   );
-    // });
     return;
   }
 

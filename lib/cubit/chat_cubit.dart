@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
@@ -59,6 +58,8 @@ class ChatCubit extends Cubit<ChatState> {
   final Map<String, bool> _loadingMoreMessages = {};
 
   final String baseUrl = '$supabaseUrl/storage/v1/object/public/ImageMessages/';
+
+  StreamSubscription<RemoteMessage>? _messageOpenedSubscription;
 
   ChatCubit(this.authCubit, this.formCubit, this.challengeCubit)
       : super(ChatInitial()) {
@@ -337,28 +338,45 @@ class ChatCubit extends Cubit<ChatState> {
         // fetchUnreadMessageIdsAfterLatestReceipt(),
       ]);
 
-      FirebaseMessaging.onMessageOpenedApp
+      // Cancel any existing subscription before creating a new one
+      if (_messageOpenedSubscription != null) {
+        _messageOpenedSubscription!.cancel();
+      }
+
+      _messageOpenedSubscription = FirebaseMessaging.onMessageOpenedApp
           .listen((RemoteMessage message) async {
-        wasPushHandled = true;
+        try {
+          wasPushHandled = true;
 
-        if (message.data['roomId'] != null) {
-          emit(ChatPushStarted());
-        }
-
-        await Future.delayed(Duration(milliseconds: 300));
-        await refreshAllMessagesForPush();
-
-        if (message.data['roomId'] != null) {
           final roomId = message.data['roomId'];
-          final roomInfo = chatList.firstWhere((room) => room.id == roomId);
+          if (roomId != null) {
+            // Notify UI that push notification processing has started
+            emit(ChatPushStarted());
 
-          if (message.data['roomId'] != null) {
-            emit(ChatPushOpenedFromBackground(
-              roomId,
-              "알림을 클릭하여 들어왔습니다.",
-              roomInfo,
-            ));
+            // Allow UI to update before heavy processing
+            await Future.delayed(const Duration(milliseconds: 600));
+
+            // Refresh messages in batch to optimize network usage
+            await refreshAllMessagesForPush();
+
+            // Find room info for the notification
+            Room? roomInfo;
+            try {
+              roomInfo = chatList.firstWhere((room) => room.id == roomId);
+
+              // Emit event with room information
+              emit(ChatPushOpenedFromBackground(
+                roomId,
+                "알림을 클릭하여 들어왔습니다.",
+                roomInfo,
+              ));
+            } catch (e) {
+              logger.e("Room not found for push notification: $e");
+            }
           }
+        } catch (e, stack) {
+          logger.e("Error processing push notification",
+              error: e, stackTrace: stack);
         }
       });
 

@@ -770,8 +770,19 @@ class FeedCubit extends Cubit<FeedState> {
   FeedCategory get getFeedCategory => _currentCategory;
 
   Iterable<Reaction> getReaction(String feedId, ReactionType reactionField) {
-    final feed = _myFeeds.firstWhere((feed) => feed.id == feedId);
-    return feed.reaction?.where((reaction) => reaction.type == reactionField) ??
-        [];
+    try {
+      final feed = _myFeeds.firstWhere(
+        (feed) => feed.id == feedId,
+        orElse: () => throw Exception("Feed not found with id: $feedId"),
+      );
+
+      return feed.reaction
+              ?.where((reaction) => reaction.type == reactionField) ??
+          [];
+    } catch (e) {
+      logger.e("Error getting reaction: ${e.toString()}");
+      Analytics().logEvent("피드_리액션_조회_에러", parameters: {"에러": e.toString()});
+      return [];
+    }
   }
 }
