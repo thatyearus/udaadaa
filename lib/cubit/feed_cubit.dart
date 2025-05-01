@@ -500,10 +500,12 @@ class FeedCubit extends Cubit<FeedState> {
     if (page == _feeds.length - 1) {
       getMoreFeeds();
     }
+
     logger.d("Current page: $_curFeedPage");
     Analytics().logEvent("피드_피드탐색", parameters: {
       "현재피드": _curFeedPage,
       "카테고리": _currentCategory.toString(),
+      "챌린지상태": authCubit.getChallengeStatus(),
     });
   }
 
@@ -519,6 +521,7 @@ class FeedCubit extends Cubit<FeedState> {
     _myFeedPage = page;
     Analytics().logEvent("피드_내피드탐색", parameters: {
       "현재피드": _myFeedPage,
+      "챌린지상태": authCubit.getChallengeStatus(),
     });
   }
 
@@ -647,7 +650,10 @@ class FeedCubit extends Cubit<FeedState> {
     try {
       Analytics().logEvent(
         "피드_리액션",
-        parameters: {"리액션": reaction.toString().split('.').last},
+        parameters: {
+          "리액션": reaction.toString().split('.').last,
+          "챌린지상태": authCubit.getChallengeStatus(),
+        },
       );
       final newReaction = Reaction(
           userId: supabase.auth.currentUser!.id,
@@ -662,7 +668,10 @@ class FeedCubit extends Cubit<FeedState> {
     } catch (e) {
       Analytics().logEvent(
         "피드_리액션_에러",
-        parameters: {"에러": e.toString()},
+        parameters: {
+          "에러": e.toString(),
+          "챌린지상태": authCubit.getChallengeStatus(),
+        },
       );
       logger.e(e);
     }
@@ -756,7 +765,10 @@ class FeedCubit extends Cubit<FeedState> {
       fetchMyFeeds();
     } catch (e) {
       logger.e(e);
-      Analytics().logEvent("피드_삭제_에러", parameters: {"에러": e.toString()});
+      Analytics().logEvent("피드_삭제_에러", parameters: {
+        "에러": e.toString(),
+        "챌린지상태": authCubit.getChallengeStatus(),
+      });
     }
   }
 
@@ -781,7 +793,10 @@ class FeedCubit extends Cubit<FeedState> {
           [];
     } catch (e) {
       logger.e("Error getting reaction: ${e.toString()}");
-      Analytics().logEvent("피드_리액션_조회_에러", parameters: {"에러": e.toString()});
+      Analytics().logEvent("피드_리액션_조회_에러", parameters: {
+        "에러": e.toString(),
+        "챌린지상태": authCubit.getChallengeStatus(),
+      });
       return [];
     }
   }

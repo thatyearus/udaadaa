@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -37,6 +38,9 @@ class NonChallengerView extends StatelessWidget {
           onPressed: () {
             Analytics().logEvent(
               "홈_챌린지_참여하기",
+              parameters: {
+                "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+              },
             );
             /*
             Navigator.push(

@@ -41,7 +41,6 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     final authState = authCubit.state;
     if (authState is Authenticated) {
       isEntered();
-
       // 연속 참여 일 계산
     }
 
@@ -119,6 +118,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
         return false;
       }
 
+      authCubit.setWasChallenger(true);
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
       final ret = await supabase

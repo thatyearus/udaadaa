@@ -74,6 +74,7 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                   onPressed: () async {
                     Analytics().logEvent('랜딩페이지이동', parameters: {
                       "view": "enter_room_view",
+                      "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
                     });
                     const url = 'https://dietchallenge.udadaa24.workers.dev/';
                     if (await canLaunchUrl(Uri.parse(url))) {
@@ -147,7 +148,11 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                         ),
                         onPressed: isEnabled
                             ? () {
-                                Analytics().logEvent('입장코드뷰_다음');
+                                Analytics().logEvent('입장코드뷰_다음', parameters: {
+                                  "챌린지상태": context
+                                      .read<AuthCubit>()
+                                      .getChallengeStatus(),
+                                });
                                 context.read<ChatCubit>().joinRoomByRoomName(
                                     _codeController.text.trim());
                               }
