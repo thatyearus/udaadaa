@@ -186,7 +186,7 @@ class _ThirdViewState extends State<ThirdView> {
 
               // Log analytics
               Analytics().logEvent(
-                '온보딩_third_view',
+                '온보딩_네번째_뷰',
                 parameters: {'버튼': '클릭'},
               );
 

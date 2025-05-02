@@ -59,7 +59,7 @@ class FirstView extends StatelessWidget {
                     ),
                     onPressed: () {
                       Analytics().logEvent(
-                        "온보딩_first_view",
+                        "온보딩_두번째_뷰",
                         parameters: {"버튼": "클릭"},
                       );
                       Navigator.of(context).push(

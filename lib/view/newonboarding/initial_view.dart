@@ -46,7 +46,7 @@ class InitialView extends StatelessWidget {
                     ),
                     onPressed: () {
                       Analytics().logEvent(
-                        "온보딩_initial_view",
+                        "온보딩_첫번째_뷰",
                         parameters: {"버튼": "클릭"},
                       );
                       Navigator.of(context).push(
