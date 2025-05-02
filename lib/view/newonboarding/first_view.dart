@@ -115,7 +115,7 @@ class ChatRoomFeaturesList extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               _buildFeatureItem(
-                "채팅방에서 다른 사람과 함께 다이어트를 해보세요",
+                "채팅방에서 함께 다이어트를 해보세요",
                 Icons.people_alt_rounded,
               ),
             ],

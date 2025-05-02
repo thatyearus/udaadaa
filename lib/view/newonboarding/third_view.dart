@@ -72,7 +72,7 @@ class _ThirdViewState extends State<ThirdView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "미션 알림 시간을\n설정해 볼까요?",
+                "미션을 놓치지 않게\n알림을 설정해 보세요",
                 style: AppTextStyles.textTheme.displayMedium,
               ),
               AppSpacing.verticalSizedBoxXxl,
