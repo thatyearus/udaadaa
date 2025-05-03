@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
+import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -72,6 +74,7 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                   onPressed: () async {
                     Analytics().logEvent('랜딩페이지이동', parameters: {
                       "view": "enter_room_view",
+                      "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
                     });
                     const url = 'https://dietchallenge.udadaa24.workers.dev/';
                     if (await canLaunchUrl(Uri.parse(url))) {
@@ -97,6 +100,10 @@ class _EnterRoomViewState extends State<EnterRoomView> {
             // 다음 버튼
             BlocListener<ChatCubit, ChatState>(
               listener: (context, state) {
+                Profile? profile = context.read<AuthCubit>().getCurProfile;
+                if (profile != null && profile.fcmToken == null) {
+                  context.read<AuthCubit>().setFCMToken();
+                }
                 if (state is JoinRoomSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("채팅방에 입장했습니다.")),
@@ -141,7 +148,11 @@ class _EnterRoomViewState extends State<EnterRoomView> {
                         ),
                         onPressed: isEnabled
                             ? () {
-                                Analytics().logEvent('입장코드뷰_다음');
+                                Analytics().logEvent('입장코드뷰_다음', parameters: {
+                                  "챌린지상태": context
+                                      .read<AuthCubit>()
+                                      .getChallengeStatus(),
+                                });
                                 context.read<ChatCubit>().joinRoomByRoomName(
                                     _codeController.text.trim());
                               }

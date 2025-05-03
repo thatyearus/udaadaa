@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/constant.dart';
 
@@ -26,6 +27,7 @@ class _CategoryButtonsContainerState extends State<CategoryButtonsContainer> {
       "피드_카테고리_선택",
       parameters: {
         "category": category.name,
+        "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
       },
     );
     widget.onCategorySelected(category); // 선택된 카테고리 콜백 호출

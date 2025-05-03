@@ -59,6 +59,15 @@ class RoomView extends StatelessWidget {
               final unread = unreadCount[room.id] ?? 0;
 
               return ListTile(
+                leading: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    'assets/logo.png',
+                    width: 40,
+                    height: 40,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 title: Text(room.roomName),
                 subtitle: Text(room.lastMessage?.content ??
                     (room.lastMessage?.imagePath != null ? '사진' : '')),

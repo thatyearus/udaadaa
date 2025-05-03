@@ -257,10 +257,10 @@ class _MainViewState extends State<MainView> with WidgetsBindingObserver {
                         ),
                       ),
                     );
+                    chatCubit.enterRoom1(state.roomId);
                   } else {
                     debugPrint("✅ 이미 채팅방에 들어가 있음, enterRoom 생략");
                   }
-                  chatCubit.enterRoom1(state.roomId); // 👉 여기 조건문 안에 있으니까 안전
                 }
               },
               child: IndexedStack(
@@ -336,7 +336,10 @@ class _MainViewState extends State<MainView> with WidgetsBindingObserver {
             onTap: (index) {
               Analytics().logEvent(
                 "네비게이션바",
-                parameters: {"클릭": labels[index]},
+                parameters: {
+                  "클릭": labels[index],
+                  "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+                },
               );
               context
                   .read<BottomNavCubit>()

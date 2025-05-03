@@ -41,7 +41,6 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     final authState = authCubit.state;
     if (authState is Authenticated) {
       isEntered();
-
       // 연속 참여 일 계산
     }
 
@@ -119,6 +118,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
         return false;
       }
 
+      authCubit.setWasChallenger(true);
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
       final ret = await supabase
@@ -192,7 +192,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
         NotificationService.scheduleNotification(
           i,
           "오늘의 미션 인증 시간이에요 ⏰",
-          "$nickname지금 바로 인증하여 다이어트 성공을 향해 한 발짝 더 나아가요 🚀",
+          "지금 바로 인증하여 다이어트 성공을 향해 한 발짝 더 나아가요 🚀",
           time.hour,
           time.minute,
           firstDate,

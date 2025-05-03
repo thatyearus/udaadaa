@@ -113,7 +113,10 @@ class SelectToggleButtons extends StatelessWidget {
             onPressed: (int index) {
               Analytics().logEvent(
                 "리포트_종류선택",
-                parameters: {"종류": type[index]},
+                parameters: {
+                  "종류": type[index],
+                  "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+                },
               );
               context.read<ProfileCubit>().updateTypeSelection(index);
             },

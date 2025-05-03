@@ -251,7 +251,10 @@ class MyPageView extends StatelessWidget {
               case 'change_nickname':
                 Analytics().logEvent(
                   "마이페이지_닉네임",
-                  parameters: {"클릭": "닉네임변경"},
+                  parameters: {
+                    "클릭": "닉네임변경",
+                    "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+                  },
                 );
                 final nicknameController = TextEditingController();
                 showDialog(
@@ -272,7 +275,12 @@ class MyPageView extends StatelessWidget {
                             onPressed: () {
                               Analytics().logEvent(
                                 "마이페이지_닉네임",
-                                parameters: {"클릭": "취소"},
+                                parameters: {
+                                  "클릭": "취소",
+                                  "챌린지상태": context
+                                      .read<AuthCubit>()
+                                      .getChallengeStatus(),
+                                },
                               );
                               Navigator.of(context).pop();
                             },
@@ -287,7 +295,12 @@ class MyPageView extends StatelessWidget {
                             onPressed: () {
                               Analytics().logEvent(
                                 "마이페이지_닉네임",
-                                parameters: {"클릭": "확인"},
+                                parameters: {
+                                  "클릭": "확인",
+                                  "챌린지상태": context
+                                      .read<AuthCubit>()
+                                      .getChallengeStatus(),
+                                },
                               );
                               context
                                   .read<AuthCubit>()
@@ -308,7 +321,10 @@ class MyPageView extends StatelessWidget {
               case 'push_setting':
                 Analytics().logEvent(
                   "마이페이지_푸시알림",
-                  parameters: {"클릭": "알림설정"},
+                  parameters: {
+                    "클릭": "알림설정",
+                    "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+                  },
                 );
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -318,14 +334,20 @@ class MyPageView extends StatelessWidget {
               case 'kakaotalk':
                 Analytics().logEvent(
                   "마이페이지_문의하기",
-                  parameters: {"클릭": "문의하기"},
+                  parameters: {
+                    "클릭": "문의하기",
+                    "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+                  },
                 );
                 _launchURL();
                 break;
               case 'refund_policy':
                 Analytics().logEvent(
                   "마이페이지_환급규정",
-                  parameters: {"클릭": "환급규정"},
+                  parameters: {
+                    "클릭": "환급규정",
+                    "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+                  },
                 );
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -364,7 +386,12 @@ class MyPageView extends StatelessWidget {
                         onTap: () {
                           Analytics().logEvent(
                             "마이페이지_피드",
-                            parameters: {"피드선택": index},
+                            parameters: {
+                              "피드선택": index,
+                              "챌린지상태": context
+                                  .read<AuthCubit>()
+                                  .getChallengeStatus(),
+                            },
                           );
                           Navigator.of(context).push(
                             MaterialPageRoute(
