@@ -25,7 +25,7 @@ class FeedCubit extends Cubit<FeedState> {
   List<List<Feed>> _homeFeeds = [[], [], []];
   List<String> _blockedFeedIds = [];
   List<String> _reactionFeedIds = [];
-  final int _limit = 10;
+  final int _limit = 5;
   int _curFeedPage = 0;
   int _myFeedPage = 0;
   List<int> _curHomeFeedPage = [0, 0, 0];

@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
+import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/models/notification_type.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 
@@ -22,6 +23,7 @@ class SplashViewState extends State<SplashView> {
     super.initState();
     _checkInitialMessage();
     context.read<AuthCubit>();
+    context.read<BottomNavCubit>();
     // _checkOnboardingStatus();
   }
 

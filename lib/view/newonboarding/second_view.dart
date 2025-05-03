@@ -107,7 +107,7 @@ class _SecondViewState extends State<SecondView>
                     ),
                     onPressed: () {
                       Analytics().logEvent(
-                        "온보딩_second_view",
+                        "온보딩_세번째_뷰",
                         parameters: {"버튼": "클릭"},
                       );
                       Navigator.of(context).push(

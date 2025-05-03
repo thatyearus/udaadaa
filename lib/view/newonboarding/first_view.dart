@@ -59,7 +59,7 @@ class FirstView extends StatelessWidget {
                     ),
                     onPressed: () {
                       Analytics().logEvent(
-                        "온보딩_first_view",
+                        "온보딩_두번째_뷰",
                         parameters: {"버튼": "클릭"},
                       );
                       Navigator.of(context).push(
@@ -115,7 +115,7 @@ class ChatRoomFeaturesList extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               _buildFeatureItem(
-                "채팅방에서 다른 사람과 함께 다이어트를 해보세요",
+                "채팅방에서 함께 다이어트를 해보세요",
                 Icons.people_alt_rounded,
               ),
             ],
