@@ -203,7 +203,12 @@ class _PushSettingViewState extends State<PushSettingView> {
                       });
                       Analytics().logEvent(
                         "푸시알림_토글",
-                        parameters: {"변경값": newValue.toString(), "설정": "리액션"},
+                        parameters: {
+                          "변경값": newValue.toString(),
+                          "설정": "리액션",
+                          "챌린지상태":
+                              context.read<AuthCubit>().getChallengeStatus(),
+                        },
                       );
                     },
                     activeTrackColor: AppColors.primary,
@@ -253,7 +258,10 @@ class _PushSettingViewState extends State<PushSettingView> {
                             "푸시알션_토글",
                             parameters: {
                               "변경값": newValue.toString(),
-                              "설정": "미션"
+                              "설정": "미션",
+                              "챌린지상태": context
+                                  .read<AuthCubit>()
+                                  .getChallengeStatus(),
                             },
                           );
                         },
@@ -280,7 +288,10 @@ class _PushSettingViewState extends State<PushSettingView> {
           onPressed: () {
             Analytics().logEvent(
               "푸시설정_완료",
-              parameters: {"버튼": "클릭"},
+              parameters: {
+                "버튼": "클릭",
+                "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+              },
             );
             if (_isMissionPushOn) {
               context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);

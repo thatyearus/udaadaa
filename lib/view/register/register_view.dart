@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
@@ -72,7 +73,9 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                 ),
                 onPressed: () {
-                  Analytics().logEvent('챌린지참여_버튼클릭');
+                  Analytics().logEvent('챌린지참여_버튼클릭', parameters: {
+                    "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+                  });
                   final provider =
                       supabase.auth.currentUser?.appMetadata['provider'];
                   final nextView = (provider == 'apple' || provider == 'kakao')
@@ -96,6 +99,7 @@ class _RegisterViewState extends State<RegisterView> {
                 onTap: () async {
                   Analytics().logEvent('랜딩페이지이동', parameters: {
                     "view": "register_view",
+                    "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
                   });
                   const url = 'https://dietchallenge.udadaa24.workers.dev/';
                   if (await canLaunchUrl(Uri.parse(url))) {

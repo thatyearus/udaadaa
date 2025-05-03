@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/cubit/profile_cubit.dart';
@@ -153,6 +154,9 @@ class SelectButton extends StatelessWidget {
                 onPressed: () {
                   Analytics().logEvent(
                     "홈_챌린지탭",
+                    parameters: {
+                      "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+                    },
                   );
                   onSelect(0);
                 },
@@ -181,6 +185,9 @@ class SelectButton extends StatelessWidget {
                 onPressed: () {
                   Analytics().logEvent(
                     "홈_리포트탭",
+                    parameters: {
+                      "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+                    },
                   );
                   onSelect(1);
                 },
