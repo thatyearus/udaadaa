@@ -232,10 +232,10 @@ class MyPageView extends StatelessWidget {
                 value: 'kakaotalk',
                 child: Text('문의하기'),
               ),
-              // const PopupMenuItem(
-              //   value: 'refund_policy',
-              //   child: Text('환급규정'),
-              // ),
+              const PopupMenuItem(
+                value: 'refund_policy',
+                child: Text('상금규정'),
+              ),
               // const PopupMenuItem(
               //   value: 'link_email',
               //   child: Text('이메일 연동'),
