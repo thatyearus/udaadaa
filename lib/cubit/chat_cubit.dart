@@ -771,6 +771,7 @@ class ChatCubit extends Cubit<ChatState> {
                 'created_at',
                 roomInfo.endDay!
                     .subtract(const Duration(hours: 9))
+                    .add(const Duration(days: 1))
                     .toIso8601String())
             .gte(
                 'created_at',

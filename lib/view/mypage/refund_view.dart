@@ -8,7 +8,7 @@ class RefundView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('환급규정', style: AppTextStyles.textTheme.headlineLarge),
+        title: Text('상금규정', style: AppTextStyles.textTheme.headlineLarge),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -18,7 +18,7 @@ class RefundView extends StatelessWidget {
           children: [
             Center(
               child: Text(
-                '환급은 2주가 끝나는 시점을 기준으로 진행됩니다',
+                '상금은 2주가 끝나는 시점을 기준으로 진행됩니다',
                 style: AppTextStyles.textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
@@ -28,7 +28,7 @@ class RefundView extends StatelessWidget {
             const SizedBox(height: AppSpacing.xl),
             Center(
               child: Text(
-                '선택한 챌린지에 실패하면 환급금은 0원입니다',
+                '선택한 챌린지에 실패하면 상금은 0원입니다',
                 style: AppTextStyles.textTheme.headlineSmall,
               ),
             ),
@@ -77,7 +77,7 @@ class RefundView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(AppSpacing.m),
               child: Text(
-                '환급금',
+                '상금',
                 style: AppTextStyles.textTheme.titleMedium
                     ?.copyWith(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
