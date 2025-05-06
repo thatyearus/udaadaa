@@ -449,6 +449,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
           .count(CountOption.exact)
           .then((res) => res.count);
       _todayMissionComplete['reaction'] = reactionCount;*/
+
       if (feedCount >= 2 && weightCount >= 1) {
         _todayChallengeComplete = true;
         getCurrentChallengeCompletedDays();
@@ -461,8 +462,9 @@ class ChallengeCubit extends Cubit<ChallengeState> {
 
   Future<void> updateMission() async {
     try {
-      await getTodayMission();
       final now = DateTime.now();
+      debugPrint("now: $now");
+      debugPrint("endDay: ${_challenge!.endDay}");
       if (now.year == _selectedDate.year &&
           now.month == _selectedDate.month &&
           now.day == _selectedDate.day) {
@@ -478,6 +480,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
         if (now.year == endDay.year &&
             now.month == endDay.month &&
             now.day == endDay.day) {
+          await getTodayMission();
           if (_todayChallengeComplete) {
             _challenge = _challenge!.copyWith(isSuccess: true);
             await supabase

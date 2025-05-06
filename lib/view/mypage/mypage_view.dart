@@ -234,7 +234,7 @@ class MyPageView extends StatelessWidget {
               ),
               const PopupMenuItem(
                 value: 'refund_policy',
-                child: Text('환급규정'),
+                child: Text('상금규정'),
               ),
               // const PopupMenuItem(
               //   value: 'link_email',
