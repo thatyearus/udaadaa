@@ -7,6 +7,7 @@ import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/register/enter_room_view.dart';
 import 'package:app_links/app_links.dart';
+import 'package:udaadaa/view/register/email_login_view.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -15,13 +16,12 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        /*
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () {
             Navigator.pop(context);
           },
-        ),*/
+        ),
         automaticallyImplyLeading: false,
         elevation: 0,
       ),
@@ -184,6 +184,28 @@ class LoginView extends StatelessWidget {
                       logger.e(e.toString());
                     });
                   },
+                ),
+                AppSpacing.verticalSizedBoxXxl,
+                TextButton(
+                  onPressed: () {
+                    // 이메일 로그인 로직 추가 예정
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const EmailLoginView(),
+                      ),
+                    );
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.neutral[400],
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+                  ),
+                  child: Text(
+                    '이메일로 로그인하기',
+                    style: AppTextStyles.textTheme.bodyLarge?.copyWith(
+                      color: AppColors.neutral[400],
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
                 ),
                 AppSpacing.verticalSizedBoxXxl,
               ],

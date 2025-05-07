@@ -287,35 +287,35 @@ class AuthCubit extends Cubit<AuthState> {
   //   }
   // }
 
-  // Future<int> signInWithEmail(String email, String password) async {
-  //   try {
-  //     await supabase.auth.signInWithPassword(email: email, password: password);
-  //     final currentUser = supabase.auth.currentUser;
-  //     logger.d("currentUser: $currentUser");
-  //     if (_profile != null || _profile!.id != currentUser!.id) {
-  //       final res = await supabase
-  //           .from('profiles')
-  //           .select()
-  //           .eq('id', currentUser!.id)
-  //           .single();
-  //       Profile profile = Profile.fromMap(map: res);
-  //       _profile = profile;
-  //     }
-  //     emit(Authenticated(_profile!));
-  //     return 3;
-  //   } catch (e) {
-  //     logger.e(e.toString());
-  //     if (e is AuthException) {
-  //       if (e.code == 'validation_failed' && e.statusCode == '400') {
-  //         return 7;
-  //       } else if (e.code == 'invalid_credentials' && e.statusCode == '400') {
-  //         return 8;
-  //       }
-  //       return 2;
-  //     }
-  //     return 2;
-  //   }
-  // }
+  Future<int> signInWithEmail(String email, String password) async {
+    try {
+      await supabase.auth.signInWithPassword(email: email, password: password);
+      final currentUser = supabase.auth.currentUser;
+      logger.d("currentUser: $currentUser");
+      if (_profile != null || _profile!.id != currentUser!.id) {
+        final res = await supabase
+            .from('profiles')
+            .select()
+            .eq('id', currentUser!.id)
+            .single();
+        Profile profile = Profile.fromMap(map: res);
+        _profile = profile;
+      }
+      emit(Authenticated(_profile!));
+      return 3;
+    } catch (e) {
+      logger.e(e.toString());
+      if (e is AuthException) {
+        if (e.code == 'validation_failed' && e.statusCode == '400') {
+          return 7;
+        } else if (e.code == 'invalid_credentials' && e.statusCode == '400') {
+          return 8;
+        }
+        return 2;
+      }
+      return 2;
+    }
+  }
 
   Future<AuthResponse> signInWithApple() async {
     _isAuthenticating = true;

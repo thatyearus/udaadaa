@@ -393,7 +393,7 @@ class _ChatViewState extends State<ChatView> {
                           }
                         },
                       ),
-                      AppSpacing.verticalSizedBoxXs,
+                      AppSpacing.verticalSizedBoxXxs,
                       Text(
                         missionName[index],
                         style: AppTextStyles.textTheme.bodyLarge,
