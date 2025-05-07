@@ -78,7 +78,9 @@ class _RegisterViewState extends State<RegisterView> {
                   });
                   final provider =
                       supabase.auth.currentUser?.appMetadata['provider'];
-                  final nextView = (provider == 'apple' || provider == 'kakao')
+                  final nextView = (provider == 'apple' ||
+                          provider == 'kakao' ||
+                          provider == 'email')
                       ? const EnterRoomView()
                       : const LoginView();
                   Navigator.of(context).push(
