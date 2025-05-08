@@ -70,6 +70,8 @@ dependencies:
   amplitude_flutter: ^3.16.7
   tutorial_coach_mark: ^1.2.13
   flutter_linkify: ^6.0.0
+  flutter_web_auth_2: ^4.1.0
+  kakao_flutter_sdk_user: ^1.9.7+3
 
 dev_dependencies:
   flutter_test:
