@@ -97,7 +97,7 @@ class LoginView extends StatelessWidget {
                         return;
                       }
                       try {
-                        if (isInstalled) {
+                        if (isInstalled || Platform.isAndroid) {
                           context.read<AuthCubit>().signInWithKakao().then((_) {
                             final appLinks = AppLinks();
                             appLinks.uriLinkStream.listen((Uri? uri) {
