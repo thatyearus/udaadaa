@@ -12,3 +12,9 @@ final class Authenticated extends AuthState {
 }
 
 final class AuthError extends AuthState {}
+
+final class AuthKakaoLoginSuccess extends AuthState {
+  final Profile user;
+
+  AuthKakaoLoginSuccess(this.user);
+}

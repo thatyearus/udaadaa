@@ -31,6 +31,7 @@
 			<array>
 				<string>fb${FACEBOOK_APP_ID}</string>
 				<string>${APP_BUNDLE_URL}</string>
+				<string>kakao92881651feba83c4d3528fdfdc5b9333</string>
 			</array>
 		</dict>
 	</array>
@@ -42,25 +43,29 @@
 	<string>${FACEBOOK_CLIENT_TOKEN}</string>
 	<key>FacebookDisplayName</key>
 	<string>우다다</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakao</string>
+		<string>kakaokompassauth</string>
+		<string>kakaolink</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>몸무게 인증 사진 촬영에 활용됩니다</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>피드 업로드 및 칼로리 분석에 사진이 활용됩니다</string>
+	<key>NSUserNotificationAlertStyle</key>
+	<string>alert</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
-	<key>NSUserNotificationAlertStyle</key>
-	<string>alert</string>
-	<key>UNUserNotificationCenterDelegate</key>
-	<string>YES</string>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
@@ -76,5 +81,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UNUserNotificationCenterDelegate</key>
+	<string>YES</string>
 </dict>
 </plist>
