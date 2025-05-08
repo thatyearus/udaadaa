@@ -80,6 +80,8 @@ PODS:
   - Flutter (1.0.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
+  - flutter_web_auth_2 (3.0.0):
+    - Flutter
   - GoogleAppMeasurement (11.7.0):
     - GoogleAppMeasurement/AdIdSupport (= 11.7.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
@@ -134,6 +136,8 @@ PODS:
     - Flutter
   - image_picker_ios (0.0.1):
     - Flutter
+  - kakao_flutter_sdk_common (1.9.7-3):
+    - Flutter
   - Mixpanel-swift (4.3.0):
     - Mixpanel-swift/Complete (= 4.3.0)
   - Mixpanel-swift/Complete (4.3.0)
@@ -174,8 +178,10 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - flutter_web_auth_2 (from `.symlinks/plugins/flutter_web_auth_2/ios`)
   - image_gallery_saver_plus (from `.symlinks/plugins/image_gallery_saver_plus/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - kakao_flutter_sdk_common (from `.symlinks/plugins/kakao_flutter_sdk_common/ios`)
   - mixpanel_flutter (from `.symlinks/plugins/mixpanel_flutter/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
@@ -223,10 +229,14 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  flutter_web_auth_2:
+    :path: ".symlinks/plugins/flutter_web_auth_2/ios"
   image_gallery_saver_plus:
     :path: ".symlinks/plugins/image_gallery_saver_plus/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  kakao_flutter_sdk_common:
+    :path: ".symlinks/plugins/kakao_flutter_sdk_common/ios"
   mixpanel_flutter:
     :path: ".symlinks/plugins/mixpanel_flutter/ios"
   path_provider_foundation:
@@ -246,41 +256,43 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Amplitude: 184def4f87aa26f94a93a7faa334e06b1cae704d
-  amplitude_flutter: 20fed3aede0c17e0be5eb0e76de39de560f95f63
+  amplitude_flutter: 5a38ad50bf208d09d226787239e66a1e3246d974
   AnalyticsConnector: a53214d38ae22734c6266106c0492b37832633a9
-  app_links: 3da4c36b46cac3bf24eb897f1a6ce80bda109874
-  facebook_app_events: 049595ecd654a675820f3150f466fa0af1e91478
+  app_links: e7a6750a915a9e161c58d91bc610e8cd1d4d0ad0
+  facebook_app_events: d791f99d78f74cde976edd378678566cb7bb4ab0
   FBAEMKit: 58cb5f302cdd715a56d4c1d0dfdd2e423ac1421a
   FBAudienceNetwork: d1670939884e3a2e0ad98dca98d7e0c841417228
   FBSDKCoreKit: 94d7461d0cecf441b1ba7c41acfff41daa8ccd41
   FBSDKCoreKit_Basics: 151b43db8b834d3f0e02f95d36a44ffd36265e45
   Firebase: a64bf6a8546e6eab54f1c715cd6151f39d2329f4
-  firebase_analytics: e790d8b3da72ae76678d4f9f25133530c09e2e63
-  firebase_core: 3d36094af9b47c46bfb965943413a39eebaca4db
-  firebase_messaging: 5881ea6744fe41f0759bc52844c530d64f3c37e3
+  firebase_analytics: 7236e6115c1b4e62c2270faa29c052a317e31107
+  firebase_core: aa979ae726f00b3ef4ccf59dfb96170af84efbd4
+  firebase_messaging: 3af84b6a90aeac4d7a67fbf4c43a91e7083bea1f
   FirebaseAnalytics: bc9e565af9044ba8d6c6e4157e4edca8e5fdf7ec
   FirebaseCore: 3227e35f4197a924206fbcdc0349325baf4f5de4
   FirebaseCoreInternal: d6c17dafc8dc33614733a8b52df78fcb4394c881
   FirebaseInstallations: 9347e719c3d52d8d7b9074b2c32407dd027305e9
   FirebaseMessaging: 00ece041b71ddb52a2862ffdee73fb6e9824bd0c
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_local_notifications: 395056b3175ba4f08480a7c5de30cd36d69827e4
+  flutter_local_notifications: df98d66e515e1ca797af436137b4459b160ad8c9
+  flutter_web_auth_2: 06d500582775790a0d4c323222fcb6d7990f9603
   GoogleAppMeasurement: 0471a5b5bff51f3a91b1e76df22c952d04c63967
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
-  image_gallery_saver_plus: e597bf65a7846979417a3eae0763b71b6dfec6c3
-  image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a
+  image_gallery_saver_plus: 782ade975fe6a4600b53e7c1983e3a2979d1e9e5
+  image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
+  kakao_flutter_sdk_common: 3dc8492c202af7853585d151490b1c5c6b7576cb
   Mixpanel-swift: 2192b9a24cf41b870749e4e0e10fbc9822bb2b4a
-  mixpanel_flutter: d84097a22c87f32fbe1c7f4991c8c357f18016c1
+  mixpanel_flutter: 455c6c7906a0bd21b609b32fef390245187068a6
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
-  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
-  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
-  sign_in_with_apple: c5dcc141574c8c54d5ac99dd2163c0c72ad22418
-  sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
-  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
-  video_player_avfoundation: 2cef49524dd1f16c5300b9cd6efd9611ce03639b
+  share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
+  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
+  sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
+  sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
+  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
+  video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
 
 PODFILE CHECKSUM: a57f30d18f102dd3ce366b1d62a55ecbef2158e5
 

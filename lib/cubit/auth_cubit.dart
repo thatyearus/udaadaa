@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udaadaa/models/profile.dart';
@@ -366,6 +367,65 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> signInWithKakaoByWebView() async {
+    _isAuthenticating = true;
+    final url =
+        '$supabaseUrl/auth/v1/authorize?provider=kakao&redirect_to=com.thatyearus.diet-challenge://oauth';
+
+    try {
+      final result = await FlutterWebAuth2.authenticate(
+        url: url,
+        callbackUrlScheme: 'com.thatyearus.diet-challenge',
+      );
+
+      // 1. URI fragment에서 토큰 추출
+      final uri = Uri.parse(result);
+      final params = Uri.splitQueryString(uri.fragment);
+      final accessToken = params['access_token'];
+      final refreshToken = params['refresh_token'];
+
+      if (accessToken == null || refreshToken == null) {
+        emit(AuthError());
+        logger.e('토큰 추출 실패');
+        return;
+      }
+
+      // 2. 세션 수동 설정
+      final session = await supabase.auth.setSession(refreshToken);
+
+      // 3. 사용자 정보 추출 및 프로필 연동
+      final provider = session.user?.appMetadata['provider'];
+      final userId = session.user?.id;
+
+      if (provider == 'kakao' || provider == 'apple') {
+        try {
+          final existing = await supabase
+              .from('profiles')
+              .select()
+              .eq('id', userId!)
+              .maybeSingle();
+
+          if (existing != null) {
+            Profile profile = Profile.fromMap(map: existing);
+            _profile = profile.copyWith();
+            emit(Authenticated(_profile!));
+          } else {
+            await makeProfile(); // 👈 생성 시 유저 정보 넘겨줌
+          }
+          emit(AuthKakaoLoginSuccess(_profile!));
+        } catch (e) {
+          emit(AuthError());
+          logger.e('프로필 조회 실패: $e');
+        }
+      } else {
+        await makeProfile();
+      }
+    } catch (e) {
+      emit(AuthError());
+      logger.e('로그인 실패: $e');
+    }
+  }
+
   Future<void> makeProfile() async {
     if (_profile?.id == supabase.auth.currentUser!.id) {
       return;
@@ -389,7 +449,9 @@ class AuthCubit extends Cubit<AuthState> {
             .single();
 
         profile = Profile.fromMap(map: res);
-        _profile = profile;
+
+        //변경을 감지하려고 객체 새로생성
+        _profile = profile.copyWith();
         emit(Authenticated(profile));
         insertSuccess = true; // 성공적으로 삽입된 경우 루프를 탈출
         FirebaseMessaging.instance.onTokenRefresh.listen((token) {
@@ -459,6 +521,9 @@ class AuthCubit extends Cubit<AuthState> {
   Profile? get getProfile {
     if (state is Authenticated) {
       return (state as Authenticated).user;
+    }
+    if (state is AuthKakaoLoginSuccess) {
+      return (state as AuthKakaoLoginSuccess).user;
     }
     return null;
   }
