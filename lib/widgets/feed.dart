@@ -149,7 +149,7 @@ class ImageCard extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -165,7 +165,7 @@ class ImageCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Row(
                 children: [
                   Text(
@@ -187,6 +187,36 @@ class ImageCard extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 8),
+              Builder(
+                builder: (context) {
+                  try {
+                    // Add 9 hours to account for KST timezone
+                    final DateTime createdDate = feed.createdAt != null
+                        ? feed.createdAt!.add(const Duration(hours: 9))
+                        : DateTime.now();
+
+                    // Extract date components
+                    final DateTime now = DateTime.now();
+                    final bool isDifferentYear = now.year != createdDate.year;
+                    final String formattedDate = isDifferentYear
+                        ? '${createdDate.year}년 ${createdDate.month}월 ${createdDate.day}일'
+                        : '${createdDate.month}월 ${createdDate.day}일';
+
+                    return Text(
+                      formattedDate,
+                      style: TextStyle(
+                        color: AppColors.neutral[300],
+                        fontSize: 13,
+                      ),
+                    );
+                  } catch (e) {
+                    debugPrint('⚠️ Error formatting date: $e');
+                    // Fallback in case of error
+                    return const SizedBox.shrink();
+                  }
+                },
               ),
             ],
           ),
