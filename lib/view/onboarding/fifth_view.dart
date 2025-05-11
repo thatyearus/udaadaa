@@ -11,7 +11,7 @@ import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 
-class FifthView extends StatelessWidget {
+class FifthView extends StatefulWidget {
   const FifthView(
       {super.key,
       required this.foodContent,
@@ -20,6 +20,19 @@ class FifthView extends StatelessWidget {
 
   final String foodContent, foodComment;
   final Calorie calorie;
+
+  @override
+  State<FifthView> createState() => _FifthViewState();
+}
+
+class _FifthViewState extends State<FifthView> {
+  late int currentCalorie;
+
+  @override
+  void initState() {
+    super.initState();
+    currentCalorie = widget.calorie.totalCalories;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,12 +110,17 @@ class FifthView extends StatelessWidget {
                   },
                 );
                 FeedType cur = context.read<form.FormCubit>().feedType;
+
+                // Use the updated calorie value
+                final updatedCalorie =
+                    widget.calorie.copyWith(totalCalories: currentCalorie);
+
                 context.read<ChatCubit>().missionComplete(
                       type: cur,
                       contentType: 'FOOD',
-                      review: foodComment,
-                      mealContent: foodContent,
-                      calorie: calorie,
+                      review: widget.foodComment,
+                      mealContent: widget.foodContent,
+                      calorie: updatedCalorie,
                     );
                 /*context.read<form.FormCubit>().submit(
                       type: cur,
@@ -155,13 +173,13 @@ class FifthView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
-                  _buildCalorieText(context, calorie.totalCalories),
+                  _buildCalorieText(context, currentCalorie),
                   const SizedBox(height: 8),
-                  _buildTags(context, calorie.items),
+                  _buildTags(context, widget.calorie.items),
                   //_buildChips(context, state.items),
                   Divider(color: AppColors.neutral[300]),
                   const SizedBox(height: 8),
-                  _buildAITextContainer(context, calorie.aiText),
+                  _buildAITextContainer(context, widget.calorie.aiText),
                   const SizedBox(height: 4),
                   _buildInfoText(context),
                 ],
@@ -189,9 +207,100 @@ class FifthView extends StatelessWidget {
   }
 
   Widget _buildCalorieText(BuildContext context, int calorie) {
-    return Text(
-      '칼로리: $calorie kcal',
-      style: Theme.of(context).textTheme.headlineLarge,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '칼로리: $calorie kcal',
+          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                color: Colors.black, // Use black color for text
+              ),
+        ),
+        const SizedBox(width: 2),
+        GestureDetector(
+          onTap: () {
+            try {
+              _showCalorieEditDialog(context, calorie);
+              Analytics().logEvent("칼로리_수정_시도", parameters: {
+                "initial_calorie": calorie.toString(),
+              });
+            } catch (e) {
+              debugPrint("칼로리 수정 다이얼로그 오류: $e");
+            }
+          },
+          child: Icon(
+            Icons.edit_outlined, // 겉에만 그려진 연필 아이콘
+            size: 22,
+            color: AppColors.primary, // Primary color for the icon
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showCalorieEditDialog(BuildContext context, int initialCalorie) {
+    final TextEditingController controller =
+        TextEditingController(text: initialCalorie.toString());
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('칼로리 수정'),
+          content: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: '칼로리',
+              suffixText: 'kcal',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                '취소',
+                style: TextStyle(fontWeight: FontWeight.w400),
+              ),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () {
+                final newCalorie = int.tryParse(controller.text);
+                if (newCalorie != null && newCalorie >= 0) {
+                  setState(() {
+                    currentCalorie = newCalorie;
+                  });
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('유효한 칼로리를 입력해주세요')),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                '저장',
+                style: TextStyle(fontWeight: FontWeight.w400),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

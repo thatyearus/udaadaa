@@ -19,4 +19,16 @@ class Calorie {
       aiText: json['ai_text'] as String,
     );
   }
+
+  Calorie copyWith({
+    int? totalCalories,
+    List<String>? items,
+    String? aiText,
+  }) {
+    return Calorie(
+      totalCalories: totalCalories ?? this.totalCalories,
+      items: items ?? this.items,
+      aiText: aiText ?? this.aiText,
+    );
+  }
 }
