@@ -30,11 +30,7 @@ class ReportView extends StatelessWidget {
               children: [
                 AppSpacing.verticalSizedBoxL,
                 const Calendar(),
-                AppSpacing.verticalSizedBoxXs,
-                const DayBanner(),
-                /* Text("$nickname 님의 리포트",
-                    style: AppTextStyles.textTheme.displaySmall),*/
-                AppSpacing.verticalSizedBoxXxl,
+                AppSpacing.verticalSizedBoxXl,
                 const SelectToggleButtons(),
                 AppSpacing.verticalSizedBoxL,
                 (selection[0] ? const DailyReport() : const WeeklyReport()),

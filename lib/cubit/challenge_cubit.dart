@@ -465,6 +465,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
       final now = DateTime.now();
       debugPrint("now: $now");
       debugPrint("endDay: ${_challenge!.endDay}");
+      await getTodayMission();
       if (now.year == _selectedDate.year &&
           now.month == _selectedDate.month &&
           now.day == _selectedDate.day) {
@@ -480,7 +481,6 @@ class ChallengeCubit extends Cubit<ChallengeState> {
         if (now.year == endDay.year &&
             now.month == endDay.month &&
             now.day == endDay.day) {
-          await getTodayMission();
           if (_todayChallengeComplete) {
             _challenge = _challenge!.copyWith(isSuccess: true);
             await supabase
