@@ -71,8 +71,8 @@ class RoomView extends StatelessWidget {
                 title: Text(room.roomName),
                 subtitle: Text(
                   room.lastMessage?.content != null
-                      ? (room.lastMessage!.content!.length > 40
-                          ? '${room.lastMessage!.content!.substring(0, 44)}...'
+                      ? (room.lastMessage!.content!.length > 25
+                          ? '${room.lastMessage!.content!.substring(0, 25)}...'
                           : room.lastMessage!.content!)
                       : (room.lastMessage?.imagePath != null ? '사진' : ''),
                 ),
