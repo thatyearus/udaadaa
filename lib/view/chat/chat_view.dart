@@ -656,6 +656,9 @@ class _ChatViewState extends State<ChatView> {
                           isLastInSequence: isLastInSequence,
                           memberCount: widget.roomInfo.members.length,
                           isLastInRoom: isLastInRoom,
+                          isDeletedMessage:
+                              message.customProperties?['isDeletedMessage'],
+                          createdAt: message.customProperties?['createdAt'],
                         );
                       },
                     ),
@@ -690,7 +693,23 @@ class _ChatViewState extends State<ChatView> {
     for (var message in messages) {
       String user = message.userId;
       // Profile profile = message.profile;
-      if (message.type == "textMessage") {
+      if (message.isDeleted == true) {
+        result.add(
+          ChatMessage(
+              createdAt: message.createdAt!,
+              text: "삭제된 메시지입니다.",
+              user: asDashChatUser(user, message.profile?.nickname ?? user),
+              customProperties: {
+                // 'reactions': message.reactions,
+                'messageId': message.id,
+                'channelUrl': message.roomId,
+                // 'unreadCount': message.readReceipts.length,
+                'message': message,
+                'isDeletedMessage': true,
+                'createdAt': message.createdAt,
+              }),
+        );
+      } else if (message.type == "textMessage") {
         result.add(
           ChatMessage(
               createdAt: message.createdAt!,
@@ -702,6 +721,7 @@ class _ChatViewState extends State<ChatView> {
                 'channelUrl': message.roomId,
                 // 'unreadCount': message.readReceipts.length,
                 'message': message,
+                'createdAt': message.createdAt,
               }),
         );
       } else if (message.type == "imageMessage") {
@@ -724,6 +744,7 @@ class _ChatViewState extends State<ChatView> {
                 'channelUrl': message.roomId,
                 // 'unreadCount': message.readReceipts.length,
                 'message': message,
+                'createdAt': message.createdAt,
               }),
         );
       } else if (message.type == 'missionMessage') {
@@ -747,6 +768,7 @@ class _ChatViewState extends State<ChatView> {
                 'channelUrl': message.roomId,
                 // 'unreadCount': message.readReceipts.length,
                 'message': message,
+                'createdAt': message.createdAt,
               }),
         );
       }
