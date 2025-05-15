@@ -47,6 +47,7 @@ class Message {
       'content': content,
       'image_path': imagePath,
       'type': type,
+      'is_deleted': isDeleted,
     };
   }
 
