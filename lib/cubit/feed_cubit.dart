@@ -258,7 +258,7 @@ class FeedCubit extends Cubit<FeedState> {
             .from('feed')
             .select('*, profiles(*)')
             .not('id', 'in', _blockedFeedIds.toList())
-            .not('id', 'in', _reactionFeedIds.toList())
+            // .not('id', 'in', _reactionFeedIds.toList())
             .not('type', 'eq', FeedType.exercise.name)
             .order('created_at', ascending: false)
             .limit(_limit);
@@ -267,7 +267,7 @@ class FeedCubit extends Cubit<FeedState> {
             .from('random_feed')
             .select('*, profiles(*)')
             .not('id', 'in', _blockedFeedIds.toList())
-            .not('id', 'in', _reactionFeedIds.toList())
+            // .not('id', 'in', _reactionFeedIds.toList())
             .not('type', 'eq', FeedType.exercise.name)
             .limit(_limit);
       }
@@ -324,7 +324,7 @@ class FeedCubit extends Cubit<FeedState> {
             .from('feed')
             .select('*, profiles(*)')
             .not('id', 'in', _blockedFeedIds.toList())
-            .not('id', 'in', _reactionFeedIds.toList())
+            // .not('id', 'in', _reactionFeedIds.toList())
             .eq('type', FeedType.exercise.name)
             .order('created_at', ascending: false)
             .limit(_limit);
@@ -334,7 +334,7 @@ class FeedCubit extends Cubit<FeedState> {
             .from('random_feed')
             .select('*, profiles(*)')
             .not('id', 'in', _blockedFeedIds.toList())
-            .not('id', 'in', _reactionFeedIds.toList())
+            // .not('id', 'in', _reactionFeedIds.toList())
             .not('id', 'eq', currentFeedId) // ✅ 현재 보고 있는 피드 제외
             .eq('type', FeedType.exercise.name)
             .limit(_limit);

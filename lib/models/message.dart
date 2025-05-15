@@ -22,6 +22,7 @@ class Message {
     required this.readReceipts,
     this.image,
     this.imageUrl,
+    this.isDeleted,
   });
 
   final String? id;
@@ -34,6 +35,7 @@ class Message {
   final bool isMine;
   final Uint8List? image;
   final String? imagePath;
+  final bool? isDeleted;
   List<Reaction> reactions;
   Set<String> readReceipts;
   String? imageUrl;
@@ -45,6 +47,7 @@ class Message {
       'content': content,
       'image_path': imagePath,
       'type': type,
+      'is_deleted': isDeleted,
     };
   }
 
@@ -63,7 +66,8 @@ class Message {
         imagePath = map['image_path'],
         createdAt = convertToKst(DateTime.parse(map['created_at'])),
         type = map['type'],
-        isMine = map['user_id'] == myUserId;
+        isMine = map['user_id'] == myUserId,
+        isDeleted = map['is_deleted'];
 
   Message copyWith({
     String? id,
@@ -79,6 +83,7 @@ class Message {
     Uint8List? image,
     String? imageUrl,
     String? imagePath,
+    bool? isDeleted,
   }) {
     return Message(
       id: id ?? this.id,
@@ -94,6 +99,7 @@ class Message {
       image: image ?? this.image,
       imageUrl: imageUrl ?? this.imageUrl,
       imagePath: imagePath ?? this.imagePath,
+      isDeleted: isDeleted ?? this.isDeleted,
     );
   }
 }
