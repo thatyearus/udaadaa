@@ -1252,6 +1252,37 @@ class ChatCubit extends Cubit<ChatState> {
         },
       )
       ..onPostgresChanges(
+        event: PostgresChangeEvent.update,
+        schema: 'public',
+        table: 'messages',
+        callback: (payload) async {
+          final updatedMsg = payload.newRecord;
+          if (updatedMsg['is_deleted'] == true) {
+            try {
+              final roomId = updatedMsg['room_id'];
+              final messageId = updatedMsg['id'];
+
+              if (messages.containsKey(roomId)) {
+                messages[roomId] = messages[roomId]!.map((message) {
+                  if (message.id == messageId) {
+                    debugPrint("Message marked as deleted: $messageId");
+                    return message.copyWith(isDeleted: true);
+                  }
+                  return message;
+                }).toList();
+              } else {
+                debugPrint("Room not found for deleted message: $roomId");
+              }
+            } catch (e) {
+              debugPrint("Error updating deleted message: ${e.toString()}");
+            }
+          }
+          debugPrint("updatedMsg: $updatedMsg");
+
+          emit(ChatMessageLoaded());
+        },
+      )
+      ..onPostgresChanges(
         event: PostgresChangeEvent.insert,
         schema: 'public',
         table: 'chat_reactions',
@@ -1747,6 +1778,7 @@ class ChatCubit extends Cubit<ChatState> {
         isMine: true,
         reactions: [],
         readReceipts: {},
+        isDeleted: false,
       );
       await supabase.from('messages').upsert(message.toMap());
     } catch (e) {
@@ -1760,6 +1792,16 @@ class ChatCubit extends Cubit<ChatState> {
 
     if (pickedFile != null) {
       _selectedImage = pickedFile;
+    }
+  }
+
+  Future<void> deleteMessage(String messageId) async {
+    try {
+      await supabase.from('messages').update({
+        'is_deleted': true,
+      }).eq('id', messageId);
+    } catch (e) {
+      logger.e("deleteMessage error: $e");
     }
   }
 
