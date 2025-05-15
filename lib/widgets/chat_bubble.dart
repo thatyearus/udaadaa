@@ -23,6 +23,8 @@ class ChatBubble extends StatelessWidget {
     required this.isLastInSequence,
     required this.memberCount,
     required this.isLastInRoom,
+    this.isDeletedMessage = false,
+    this.createdAt,
   });
 
   final ChatMessage message;
@@ -31,7 +33,8 @@ class ChatBubble extends StatelessWidget {
   final bool isLastInSequence;
   final int memberCount;
   final bool isLastInRoom;
-
+  final bool? isDeletedMessage;
+  final DateTime? createdAt;
   void _showReactionOverlay(BuildContext context, bool isInDialog) {
     if (isInDialog) return;
     showGeneralDialog(
@@ -222,6 +225,83 @@ class ChatBubble extends StatelessWidget {
                                   TextStyle(color: AppColors.grayscale[800])),
                             ),
                           ),
+                          if (message.customProperties?['message'].isMine ==
+                              true)
+                            TextButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('모든 대화 상대에게서 삭제'),
+                                      content: const Text(
+                                          '선택한 메시지를 모든 채팅 참가자에게서 삭제합니다. 삭제된 메시지는 "삭제된 메시지입니다"로 표시됩니다. 정말 삭제하시겠습니까?'),
+                                      actions: <Widget>[
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text(
+                                                  '취소',
+                                                  style: TextStyle(
+                                                      color: const Color(
+                                                          0xFF2563EB),
+                                                      fontSize: 16.0,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: TextButton(
+                                                onPressed: () {
+                                                  try {
+                                                    context
+                                                        .read<ChatCubit>()
+                                                        .deleteMessage(message
+                                                                .customProperties?[
+                                                                    'message']
+                                                                .id ??
+                                                            "");
+                                                    debugPrint(
+                                                        '메시지 삭제 요청 성공: ${message.customProperties?['message'].id}');
+                                                  } catch (e) {
+                                                    debugPrint(
+                                                        'Error deleting message: $e');
+                                                  } finally {
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                  }
+                                                },
+                                                child: Text(
+                                                  '삭제',
+                                                  style: TextStyle(
+                                                      color: AppColors.red[600],
+                                                      fontSize: 16.0,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Text(
+                                '메세지 삭제',
+                                style: AppTextStyles.bodyLarge(
+                                        TextStyle(color: AppColors.red[600]))
+                                    .copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -465,7 +545,11 @@ class ChatBubble extends StatelessWidget {
                       text: message.text,
                       style: AppTextStyles.bodyLarge(
                         TextStyle(
-                          color: AppColors.neutral[800],
+                          color:
+                              message.customProperties?['isDeletedMessage'] ==
+                                      true
+                                  ? AppColors.neutral[600]
+                                  : AppColors.neutral[800],
                         ),
                       ),
                       linkStyle: AppTextStyles.bodyLarge(

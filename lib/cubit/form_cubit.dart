@@ -104,9 +104,23 @@ class FormCubit extends Cubit<FormState> {
       final userId = supabase.auth.currentUser?.id;
       final imagePath =
           '$userId/$type/${DateTime.now().microsecondsSinceEpoch}.jpg';
-      await supabase.storage
-          .from('FeedImages')
-          .upload(imagePath, compressedImage);
+      for (int attempt = 0; attempt < 3; attempt++) {
+        try {
+          await supabase.storage
+              .from('FeedImages')
+              .upload(imagePath, compressedImage)
+              .timeout(const Duration(seconds: 15));
+          logger.d("✅ 이미지 업로드 성공: $imagePath (시도: ${attempt + 1}/3)");
+          break;
+        } catch (e) {
+          logger.w("🔄 이미지 업로드 실패 (시도: ${attempt + 1}/3): $e");
+          if (attempt == 2) {
+            logger.e("❌ 이미지 업로드 최종 실패: $e");
+            rethrow;
+          }
+          await Future.delayed(const Duration(milliseconds: 300));
+        }
+      }
       return imagePath;
     } catch (e) {
       logger.e(e);
