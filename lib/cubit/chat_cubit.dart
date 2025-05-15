@@ -1855,7 +1855,7 @@ class ChatCubit extends Cubit<ChatState> {
           await supabase.storage
               .from('ImageMessages')
               .upload(imagePath, compressedImage)
-              .timeout(const Duration(seconds: 5));
+              .timeout(const Duration(seconds: 15));
           return imagePath;
         } catch (e) {
           if (retry < 2) {
