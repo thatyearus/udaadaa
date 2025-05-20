@@ -282,6 +282,7 @@ class ChatCubit extends Cubit<ChatState> {
                                 (receiptRet) => receiptRet['user_id'] as String)
                             .toSet(),
                       ))
+                  .where((msg) => !(msg.isDeleted ?? false))
                   .map((message) => message.copyWith(
                       imageUrl: message.imagePath != null
                           ? '$baseUrl${message.imagePath}'
