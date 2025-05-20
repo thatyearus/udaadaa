@@ -518,6 +518,12 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  void refreshProfile() {
+    if (_profile != null) {
+      emit(Authenticated(_profile!));
+    }
+  }
+
   Profile? get getProfile {
     if (state is Authenticated) {
       return (state as Authenticated).user;
