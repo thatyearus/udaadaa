@@ -5,9 +5,13 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/models/notification_type.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
+import 'package:udaadaa/utils/constant.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase_flutter;
 
 import 'package:udaadaa/view/main_view.dart';
 import 'package:udaadaa/view/newonboarding/initial_view.dart';
+import 'package:udaadaa/view/newonboarding/onboarding_login_view.dart';
+import 'package:udaadaa/view/newonboarding/profile_onboarding_view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -18,10 +22,11 @@ class SplashView extends StatefulWidget {
 
 class SplashViewState extends State<SplashView> {
   String messageType = "🔄 일반 진입 중..."; // 👉 디버깅용 텍스트 상태
+
   @override
   void initState() {
     super.initState();
-    _checkInitialMessage();
+    // _checkInitialMessage();
     context.read<AuthCubit>();
     context.read<BottomNavCubit>();
     // _checkOnboardingStatus();
@@ -64,18 +69,26 @@ class SplashViewState extends State<SplashView> {
       return;
     }
 
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(
+    //       builder: (context) => const MainView(),
+    //     ),
+    //   );
+    // });
     checkOnboardingStatus();
   }
 
   void checkOnboardingStatus() {
-    bool isOnboardingComplete =
-        PreferencesService().getBool('isOnboardingComplete') ?? false;
+    bool isNewOnboardingComplete =
+        PreferencesService().getBool('isNewOnboardingComplete') ?? false;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) =>
-              isOnboardingComplete ? const MainView() : const InitialView(),
+          builder: (context) => isNewOnboardingComplete
+              ? const MainView()
+              : const ProfileOnboardingView(),
         ),
       );
     });
@@ -84,10 +97,28 @@ class SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: CircularProgressIndicator(),
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is Authenticated) {
+          final provider = supabase.auth.currentUser?.appMetadata['provider'];
+          if (provider == 'kakao' || provider == 'apple') {
+            _checkInitialMessage();
+          } else {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const OnboardingLoginView(),
+                ),
+              );
+            });
+          }
+        }
+      },
+      child: const Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
         ),
       ),
     );
