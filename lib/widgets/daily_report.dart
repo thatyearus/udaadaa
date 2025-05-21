@@ -4,6 +4,8 @@ import 'package:udaadaa/cubit/profile_cubit.dart';
 import 'package:udaadaa/models/report.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/widgets/card_view.dart';
+import 'package:udaadaa/cubit/auth_cubit.dart';
+import 'package:udaadaa/utils/recommended_calorie_calculator.dart';
 
 class DayMiniReport extends StatelessWidget {
   final String title;
@@ -86,11 +88,86 @@ class DailyReport extends StatelessWidget {
             (report.dinner ?? 0) +
             (report.snack ?? 0))
         : 0);
+    final profile = context.read<AuthCubit>().getProfile;
+    final recommendedCalorie = profile != null
+        ? RecommendedCalorieCalculator.calculate(profile).round()
+        : 0;
+    final percent = recommendedCalorie > 0
+        ? (totalCalorie / recommendedCalorie).clamp(0.0, 1.0)
+        : 0.0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("오늘의 섭취 칼로리 : $totalCalorie kcal",
-            style: AppTextStyles.textTheme.headlineLarge),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 38,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(19),
+                  color: AppColors.primary[50],
+                ),
+                child: Stack(
+                  children: [
+                    FractionallySizedBox(
+                      widthFactor: percent,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(19),
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.primary, // 진한 브랜드 컬러
+                              AppColors.primary[200]!, // 중간 브랜드 컬러
+                              AppColors.primary[100]!, // 연한 브랜드 컬러
+                            ],
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '$totalCalorie',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' / $recommendedCalorie kcal',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.85),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                '권장 칼로리',
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        ),
         AppSpacing.verticalSizedBoxXs,
         Row(
           children: [

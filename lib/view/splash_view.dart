@@ -6,10 +6,8 @@ import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/models/notification_type.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' as supabase_flutter;
 
 import 'package:udaadaa/view/main_view.dart';
-import 'package:udaadaa/view/newonboarding/initial_view.dart';
 import 'package:udaadaa/view/newonboarding/onboarding_login_view.dart';
 import 'package:udaadaa/view/newonboarding/profile_onboarding_view.dart';
 
@@ -26,10 +24,8 @@ class SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
-    // _checkInitialMessage();
     context.read<AuthCubit>();
     context.read<BottomNavCubit>();
-    // _checkOnboardingStatus();
   }
 
   void _checkInitialMessage() async {
@@ -69,13 +65,6 @@ class SplashViewState extends State<SplashView> {
       return;
     }
 
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   Navigator.of(context).pushReplacement(
-    //     MaterialPageRoute(
-    //       builder: (context) => const MainView(),
-    //     ),
-    //   );
-    // });
     checkOnboardingStatus();
   }
 
@@ -100,17 +89,18 @@ class SplashViewState extends State<SplashView> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is Authenticated) {
+          if (!mounted) return;
           final provider = supabase.auth.currentUser?.appMetadata['provider'];
+          // Oauth로그인 돼있으면 newonboarding 확인하고 분기
           if (provider == 'kakao' || provider == 'apple') {
             _checkInitialMessage();
           } else {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const OnboardingLoginView(),
-                ),
-              );
-            });
+            // 어나니머스 로그인 돼있으면 로그인 화면으로 이동
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const OnboardingLoginView(),
+              ),
+            );
           }
         }
       },

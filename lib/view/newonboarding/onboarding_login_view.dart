@@ -9,7 +9,6 @@ import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/main_view.dart';
 import 'package:app_links/app_links.dart';
-import 'package:udaadaa/view/newonboarding/initial_view.dart';
 import 'package:udaadaa/view/newonboarding/profile_onboarding_view.dart';
 import 'package:udaadaa/view/register/email_login_view.dart';
 
@@ -48,13 +47,7 @@ class OnboardingLoginView extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_rounded),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: true,
           elevation: 0,
         ),
         body: Column(
@@ -106,7 +99,8 @@ class OnboardingLoginView extends StatelessWidget {
                       }
                       debugPrint('isInstalled: $isInstalled');
 
-                      Analytics().logEvent('로그인_카카오로그인');
+                      Analytics()
+                          .logEvent('로그인_카카오로그인', parameters: {'페이지': "온보딩"});
                       // 카카오 로그인 로직 추가
                       if (!context.mounted) {
                         return;
@@ -120,11 +114,30 @@ class OnboardingLoginView extends StatelessWidget {
                                   uri.scheme == schemeName &&
                                   uri.host == hostName) {
                                 if (!context.mounted) return;
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => const MainView(),
-                                  ),
-                                );
+                                try {
+                                  logger.i('카카오 로그인 성공: 화면 전환');
+                                  context.read<AuthCubit>().refreshProfile();
+                                  final isNewOnboardingComplete =
+                                      PreferencesService().getBool(
+                                              'isNewOnboardingComplete') ??
+                                          false;
+                                  if (!isNewOnboardingComplete) {
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ProfileOnboardingView(),
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) => const MainView(),
+                                      ),
+                                    );
+                                  }
+                                } catch (e) {
+                                  logger.e('화면 전환 중 오류 발생: ${e.toString()}');
+                                }
                               }
                             });
                           }).catchError((e) {
@@ -147,7 +160,8 @@ class OnboardingLoginView extends StatelessWidget {
                     AppColors.black,
                     textColor: AppColors.white,
                     onPressed: () {
-                      Analytics().logEvent('로그인_애플로그인');
+                      Analytics()
+                          .logEvent('로그인_애플로그인', parameters: {'페이지': "온보딩"});
                       // 애플 로그인 로직 추가
                       if (Platform.isAndroid) {
                         showDialog(
@@ -203,11 +217,23 @@ class OnboardingLoginView extends StatelessWidget {
                       context.read<AuthCubit>().signInWithApple().then((_) {
                         if (!context.mounted) return;
                         context.read<AuthCubit>().refreshProfile();
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const MainView(),
-                          ),
-                        );
+                        final isNewOnboardingComplete = PreferencesService()
+                                .getBool('isNewOnboardingComplete') ??
+                            false;
+                        if (!isNewOnboardingComplete) {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const ProfileOnboardingView(),
+                            ),
+                          );
+                        } else {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const MainView(),
+                            ),
+                          );
+                        }
                       }).catchError((e) {
                         logger.e(e.toString());
                       });
