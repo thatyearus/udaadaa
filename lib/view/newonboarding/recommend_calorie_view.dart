@@ -56,7 +56,7 @@ class _RecommendCalorieViewState extends State<RecommendCalorieView> {
                   const TextStyle(color: AppColors.black),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
                 'Mifflin-St Jeor 방정식을 참고하여 계산했어요',
                 style: AppTextStyles.textTheme.bodyLarge?.copyWith(
@@ -125,7 +125,7 @@ class _RecommendCalorieViewState extends State<RecommendCalorieView> {
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Text(
                     '우다다는 급격한 다이어트보단\n지속적인, 그리고 다같이 하는 다이어트를 지향합니다',
-                    style: AppTextStyles.textTheme.bodyMedium?.copyWith(
+                    style: AppTextStyles.textTheme.bodySmall?.copyWith(
                       color: AppColors.neutral[400],
                     ),
                     textAlign: TextAlign.center,
