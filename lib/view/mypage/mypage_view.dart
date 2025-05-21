@@ -221,6 +221,10 @@ class MyPageView extends StatelessWidget {
                 value: 'change_nickname',
                 child: Text('닉네임 변경'),
               ),
+              const PopupMenuItem(
+                value: 'change_calorie',
+                child: Text('칼로리 설정'),
+              ),
               PopupMenuItem(
                 value: 'push_setting',
                 child: Text('알림 설정'),
