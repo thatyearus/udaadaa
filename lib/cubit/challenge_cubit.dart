@@ -476,7 +476,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
       }
       emit(ChallengeSuccess());
       if (_challenge != null && _challenge!.isSuccess == false) {
-        // if (_consecutiveDays < 6) return;
+        if (_consecutiveDays < 13) return;
         final endDay = _challenge!.endDay;
         if (now.year == endDay.year &&
             now.month == endDay.month &&
