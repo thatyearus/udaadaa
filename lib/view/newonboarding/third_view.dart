@@ -178,7 +178,8 @@ class _ThirdViewState extends State<ThirdView> {
             try {
               // Always set onboarding to complete
               PreferencesService().setBool('isOnboardingComplete', true);
-
+              // 뉴온보딩 클리어
+              PreferencesService().setBool('isNewOnboardingComplete', true);
               // Always schedule notifications
               context.read<ChallengeCubit>().scheduleNotifications(alarmTimes);
               // Request FCM token for push notifications

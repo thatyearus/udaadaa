@@ -165,13 +165,16 @@ class RankingChart extends StatelessWidget {
           ),
           barTouchData: BarTouchData(
             enabled: true,
+            touchExtraThreshold: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 60), // ← 범위 확장 (vertical이 가로, horizontal이 세로)
             touchTooltipData: BarTouchTooltipData(
               fitInsideHorizontally: true,
               fitInsideVertically: true,
               getTooltipColor: (group) => AppColors.primary[100]!,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
-                  rod.toY.toStringAsFixed(2),
+                  '${rod.toY.toStringAsFixed(2)} kg',
                   AppTextStyles.textTheme.bodySmall!,
                 );
               },

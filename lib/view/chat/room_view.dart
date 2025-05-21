@@ -70,11 +70,13 @@ class RoomView extends StatelessWidget {
                 ),
                 title: Text(room.roomName),
                 subtitle: Text(
-                  room.lastMessage?.content != null
-                      ? (room.lastMessage!.content!.length > 35
-                          ? '${room.lastMessage!.content!.substring(0, 35)}...'
-                          : room.lastMessage!.content!)
-                      : (room.lastMessage?.imagePath != null ? '사진' : ''),
+                  room.lastMessage?.isDeleted == true
+                      ? '삭제된 메시지입니다.'
+                      : room.lastMessage?.content != null
+                          ? (room.lastMessage!.content!.length > 35
+                              ? '${room.lastMessage!.content!.substring(0, 35)}...'
+                              : room.lastMessage!.content!)
+                          : (room.lastMessage?.imagePath != null ? '사진' : ''),
                 ),
                 trailing: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,

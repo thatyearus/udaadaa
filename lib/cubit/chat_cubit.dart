@@ -282,6 +282,7 @@ class ChatCubit extends Cubit<ChatState> {
                                 (receiptRet) => receiptRet['user_id'] as String)
                             .toSet(),
                       ))
+                  .where((msg) => !(msg.isDeleted ?? false))
                   .map((message) => message.copyWith(
                       imageUrl: message.imagePath != null
                           ? '$baseUrl${message.imagePath}'
@@ -1205,6 +1206,16 @@ class ChatCubit extends Cubit<ChatState> {
             messages[message.roomId] = [];
           }
           messages[message.roomId] = [message, ...messages[message.roomId]!];
+
+          // 한마디가 잘 작동하기위해 메시지 소트
+          messages[message.roomId]!.sort((a, b) {
+            final aTime = a.createdAt;
+            final bTime = b.createdAt;
+            if (aTime == null && bTime == null) return 0;
+            if (bTime == null) return -1;
+            if (aTime == null) return 1;
+            return bTime.compareTo(aTime);
+          });
 
           if (message.imagePath != null) {
             await makeImageUrlMessage(message);

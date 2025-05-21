@@ -5,9 +5,11 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/models/notification_type.dart';
 import 'package:udaadaa/service/shared_preferences.dart';
+import 'package:udaadaa/utils/constant.dart';
 
 import 'package:udaadaa/view/main_view.dart';
-import 'package:udaadaa/view/newonboarding/initial_view.dart';
+import 'package:udaadaa/view/newonboarding/onboarding_login_view.dart';
+import 'package:udaadaa/view/newonboarding/profile_onboarding_view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -18,13 +20,13 @@ class SplashView extends StatefulWidget {
 
 class SplashViewState extends State<SplashView> {
   String messageType = "🔄 일반 진입 중..."; // 👉 디버깅용 텍스트 상태
+  bool _hasHandledAuth = false; // 인증 처리 플래그 추가
+
   @override
   void initState() {
     super.initState();
-    _checkInitialMessage();
     context.read<AuthCubit>();
     context.read<BottomNavCubit>();
-    // _checkOnboardingStatus();
   }
 
   void _checkInitialMessage() async {
@@ -68,14 +70,15 @@ class SplashViewState extends State<SplashView> {
   }
 
   void checkOnboardingStatus() {
-    bool isOnboardingComplete =
-        PreferencesService().getBool('isOnboardingComplete') ?? false;
+    bool isNewOnboardingComplete =
+        PreferencesService().getBool('isNewOnboardingComplete') ?? false;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) =>
-              isOnboardingComplete ? const MainView() : const InitialView(),
+          builder: (context) => isNewOnboardingComplete
+              ? const MainView()
+              : const ProfileOnboardingView(),
         ),
       );
     });
@@ -84,10 +87,30 @@ class SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: CircularProgressIndicator(),
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is Authenticated && !_hasHandledAuth) {
+          _hasHandledAuth = true; // 플래그 설정
+          if (!mounted) return;
+          final provider = supabase.auth.currentUser?.appMetadata['provider'];
+          // Oauth로그인 돼있으면 newonboarding 확인하고 분기
+          if (provider == 'kakao' || provider == 'apple') {
+            _checkInitialMessage();
+          } else {
+            // 어나니머스 로그인 돼있으면 로그인 화면으로 이동
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const OnboardingLoginView(),
+              ),
+            );
+          }
+        }
+      },
+      child: const Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
         ),
       ),
     );
