@@ -9,7 +9,7 @@ class RecommendedCalorieCalculator {
   /// Returns 권장 칼로리 (kcal)
   static double calculate(Profile profile) {
     if (profile.height == null || profile.weight == null) {
-      throw ArgumentError('Height and weight must not be null');
+      return 1300;
     }
 
     // BMR 계산 (Mifflin-St Jeor 방정식)
@@ -19,7 +19,7 @@ class RecommendedCalorieCalculator {
     // 총 에너지 소비량 계산 (1.2 곱하기)
     final tdee = bmr * 1.2;
 
-    // 권장 섭취량 계산 (200 감소)
-    return tdee - 200;
+    // 권장 섭취량 계산 (310 감소)
+    return tdee - 310;
   }
 }
