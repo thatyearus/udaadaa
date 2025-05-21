@@ -92,15 +92,15 @@ class HomeViewState extends State<HomeView> {
               );
             }
           } else if (state is ChallengeSuccess) {
-            if (!_isChallenger) return;
-            setState(() {
-              _selectedIndex = 0;
-            });
-            _sectionController.animateToPage(
-              0,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
+            // if (!_isChallenger) return;
+            // setState(() {
+            //   _selectedIndex = 0;
+            // });
+            // _sectionController.animateToPage(
+            //   0,
+            //   duration: const Duration(milliseconds: 300),
+            //   curve: Curves.easeInOut,
+            // );
           }
         },
         child: Column(
