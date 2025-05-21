@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/newonboarding/initial_view.dart';
+import 'package:udaadaa/view/newonboarding/recommend_calorie_view.dart';
 
 class ProfileOnboardingView extends StatefulWidget {
   const ProfileOnboardingView({super.key});
@@ -233,10 +233,15 @@ class _ProfileOnboardingViewState extends State<ProfileOnboardingView>
                   ),
                   onPressed: (_isHeightValid && _isTargetWeightValid)
                       ? () {
+                          context.read<AuthCubit>().updateProfile(
+                                _heightController.text,
+                                _targetWeightController.text,
+                              );
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const InitialView(),
+                              builder: (context) =>
+                                  const RecommendCalorieView(),
                             ),
                           );
                         }
