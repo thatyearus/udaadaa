@@ -20,6 +20,7 @@ class SplashView extends StatefulWidget {
 
 class SplashViewState extends State<SplashView> {
   String messageType = "🔄 일반 진입 중..."; // 👉 디버깅용 텍스트 상태
+  bool _hasHandledAuth = false; // 인증 처리 플래그 추가
 
   @override
   void initState() {
@@ -88,7 +89,8 @@ class SplashViewState extends State<SplashView> {
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
-        if (state is Authenticated) {
+        if (state is Authenticated && !_hasHandledAuth) {
+          _hasHandledAuth = true; // 플래그 설정
           if (!mounted) return;
           final provider = supabase.auth.currentUser?.appMetadata['provider'];
           // Oauth로그인 돼있으면 newonboarding 확인하고 분기
