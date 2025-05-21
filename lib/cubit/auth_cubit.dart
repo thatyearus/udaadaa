@@ -524,6 +524,29 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> updateProfile(String height, String weight) async {
+    final parsedHeight = double.tryParse(height);
+    final parsedWeight = double.tryParse(weight);
+
+    _profile = _profile?.copyWith(
+      height: parsedHeight,
+      weight: parsedWeight,
+    );
+
+    // Update profile in Supabase
+    if (_profile != null) {
+      try {
+        await supabase.from('profiles').update({
+          'height': parsedHeight,
+          'weight': parsedWeight,
+        }).eq('id', _profile!.id);
+      } catch (e) {
+        logger.e('Error updating profile in Supabase: ${e.toString()}');
+      }
+    }
+    emit(Authenticated(_profile!));
+  }
+
   Profile? get getProfile {
     if (state is Authenticated) {
       return (state as Authenticated).user;
