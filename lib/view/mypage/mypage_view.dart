@@ -1,12 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
-import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
-import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/mypage/push_setting_view.dart';
@@ -317,6 +314,106 @@ class MyPageView extends StatelessWidget {
                         ],
                       );
                     });
+                break;
+              case 'change_calorie':
+                Analytics().logEvent(
+                  "마이페이지_칼로리",
+                  parameters: {
+                    "클릭": "칼로리변경",
+                    "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+                  },
+                );
+                final heightController = TextEditingController();
+                final weightController = TextEditingController();
+                final profile = context.read<AuthCubit>().getCurProfile;
+                if (profile?.height != null) {
+                  heightController.text = profile!.height.toString();
+                }
+                if (profile?.weight != null) {
+                  weightController.text = profile!.weight.toString();
+                }
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('키와 목표 몸무게 변경'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextField(
+                            controller: heightController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: '키 (cm)',
+                              hintText: '키를 입력해주세요',
+                              hintStyle: AppTextStyles.labelLarge(
+                                TextStyle(color: AppColors.neutral[500]),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: weightController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: '목표 몸무게 (kg)',
+                              hintText: '목표 몸무게를 입력해주세요',
+                              hintStyle: AppTextStyles.labelLarge(
+                                TextStyle(color: AppColors.neutral[500]),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Analytics().logEvent(
+                              "마이페이지_칼로리",
+                              parameters: {
+                                "클릭": "취소",
+                                "챌린지상태": context
+                                    .read<AuthCubit>()
+                                    .getChallengeStatus(),
+                              },
+                            );
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            '취소',
+                            style: AppTextStyles.bodyLarge(
+                              TextStyle(color: AppColors.neutral[800]),
+                            ),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Analytics().logEvent(
+                              "마이페이지_칼로리",
+                              parameters: {
+                                "클릭": "확인",
+                                "챌린지상태": context
+                                    .read<AuthCubit>()
+                                    .getChallengeStatus(),
+                              },
+                            );
+                            context.read<AuthCubit>().updateProfile(
+                                  heightController.text,
+                                  weightController.text,
+                                );
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            '확인',
+                            style: AppTextStyles.bodyLarge(
+                              TextStyle(color: AppColors.neutral[800]),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
                 break;
               case 'push_setting':
                 Analytics().logEvent(
