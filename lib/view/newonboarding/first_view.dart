@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:udaadaa/service/notifications/notification_service.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/newonboarding/second_view.dart';

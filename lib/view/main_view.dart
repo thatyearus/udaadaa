@@ -169,8 +169,7 @@ class _MainViewState extends State<MainView> with WidgetsBindingObserver {
 
     debugPrint("❌ roomId=$roomId 에 해당하는 채팅방을 찾지 못함");
 
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   if (!mounted) return;
+    // WidgetsBinding.instance.addPostFrameCallback((_) {1
     //   ScaffoldMessenger.of(context).showSnackBar(
     //     const SnackBar(
     //       content: Text('채팅방 정보를 불러오지 못했어요 🥲 다시 앱을 실행시켜주세요'),

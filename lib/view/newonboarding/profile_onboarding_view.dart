@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/models/profile.dart';
 import 'package:udaadaa/utils/constant.dart';
-import 'package:udaadaa/view/newonboarding/initial_view.dart';
+import 'package:udaadaa/view/newonboarding/recommend_calorie_view.dart';
 
 class ProfileOnboardingView extends StatefulWidget {
   const ProfileOnboardingView({super.key});
@@ -116,141 +116,160 @@ class _ProfileOnboardingViewState extends State<ProfileOnboardingView>
 
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 64),
-              AnimatedOpacity(
-                duration: const Duration(milliseconds: 300),
-                opacity: _showHeightText ? 1.0 : 0.0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '키를 입력해주세요',
-                      style: AppTextStyles.displayLarge(
-                        const TextStyle(
-                          color: AppColors.black,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'cm 단위로 입력해주세요',
-                      style: AppTextStyles.textTheme.bodyLarge?.copyWith(
-                        color: AppColors.neutral[400],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-                ),
-              ),
-              SlideTransition(
-                position: _slideAnimation,
-                child: _buildInputField(
-                  controller: _heightController,
-                  hintText: '키',
-                  suffixText: 'cm',
-                  onChanged: _onHeightChanged,
-                  onTap: () {
-                    if (_isTargetWeightValid) {
-                      _targetWeightAnimationController.reverse();
-                      setState(() {
-                        _isTargetWeightValid = false;
-                        _showTargetWeightText = true;
-                      });
-                    }
-                  },
-                ),
-              ),
-              Transform.translate(
-                offset: const Offset(0, -20),
-                child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AnimatedOpacity(
-                        duration: const Duration(milliseconds: 300),
-                        opacity: _showTargetWeightText ? 1.0 : 0.0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '목표 몸무게를 입력해주세요',
-                              style: AppTextStyles.displayLarge(
-                                const TextStyle(color: AppColors.black),
-                              ),
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).padding.top,
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 64),
+                  AnimatedOpacity(
+                    duration: const Duration(milliseconds: 300),
+                    opacity: _showHeightText ? 1.0 : 0.0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '키를 입력해주세요',
+                          style: AppTextStyles.displayMedium(
+                            const TextStyle(
+                              color: AppColors.black,
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'kg 단위로 입력해주세요',
-                              style:
-                                  AppTextStyles.textTheme.bodyLarge?.copyWith(
-                                color: AppColors.neutral[400],
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                          ],
+                          ),
                         ),
-                      ),
-                      SlideTransition(
-                        position: _targetWeightSlideAnimation,
-                        child: _buildInputField(
-                          controller: _targetWeightController,
-                          hintText: '목표 몸무게',
-                          suffixText: 'kg',
-                          onChanged: _onTargetWeightChanged,
-                          onTap: () {
-                            if (_isHeightValid) {
-                              _animationController.reverse();
-                              setState(() {
-                                _isHeightValid = false;
-                                _showHeightText = true;
-                              });
-                            }
-                          },
+                        const SizedBox(height: 8),
+                        Text(
+                          'cm 단위로 입력해주세요',
+                          style: AppTextStyles.textTheme.bodyLarge?.copyWith(
+                            color: AppColors.neutral[400],
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 24),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 40),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    minimumSize: const Size(double.infinity, 56),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 2,
-                  ),
-                  onPressed: (_isHeightValid && _isTargetWeightValid)
-                      ? () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const InitialView(),
-                            ),
-                          );
+                  SlideTransition(
+                    position: _slideAnimation,
+                    child: _buildInputField(
+                      controller: _heightController,
+                      hintText: '키',
+                      suffixText: 'cm',
+                      onChanged: _onHeightChanged,
+                      onTap: () {
+                        if (_isTargetWeightValid) {
+                          _targetWeightAnimationController.reverse();
+                          setState(() {
+                            _isTargetWeightValid = false;
+                            _showTargetWeightText = true;
+                          });
                         }
-                      : null,
-                  child: Text(
-                    "다음",
-                    style: AppTextStyles.textTheme.headlineMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
+                      },
                     ),
                   ),
-                ),
+                  Transform.translate(
+                    offset: const Offset(0, -20),
+                    child: FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AnimatedOpacity(
+                            duration: const Duration(milliseconds: 300),
+                            opacity: _showTargetWeightText ? 1.0 : 0.0,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '목표 몸무게를 입력해주세요',
+                                  style: AppTextStyles.textTheme.displayMedium
+                                      ?.copyWith(
+                                    color: AppColors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'kg 단위로 입력해주세요',
+                                  style: AppTextStyles.textTheme.bodyMedium
+                                      ?.copyWith(
+                                    color: AppColors.neutral[400],
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                              ],
+                            ),
+                          ),
+                          SlideTransition(
+                            position: _targetWeightSlideAnimation,
+                            child: _buildInputField(
+                              controller: _targetWeightController,
+                              hintText: '목표 몸무게',
+                              suffixText: 'kg',
+                              onChanged: _onTargetWeightChanged,
+                              onTap: () {
+                                if (_isHeightValid) {
+                                  _animationController.reverse();
+                                  setState(() {
+                                    _isHeightValid = false;
+                                    _showHeightText = true;
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 70),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width - 48,
+                      child: FloatingActionButton.extended(
+                        backgroundColor: (_heightController.text.isNotEmpty &&
+                                _targetWeightController.text.isNotEmpty)
+                            ? AppColors.primary
+                            : AppColors.neutral[300],
+                        elevation: 2,
+                        onPressed: (_heightController.text.isNotEmpty &&
+                                _targetWeightController.text.isNotEmpty)
+                            ? () {
+                                context.read<AuthCubit>().updateProfile(
+                                      _heightController.text,
+                                      _targetWeightController.text,
+                                    );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const RecommendCalorieView(),
+                                  ),
+                                );
+                              }
+                            : null,
+                        label: Text(
+                          "다음",
+                          style:
+                              AppTextStyles.textTheme.headlineMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
