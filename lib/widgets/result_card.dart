@@ -39,7 +39,11 @@ class ResultCard extends StatelessWidget {
         : "$nickname님\n챌린지 성공을 축하합니다!\n$startDay - $endDay 동안\n매일 모든 미션을 성공했습니다.\n\n축하드립니다!";
 
     String failMessage =
-        "$nickname님\n아쉽게도 지난 일주일 동안\n진행한 챌린지에 실패하셨습니다.\n\n실패는 성공의 어머니입니다.\n건강한 다이어트 습관을 만들기 위해\n한번 더 챌린지에 도전해 보세요!";
+        "$nickname님\n아쉽게도 지난 이주일 동안\n진행한 챌린지에 실패하셨습니다.\n\n실패는 성공의 어머니입니다.\n건강한 다이어트 습관을 만들기 위해\n한번 더 챌린지에 도전해 보세요!";
+
+    // 체중이 증가했는지 확인
+    bool isWeightIncreased =
+        endWeight != null && startWeight != null && endWeight > startWeight;
 
     return Container(
       width: MediaQuery.of(context).size.width * 0.9,
@@ -61,7 +65,7 @@ class ResultCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            isSuccess ? '👏' : '😅',
+            (isSuccess && !isWeightIncreased) ? '👏' : '😅',
             style: const TextStyle(
               fontSize: 80,
               fontFamily: 'tossface',
@@ -75,12 +79,12 @@ class ResultCard extends StatelessWidget {
             ),
           ),
           Text(
-            isSuccess ? '챌린지 성공' : '챌린지 실패',
+            (isSuccess && !isWeightIncreased) ? '챌린지 성공' : '챌린지 실패',
             style: AppTextStyles.textTheme.displayMedium!,
           ),
           AppSpacing.sizedBoxL,
           Text(
-            isSuccess ? successMessage : failMessage,
+            (isSuccess && !isWeightIncreased) ? successMessage : failMessage,
             textAlign: TextAlign.center,
             style: AppTextStyles.textTheme.titleMedium,
           ),
