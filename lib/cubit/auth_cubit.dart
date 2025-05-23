@@ -547,6 +547,27 @@ class AuthCubit extends Cubit<AuthState> {
     emit(Authenticated(_profile!));
   }
 
+  Future<void> withdrawAccount() async {
+    try {
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('User is not authenticated');
+      }
+
+      // 1. Delete user's profile from profiles table
+      await supabase.from('profiles').delete().eq('id', currentUser.id);
+
+      // 2. Delete user's auth account
+      await supabase.auth.signOut();
+
+      // 3. Emit initial state to trigger navigation to login
+      emit(AuthInitial());
+    } catch (e) {
+      logger.e('Error during account withdrawal: ${e.toString()}');
+      throw Exception('Failed to withdraw account');
+    }
+  }
+
   Profile? get getProfile {
     if (state is Authenticated) {
       return (state as Authenticated).user;
