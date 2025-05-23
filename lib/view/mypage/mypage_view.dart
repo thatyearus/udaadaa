@@ -238,10 +238,10 @@ class MyPageView extends StatelessWidget {
                 value: 'refund_policy',
                 child: Text('상금규정'),
               ),
-              // const PopupMenuItem(
-              //   value: 'withdraw',
-              //   child: Text('회원탈퇴'),
-              // ),
+              const PopupMenuItem(
+                value: 'withdraw',
+                child: Text('회원탈퇴'),
+              ),
               // const PopupMenuItem(
               //   value: 'link_email',
               //   child: Text('이메일 연동'),
