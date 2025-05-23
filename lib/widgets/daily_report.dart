@@ -158,7 +158,7 @@ class DailyReport extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                '권장 칼로리',
+                '섭취 / 권장 칼로리',
                 style: TextStyle(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w600,
