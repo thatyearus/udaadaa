@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
+import 'package:udaadaa/view/main_view.dart';
+import 'package:udaadaa/view/newonboarding/profile_onboarding_view.dart';
 import 'package:udaadaa/view/register/enter_room_view.dart';
 
 class EmailLoginView extends StatefulWidget {
@@ -21,14 +24,27 @@ class _EmailLoginViewState extends State<EmailLoginView> {
     super.dispose();
   }
 
-  void _handleLogin() {
-    context.read<AuthCubit>().signInWithEmail(
+  void _handleLogin() async {
+    await context.read<AuthCubit>().signInWithEmail(
           _emailController.text,
           _passwordController.text,
         );
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const EnterRoomView()),
-    );
+    if (!mounted) return;
+    final isNewOnboardingComplete =
+        PreferencesService().getBool('isNewOnboardingComplete') ?? false;
+    if (!isNewOnboardingComplete) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const ProfileOnboardingView(),
+        ),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const MainView(),
+        ),
+      );
+    }
   }
 
   @override
