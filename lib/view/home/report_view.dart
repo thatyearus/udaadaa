@@ -52,8 +52,8 @@ class SelectToggleButtons extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       margin: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: isSelected ? Theme.of(context).primaryColor : Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
         boxShadow: isSelected
             ? const [
                 BoxShadow(
@@ -66,7 +66,11 @@ class SelectToggleButtons extends StatelessWidget {
       child: Text(
         text,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: isSelected ? Colors.white : Colors.black45,
+              color: isSelected
+                  ? Theme.of(context).primaryColor
+                  : AppColors.grayscale[400],
+              fontWeight: isSelected ? FontWeight.w800 : FontWeight.normal,
+              fontSize: isSelected ? 15 : 14,
             ),
         textAlign: TextAlign.center,
       ),
@@ -82,7 +86,7 @@ class SelectToggleButtons extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(10),
         color: Colors.white,
         boxShadow: const [
           BoxShadow(
@@ -98,7 +102,7 @@ class SelectToggleButtons extends StatelessWidget {
           return ToggleButtons(
             renderBorder: false,
             isSelected: selection,
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(10),
             fillColor: Colors.white,
             constraints: BoxConstraints.tightFor(width: buttonWidth),
             children: <Widget>[
