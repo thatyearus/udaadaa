@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/mypage/push_setting_view.dart';
@@ -238,10 +239,10 @@ class MyPageView extends StatelessWidget {
                 value: 'refund_policy',
                 child: Text('상금규정'),
               ),
-              // const PopupMenuItem(
-              //   value: 'withdraw',
-              //   child: Text('회원탈퇴'),
-              // ),
+              const PopupMenuItem(
+                value: 'withdraw',
+                child: Text('회원탈퇴'),
+              ),
               // const PopupMenuItem(
               //   value: 'link_email',
               //   child: Text('이메일 연동'),
@@ -507,6 +508,8 @@ class MyPageView extends StatelessWidget {
                           try {
                             await context.read<AuthCubit>().withdrawAccount();
                             if (!context.mounted) return;
+                            PreferencesService()
+                                .setBool('isNewOnboardingComplete', false);
                             Navigator.of(context).pop();
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
