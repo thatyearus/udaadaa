@@ -47,15 +47,21 @@ begin
   );
 
   if feed_type <> 'weight' and review is not null and trim(review) <> '' then
-    perform pg_sleep(0.1);
-    
-    insert into messages (room_id, user_id, content, image_path, type)
+    insert into messages (
+      room_id,
+      user_id,
+      content,
+      image_path,
+      type,
+      created_at
+    )
     values (
       room_id,
       user_id,
       review,
       null,
-      'textMessage'::"public"."MessageType"
+      'textMessage'::"public"."MessageType",
+      now() + interval '1 millisecond'
     );
   end if;
 
