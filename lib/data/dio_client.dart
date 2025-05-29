@@ -6,8 +6,8 @@ class DioClient {
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: _baseUrl,
-      connectTimeout: const Duration(milliseconds: 12000),
-      receiveTimeout: const Duration(milliseconds: 15000),
+      connectTimeout: const Duration(milliseconds: 20000),
+      receiveTimeout: const Duration(milliseconds: 22000),
     ),
   );
 }

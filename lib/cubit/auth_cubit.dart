@@ -290,7 +290,12 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<int> signInWithEmail(String email, String password) async {
     try {
-      await supabase.auth.signInWithPassword(email: email, password: password);
+      final response = await supabase.auth
+          .signInWithPassword(email: email, password: password);
+      if (response.user == null) {
+        emit(AuthError());
+        return 0;
+      }
       final currentUser = supabase.auth.currentUser;
       logger.d("currentUser: $currentUser");
       if (_profile != null || _profile!.id != currentUser!.id) {
@@ -308,8 +313,10 @@ class AuthCubit extends Cubit<AuthState> {
       logger.e(e.toString());
       if (e is AuthException) {
         if (e.code == 'validation_failed' && e.statusCode == '400') {
+          emit(AuthError());
           return 7;
         } else if (e.code == 'invalid_credentials' && e.statusCode == '400') {
+          emit(AuthError());
           return 8;
         }
         return 2;
@@ -545,6 +552,33 @@ class AuthCubit extends Cubit<AuthState> {
       }
     }
     emit(Authenticated(_profile!));
+  }
+
+  Future<void> withdrawAccount() async {
+    try {
+      final currentUser = supabase.auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('User is not authenticated');
+      }
+
+      // 1. Delete user's profile from profiles table
+      await supabase.from('profiles').delete().eq('id', currentUser.id);
+
+      // 2. Delete user's auth account using Edge Function
+      final response = await supabase.functions
+          .invoke('delete-auth-user', body: {'userId': currentUser.id});
+
+      if (response.status != 200) {
+        throw Exception('Failed to delete user account');
+      }
+
+      // 3. Sign out and reset state
+      await signOut();
+      emit(AuthInitial());
+    } catch (e) {
+      logger.e('Error during account withdrawal: ${e.toString()}');
+      throw Exception('Failed to withdraw account');
+    }
   }
 
   Profile? get getProfile {

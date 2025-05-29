@@ -94,7 +94,9 @@ class SplashViewState extends State<SplashView> {
           if (!mounted) return;
           final provider = supabase.auth.currentUser?.appMetadata['provider'];
           // Oauth로그인 돼있으면 newonboarding 확인하고 분기
-          if (provider == 'kakao' || provider == 'apple') {
+          if (provider == 'kakao' ||
+              provider == 'apple' ||
+              provider == 'email') {
             _checkInitialMessage();
           } else {
             // 어나니머스 로그인 돼있으면 로그인 화면으로 이동

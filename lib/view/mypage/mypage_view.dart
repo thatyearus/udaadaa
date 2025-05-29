@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
+import 'package:udaadaa/service/shared_preferences.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/view/mypage/push_setting_view.dart';
+import 'package:udaadaa/view/newonboarding/onboarding_login_view.dart';
 import 'package:udaadaa/widgets/my_profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -237,6 +239,10 @@ class MyPageView extends StatelessWidget {
                 value: 'refund_policy',
                 child: Text('상금규정'),
               ),
+              const PopupMenuItem(
+                value: 'withdraw',
+                child: Text('회원탈퇴'),
+              ),
               // const PopupMenuItem(
               //   value: 'link_email',
               //   child: Text('이메일 연동'),
@@ -453,6 +459,79 @@ class MyPageView extends StatelessWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => const RefundView(),
+                  ),
+                );
+                break;
+              case 'withdraw':
+                Analytics().logEvent(
+                  "마이페이지_회원탈퇴",
+                  parameters: {
+                    "클릭": "회원탈퇴",
+                    "챌린지상태": context.read<AuthCubit>().getChallengeStatus(),
+                  },
+                );
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('회원탈퇴'),
+                    content: const Text('회원을 탈퇴하시겠습니까?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Analytics().logEvent(
+                            "마이페이지_회원탈퇴",
+                            parameters: {
+                              "클릭": "취소",
+                              "챌린지상태": context
+                                  .read<AuthCubit>()
+                                  .getChallengeStatus(),
+                            },
+                          );
+                          Navigator.of(context).pop();
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.blue,
+                        ),
+                        child: const Text('아니요'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          Analytics().logEvent(
+                            "마이페이지_회원탈퇴",
+                            parameters: {
+                              "클릭": "확인",
+                              "챌린지상태": context
+                                  .read<AuthCubit>()
+                                  .getChallengeStatus(),
+                            },
+                          );
+                          try {
+                            await context.read<AuthCubit>().withdrawAccount();
+                            if (!context.mounted) return;
+                            PreferencesService()
+                                .setBool('isNewOnboardingComplete', false);
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const OnboardingLoginView(),
+                              ),
+                              (route) => false,
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('회원탈퇴 중 오류가 발생했습니다.'),
+                              ),
+                            );
+                          }
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.red,
+                        ),
+                        child: const Text('예'),
+                      ),
+                    ],
                   ),
                 );
                 break;
