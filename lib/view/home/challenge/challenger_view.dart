@@ -8,6 +8,7 @@ import 'package:udaadaa/cubit/challenge_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/widgets/calendar.dart';
 import 'package:udaadaa/view/detail/my_record_view.dart';
 import 'package:udaadaa/widgets/last_record.dart';
 import 'package:udaadaa/widgets/mission_card.dart';
@@ -21,7 +22,7 @@ class ChallengerView extends StatelessWidget {
       child: Column(
         children: [
           AppSpacing.verticalSizedBoxL,
-          Calendar(),
+          const Calendar(),
           //DayBanner(),
           StreakCard(),
           MissionList(),
@@ -31,55 +32,55 @@ class ChallengerView extends StatelessWidget {
   }
 }
 
-class Calendar extends StatelessWidget {
-  const Calendar({super.key});
+// class Calendar extends StatelessWidget {
+//   const Calendar({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    DateTime? selectedDate = context
-        .select<ChallengeCubit, DateTime?>((cubit) => cubit.getSelectedDate);
-    DateTime focusedDate =
-        context.select<ChallengeCubit, DateTime>((cubit) => cubit.getFocusDate);
+//   @override
+//   Widget build(BuildContext context) {
+//     DateTime? selectedDate = context
+//         .select<ChallengeCubit, DateTime?>((cubit) => cubit.getSelectedDate);
+//     DateTime focusedDate =
+//         context.select<ChallengeCubit, DateTime>((cubit) => cubit.getFocusDate);
 
-    return TableCalendar(
-      locale: 'ko_KR',
-      focusedDay: focusedDate,
-      firstDay: DateTime(1800),
-      lastDay: DateTime(2050),
-      headerVisible: false,
-      headerStyle: HeaderStyle(
-        formatButtonVisible: false,
-        titleCentered: true,
-        titleTextStyle: AppTextStyles.textTheme.headlineMedium!,
-      ),
-      calendarFormat: CalendarFormat.week,
-      calendarStyle: CalendarStyle(
-        isTodayHighlighted: true,
-        selectedDecoration: const BoxDecoration(
-          color: AppColors.primary,
-          shape: BoxShape.circle,
-        ),
-        todayDecoration: BoxDecoration(
-          color: AppColors.primary[100],
-          shape: BoxShape.circle,
-        ),
-      ),
-      onPageChanged: (focusedDay) =>
-          context.read<ChallengeCubit>().selectFocusDate(focusedDay),
-      onDaySelected: (DateTime selectedDay, DateTime focusDay) {
-        Analytics()
-            .logEvent("리포트_날짜선택", parameters: {"날짜": selectedDay.toString()});
-        context.read<ChallengeCubit>().selectDay(selectedDay);
-      },
-      selectedDayPredicate: (day) {
-        if (selectedDate == null) {
-          return false;
-        }
-        return isSameDay(selectedDate, day);
-      },
-    );
-  }
-}
+//     return TableCalendar(
+//       locale: 'ko_KR',
+//       focusedDay: focusedDate,
+//       firstDay: DateTime(1800),
+//       lastDay: DateTime(2050),
+//       headerVisible: false,
+//       headerStyle: HeaderStyle(
+//         formatButtonVisible: false,
+//         titleCentered: true,
+//         titleTextStyle: AppTextStyles.textTheme.headlineMedium!,
+//       ),
+//       calendarFormat: CalendarFormat.week,
+//       calendarStyle: CalendarStyle(
+//         isTodayHighlighted: true,
+//         selectedDecoration: const BoxDecoration(
+//           color: AppColors.primary,
+//           shape: BoxShape.circle,
+//         ),
+//         todayDecoration: BoxDecoration(
+//           color: AppColors.primary[100],
+//           shape: BoxShape.circle,
+//         ),
+//       ),
+//       onPageChanged: (focusedDay) =>
+//           context.read<ChallengeCubit>().selectFocusDate(focusedDay),
+//       onDaySelected: (DateTime selectedDay, DateTime focusDay) {
+//         Analytics()
+//             .logEvent("리포트_날짜선택", parameters: {"날짜": selectedDay.toString()});
+//         context.read<ChallengeCubit>().selectDay(selectedDay);
+//       },
+//       selectedDayPredicate: (day) {
+//         if (selectedDate == null) {
+//           return false;
+//         }
+//         return isSameDay(selectedDate, day);
+//       },
+//     );
+//   }
+// }
 
 class DayBanner extends StatelessWidget {
   const DayBanner({super.key});
