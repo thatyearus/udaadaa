@@ -33,6 +33,8 @@ class ChatCubit extends Cubit<ChatState> {
 
   Map<String, DateTime?> readReceipts = {};
   XFile? _selectedImage;
+  List<XFile> _selectedImages = [];
+
   String? currentRoomId;
   List<String> blockedUsers = [];
   List<String> blockedMessages = [];
@@ -1799,10 +1801,9 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> selectImage(ImageSource pickertype) async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: pickertype);
-
-    if (pickedFile != null) {
-      _selectedImage = pickedFile;
+    final List<XFile> pickedFiles = await picker.pickMultiImage();
+    if (pickedFiles.isNotEmpty) {
+      _selectedImages = pickedFiles;
     }
   }
 
@@ -1887,25 +1888,89 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  Future<List<String>> uploadImages(
+      String roomId, List<XFile> otherFiles) async {
+    final session = supabase.auth.currentSession;
+    if (session == null || session.isExpired) {
+      await supabase.auth.refreshSession();
+    }
+    final List<XFile> files = _selectedImages;
+    if (files.isEmpty) {
+      logger.e('No images selected');
+      return [];
+    }
+
+    final userId = supabase.auth.currentUser!.id;
+    List<String> uploadedPaths = [];
+
+    for (final file in files) {
+      try {
+        final File? compressedImage = await compressImage(File(file.path));
+        if (compressedImage == null) {
+          logger.e('Failed to compress image: ${file.path}');
+          continue;
+        }
+
+        final imagePath =
+            '$roomId/${DateTime.now().microsecondsSinceEpoch}_$userId.jpg';
+        bool uploadSuccess = false;
+
+        for (int retry = 0; retry < 3; retry++) {
+          try {
+            await supabase.storage
+                .from('ImageMessages')
+                .upload(imagePath, compressedImage)
+                .timeout(const Duration(seconds: 15));
+            uploadSuccess = true;
+            uploadedPaths.add(imagePath);
+            break;
+          } catch (e) {
+            if (retry < 2) {
+              logger.w("이미지 업로드 재시도 중... (${retry + 1}/3)");
+              await Future.delayed(const Duration(milliseconds: 300));
+              continue;
+            }
+            logger.e("이미지 업로드 실패: ${file.path}");
+            Analytics().logEvent("업로드_이미지실패", parameters: {"에러": e.toString()});
+          }
+        }
+
+        if (!uploadSuccess) {
+          logger.e("이미지 업로드 최종 실패: ${file.path}");
+        }
+      } catch (e) {
+        logger.e("이미지 처리 중 오류 발생: ${file.path}");
+        Analytics().logEvent("업로드_이미지실패", parameters: {"에러": e.toString()});
+      }
+    }
+
+    return uploadedPaths;
+  }
+
   Future<void> sendImageMessage(String roomId) async {
     try {
       await selectImage(ImageSource.gallery);
-      final imagePath = await uploadImage(roomId, null);
-      if (imagePath == null) {
-        logger.e('Failed to upload image');
+
+      if (_selectedImages.isEmpty) {
+        logger.e('No images selected');
         return;
       }
-      final message = Message(
-        roomId: roomId,
-        userId: supabase.auth.currentUser!.id,
-        imagePath: imagePath,
-        type: 'imageMessage',
-        isMine: true,
-        reactions: [],
-        readReceipts: {},
-      );
-      await supabase.from('messages').upsert(message.toMap());
+      final imagePaths = await uploadImages(roomId, _selectedImages);
+
+      for (final imagePath in imagePaths) {
+        final message = Message(
+          roomId: roomId,
+          userId: supabase.auth.currentUser!.id,
+          imagePath: imagePath,
+          type: 'imageMessage',
+          isMine: true,
+          reactions: [],
+          readReceipts: {},
+        );
+        await supabase.from('messages').upsert(message.toMap());
+      }
       _selectedImage = null;
+      _selectedImages = [];
     } catch (e) {
       logger.e("sendImageMessage error: $e");
     }
