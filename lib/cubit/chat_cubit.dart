@@ -1207,6 +1207,14 @@ class ChatCubit extends Cubit<ChatState> {
           if (!messages.containsKey(message.roomId)) {
             messages[message.roomId] = [];
           }
+
+          // Take first 5 messages and check for duplicates
+          final recentMessages = messages[message.roomId]!.take(5).toList();
+          if (recentMessages.any((m) => m.id == message.id)) {
+            return;
+          }
+
+          //메시지 추가
           messages[message.roomId] = [message, ...messages[message.roomId]!];
 
           // 한마디가 잘 작동하기위해 메시지 소트
