@@ -204,11 +204,14 @@ class ImageCard extends StatelessWidget {
                         ? '${createdDate.year}년 ${createdDate.month}월 ${createdDate.day}일'
                         : '${createdDate.month}월 ${createdDate.day}일';
 
-                    return Text(
-                      formattedDate,
-                      style: TextStyle(
-                        color: AppColors.neutral[300],
-                        fontSize: 13,
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        formattedDate,
+                        style: TextStyle(
+                          color: AppColors.neutral[300],
+                          fontSize: 13,
+                        ),
                       ),
                     );
                   } catch (e) {
