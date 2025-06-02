@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
+import 'package:udaadaa/view/chat/freind_profile_view.dart';
 
 class ProfileView extends StatelessWidget {
   // final String imageUrl;
@@ -47,6 +49,23 @@ class ProfileView extends StatelessWidget {
                             color: Colors.white),
                         onPressed: () {
                           Navigator.pop(context);
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.photo_library_rounded,
+                            color: Colors.white),
+                        onPressed: () {
+                          Analytics().logEvent(
+                            "친구프로필_피드_아이콘_클릭",
+                          );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FreindProfileView(
+                                friendUserId: userId,
+                              ),
+                            ),
+                          );
                         },
                       ),
                     ],

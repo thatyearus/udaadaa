@@ -559,6 +559,39 @@ class FeedCubit extends Cubit<FeedState> {
     }
   }
 
+  Future<List<Feed>> fetchUserFeeds(String userId) async {
+    try {
+      final data = await supabase
+          .from('feed')
+          .select('*, profiles(*), reactions(*, profiles(*))')
+          .eq('user_id', userId)
+          .order('created_at', ascending: false)
+          .limit(30);
+
+      final imagePaths =
+          data.map((item) => item['image_path'] as String).toList();
+
+      final signedUrls = await _getPublicUrls(imagePaths);
+
+      if (data.isEmpty) {
+        logger.e("No data for user: $userId");
+        return [];
+      }
+
+      List<Feed> userFeeds = [];
+      for (var i = 0; i < data.length; i++) {
+        final item = data[i];
+        item['image_url'] = signedUrls[i];
+        userFeeds.add(Feed.fromMap(map: item));
+      }
+      logger.d("Fetched ${userFeeds.length} feeds for user: $userId");
+      return userFeeds;
+    } catch (e) {
+      logger.e("Error fetching user feeds: $e");
+      return [];
+    }
+  }
+
   Future<List<String>> _getPublicUrls(List<String> paths) async {
     // const baseUrl =
     //     'https://ccpcclfqofyvksajnrpg.supabase.co/storage/v1/object/public/FeedImages/';
