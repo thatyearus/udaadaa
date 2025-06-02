@@ -496,6 +496,7 @@ class ChallengeCubit extends Cubit<ChallengeState> {
     }
   }
 
+  // result_list_view에서밖에 안씀
   Future<void> fetchChallenge() async {
     try {
       emit(ChallengeLoading());
