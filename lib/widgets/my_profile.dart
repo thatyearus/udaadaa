@@ -39,6 +39,29 @@ class MyProfile extends StatelessWidget {
             profile?.nickname ?? 'Not Logged In',
             style: AppTextStyles.textTheme.bodyLarge,
           ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(right: 15, top: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '목표 몸무게',
+                  style: AppTextStyles.textTheme.bodySmall?.copyWith(
+                    color: AppColors.grayscale[500],
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '${profile?.weight?.toStringAsFixed(1) ?? '-'}kg',
+                  style: AppTextStyles.textTheme.headlineSmall?.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
