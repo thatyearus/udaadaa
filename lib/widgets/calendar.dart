@@ -101,6 +101,7 @@ class _CalendarState extends State<Calendar> {
         GestureDetector(
           onTap: () {
             setState(() {
+              Analytics().logEvent("켈린더_펼치기_클릭");
               isExpanded = !isExpanded;
             });
           },
