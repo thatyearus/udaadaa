@@ -90,6 +90,7 @@ class _FreindProfileViewState extends State<FreindProfileView> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => FriendRecordView(
+                                  feeds: friendFeeds,
                                   initialPage: index,
                                   friendUserId: widget.friendUserId),
                             ),

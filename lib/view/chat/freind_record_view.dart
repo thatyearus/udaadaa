@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
-import 'package:udaadaa/utils/analytics/analytics.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/widgets/feed.dart';
 
 class FriendRecordView extends StatelessWidget {
   final int initialPage;
   final String friendUserId;
+  final List<Feed> feeds;
 
   const FriendRecordView({
     super.key,
     required this.initialPage,
     required this.friendUserId,
+    required this.feeds,
   });
 
   @override
@@ -28,6 +27,7 @@ class FriendRecordView extends StatelessWidget {
         child: FriendFeedPageView(
           initialPage: initialPage,
           friendUserId: friendUserId,
+          feeds: feeds,
         ),
       ),
     );
@@ -37,11 +37,13 @@ class FriendRecordView extends StatelessWidget {
 class FriendFeedPageView extends StatefulWidget {
   final int initialPage;
   final String friendUserId;
+  final List<Feed> feeds;
 
   const FriendFeedPageView({
     super.key,
     required this.initialPage,
     required this.friendUserId,
+    required this.feeds,
   });
 
   @override
@@ -57,13 +59,11 @@ class FeedPageViewState extends State<FriendFeedPageView> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: widget.initialPage);
-    _loadFriendFeeds();
+    _loadFriendFeeds(widget.feeds);
   }
 
-  Future<void> _loadFriendFeeds() async {
+  Future<void> _loadFriendFeeds(List<Feed> feeds) async {
     try {
-      final feeds =
-          await context.read<FeedCubit>().fetchUserFeeds(widget.friendUserId);
       if (mounted) {
         setState(() {
           friendFeeds = feeds;
