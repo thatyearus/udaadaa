@@ -76,10 +76,18 @@ class RankingView extends StatelessWidget {
   }
 }
 
-class RankingChart extends StatelessWidget {
+class RankingChart extends StatefulWidget {
   const RankingChart({super.key});
 
-  BarChartGroupData makeGroupData(int x, double y, Color color) {
+  @override
+  State<RankingChart> createState() => _RankingChartState();
+}
+
+class _RankingChartState extends State<RankingChart> {
+  int? touchedGroupIndex;
+
+  BarChartGroupData makeGroupData(int x, double y, Color color,
+      {bool showTooltip = false}) {
     return BarChartGroupData(
       x: x,
       barRods: [
@@ -89,7 +97,7 @@ class RankingChart extends StatelessWidget {
           width: 6,
         ),
       ],
-      // showingTooltipIndicators: touchedGroupIndex == x ? [0] : [],
+      showingTooltipIndicators: showTooltip ? [0] : [],
     );
   }
 
@@ -104,20 +112,13 @@ class RankingChart extends StatelessWidget {
           rotationQuarterTurns: 1,
           barGroups: List.generate(
             data.length,
-            (index) =>
-                makeGroupData(index, data[index].value, AppColors.primary),
+            (index) => makeGroupData(
+              index,
+              data[index].value,
+              AppColors.primary,
+              showTooltip: touchedGroupIndex == index,
+            ),
           ),
-          /* data
-              .map(
-                (value) => MapEntry(
-                  value.key,
-                  makeGroupData(
-                      key.hashCode, value.value, AppColors.primary),
-                ),
-              )
-              .values
-              .toList(),*/
-
           borderData: FlBorderData(show: false),
           titlesData: FlTitlesData(
             topTitles: AxisTitles(
@@ -126,18 +127,38 @@ class RankingChart extends StatelessWidget {
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                getTitlesWidget: (value, meta) => Padding(
-                  padding: AppSpacing.edgeInsetsXxs,
-                  child: RotatedBox(
-                    quarterTurns: -1,
-                    child: Text(
-                      data[value.toInt()].key.nickname,
-                      style: AppTextStyles.textTheme.bodySmall,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.end,
+                getTitlesWidget: (value, meta) {
+                  final idx = value.toInt();
+                  return Padding(
+                    padding: AppSpacing.edgeInsetsXxs,
+                    child: RotatedBox(
+                      quarterTurns: -1,
+                      child: GestureDetector(
+                        onTapDown: (_) {
+                          setState(() {
+                            touchedGroupIndex = idx;
+                          });
+                        },
+                        onTapUp: (_) {
+                          setState(() {
+                            touchedGroupIndex = null;
+                          });
+                        },
+                        onTapCancel: () {
+                          setState(() {
+                            touchedGroupIndex = null;
+                          });
+                        },
+                        child: Text(
+                          data[idx].key.nickname,
+                          style: AppTextStyles.textTheme.bodySmall,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.end,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
                 reservedSize: 130,
               ),
             ),
@@ -148,7 +169,6 @@ class RankingChart extends StatelessWidget {
                 reservedSize: 40,
                 getTitlesWidget: (value, meta) {
                   if (value % 0.5 != 0) return const SizedBox();
-                  // Wrap with RotatedBox and set quarterTurns to -1
                   return RotatedBox(
                     quarterTurns: -1,
                     child: SizedBox(
@@ -165,9 +185,8 @@ class RankingChart extends StatelessWidget {
           ),
           barTouchData: BarTouchData(
             enabled: true,
-            touchExtraThreshold: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 60), // ← 범위 확장 (vertical이 가로, horizontal이 세로)
+            touchExtraThreshold:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 60),
             touchTooltipData: BarTouchTooltipData(
               fitInsideHorizontally: true,
               fitInsideVertically: true,

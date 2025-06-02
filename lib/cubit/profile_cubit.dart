@@ -13,6 +13,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   late final StreamSubscription authSubscription;
   Report? _report;
   Report? _selectedReport;
+  Report? _yesterdayReport;
   DateTime? _selectedDate;
   DateTime _focusDate = DateTime.now();
   List<bool> _typeSelection = [true, false];
@@ -79,6 +80,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   void selectDay(DateTime date) {
     _selectedDate = date;
     fetchSelectedReport(date);
+    fetchYesterdayReport(date);
     fetchWeeklyReport(date);
   }
 
@@ -102,6 +104,29 @@ class ProfileCubit extends Cubit<ProfileState> {
     } catch (e) {
       logger.e(e);
       _selectedReport = null;
+    }
+  }
+
+  Future<void> fetchYesterdayReport(DateTime date) async {
+    if (authCubit.state is! Authenticated) {
+      return;
+    }
+    try {
+      final reportMap = await supabase
+          .from('report')
+          .select()
+          .eq('date', date.subtract(const Duration(days: 1)).toIso8601String());
+      if (reportMap.isEmpty) {
+        _yesterdayReport = null;
+        emit(ProfileLoaded("selectedReport"));
+        return;
+      }
+      _yesterdayReport = Report.fromMap(map: reportMap[0]);
+
+      emit(ProfileLoaded("selectedReport"));
+    } catch (e) {
+      logger.e(e);
+      _yesterdayReport = null;
     }
   }
 
@@ -145,4 +170,5 @@ class ProfileCubit extends Cubit<ProfileState> {
   List<bool> get getSelectedType => _typeSelection;
   List<Report?> get getWeeklyReport => _weeklyReport;
   bool get getIsChallenger => authCubit.getIsChallenger;
+  Report? get getYesterdayReport => _yesterdayReport;
 }
