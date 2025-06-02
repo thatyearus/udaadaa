@@ -36,16 +36,21 @@ class CardView2 extends StatelessWidget {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(15),
           color: Colors.white,
           boxShadow: const [
             BoxShadow(
               color: Colors.black12,
-              blurRadius: 5,
+              blurRadius: 7,
             ),
           ],
         ),
-        padding: AppSpacing.edgeInsetsL,
+        padding: EdgeInsets.only(
+          top: 15,
+          bottom: 55,
+          left: 15,
+          right: 0,
+        ),
         child: child,
       ),
     );
