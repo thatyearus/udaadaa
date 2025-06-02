@@ -1,12 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
 import 'package:udaadaa/models/feed.dart';
 import 'package:udaadaa/utils/constant.dart';
 import 'package:udaadaa/view/chat/freind_record_view.dart';
-import 'package:udaadaa/view/detail/my_record_view.dart';
 
 import '../../utils/analytics/analytics.dart';
 
@@ -84,12 +82,9 @@ class _FreindProfileViewState extends State<FreindProfileView> {
                       child: GestureDetector(
                         onTap: () {
                           Analytics().logEvent(
-                            "친구프로필_피드",
+                            "친구프로필_피드_사진_클릭",
                             parameters: {
                               "피드선택": index,
-                              "챌린지상태": context
-                                  .read<AuthCubit>()
-                                  .getChallengeStatus(),
                             },
                           );
                           Navigator.of(context).push(
