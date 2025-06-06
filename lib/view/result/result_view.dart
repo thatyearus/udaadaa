@@ -113,17 +113,17 @@ class ChallengeResultView extends StatelessWidget {
                       );
                     },
                   ),
-                  _buildActionButton(
-                    context,
-                    icon: Icons.share_rounded,
-                    label: '공유하기',
-                    onPressed: () {
-                      _shareImage();
-                      Analytics().logEvent(
-                        "챌린지결과_공유하기",
-                      );
-                    },
-                  ),
+                  // _buildActionButton(
+                  //   context,
+                  //   icon: Icons.share_rounded,
+                  //   label: '공유하기',
+                  //   onPressed: () {
+                  //     _shareImage();
+                  //     Analytics().logEvent(
+                  //       "챌린지결과_공유하기",
+                  //     );
+                  //   },
+                  // ),
                 ],
               ),
             ),
