@@ -54,12 +54,25 @@ class FormCubit extends Cubit<FormState> {
   }
 
   Future<void> updateImage(String type, ImageSource pickertype) async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: pickertype);
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile = await picker.pickImage(source: pickertype);
 
-    if (pickedFile != null) {
-      _selectedImages[type] = pickedFile;
-      emit(FormInitial());
+      if (pickedFile != null) {
+        _selectedImages[type] = pickedFile;
+        emit(FormInitial());
+      }
+    } catch (e) {
+      Analytics().logEvent(
+        "이미지_업로드_오류",
+        parameters: {
+          "에러_내역": e.toString(),
+          "이미지_타입": type,
+          "소스_타입": pickertype.toString(),
+        },
+      );
+      logger.e("이미지 업로드 중 오류 발생: $e");
+      emit(FormError('이미지 업로드 중 오류가 발생했습니다'));
     }
   }
 
