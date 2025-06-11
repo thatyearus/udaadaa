@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
@@ -19,6 +20,8 @@ part 'form_state.dart';
 
 class FormCubit extends Cubit<FormState> {
   ProfileCubit profileCubit;
+  bool isAndroidImageSelected = false;
+
   FeedCubit feedCubit;
   FormCubit(
     this.profileCubit,
@@ -57,6 +60,9 @@ class FormCubit extends Cubit<FormState> {
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? pickedFile = await picker.pickImage(source: pickertype);
+      if (Platform.isAndroid) {
+        isAndroidImageSelected = true;
+      }
 
       if (pickedFile != null) {
         _selectedImages[type] = pickedFile;
@@ -74,6 +80,7 @@ class FormCubit extends Cubit<FormState> {
       logger.e("이미지 업로드 중 오류 발생: $e");
       emit(FormError('이미지 업로드 중 오류가 발생했습니다'));
     }
+    debugPrint('selectedImages: $_selectedImages');
   }
 
   Future<File?> compressImage(File file) async {

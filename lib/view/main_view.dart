@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +9,7 @@ import 'package:udaadaa/cubit/auth_cubit.dart';
 import 'package:udaadaa/cubit/bottom_nav_cubit.dart';
 import 'package:udaadaa/cubit/chat_cubit.dart';
 import 'package:udaadaa/cubit/feed_cubit.dart';
+import 'package:udaadaa/cubit/form_cubit.dart';
 import 'package:udaadaa/models/notification_type.dart';
 import 'package:udaadaa/models/room.dart';
 import 'package:udaadaa/utils/constant.dart';
@@ -53,6 +56,16 @@ class _MainViewState extends State<MainView> with WidgetsBindingObserver {
       if (context.read<AuthCubit>().getIsAuthenticating) {
         context.read<AuthCubit>().setIsAuthenticating = false;
         return;
+      }
+      if (Platform.isAndroid) {
+        if (context.read<FormCubit>().isAndroidImageSelected) {
+          context.read<FormCubit>().isAndroidImageSelected = false;
+          return;
+        }
+        if (context.read<ChatCubit>().isAndroidImageSelected) {
+          context.read<ChatCubit>().isAndroidImageSelected = false;
+          return;
+        }
       }
 
       await Supabase.instance.client.auth.refreshSession();

@@ -45,6 +45,7 @@ class ChatCubit extends Cubit<ChatState> {
   Map<String, bool> _pushOptions = {};
   bool _initialized = false;
   bool wasPushHandled = false;
+  bool isAndroidImageSelected = false;
 
   Map<String, List<String>> unreadMessageIdsByRoom = {};
 
@@ -1808,6 +1809,9 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   Future<void> selectImage(ImageSource pickertype) async {
+    if (Platform.isAndroid) {
+      isAndroidImageSelected = true;
+    }
     final ImagePicker picker = ImagePicker();
     final List<XFile> pickedFiles = await picker.pickMultiImage();
     if (pickedFiles.isNotEmpty) {
